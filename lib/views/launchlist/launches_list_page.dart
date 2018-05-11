@@ -48,7 +48,7 @@ class _LaunchListPageState extends State<LaunchListPage> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(launch, avatarTag: avatarTag);
+          return new LaunchDetailPage(launch: launch, avatarTag: avatarTag,);
         },
       ),
     );

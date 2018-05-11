@@ -7,20 +7,24 @@ import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 class LaunchDetailHeader extends StatelessWidget {
   static const BACKGROUND_IMAGE = 'images/profile_header_background.png';
 
-  LaunchDetailHeader(
-    this.launch,
-    this.animationController,
-    this.startValue,{
-    @required this.avatarTag,
-  });
+  LaunchDetailHeader(this.launch,
+      this.animationController,
+      this.startValue, {
+        this.avatarTag,
+        @required this.backEnabled,
+      });
 
   final Launch launch;
   final AnimationController animationController;
   final int startValue;
   final Object avatarTag;
+  final bool backEnabled;
 
   Widget _buildDiagonalImageBackground(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
+    var screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return new DiagonallyCutColoredImage(
       new Image.network(launch.rocket.imageURL,
@@ -33,27 +37,34 @@ class LaunchDetailHeader extends StatelessWidget {
   }
 
   Widget _buildAvatar() {
-    return new Hero(
-      tag: avatarTag,
-      child: new CircleAvatar(
+    if (avatarTag != null) {
+      return new Hero(
+        tag: avatarTag,
+        child: new CircleAvatar(
+          backgroundImage: new NetworkImage(launch.rocket.imageURL),
+          radius: 75.0,
+        ),
+      );
+    } else {
+      return new CircleAvatar(
         backgroundImage: new NetworkImage(launch.rocket.imageURL),
-        radius: 50.0,
-      ),
-    );
+        radius: 75.0,
+      );
+    }
   }
 
   Widget _buildFollowerInfo(TextTheme textTheme) {
     var followerStyle =
-        textTheme.subhead.copyWith(color: const Color(0xBBFFFFFF));
+    textTheme.subhead.copyWith(color: const Color(0xBBFFFFFF));
 
     return new Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: new Countdown(
-          animation: new StepTween(
-            begin: startValue,
-            end: 0,
-          ).animate(animationController),
-        ),
+        animation: new StepTween(
+          begin: startValue,
+          end: 0,
+        ).animate(animationController),
+      ),
     );
   }
 
@@ -86,8 +97,7 @@ class LaunchDetailHeader extends StatelessWidget {
     );
   }
 
-  Widget _createPillButton(
-    String text, {
+  Widget _createPillButton(String text, {
     Color backgroundColor = Colors.transparent,
     Color textColor = Colors.white70,
   }) {
@@ -108,28 +118,46 @@ class LaunchDetailHeader extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
-    return new Stack(
-      children: <Widget>[
-        _buildDiagonalImageBackground(context),
-        new Align(
-          alignment: FractionalOffset.bottomCenter,
-          heightFactor: 1.4,
-          child: new Column(
-            children: <Widget>[
-              _buildAvatar(),
-              _buildFollowerInfo(textTheme),
-              _buildActionButtons(theme),
-            ],
+
+    if (backEnabled) {
+      return new Stack(
+        children: <Widget>[
+          _buildDiagonalImageBackground(context),
+          new Align(
+            alignment: FractionalOffset.bottomCenter,
+            heightFactor: 1.4,
+            child: new Column(
+              children: <Widget>[
+                _buildAvatar(),
+                _buildFollowerInfo(textTheme),
+                _buildActionButtons(theme),
+              ],
+            ),
           ),
-        ),
-        new Positioned(
-          top: 26.0,
-          left: 4.0,
-          child: new BackButton(color: Colors.white),
-        ),
-      ],
-    );
+          new Positioned(
+            top: 26.0,
+            left: 4.0,
+            child: new BackButton(color: Colors.white),
+          ),
+        ],
+      );
+    } else {
+      return new Stack(
+        children: <Widget>[
+          _buildDiagonalImageBackground(context),
+          new Align(
+            alignment: FractionalOffset.bottomCenter,
+            heightFactor: 1.4,
+            child: new Column(
+              children: <Widget>[
+                _buildAvatar(),
+                _buildFollowerInfo(textTheme),
+                _buildActionButtons(theme),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
   }
-
-
 }
