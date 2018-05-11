@@ -4,21 +4,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:spacelaunchnow_flutter/colors/app_colors.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/launches_list_page.dart';
 
-final ThemeData kIOSTheme = new ThemeData(
-  primarySwatch: Colors.blue,
-  primaryColor: Colors.grey[100],
-  accentColor: Colors.redAccent,
-);
 
-final ThemeData kDefaultTheme = new ThemeData(
-  primaryColorBrightness: Brightness.dark,
-  primarySwatch: Colors.blue,
-  accentColor: Colors.redAccent,
-);
 
 Future<Launches> fetchLaunches() async {
   final response =
@@ -75,17 +67,18 @@ class PagesState extends State<Pages> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = defaultTargetPlatform == TargetPlatform.iOS
+        ? kIOSTheme
+        : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
-        theme: defaultTargetPlatform == TargetPlatform.iOS
-            ? kIOSTheme
-            : kDefaultTheme,
+        theme: theme,
         home: new Scaffold(
             body: pageChooser(),
             bottomNavigationBar: new Theme(
                 data: Theme.of(context).copyWith(
                     // sets the background color of the `BottomNavigationBar`
-                    canvasColor: Colors.redAccent,
+                    canvasColor: theme.accentColor,
                     // sets the active color of the `BottomNavigationBar` if `Brightness` is light
                     primaryColor: Colors.white,
                     textTheme: Theme.of(context).textTheme.copyWith(
