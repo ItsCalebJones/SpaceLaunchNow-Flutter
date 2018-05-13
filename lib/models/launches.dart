@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 
 class Launches {

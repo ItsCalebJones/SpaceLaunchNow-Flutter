@@ -8,17 +8,8 @@ import 'package:spacelaunchnow_flutter/colors/app_colors.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/launchlist/launches_list_page.dart';
-
-
-
-Future<Launches> fetchLaunches() async {
-  final response =
-      await http.get('https://launchlibrary.net/1.4/launch/next/100');
-  final responseJson = json.decode(response.body);
-
-  return new Launches.fromJson(responseJson);
-}
+import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
+import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -35,21 +26,21 @@ class Pages extends StatefulWidget {
 }
 
 class PagesState extends State<Pages> {
-  int pageIndex = 0;
+  int pageIndex = 1;
 
   // Create all the pages once and return same instance when required
   final LaunchDetailPage _nextPage = new LaunchDetailPage();
-  final LaunchListPage _listPage = new LaunchListPage();
-  final LaunchListPage _previousListPage = new LaunchListPage();
+  final UpcomingLaunchListPage _listPage = new UpcomingLaunchListPage();
+  final PreviousLaunchListPage _previousListPage = new PreviousLaunchListPage();
 
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        return _nextPage;
+        return _listPage;
         break;
 
       case 1:
-        return _listPage;
+        return _nextPage;
         break;
 
       case 2:
@@ -67,14 +58,20 @@ class PagesState extends State<Pages> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = defaultTargetPlatform == TargetPlatform.iOS
-        ? kIOSTheme
-        : kDefaultTheme;
+    ThemeData theme =
+        defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
         home: new Scaffold(
             body: pageChooser(),
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.sort),
+              onPressed: () {
+
+              },
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
                 data: Theme.of(context).copyWith(
                     // sets the background color of the `BottomNavigationBar`
@@ -95,14 +92,51 @@ class PagesState extends State<Pages> {
                   },
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
-                        title: new Text('Next'), icon: new Icon(Icons.home)),
-                    new BottomNavigationBarItem(
                         title: new Text('Upcoming'),
-                        icon: new Icon(Icons.time_to_leave)),
+                        icon: new Icon(Icons.assignment)),
+                    new BottomNavigationBarItem(
+                        icon: new Icon(Icons.home),
+                        title: new Text("Next Launch")),
                     new BottomNavigationBarItem(
                         title: new Text('Previous'),
-                        icon: new Icon(Icons.history))
+                        icon: new Icon(Icons.history)),
                   ],
-                ))));
+                )
+            )
+        )
+    );
   }
 }
+
+// TODO USE THIS 
+class GoogleTasksBottomAppBarPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(title: const Text('Tasks - Bottom App Bar')),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.home),
+        onPressed: () {},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        hasNotch: false,
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+

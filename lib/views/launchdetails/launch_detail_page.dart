@@ -32,12 +32,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     super.initState();
     if (widget.launch != null) {
       launch = widget.launch;
-      var until = launch.net.difference(new DateTime.now());
-      _controller = new AnimationController(
-        vsync: this,
-        duration: new Duration(seconds: until.inSeconds),
-      );
-      _controller.forward();
+      setController();
       backEnabled = true;
     } else if (widget.launchId != null && widget.launchId != 0) {
       _loadLaunch(widget.launchId);
@@ -55,12 +50,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     setState(() {
       _launches = Launch.allFromResponse(response.body);
       launch = _launches.first;
-      var until = launch.net.difference(new DateTime.now());
-      _controller = new AnimationController(
-        vsync: this,
-        duration: new Duration(seconds: until.inSeconds),
-      );
-      _controller.forward();
+      setController();
     });
   }
 
@@ -124,5 +114,16 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       );
     }
     return content;
+  }
+
+  void setController() {
+    var until = launch.net.difference(new DateTime.now());
+    if (until.inSeconds > 0) {
+      _controller = new AnimationController(
+        vsync: this,
+        duration: new Duration(seconds: until.inSeconds),
+      );
+      _controller.forward();
+    }
   }
 }

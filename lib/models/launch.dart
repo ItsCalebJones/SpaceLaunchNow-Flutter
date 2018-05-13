@@ -19,7 +19,7 @@ class Launch {
   final Location location;
   final List<Mission> missions;
 
-  Launch({this.id, this.name, this.status, this.windowStart, this.windowEnd,
+  const Launch({this.id, this.name, this.status, this.windowStart, this.windowEnd,
     this.net,  this.probability, this.launchServiceProvider,
     this.rocket, this.location, this.missions});
 
@@ -34,6 +34,7 @@ class Launch {
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
+    print (json);
     return new Launch(
       id: json['id'],
       name: json['name'],

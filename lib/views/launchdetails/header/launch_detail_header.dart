@@ -58,15 +58,22 @@ class LaunchDetailHeader extends StatelessWidget {
     var followerStyle =
     textTheme.subhead.copyWith(color: const Color(0xBBFFFFFF));
 
-    return new Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: new Countdown(
-        animation: new StepTween(
-          begin: startValue,
-          end: 0,
-        ).animate(animationController),
-      ),
-    );
+    if (startValue > 0) {
+      return new Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: new Countdown(
+          animation: new StepTween(
+            begin: startValue,
+            end: 0,
+          ).animate(animationController),
+        ),
+      );
+    } else {
+      return new Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: new Text(launch.net.toLocal().toString())
+      );
+    }
   }
 
   Widget _buildActionButtons(ThemeData theme) {

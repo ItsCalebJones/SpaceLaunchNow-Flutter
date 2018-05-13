@@ -2,30 +2,39 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 
-class LaunchListPage extends StatefulWidget {
+class UpcomingLaunchListPage extends StatefulWidget {
   @override
   _LaunchListPageState createState() => new _LaunchListPageState();
 }
 
-class _LaunchListPageState extends State<LaunchListPage> {
+class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   List<Launch> _launches = [];
+  LaunchesRepository _repository = new Injector().launchRepository;
 
   @override
   void initState() {
     super.initState();
-    _loadLaunch();
+    _repository.fetch()
+        .then((contacts) => onLoadContactsComplete(contacts))
+        .catchError((onError) {
+          print(onError);
+          onLoadContactsError();
+        });
   }
 
-  Future<void> _loadLaunch() async {
-    http.Response response =
-    await http.get('https://launchlibrary.net/1.4/launch/next/100');
-
+  void onLoadContactsComplete(List<Launch> items) {
     setState(() {
-      _launches = Launch.allFromResponse(response.body);
+      _launches = items;
     });
+  }
+
+  void onLoadContactsError() {
+    // TODO: implement onLoadContactsError
   }
 
   Widget _buildLaunchListTile(BuildContext context, int index) {
@@ -70,7 +79,9 @@ class _LaunchListPageState extends State<LaunchListPage> {
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Home')),
+      appBar: new AppBar(
+          title: new Text('Space Launch Now',
+      )),
       body: content,
     );
   }
