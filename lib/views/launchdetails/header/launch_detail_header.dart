@@ -8,16 +8,12 @@ import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 class LaunchDetailHeader extends StatelessWidget {
   static const BACKGROUND_IMAGE = 'images/profile_header_background.png';
 
-  LaunchDetailHeader(this.launch,
-      this.animationController,
-      this.startValue, {
+  LaunchDetailHeader(this.launch, {
         this.avatarTag,
         @required this.backEnabled,
       });
 
   final Launch launch;
-  final AnimationController animationController;
-  final int startValue;
   final Object avatarTag;
   final bool backEnabled;
 
@@ -30,7 +26,7 @@ class LaunchDetailHeader extends StatelessWidget {
     return new DiagonallyCutColoredImage(
       new Image.network(launch.rocket.imageURL,
         width: screenWidth,
-        height: 280.0,
+        height: 240.0,
         fit: BoxFit.cover,
       ),
       color: SpaceLaunchNowColors.blue_transparent,
@@ -42,87 +38,26 @@ class LaunchDetailHeader extends StatelessWidget {
       return new Hero(
         tag: avatarTag,
         child: new CircleAvatar(
+          foregroundColor: Colors.white,
           backgroundImage: new NetworkImage(launch.rocket.imageURL),
-          radius: 75.0,
+          radius: 85.0,
+          backgroundColor: Colors.white,
         ),
       );
     } else {
       return new CircleAvatar(
+        foregroundColor: Colors.white,
         backgroundImage: new NetworkImage(launch.rocket.imageURL),
-        radius: 75.0,
+        radius: 85.0,
+        backgroundColor: Colors.white,
       );
     }
-  }
-
-  Widget _buildCountDown(TextTheme textTheme) {
-    if (startValue > 0) {
-      return new Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: new Countdown(
-          animation: new StepTween(
-            begin: startValue,
-            end: 0,
-          ).animate(animationController),
-        ),
-      );
-    } else {
-      return new Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: new Text(launch.net.toLocal().toString())
-      );
-    }
-  }
-
-  Widget _buildActionButtons(ThemeData theme) {
-    return new Padding(
-      padding: const EdgeInsets.only(
-        top: 16.0,
-        left: 16.0,
-        right: 16.0,
-      ),
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _createPillButton(
-            'Watch Live',
-            backgroundColor: Colors.redAccent,
-          ),
-          new DecoratedBox(
-            decoration: new BoxDecoration(
-              border: new Border.all(color: Colors.white30),
-              borderRadius: new BorderRadius.circular(30.0),
-            ),
-            child: _createPillButton(
-              'Share',
-              textColor: Colors.white70,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _createPillButton(String text, {
-    Color backgroundColor = Colors.transparent,
-    Color textColor = Colors.white70,
-  }) {
-    return new ClipRRect(
-      borderRadius: new BorderRadius.circular(30.0),
-      child: new MaterialButton(
-        minWidth: 140.0,
-        color: backgroundColor,
-        textColor: textColor,
-        onPressed: () {},
-        child: new Text(text),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
-
 
     if (backEnabled) {
       return new Stack(
@@ -131,16 +66,10 @@ class LaunchDetailHeader extends StatelessWidget {
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.4,
-            child: new Column(
-              children: <Widget>[
-                _buildAvatar(),
-                _buildActionButtons(theme),
-                _buildCountDown(textTheme),
-              ],
-            ),
+            child: _buildAvatar(),
           ),
           new Positioned(
-            top: 26.0,
+            top: 24.0,
             left: 4.0,
             child: new BackButton(color: Colors.white),
           ),
@@ -153,13 +82,7 @@ class LaunchDetailHeader extends StatelessWidget {
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.4,
-            child: new Column(
-              children: <Widget>[
-                _buildAvatar(),
-                _buildActionButtons(theme),
-                _buildCountDown(textTheme),
-              ],
-            ),
+            child: _buildAvatar(),
           ),
         ],
       );

@@ -25,7 +25,7 @@ class DiagonalClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = new Path();
     path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height - 25.0);
+    path.lineTo(size.width, size.height - 35.0);
     path.lineTo(size.width, 0.0);
     path.close();
 

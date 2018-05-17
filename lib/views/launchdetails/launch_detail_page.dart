@@ -97,14 +97,14 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
               children: <Widget>[
                 new LaunchDetailHeader(
                   launch,
-                  _controller,
-                  launch.net.difference(new DateTime.now()).inSeconds,
                   avatarTag: widget.avatarTag,
                   backEnabled: backEnabled,
                 ),
                 new Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: new LaunchDetailBody(launch),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: new LaunchDetailBody(launch,
+                      _controller,
+                      launch.net.difference(new DateTime.now()).inSeconds,),
                 ),
                 new LaunchShowcase(launch),
               ],
