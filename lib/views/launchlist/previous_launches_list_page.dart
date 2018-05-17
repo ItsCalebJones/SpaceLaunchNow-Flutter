@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
@@ -110,8 +111,9 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     }
 
     return new Scaffold(
-      appBar: new AppBar(
-          title: new Text('Space Launch Now'),
+      appBar: new PlatformAdaptiveAppBar(
+          title: new Text('Previous'),
+          platform: Theme.of(context).platform,
           actions: <Widget>[
             new IconButton(
               onPressed: () {

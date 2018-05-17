@@ -11,13 +11,16 @@ class LaunchDetailBody extends StatelessWidget {
         new Icon(
           Icons.place,
           color: Colors.white,
-          size: 16.0,
         ),
-        new Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: new Text(
-            launch.location.name,
-            style: textTheme.subhead.copyWith(color: Colors.white),
+        new Expanded(
+          child: new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text(
+              launch.location.name,
+              maxLines: 2,
+              style: textTheme.subhead.copyWith(color: Colors.white),
+              overflow: TextOverflow.fade,
+            ),
           ),
         ),
       ],

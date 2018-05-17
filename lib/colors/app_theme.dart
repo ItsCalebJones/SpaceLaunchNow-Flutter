@@ -8,9 +8,9 @@ final ThemeData kDarkIOSTheme = new ThemeData(
 );
 
 final ThemeData kIOSTheme = new ThemeData(
+  primaryColorBrightness: Brightness.light,
   primarySwatch: Colors.blue,
-  primaryColor: Colors.blue[500],
-  accentColor: Colors.red[500],
+  primaryColor: Colors.grey[300],
 );
 
 final ThemeData kDarkDefaultTheme = new ThemeData(
@@ -27,3 +27,21 @@ final ThemeData kDefaultTheme = new ThemeData(
   primaryColor: Colors.blue[500],
   accentColor: Colors.red[500],
 );
+
+/// App bar that uses iOS styling on iOS
+class PlatformAdaptiveAppBar extends AppBar {
+  PlatformAdaptiveAppBar({
+    Key key,
+    TargetPlatform platform,
+    List<Widget> actions,
+    Widget title,
+    Widget body,
+    // TODO(jackson): other properties?
+  })
+      : super(
+    key: key,
+    elevation: platform == TargetPlatform.iOS ? 0.0 : 4.0,
+    title: title,
+    actions: actions,
+  );
+}

@@ -45,13 +45,15 @@ class _LaunchShowcaseState extends State<LaunchShowcase>
   @override
   Widget build(BuildContext context) {
     return new Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: new Column(
         children: <Widget>[
           new TabBar(
             controller: _controller,
             tabs: _tabs,
-            indicatorColor: Colors.white,
+            indicatorColor: Colors.redAccent,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
           ),
           new SizedBox.fromSize(
             size: const Size.fromHeight(300.0),

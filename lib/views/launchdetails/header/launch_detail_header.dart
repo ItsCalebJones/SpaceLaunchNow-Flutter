@@ -54,10 +54,7 @@ class LaunchDetailHeader extends StatelessWidget {
     }
   }
 
-  Widget _buildFollowerInfo(TextTheme textTheme) {
-    var followerStyle =
-    textTheme.subhead.copyWith(color: const Color(0xBBFFFFFF));
-
+  Widget _buildCountDown(TextTheme textTheme) {
     if (startValue > 0) {
       return new Padding(
         padding: const EdgeInsets.only(top: 16.0),
@@ -88,7 +85,7 @@ class LaunchDetailHeader extends StatelessWidget {
         children: <Widget>[
           _createPillButton(
             'Watch Live',
-            backgroundColor: theme.accentColor,
+            backgroundColor: Colors.redAccent,
           ),
           new DecoratedBox(
             decoration: new BoxDecoration(
@@ -137,8 +134,8 @@ class LaunchDetailHeader extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 _buildAvatar(),
-                _buildFollowerInfo(textTheme),
                 _buildActionButtons(theme),
+                _buildCountDown(textTheme),
               ],
             ),
           ),
@@ -159,8 +156,8 @@ class LaunchDetailHeader extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 _buildAvatar(),
-                _buildFollowerInfo(textTheme),
                 _buildActionButtons(theme),
+                _buildCountDown(textTheme),
               ],
             ),
           ),

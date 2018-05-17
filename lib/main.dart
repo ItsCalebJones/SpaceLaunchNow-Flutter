@@ -58,14 +58,14 @@ class PagesState extends State<Pages> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme =
-        defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+    ThemeData theme = defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
         home: new Scaffold(
             body: pageChooser(),
             floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.red[400],
               child: const Icon(Icons.sort),
               onPressed: () {
 
