@@ -1,12 +1,6 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:spacelaunchnow_flutter/colors/app_colors.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
-import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
@@ -73,12 +67,12 @@ class PagesState extends State<Pages> {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
-                data: Theme.of(context).copyWith(
+                data: theme.copyWith(
                     // sets the background color of the `BottomNavigationBar`
                     canvasColor: theme.accentColor,
                     // sets the active color of the `BottomNavigationBar` if `Brightness` is light
                     primaryColor: Colors.white,
-                    textTheme: Theme.of(context).textTheme.copyWith(
+                    textTheme: theme.textTheme.copyWith(
                         caption: new TextStyle(
                             color: Colors
                                 .white70))), // sets the inactive color of the `BottomNavigationBar`

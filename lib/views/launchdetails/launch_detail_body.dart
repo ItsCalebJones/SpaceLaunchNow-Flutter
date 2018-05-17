@@ -105,7 +105,6 @@ class LaunchDetailBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _buildCountDown(textTheme),
-          _buildActionButtons(theme),
           new Padding(
             padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0),
             child: new Text(
@@ -118,22 +117,13 @@ class LaunchDetailBody extends StatelessWidget {
             child: _buildLocationInfo(textTheme),
           ),
           new Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0, bottom: 16.0),
             child: new Text(missionDescription,
               style:
               textTheme.body1.copyWith(fontSize: 16.0, color: Colors.white70),
             ),
           ),
-          new Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: new Row(
-              children: <Widget>[
-                _createCircleBadge(Icons.beach_access, theme.accentColor),
-                _createCircleBadge(Icons.cloud, Colors.white12),
-                _createCircleBadge(Icons.shop, Colors.white12),
-              ],
-            ),
-          ),
+          _buildActionButtons(theme),
         ],
     );
   }
