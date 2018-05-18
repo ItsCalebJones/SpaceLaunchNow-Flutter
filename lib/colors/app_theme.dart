@@ -7,7 +7,7 @@ final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.grey[300],
   fontFamily: "Futura",
-  textTheme: new Typography(platform: TargetPlatform.iOS).white.apply(fontFamily: "Futura")
+  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "Futura")
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
@@ -16,6 +16,7 @@ final ThemeData kDefaultTheme = new ThemeData(
   primaryColor: Colors.blue[500],
   accentColor: Colors.red[500],
   fontFamily: "Futura",
+  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "Futura")
 
 );
 
@@ -27,7 +28,6 @@ class PlatformAdaptiveAppBar extends AppBar {
     List<Widget> actions,
     Widget title,
     Widget body,
-    // TODO(jackson): other properties?
   })
       : super(
     key: key,

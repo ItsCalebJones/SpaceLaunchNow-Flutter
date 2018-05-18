@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 
@@ -51,25 +52,32 @@ class LaunchDetailBody extends StatelessWidget {
   Widget _buildActionButtons(ThemeData theme) {
     return new Padding(
       padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
+        left: 8.0,
+        right: 8.0,
+        bottom: 16.0
       ),
       child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _createPillButton(
-            'Watch Live',
-            backgroundColor: Colors.redAccent,
+          new MaterialButton(
+            elevation: 2.0,
+            minWidth: 160.0,
+            color: Colors.redAccent,
+            textColor: Colors.white,
+            onPressed: () {
+
+            },
+            child: new Text('Watch Live'),
           ),
-          new DecoratedBox(
-            decoration: new BoxDecoration(
-              border: new Border.all(color: Colors.white30),
-              borderRadius: new BorderRadius.circular(30.0),
-            ),
-            child: _createPillButton(
-              'Share',
-              textColor: Colors.white70,
-            ),
+          new MaterialButton(
+            elevation: 2.0,
+            minWidth: 160.0,
+            color: Colors.blue,
+            textColor: Colors.white,
+            onPressed: () {
+              share('check out my website https://example.com');
+            },
+            child: new Text('Share'),
           ),
         ],
       ),
@@ -104,7 +112,15 @@ class LaunchDetailBody extends StatelessWidget {
     return new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          new Divider(
+            indent: 8.0,
+            color: Colors.white,
+          ),
           _buildCountDown(textTheme),
+          new Divider(
+            indent: 8.0,
+            color: Colors.white,
+          ),
           new Padding(
             padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0),
             child: new Text(
@@ -125,22 +141,6 @@ class LaunchDetailBody extends StatelessWidget {
           ),
           _buildActionButtons(theme),
         ],
-    );
-  }
-
-  Widget _createPillButton(String text, {
-    Color backgroundColor = Colors.transparent,
-    Color textColor = Colors.white70,
-  }) {
-    return new ClipRRect(
-      borderRadius: new BorderRadius.circular(30.0),
-      child: new MaterialButton(
-        minWidth: 140.0,
-        color: backgroundColor,
-        textColor: textColor,
-        onPressed: () {},
-        child: new Text(text),
-      ),
     );
   }
 

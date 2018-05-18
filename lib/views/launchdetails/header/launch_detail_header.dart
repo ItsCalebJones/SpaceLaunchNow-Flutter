@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 import 'package:spacelaunchnow_flutter/colors/app_colors.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/diagonally_cut_colored_image.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 
 class LaunchDetailHeader extends StatelessWidget {
   static const BACKGROUND_IMAGE = 'images/profile_header_background.png';

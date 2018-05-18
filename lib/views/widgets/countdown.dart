@@ -15,7 +15,7 @@ class Countdown extends AnimatedWidget {
     Duration duration = new Duration(seconds: animation.value);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     return new Container(
-      padding: new EdgeInsets.only(left: 20.0, right: 20.0, top: 16.0, bottom: 8.0),
+      padding: new EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
