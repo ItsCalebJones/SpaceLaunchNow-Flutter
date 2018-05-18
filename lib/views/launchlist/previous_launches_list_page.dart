@@ -55,16 +55,8 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       notifyThreshold();
     }
 
-    return new Card(
-      elevation: 2.0,
-      shape: BeveledRectangleBorder(
-        borderRadius: const BorderRadius.only(
-          topLeft: const Radius.circular(14.0),
-          topRight: const Radius.circular(2.0),
-          bottomLeft: const Radius.circular(2.0),
-          bottomRight: const Radius.circular(14.0),
-        )
-    ),
+    return new Padding(
+      padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
       child: new ListTile(
         onTap: () => _navigateToLaunchDetails(launch: launch, avatarTag: index),
         leading: new Hero(

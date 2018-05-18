@@ -6,8 +6,8 @@ final ThemeData kIOSTheme = new ThemeData(
   primaryColorBrightness: Brightness.light,
   primarySwatch: Colors.blue,
   primaryColor: Colors.grey[300],
-  fontFamily: "Futura",
-  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "Futura")
+  fontFamily: "AvenirNextCondensed-Regular ",
+  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
 );
 
 final ThemeData kDefaultTheme = new ThemeData(
@@ -15,8 +15,8 @@ final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.blue[500],
   accentColor: Colors.red[500],
-  fontFamily: "Futura",
-  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "Futura")
+  fontFamily: "AvenirNextCondensed-Regular ",
+  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
 
 );
 
