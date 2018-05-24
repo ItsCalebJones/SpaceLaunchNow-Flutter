@@ -47,7 +47,7 @@ class LaunchesRepositoryImpl implements LaunchesRepository {
   }
 
   @override
-  Future<Launches> fetchPrevious({String lsp, String offset}) {
+  Future<Launches> fetchPrevious({String lsp, String offset, String search}) {
     String currentDate = new DateFormat("yyyy-MM-dd").format(new DateTime.now());
     String _kLaunchesUrl = BASE_URL + '/launch/1960-01-01/' + currentDate;
     print("Fetching!");
@@ -57,6 +57,9 @@ class LaunchesRepositoryImpl implements LaunchesRepository {
     }
     if (offset != null){
       _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+    }
+    if (search != null){
+      _kLaunchesUrl = _kLaunchesUrl + '&name=' + search;
     }
     print(_kLaunchesUrl);
     return http.get(_kLaunchesUrl).then((http.Response response) {

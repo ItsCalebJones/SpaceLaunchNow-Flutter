@@ -1,5 +1,3 @@
-export 'package:quiver_time/time_unit.dart';
-
 // Creates a [Duration] with given [milliseconds]
 Duration us(int microseconds) => new Duration(microseconds: microseconds);
 

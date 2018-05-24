@@ -8,7 +8,7 @@ abstract class LaunchesRepository {
 
   Future<List<Launch>> fetchUpcoming([String lsp]);
 
-  Future<Launches> fetchPrevious({String lsp, String offset});
+  Future<Launches> fetchPrevious({String lsp, String offset, String search});
 
   Future<List<Launch>> fetchNext([String lsp]);
 

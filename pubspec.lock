@@ -85,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-  duration:
-    dependency: "direct main"
-    description:
-      name: duration
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -256,13 +249,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
-  path_provider:
-    dependency: "direct main"
-    description:
-      name: path_provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
   plugin:
     dependency: transitive
     description:
@@ -291,13 +277,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.29.0+1"
-  quiver_time:
-    dependency: transitive
-    description:
-      name: quiver_time
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   share:
     dependency: "direct main"
     description:
@@ -305,6 +284,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   shelf:
     dependency: transitive
     description:
@@ -359,13 +345,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  sqflite:
-    dependency: "direct main"
-    description:
-      name: sqflite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.9"
   stack_trace:
     dependency: transitive
     description:
@@ -387,13 +366,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -451,5 +423,5 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=2.0.0-dev.35 <=2.0.0-edge.c080951d45e79cd25df98036c4be835b284a269c"
+  dart: ">=2.0.0-dev.28.0 <=2.0.0-edge.3c4dccbd46f152be9e1b6ca95c57357e8e48057c"
   flutter: ">=0.1.4 <2.0.0"

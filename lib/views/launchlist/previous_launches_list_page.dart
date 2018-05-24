@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
@@ -22,6 +23,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   int total = 0;
   int offset = 0;
   bool loading = false;
+  bool searchActive = false;
   LaunchesRepository _repository = new Injector().launchRepository;
 
   @override
@@ -30,7 +32,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     lockedLoadNext();
   }
 
-  void onLoadContactsComplete(Launches launches, [bool reload = false]) {
+  void onLoadLaunchesComplete(Launches launches, [bool reload = false]) {
     loading = false;
     count = launches.count;
     total = launches.total;
@@ -44,16 +46,36 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     });
   }
 
-  void onLoadContactsError() {
-    // TODO: implement onLoadContactsError
+  void onLoadContactsError([bool search]) {
+    print("Error occured");
+    loading = false;
+    if (search == true) {
+      setState(() {
+        _launches.clear();
+      });
+      Scaffold.of(context).showSnackBar(new SnackBar(
+        duration: new Duration(seconds: 10),
+        content: new Text('Unable to load launches matching search.'),
+        action: new SnackBarAction(
+          label: 'Refresh',
+          onPressed: () {
+            // Some code to undo the change!
+            onRefresh();
+          },
+        ),
+      )
+      );
+    }
   }
 
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
+    var formatter = new DateFormat('MMM - yyyy');
 
     if (index + count > _launches.length) {
       notifyThreshold();
     }
+
 
     return new Padding(
       padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
@@ -67,7 +89,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         ),
         title: new Text(launch.name),
         subtitle: new Text(launch.location.name),
-        trailing: new Text(launch.net.month.toString() + " - " + launch.net.year.toString()),
+        trailing: new Text(formatter.format(launch.net)),
       ),
     );
   }
@@ -86,9 +108,13 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_launches.isEmpty) {
+    if (_launches.isEmpty && loading) {
       content = new Center(
         child: new CircularProgressIndicator(),
+      );
+    } else if ( _launches.isEmpty) {
+      content = new Center(
+          child: new Text("No Launches Loaded"),
       );
     } else {
       ListView listView = new ListView.builder(
@@ -153,8 +179,10 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
           if (value is String){
             if (isNumeric(value)){
               _navigateToLaunchDetails(launchId: int.parse(value));
+            } else {
+              searchActive = true;
+              _getLaunchBySearch(value);
             }
-            print(value);
           } else if (value == Launch) {
               _navigateToLaunchDetails(launch: value);
           }
@@ -170,7 +198,9 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   }
 
   void notifyThreshold() {
-    lockedLoadNext();
+    if (!searchActive) {
+      lockedLoadNext();
+    }
   }
 
   void lockedLoadNext() {
@@ -184,7 +214,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     int newOffset = (offset + count);
     if (total == 0 || newOffset < total) {
       _repository.fetchPrevious(offset: newOffset.toString())
-          .then((launches) => onLoadContactsComplete(launches))
+          .then((launches) => onLoadLaunchesComplete(launches))
           .catchError((onError) {
         print(onError);
         onLoadContactsError();
@@ -195,17 +225,21 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   Future<Null> onRefresh() async {
     final Completer<Null> completer = new Completer<Null>();
     loading == false;
+    total = 0;
     offset = 0;
     count = 0;
     print("Going to fetch");
+    searchActive = false;
     if (total != 0 || offset > total) {
+      print("$total, $offset, $total");
       completer.complete(null);
       return completer.future;
     } else {
+      loading = true;
       _repository.fetchPrevious(offset: offset.toString())
           .then((launches) {
         print("Loaded successfully.");
-        onLoadContactsComplete(launches, true);
+        onLoadLaunchesComplete(launches, true);
         completer.complete(null);
         return completer.future;
       })
@@ -217,5 +251,15 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         return completer.future;
       });
     }
+  }
+
+  void _getLaunchBySearch(String value) {
+    loading = true;
+    searchActive = true;
+    _repository.fetchPrevious(search: value).then((launches){
+      onLoadLaunchesComplete(launches, true);
+    }).catchError((onError){
+      onLoadContactsError(true);
+    });
   }
 }

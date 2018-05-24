@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
+import 'package:spacelaunchnow_flutter/views/notifications/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/notifications/notification_filter_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -21,6 +26,31 @@ class Pages extends StatefulWidget {
 
 class PagesState extends State<Pages> {
   int pageIndex = 1;
+  AppConfiguration _configuration = new AppConfiguration(
+      allowOneHourNotifications: true,
+      allowTwentyFourHourNotifications: true,
+      allowTenMinuteNotifications: true);
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+    _prefs.then((SharedPreferences prefs) {
+      bool allowOneHourNotifications = prefs.getBool("allowOneHourNotifications") ?? true;
+      bool allowTwentyFourHourNotifications = prefs.getBool("allowTwentyFourHourNotifications") ?? true;
+      bool allowTenMinuteNotifications = prefs.getBool("allowTenMinuteNotifications") ?? true;
+      configurationUpdater(_configuration.copyWith(
+          allowOneHourNotifications: allowOneHourNotifications,
+          allowTwentyFourHourNotifications: allowTwentyFourHourNotifications,
+          allowTenMinuteNotifications: allowTenMinuteNotifications));
+    });
+  }
+
+  void configurationUpdater(AppConfiguration value) {
+    setState(() {
+      _configuration = value;
+    });
+  }
 
   // Create all the pages once and return same instance when required
   final LaunchDetailPage _nextPage = new LaunchDetailPage();
@@ -52,19 +82,27 @@ class PagesState extends State<Pages> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('counter') ?? 0);
+    });
+    ThemeData theme =
+        defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
+        routes: <String, WidgetBuilder>{
+          '/notifications': (BuildContext context) =>
+              new NotificationFilterPage(_configuration, configurationUpdater),
+        },
         home: new Scaffold(
             body: pageChooser(),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.red[400],
-              child: const Icon(Icons.sort),
-              onPressed: () {
-
-              },
-            ),
+            floatingActionButton: new Builder(builder: (BuildContext context) {
+              return new FloatingActionButton(
+                  backgroundColor: Colors.blue[400],
+                  child: const Icon(Icons.sort),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed('/notifications'));
+            }),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
                 data: theme.copyWith(
@@ -73,9 +111,8 @@ class PagesState extends State<Pages> {
                     // sets the active color of the `BottomNavigationBar` if `Brightness` is light
                     primaryColor: Colors.white,
                     textTheme: theme.textTheme.copyWith(
-                        caption: new TextStyle(
-                            color: Colors
-                                .white70))), // sets the inactive color of the `BottomNavigationBar`
+                        caption: new TextStyle(color: Colors.white70))),
+                // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
                   currentIndex: pageIndex,
                   onTap: (int tappedIndex) {
@@ -95,14 +132,11 @@ class PagesState extends State<Pages> {
                         title: new Text('Previous'),
                         icon: new Icon(Icons.history)),
                   ],
-                )
-            )
-        )
-    );
+                ))));
   }
 }
 
-// TODO USE THIS 
+// TODO USE THIS
 class GoogleTasksBottomAppBarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -133,4 +167,3 @@ class GoogleTasksBottomAppBarPage extends StatelessWidget {
     );
   }
 }
-
