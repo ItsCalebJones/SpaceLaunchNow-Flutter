@@ -1,48 +1,219 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/notifications/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/notifications/notification_filter_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
 class SpaceLaunchNow extends StatelessWidget {
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
   @override
   Widget build(BuildContext context) {
-    return new Pages();
+    return new Pages(_firebaseMessaging);
   }
 }
 
 class Pages extends StatefulWidget {
+  FirebaseMessaging _firebaseMessaging;
+
+  Pages(this._firebaseMessaging);
+
   @override
-  createState() => new PagesState();
+  createState() => new PagesState(_firebaseMessaging);
 }
 
 class PagesState extends State<Pages> {
+  PagesState(this._firebaseMessaging);
+  FirebaseMessaging _firebaseMessaging;
   int pageIndex = 1;
   AppConfiguration _configuration = new AppConfiguration(
       allowOneHourNotifications: true,
       allowTwentyFourHourNotifications: true,
-      allowTenMinuteNotifications: true);
+      allowTenMinuteNotifications: false,
+      allowStatusChanged: true,
+      subscribeALL: true,
+      subscribeSpaceX: true,
+      subscribeNASA: true,
+      subscribeArianespace: true,
+      subscribeULA: true,
+      subscribeRoscosmos: true,
+      subscribeCASC: true,
+      subscribeCAPE: true,
+      subscribePLES: true,
+      subscribeISRO: true,
+      subscribeKSC: true,
+      subscribeVAN: true);
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
     super.initState();
     _prefs.then((SharedPreferences prefs) {
-      bool allowOneHourNotifications = prefs.getBool("allowOneHourNotifications") ?? true;
-      bool allowTwentyFourHourNotifications = prefs.getBool("allowTwentyFourHourNotifications") ?? true;
-      bool allowTenMinuteNotifications = prefs.getBool("allowTenMinuteNotifications") ?? true;
+      bool allowOneHourNotifications =
+          prefs.getBool("allowOneHourNotifications") ?? true;
+      bool allowTwentyFourHourNotifications =
+          prefs.getBool("allowTwentyFourHourNotifications") ?? true;
+      bool allowTenMinuteNotifications =
+          prefs.getBool("allowTenMinuteNotifications") ?? false;
+      bool allowStatusChanged = prefs.getBool("allowStatusChanged") ?? true;
+      bool subscribeALL = prefs.getBool("subscribeALL") ?? true;
+      bool subscribeSpaceX = prefs.getBool("subscribeSpaceX") ?? true;
+      bool subscribeNASA = prefs.getBool("subscribeNASA") ?? true;
+      bool subscribeArianespace = prefs.getBool("subscribeArianespace") ?? true;
+      bool subscribeULA = prefs.getBool("subscribeULA") ?? true;
+      bool subscribeRoscosmos = prefs.getBool("subscribeRoscosmos") ?? true;
+      bool subscribeCASC = prefs.getBool("subscribeCASC") ?? true;
+      bool subscribeCAPE = prefs.getBool("subscribeCAPE") ?? true;
+      bool subscribePLES = prefs.getBool("subscribePLES") ?? true;
+      bool subscribeISRO = prefs.getBool("subscribeISRO") ?? true;
+      bool subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
+      bool subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
+
+      _firebaseMessaging.subscribeToTopic("debug");
+      _firebaseMessaging.subscribeToTopic("flutter");
+
+      if (allowTenMinuteNotifications) {
+        _firebaseMessaging.subscribeToTopic("allow_ten_minute");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("allow_ten_minute");
+      }
+
+      if (allowOneHourNotifications) {
+        _firebaseMessaging.subscribeToTopic("allow_one_hour");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("allow_one_hour");
+      }
+
+      if (allowTwentyFourHourNotifications) {
+        _firebaseMessaging.subscribeToTopic("allow_twenty_four");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("allow_twenty_four");
+      }
+
+      if (allowStatusChanged) {
+        _firebaseMessaging.subscribeToTopic("allow_netstamp_changed");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("allow_netstamp_changed");
+      }
+
+      if (subscribeALL) {
+        _firebaseMessaging.subscribeToTopic("all");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("all");
+      }
+
+
+      if (subscribeNASA) {
+        _firebaseMessaging.subscribeToTopic("nasa");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("nasa");
+      }
+
+      if (subscribeArianespace) {
+        _firebaseMessaging.subscribeToTopic("arianespace");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("arianespace");
+      }
+
+      if (subscribeSpaceX) {
+        _firebaseMessaging.subscribeToTopic("spacex");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("spacex");
+      }
+
+      if (subscribeCASC) {
+        _firebaseMessaging.subscribeToTopic("casc");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("casc");
+      }
+
+      if (subscribeKSC) {
+        _firebaseMessaging.subscribeToTopic("ksc");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ksc");
+      }
+
+      if (subscribeCAPE) {
+        _firebaseMessaging.subscribeToTopic("cape");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("cape");
+      }
+
+      if (subscribePLES) {
+        _firebaseMessaging.subscribeToTopic("ples");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ples");
+      }
+
+      if (subscribeVAN) {
+        _firebaseMessaging.subscribeToTopic("van");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("van");
+      }
+
+      if (subscribeRoscosmos) {
+        _firebaseMessaging.subscribeToTopic("roscosmos");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+      }
+
+      if (subscribeULA) {
+        _firebaseMessaging.subscribeToTopic("ula");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ula");
+      }
+
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) {
+          print("onMessage: $message");
+        },
+        onLaunch: (Map<String, dynamic> message) {
+          print("onLaunch: $message");
+        },
+        onResume: (Map<String, dynamic> message) {
+          print("onResume: $message");
+        },
+      );
+      _firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(sound: true, badge: true, alert: true));
+      _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+      _firebaseMessaging.getToken().then((String token) {
+        assert(token != null);
+        setState(() {
+          _homeScreenText = "Push Messaging token: $token";
+        });
+        print(_homeScreenText);
+      });
+
       configurationUpdater(_configuration.copyWith(
           allowOneHourNotifications: allowOneHourNotifications,
           allowTwentyFourHourNotifications: allowTwentyFourHourNotifications,
-          allowTenMinuteNotifications: allowTenMinuteNotifications));
+          allowTenMinuteNotifications: allowTenMinuteNotifications,
+          allowStatusChanged: allowStatusChanged,
+          subscribeALL: subscribeALL,
+          subscribeSpaceX: subscribeSpaceX,
+          subscribeNASA: subscribeNASA,
+          subscribeArianespace: subscribeArianespace,
+          subscribeULA: subscribeULA,
+          subscribeRoscosmos: subscribeRoscosmos,
+          subscribeCASC: subscribeCASC,
+          subscribeCAPE: subscribeCAPE,
+          subscribePLES: subscribePLES,
+          subscribeISRO: subscribeISRO,
+          subscribeKSC: subscribeKSC,
+          subscribeVAN: subscribeVAN));
     });
   }
 
@@ -92,7 +263,7 @@ class PagesState extends State<Pages> {
         theme: theme,
         routes: <String, WidgetBuilder>{
           '/notifications': (BuildContext context) =>
-              new NotificationFilterPage(_configuration, configurationUpdater),
+              new NotificationFilterPage(_configuration, configurationUpdater, _firebaseMessaging),
         },
         home: new Scaffold(
             body: pageChooser(),
