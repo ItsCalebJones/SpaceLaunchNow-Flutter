@@ -18,7 +18,11 @@ class SpaceLaunchNow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Pages(_firebaseMessaging);
+    return new MaterialApp(
+      title: 'Space Launch Now',
+      home: new Pages(_firebaseMessaging),
+      routes: <String, WidgetBuilder>{}
+    );
   }
 }
 
@@ -78,8 +82,7 @@ class PagesState extends State<Pages> {
       bool subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
       bool subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
 
-      _firebaseMessaging.subscribeToTopic("debug");
-      _firebaseMessaging.subscribeToTopic("flutter");
+      _firebaseMessaging.subscribeToTopic("flutter_debug");
 
       if (allowTenMinuteNotifications) {
         _firebaseMessaging.subscribeToTopic("allow_ten_minute");
@@ -175,12 +178,18 @@ class PagesState extends State<Pages> {
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) {
           print("onMessage: $message");
+          _showItemDialog(message);
         },
         onLaunch: (Map<String, dynamic> message) {
           print("onLaunch: $message");
+          final int launchId = int.parse(message['launch_id']);
+          _navigateToLaunchDetails(launchId);
+
         },
         onResume: (Map<String, dynamic> message) {
           print("onResume: $message");
+          final int launchId = int.parse(message['launch_id']);
+          _navigateToLaunchDetails(launchId);
         },
       );
       _firebaseMessaging.requestNotificationPermissions(
@@ -191,10 +200,7 @@ class PagesState extends State<Pages> {
       });
       _firebaseMessaging.getToken().then((String token) {
         assert(token != null);
-        setState(() {
-          _homeScreenText = "Push Messaging token: $token";
-        });
-        print(_homeScreenText);
+        print("Push Messaging token: $token");
       });
 
       configurationUpdater(_configuration.copyWith(
@@ -214,6 +220,44 @@ class PagesState extends State<Pages> {
           subscribeISRO: subscribeISRO,
           subscribeKSC: subscribeKSC,
           subscribeVAN: subscribeVAN));
+    });
+  }
+
+  Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
+    return new AlertDialog(
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          new Text(message['launch_name']),
+          new Text(message['launch_location']),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          child: const Text('CLOSE'),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        ),
+        new FlatButton(
+          child: const Text('SHOW'),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showItemDialog(Map<String, dynamic> message) {
+    final int launchId = int.parse(message['launch_id']);
+    showDialog<bool>(
+      context: context,
+      builder: (_) => _buildDialog(context, message),
+    ).then((bool shouldNavigate) {
+      if (shouldNavigate == true) {
+        _navigateToLaunchDetails(launchId);
+      }
     });
   }
 
@@ -304,6 +348,16 @@ class PagesState extends State<Pages> {
                         icon: new Icon(Icons.history)),
                   ],
                 ))));
+  }
+
+  void _navigateToLaunchDetails(int launchId) {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (c) {
+          return new LaunchDetailPage(launchId: launchId);
+        },
+      ),
+    );
   }
 }
 
