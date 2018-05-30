@@ -6,9 +6,9 @@ import 'package:spacelaunchnow_flutter/views/notifications/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationFilterPage extends StatefulWidget {
-  const NotificationFilterPage(this.configuration, this.updater, this._firebaseMessaging);
+  NotificationFilterPage(this.configuration, this.updater);
 
-  final FirebaseMessaging _firebaseMessaging;
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
 

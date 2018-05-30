@@ -20,21 +20,16 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    _repository.fetch()
-        .then((contacts) => onLoadContactsComplete(contacts))
-        .catchError((onError) {
-          print(onError);
-          onLoadContactsError();
-        });
   }
 
-  void onLoadContactsComplete(List<Launch> items) {
+  void onLoadLaunchesComplete(List<Launch> items) {
+    PageStorage.of(context).writeState(context, items, identifier: 'launches');
     setState(() {
       _launches = items;
     });
   }
 
-  void onLoadContactsError() {
+  void onLoadLaunchersError() {
     // TODO: implement onLoadContactsError
   }
 
@@ -68,7 +63,17 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   Widget build(BuildContext context) {
     Widget content;
 
+    List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'launches');
+    if (launches != null){
+     _launches = launches;
+    }
     if (_launches.isEmpty) {
+      _repository.fetch()
+          .then((contacts) => onLoadLaunchesComplete(contacts))
+          .catchError((onError) {
+        print(onError);
+        onLoadLaunchersError();
+      });
       content = new Center(
         child: new CircularProgressIndicator(),
       );
@@ -84,7 +89,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         title: new Text('Upcoming'),
         platform: Theme.of(context).platform,
       ),
-      body: content,
+      body: content
     );
   }
 }

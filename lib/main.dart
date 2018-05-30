@@ -19,10 +19,9 @@ class SpaceLaunchNow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Space Launch Now',
-      home: new Pages(_firebaseMessaging),
-      routes: <String, WidgetBuilder>{}
-    );
+        title: 'Space Launch Now',
+        home: new Pages(_firebaseMessaging),
+        routes: <String, WidgetBuilder>{});
   }
 }
 
@@ -36,7 +35,10 @@ class Pages extends StatefulWidget {
 }
 
 class PagesState extends State<Pages> {
+  TabController controller;
+
   PagesState(this._firebaseMessaging);
+
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 1;
   AppConfiguration _configuration = new AppConfiguration(
@@ -114,7 +116,6 @@ class PagesState extends State<Pages> {
         _firebaseMessaging.unsubscribeFromTopic("all");
       }
 
-
       if (subscribeNASA) {
         _firebaseMessaging.subscribeToTopic("nasa");
       } else {
@@ -184,7 +185,6 @@ class PagesState extends State<Pages> {
           print("onLaunch: $message");
           final int launchId = int.parse(message['launch_id']);
           _navigateToLaunchDetails(launchId);
-
         },
         onResume: (Map<String, dynamic> message) {
           print("onResume: $message");
@@ -271,20 +271,24 @@ class PagesState extends State<Pages> {
   final LaunchDetailPage _nextPage = new LaunchDetailPage();
   final UpcomingLaunchListPage _listPage = new UpcomingLaunchListPage();
   final PreviousLaunchListPage _previousListPage = new PreviousLaunchListPage();
+  PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        return _listPage;
+        return _nextPage;
         break;
 
       case 1:
-        return _nextPage;
+        return _listPage;
         break;
 
       case 2:
         return _previousListPage;
         break;
+
+      case 3:
+        return new NotificationFilterPage(_configuration, configurationUpdater);
 
       default:
         return new Container(
@@ -307,18 +311,20 @@ class PagesState extends State<Pages> {
         theme: theme,
         routes: <String, WidgetBuilder>{
           '/notifications': (BuildContext context) =>
-              new NotificationFilterPage(_configuration, configurationUpdater, _firebaseMessaging),
+              new NotificationFilterPage(_configuration, configurationUpdater),
         },
         home: new Scaffold(
-            body: pageChooser(),
-            floatingActionButton: new Builder(builder: (BuildContext context) {
-              return new FloatingActionButton(
-                  backgroundColor: Colors.blue[400],
-                  child: const Icon(Icons.sort),
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed('/notifications'));
-            }),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            body: new PageStorage(
+                bucket: pageStorageBucket,
+                child: pageChooser()),
+//            floatingActionButton: new Builder(builder: (BuildContext context) {
+//              return new FloatingActionButton(
+//                  backgroundColor: Colors.blue[400],
+//                  child: const Icon(Icons.sort),
+//                  onPressed: () =>
+//                      Navigator.of(context).pushNamed('/notifications'));
+//            }),
+//            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
                 data: theme.copyWith(
                     // sets the background color of the `BottomNavigationBar`
@@ -338,16 +344,22 @@ class PagesState extends State<Pages> {
                   },
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
-                        title: new Text('Upcoming'),
-                        icon: new Icon(Icons.assignment)),
-                    new BottomNavigationBarItem(
                         icon: new Icon(Icons.home),
                         title: new Text("Next Launch")),
                     new BottomNavigationBarItem(
+                        title: new Text('Upcoming'),
+                        icon: new Icon(Icons.assignment)),
+                    new BottomNavigationBarItem(
                         title: new Text('Previous'),
                         icon: new Icon(Icons.history)),
+                    new BottomNavigationBarItem(
+                        title: new Text('Notifications'),
+                        icon: new Icon(Icons.notifications)),
                   ],
-                ))));
+                )
+            )
+        )
+    );
   }
 
   void _navigateToLaunchDetails(int launchId) {

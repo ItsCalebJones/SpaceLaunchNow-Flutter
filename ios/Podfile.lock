@@ -1,36 +1,94 @@
 PODS:
+  - Firebase/Core (5.0.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 5.0.0)
+  - Firebase/CoreOnly (5.0.0):
+    - FirebaseCore (= 5.0.0)
+  - Firebase/Messaging (5.0.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (= 3.0.0)
+  - firebase_analytics (0.0.1):
+    - Firebase/Core
+    - Flutter
+  - firebase_messaging (0.0.1):
+    - Firebase/Core
+    - Firebase/Messaging
+    - Flutter
+  - FirebaseAnalytics (5.0.0):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - nanopb (~> 0.3)
+  - FirebaseCore (5.0.0):
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseInstanceID (3.0.0):
+    - FirebaseCore (~> 5.0)
+  - FirebaseMessaging (3.0.0):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - Protobuf (~> 3.1)
   - Flutter (1.0.0)
-  - FMDB (2.7.2):
-    - FMDB/standard (= 2.7.2)
-  - FMDB/standard (2.7.2)
-  - path_provider (0.0.1):
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - GoogleToolboxForMac/Logger (2.1.4):
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+  - Protobuf (3.5.0)
+  - share (0.0.1):
     - Flutter
-  - sqflite (0.0.1):
+  - shared_preferences (0.0.1):
     - Flutter
-    - FMDB (~> 2.7.2)
 
 DEPENDENCIES:
+  - firebase_analytics (from `Pods/.symlinks/plugins/firebase_analytics/ios`)
+  - firebase_messaging (from `Pods/.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Pods/.symlinks/flutter/ios`)
-  - path_provider (from `Pods/.symlinks/plugins/path_provider/ios`)
-  - sqflite (from `Pods/.symlinks/plugins/sqflite/ios`)
+  - share (from `Pods/.symlinks/plugins/share/ios`)
+  - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - FMDB
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - FirebaseMessaging
+    - GoogleToolboxForMac
+    - nanopb
+    - Protobuf
 
 EXTERNAL SOURCES:
+  firebase_analytics:
+    :path: Pods/.symlinks/plugins/firebase_analytics/ios
+  firebase_messaging:
+    :path: Pods/.symlinks/plugins/firebase_messaging/ios
   Flutter:
     :path: Pods/.symlinks/flutter/ios
-  path_provider:
-    :path: Pods/.symlinks/plugins/path_provider/ios
-  sqflite:
-    :path: Pods/.symlinks/plugins/sqflite/ios
+  share:
+    :path: Pods/.symlinks/plugins/share/ios
+  shared_preferences:
+    :path: Pods/.symlinks/plugins/shared_preferences/ios
 
 SPEC CHECKSUMS:
+  Firebase: 4bd804448ab2596794698773d41520a0af101e65
+  firebase_analytics: fcc60a9de4b8e07aa5af8941303a7f5fe6e0383f
+  firebase_messaging: a5f5d4a9491b660f33a1f94bd0596558f820bad1
+  FirebaseAnalytics: 19812b49fa5f283dd6b23edf8a14b5d477029ab8
+  FirebaseCore: e46e4babb9de298fb2f736958edcc6da1dc60d73
+  FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
+  FirebaseMessaging: f2360a966ecfb0d14facf0fbdf306efc2df0ddbe
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  FMDB: 6198a90e7b6900cfc046e6bc0ef6ebb7be9236aa
-  path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  sqflite: d1612813fa7db7c667bed9f1d1b508deffc56999
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
+  share: 8d04605548e55f7ce4ebb7b3e933f3c85028c9cf
+  shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
 
 PODFILE CHECKSUM: ea0518673586564c605fb6593d385c0e3708ff8d
 

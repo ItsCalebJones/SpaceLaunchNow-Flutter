@@ -9,7 +9,6 @@ import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 
 class LaunchDetailPage extends StatefulWidget {
-
   LaunchDetailPage({this.launch, this.launchId, this.avatarTag});
 
   final Launch launch;
@@ -38,7 +37,14 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _loadLaunch(widget.launchId);
       backEnabled = true;
     } else {
-      _loadNextLaunch();
+      Launch mLaunch =
+          PageStorage.of(context).readState(context, identifier: 'next_launch');
+      if (mLaunch != null) {
+        launch = mLaunch;
+        setController();
+      } else {
+        _loadNextLaunch();
+      }
       backEnabled = false;
     }
   }
@@ -55,12 +61,17 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   Future<void> _loadNextLaunch() async {
-  List<Launch> _nextLaunches;
+    List<Launch> _nextLaunches;
     http.Response response =
         await http.get('https://launchlibrary.net/1.4/launch/next/1');
 
     _nextLaunches = Launch.allFromResponse(response.body);
-    _loadLaunch(_nextLaunches.first.id);
+    PageStorage.of(context).writeState(context, _nextLaunches.first, identifier: 'next_launch');
+    setState(() {
+      _launches = _nextLaunches;
+      launch = _nextLaunches.first;
+      setController();
+    });
   }
 
   @override
@@ -102,9 +113,11 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                    child: new LaunchDetailBody(launch,
-                      _controller,
-                      launch.net.difference(new DateTime.now()).inSeconds,),
+                  child: new LaunchDetailBody(
+                    launch,
+                    _controller,
+                    launch.net.difference(new DateTime.now()).inSeconds,
+                  ),
                 ),
                 new LaunchShowcase(launch),
               ],

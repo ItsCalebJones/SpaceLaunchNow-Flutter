@@ -29,7 +29,12 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    lockedLoadNext();
+    List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'launches');
+    if (launches != null){
+      _launches = launches;
+    } else {
+      lockedLoadNext();
+    }
   }
 
   void onLoadLaunchesComplete(Launches launches, [bool reload = false]) {
@@ -38,6 +43,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     total = launches.total;
     offset = launches.offset;
     print("Count: " + count.toString() + " Total: " + total.toString() + " Offset: " + offset.toString());
+    PageStorage.of(context).writeState(context, launches.launches, identifier: 'launches');
     if (reload){
       _launches.clear();
     }
