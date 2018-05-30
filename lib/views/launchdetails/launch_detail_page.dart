@@ -7,10 +7,12 @@ import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/launch_detail_footer.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class LaunchDetailPage extends StatefulWidget {
-  LaunchDetailPage({this.launch, this.launchId, this.avatarTag});
+  LaunchDetailPage(this._configuration,{this.launch, this.launchId, this.avatarTag});
 
+  final AppConfiguration _configuration;
   final Launch launch;
   final int launchId;
   final Object avatarTag;
@@ -83,14 +85,17 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   @override
   Widget build(BuildContext context) {
     Widget content;
-    var linearGradient = const BoxDecoration(
-      gradient: const LinearGradient(
-        begin: FractionalOffset.centerRight,
-        end: FractionalOffset.bottomLeft,
-        colors: <Color>[
-          const Color(0xFF2196F3),
-          const Color(0xFFF44336),
-        ],
+    List<Color> colors = [];
+    if (widget._configuration.nightMode){
+      colors.addAll([Color(0xFF2196F3), Color(0xFFF44336)]);
+    } else {
+      colors.addAll([Colors.grey[800], Colors.blueGrey[700]]);
+    }
+    var linearGradient = new BoxDecoration(
+      gradient: new LinearGradient(
+        begin: FractionalOffset.topCenter,
+        end: FractionalOffset.bottomCenter,
+        colors: colors,
       ),
     );
 

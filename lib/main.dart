@@ -8,8 +8,8 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
-import 'package:spacelaunchnow_flutter/views/notifications/app_settings.dart';
-import 'package:spacelaunchnow_flutter/views/notifications/notification_filter_page.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -42,6 +42,7 @@ class PagesState extends State<Pages> {
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 1;
   AppConfiguration _configuration = new AppConfiguration(
+      nightMode: false,
       allowOneHourNotifications: true,
       allowTwentyFourHourNotifications: true,
       allowTenMinuteNotifications: false,
@@ -64,6 +65,7 @@ class PagesState extends State<Pages> {
   void initState() {
     super.initState();
     _prefs.then((SharedPreferences prefs) {
+      bool nightMode = prefs.getBool("nightMode") ?? true;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
       bool allowTwentyFourHourNotifications =
@@ -204,6 +206,7 @@ class PagesState extends State<Pages> {
       });
 
       configurationUpdater(_configuration.copyWith(
+          nightMode: nightMode,
           allowOneHourNotifications: allowOneHourNotifications,
           allowTwentyFourHourNotifications: allowTwentyFourHourNotifications,
           allowTenMinuteNotifications: allowTenMinuteNotifications,
@@ -268,27 +271,24 @@ class PagesState extends State<Pages> {
   }
 
   // Create all the pages once and return same instance when required
-  final LaunchDetailPage _nextPage = new LaunchDetailPage();
-  final UpcomingLaunchListPage _listPage = new UpcomingLaunchListPage();
-  final PreviousLaunchListPage _previousListPage = new PreviousLaunchListPage();
   PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        return _nextPage;
+        return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
-        return _listPage;
+        return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
-        return _previousListPage;
+        return new PreviousLaunchListPage(_configuration);
         break;
 
       case 3:
-        return new NotificationFilterPage(_configuration, configurationUpdater);
+        return new SettingsPage(_configuration, configurationUpdater);
 
       default:
         return new Container(
@@ -305,13 +305,13 @@ class PagesState extends State<Pages> {
       return (prefs.getInt('counter') ?? 0);
     });
     ThemeData theme =
-        defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+        defaultTargetPlatform == TargetPlatform.iOS ? kIOSThemeDark : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
         routes: <String, WidgetBuilder>{
-          '/notifications': (BuildContext context) =>
-              new NotificationFilterPage(_configuration, configurationUpdater),
+          '/settings': (BuildContext context) =>
+              new SettingsPage(_configuration, configurationUpdater),
         },
         home: new Scaffold(
             body: new PageStorage(
@@ -328,13 +328,14 @@ class PagesState extends State<Pages> {
             bottomNavigationBar: new Theme(
                 data: theme.copyWith(
                     // sets the background color of the `BottomNavigationBar`
-                    canvasColor: theme.accentColor,
+                    canvasColor: Colors.blueGrey[800],
                     // sets the active color of the `BottomNavigationBar` if `Brightness` is light
                     primaryColor: Colors.white,
                     textTheme: theme.textTheme.copyWith(
                         caption: new TextStyle(color: Colors.white70))),
                 // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
                   currentIndex: pageIndex,
                   onTap: (int tappedIndex) {
                     //Toggle pageChooser and rebuild state with the index that was tapped in bottom navbar
@@ -353,8 +354,8 @@ class PagesState extends State<Pages> {
                         title: new Text('Previous'),
                         icon: new Icon(Icons.history)),
                     new BottomNavigationBarItem(
-                        title: new Text('Notifications'),
-                        icon: new Icon(Icons.notifications)),
+                        title: new Text('Settings'),
+                        icon: new Icon(Icons.settings)),
                   ],
                 )
             )
@@ -366,40 +367,8 @@ class PagesState extends State<Pages> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(launchId: launchId);
+          return new LaunchDetailPage(_configuration, launchId: launchId);
         },
-      ),
-    );
-  }
-}
-
-// TODO USE THIS
-class GoogleTasksBottomAppBarPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(title: const Text('Tasks - Bottom App Bar')),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.home),
-        onPressed: () {},
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        hasNotch: false,
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-            )
-          ],
-        ),
       ),
     );
   }

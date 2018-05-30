@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/views/notifications/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class NotificationFilterPage extends StatefulWidget {
-  NotificationFilterPage(this.configuration, this.updater);
+class SettingsPage extends StatefulWidget {
+  SettingsPage(this.configuration, this.updater);
 
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final AppConfiguration configuration;
@@ -18,11 +18,19 @@ class NotificationFilterPage extends StatefulWidget {
       new NotificationFilterPageState(_firebaseMessaging);
 }
 
-class NotificationFilterPageState extends State<NotificationFilterPage> {
+class NotificationFilterPageState extends State<SettingsPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   FirebaseMessaging _firebaseMessaging;
 
   NotificationFilterPageState(this._firebaseMessaging);
+
+  void _handleNightMode(bool value) {
+    sendUpdates(
+        widget.configuration.copyWith(nightMode: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('nightMode', value));
+    });
+  }
 
   void _handleOneHour(bool value) {
     _firebaseMessaging.subscribeToTopic("allow_one_hour");
@@ -153,7 +161,7 @@ class NotificationFilterPageState extends State<NotificationFilterPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Notifications'),
+        title: new Text('Settings'),
       ),
       body: buildSettingsPane(context),
     );
@@ -164,7 +172,25 @@ class NotificationFilterPageState extends State<NotificationFilterPage> {
 
     final List<Widget> rows = <Widget>[
       new ListTile(
+        title: new Text('Appearance', style: theme.textTheme.title),
+        subtitle: new Text(
+            'Change appereance settings.'),
+      ),
+      new ListTile(
+        title: const Text('Use Dark Theme'),
+        onTap: () {
+          _handleNightMode(
+              !widget.configuration.nightMode);
+        },
+        trailing: new Switch(
+          value: widget.configuration.nightMode,
+          onChanged: _handleNightMode,
+        ),
+      ),
+      new ListTile(
         title: new Text('Notification Settings', style: theme.textTheme.title),
+        subtitle: new Text(
+              'Select what kind of notifications to receive.'),
       ),
       new ListTile(
         title: const Text('Allow 24 Hour Notifications'),

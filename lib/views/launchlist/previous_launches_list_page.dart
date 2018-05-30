@@ -10,8 +10,12 @@ import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:material_search/material_search.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class PreviousLaunchListPage extends StatefulWidget {
+  PreviousLaunchListPage(this._configuration);
+
+  final AppConfiguration _configuration;
 
   @override
   _LaunchListPageState createState() => new _LaunchListPageState();
@@ -104,7 +108,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(launch: launch, avatarTag: avatarTag, launchId: launchId,);
+          return new LaunchDetailPage(widget._configuration, launch: launch, avatarTag: avatarTag, launchId: launchId,);
         },
       ),
     );

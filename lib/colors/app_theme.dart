@@ -5,9 +5,19 @@ import 'package:flutter/material.dart';
 final ThemeData kIOSTheme = new ThemeData(
   primaryColorBrightness: Brightness.light,
   primarySwatch: Colors.blue,
-  primaryColor: Colors.grey[300],
+  primaryColor: Colors.grey[400],
   fontFamily: "AvenirNextCondensed-Regular ",
   textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
+);
+
+final ThemeData kIOSThemeDark = new ThemeData(
+    primaryColorBrightness: Brightness.dark,
+    brightness: Brightness.dark,
+    primarySwatch: Colors.blue,
+    primaryColor: Colors.grey[800],
+    accentColor: Colors.red,
+    fontFamily: "AvenirNextCondensed-Regular ",
+    textTheme: new Typography(platform: TargetPlatform.iOS).white.apply(fontFamily: "AvenirNextCondensed-Regular ")
 );
 
 final ThemeData kDefaultTheme = new ThemeData(

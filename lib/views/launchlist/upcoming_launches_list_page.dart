@@ -7,8 +7,14 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class UpcomingLaunchListPage extends StatefulWidget {
+
+  UpcomingLaunchListPage(this._configuration);
+
+  final AppConfiguration _configuration;
+
   @override
   _LaunchListPageState createState() => new _LaunchListPageState();
 }
@@ -53,7 +59,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(launch: launch, avatarTag: avatarTag,);
+          return new LaunchDetailPage(widget._configuration, launch: launch, avatarTag: avatarTag,);
         },
       ),
     );
