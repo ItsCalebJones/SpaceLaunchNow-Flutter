@@ -78,6 +78,14 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     }
   }
 
+  ThemeData get appBarTheme {
+    if (widget._configuration.nightMode) {
+      return kIOSThemeDarkAppBar;
+    } else {
+      return kIOSThemeAppBar;
+    }
+  }
+
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
     var formatter = new DateFormat('MMM - yyyy');
@@ -140,8 +148,9 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
 
     return new Scaffold(
       appBar: new PlatformAdaptiveAppBar(
-          title: new Text('Previous'),
-          platform: Theme.of(context).platform,
+          color: Theme.of(context).primaryColor,
+          text: "Previous",
+          platform: appBarTheme.platform,
           actions: <Widget>[
             new IconButton(
               onPressed: () {

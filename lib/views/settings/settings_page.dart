@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -160,8 +161,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Settings'),
+      appBar: new PlatformAdaptiveAppBar(
+        text: "Settings",
+        color: Theme.of(context).primaryColor,
+        platform: Theme.of(context).platform,
       ),
       body: buildSettingsPane(context),
     );

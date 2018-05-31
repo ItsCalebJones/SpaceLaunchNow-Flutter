@@ -234,6 +234,14 @@ class PagesState extends State<Pages> {
     }
   }
 
+  ThemeData get barTheme {
+    if (_configuration.nightMode) {
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
+
   Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
     return new AlertDialog(
       content: new Column(
@@ -332,13 +340,7 @@ class PagesState extends State<Pages> {
 //            }),
 //            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
-                data: theme.copyWith(
-                    // sets the background color of the `BottomNavigationBar`
-                    canvasColor: theme.primaryColor,
-                    // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-                    primaryColor: Colors.white,
-                    textTheme: theme.textTheme.copyWith(
-                        caption: new TextStyle(color: Colors.white70))),
+                data: barTheme,
                 // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,

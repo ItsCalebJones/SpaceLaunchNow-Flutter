@@ -65,6 +65,8 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     Widget content;
@@ -92,7 +94,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
 
     return new Scaffold(
       appBar: new PlatformAdaptiveAppBar(
-        title: new Text('Upcoming'),
+        text: "Upcoming",
         platform: Theme.of(context).platform,
       ),
       body: content
