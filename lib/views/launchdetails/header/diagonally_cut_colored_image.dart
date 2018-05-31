@@ -13,7 +13,7 @@ class DiagonallyCutColoredImage extends StatelessWidget {
       clipper: new DiagonalClipper(),
       child: new DecoratedBox(
         position: DecorationPosition.foreground,
-        decoration: new BoxDecoration(color: color),
+        decoration: new BoxDecoration(color: Theme.of(context).primaryColor),
         child: image,
       ),
     );

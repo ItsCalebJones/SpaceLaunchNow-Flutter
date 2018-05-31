@@ -226,6 +226,14 @@ class PagesState extends State<Pages> {
     });
   }
 
+  ThemeData get theme {
+    if (_configuration.nightMode) {
+      return kIOSThemeDark;
+    } else {
+        return defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+    }
+  }
+
   Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
     return new AlertDialog(
       content: new Column(
@@ -304,8 +312,6 @@ class PagesState extends State<Pages> {
     _prefs.then((SharedPreferences prefs) {
       return (prefs.getInt('counter') ?? 0);
     });
-    ThemeData theme =
-        defaultTargetPlatform == TargetPlatform.iOS ? kIOSThemeDark : kDefaultTheme;
     return new MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
@@ -328,7 +334,7 @@ class PagesState extends State<Pages> {
             bottomNavigationBar: new Theme(
                 data: theme.copyWith(
                     // sets the background color of the `BottomNavigationBar`
-                    canvasColor: Colors.blueGrey[800],
+                    canvasColor: theme.primaryColor,
                     // sets the active color of the `BottomNavigationBar` if `Brightness` is light
                     primaryColor: Colors.white,
                     textTheme: theme.textTheme.copyWith(

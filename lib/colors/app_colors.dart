@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SpaceLaunchNowColors {
   SpaceLaunchNowColors._(); // this basically makes it so you can instantiate this class
   static const _greenPrimaryValue = 0xFF3a6d70;
-  static const blue_transparent = const  Color(0x732196F3);
+  static const blue_transparent = const  Color(0xf02196F3);
 
   static const MaterialColor primary = const MaterialColor(
     _greenPrimaryValue,
