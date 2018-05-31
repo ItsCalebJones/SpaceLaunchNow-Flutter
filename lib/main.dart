@@ -40,7 +40,7 @@ class PagesState extends State<Pages> {
   PagesState(this._firebaseMessaging);
 
   FirebaseMessaging _firebaseMessaging;
-  int pageIndex = 1;
+  int pageIndex = 0;
   AppConfiguration _configuration = new AppConfiguration(
       nightMode: false,
       allowOneHourNotifications: true,
