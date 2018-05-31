@@ -92,7 +92,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     Widget content;
     List<Color> colors = [];
     if (!widget._configuration.nightMode){
-      colors.addAll([Color(0xFF2196F3), Color(0xFFF44336)]);
+      colors.addAll([Colors.blue[700], Colors.blue[600]]);
     } else {
       colors.addAll([Colors.grey[800], Colors.blueGrey[700]]);
     }

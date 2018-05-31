@@ -29,11 +29,19 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
   - GoogleToolboxForMac/Defines (2.1.4)
   - GoogleToolboxForMac/Logger (2.1.4):
     - GoogleToolboxForMac/Defines (= 2.1.4)
   - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
     - GoogleToolboxForMac/Defines (= 2.1.4)
+  - map_view (0.0.1):
+    - Flutter
+    - GoogleMaps
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -44,13 +52,17 @@ PODS:
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - firebase_analytics (from `Pods/.symlinks/plugins/firebase_analytics/ios`)
   - firebase_messaging (from `Pods/.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Pods/.symlinks/flutter/ios`)
+  - map_view (from `Pods/.symlinks/plugins/map_view/ios`)
   - share (from `Pods/.symlinks/plugins/share/ios`)
   - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences/ios`)
+  - url_launcher (from `Pods/.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -59,6 +71,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseInstanceID
     - FirebaseMessaging
+    - GoogleMaps
     - GoogleToolboxForMac
     - nanopb
     - Protobuf
@@ -70,10 +83,14 @@ EXTERNAL SOURCES:
     :path: Pods/.symlinks/plugins/firebase_messaging/ios
   Flutter:
     :path: Pods/.symlinks/flutter/ios
+  map_view:
+    :path: Pods/.symlinks/plugins/map_view/ios
   share:
     :path: Pods/.symlinks/plugins/share/ios
   shared_preferences:
     :path: Pods/.symlinks/plugins/shared_preferences/ios
+  url_launcher:
+    :path: Pods/.symlinks/plugins/url_launcher/ios
 
 SPEC CHECKSUMS:
   Firebase: 4bd804448ab2596794698773d41520a0af101e65
@@ -84,12 +101,15 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
   FirebaseMessaging: f2360a966ecfb0d14facf0fbdf306efc2df0ddbe
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  map_view: da5875d2bc7b2871e4b7ed3e9e8e4509fc62d7bd
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   share: 8d04605548e55f7ce4ebb7b3e933f3c85028c9cf
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
+  url_launcher: 92b89c1029a0373879933c21642958c874539095
 
-PODFILE CHECKSUM: ea0518673586564c605fb6593d385c0e3708ff8d
+PODFILE CHECKSUM: 989808cd64b5e6e4394d17d18aa1e3580c2d0648
 
 COCOAPODS: 1.5.2

@@ -65,7 +65,7 @@ class PagesState extends State<Pages> {
   void initState() {
     super.initState();
     _prefs.then((SharedPreferences prefs) {
-      bool nightMode = prefs.getBool("nightMode") ?? true;
+      bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
       bool allowTwentyFourHourNotifications =

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'articles_showcase.dart';
-import 'portfolio_showcase.dart';
-import 'skills_showcase.dart';
+import 'agencies_showcase.dart';
+import 'location_showcase.dart';
+import 'mission_showcase.dart';
 
 class LaunchShowcase extends StatefulWidget {
   LaunchShowcase(this.launch);
@@ -27,14 +27,14 @@ class _LaunchShowcaseState extends State<LaunchShowcase>
   void initState() {
     super.initState();
     _tabs = [
-      new Tab(text: 'Details'),
       new Tab(text: 'Mission'),
+      new Tab(text: 'Location'),
       new Tab(text: 'Agencies'),
     ];
     _pages = [
-      new PortfolioShowcase(launch),
-      new SkillsShowcase(),
-      new ArticlesShowcase(),
+      new MissionShowcase(launch),
+      new LocationShowcase(launch),
+      new AgenciesShowcase(launch),
     ];
     _controller = new TabController(
       length: _tabs.length,
@@ -56,7 +56,7 @@ class _LaunchShowcaseState extends State<LaunchShowcase>
             unselectedLabelColor: Colors.white70,
           ),
           new SizedBox.fromSize(
-            size: const Size.fromHeight(300.0),
+            size: const Size.fromHeight(350.0),
             child: new TabBarView(
               controller: _controller,
               children: _pages,

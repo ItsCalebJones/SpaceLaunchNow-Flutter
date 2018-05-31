@@ -7,15 +7,27 @@ class Mission {
   final String description;
   final String typeName;
   final String wikiURL;
-
-//  final List<Agency> agencies;
+  final List<Payload> payloads;
+  final List<Agency> agencies;
 //  final List<Payload> payloads;
 
-  Mission({this.id, this.name, this.description, this.typeName, this.wikiURL});
+  Mission({this.id, this.name, this.description, this.typeName, this.wikiURL, this.payloads, this.agencies});
 
   factory Mission.fromJson(Map<String, dynamic> json) {
     print(json);
+    List<Payload> payloads;
+    if (json['payloads'] != null && json['payloads'].length > 0){
+      payloads = new List<Payload>.from(json['payloads'].map((payload) => new Payload.fromJson(payload)));
+    } else {
+      payloads;
+    }
 
+    List<Agency> agencies;
+    if (json['agencies'] != null && json['agencies'].length > 0){
+      agencies = new List<Agency>.from(json['agencies'].map((agencies) => new Agency.fromJson(agencies)));
+    } else {
+      agencies;
+    }
     return new Mission(
       id: json['id'],
       name: json['name'],
@@ -23,8 +35,8 @@ class Mission {
       typeName: json['typeName'],
       wikiURL: json['wikiURL'],
 
-//      agencies: new List<Agency>.from(json['agencies'].map((agency) => new Agency.fromJson(agency))),
-//      payloads: new List<Payload>.from(json['payloads'].map((payload) => new Payload.fromJson(payload))),
+      agencies: agencies,
+      payloads: payloads,
     );
   }
 }

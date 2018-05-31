@@ -12,13 +12,18 @@ class Agency {
 
   factory Agency.fromJson(Map<String, dynamic> json) {
     if (json != null) {
+
+      String infoURL;
+      if (json['infoURLs'] != null && json['infoURLs'].length > 0){
+        infoURL = json['infoURLs'][0];
+      }
       return new Agency(
         id: json['id'],
         name: json['name'],
         abbrev: json['abbrev'],
         countryCode: json['countryCode'],
         type: json['type'],
-        infoURL: json['infoURL'],
+        infoURL: infoURL,
         wikiURL: json['wikiURL'],
 //      infoURLs: json['infoURLs'],
       );
