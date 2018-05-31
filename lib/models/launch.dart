@@ -17,11 +17,11 @@ class Launch {
   final Agency launchServiceProvider;
   final Rocket rocket;
   final Location location;
-  final List<Mission> missions;
-
+  final Mission mission;
+  final String vidURL;
   const Launch({this.id, this.name, this.status, this.windowStart, this.windowEnd,
     this.net,  this.probability, this.launchServiceProvider,
-    this.rocket, this.location, this.missions});
+    this.rocket, this.location, this.mission, this.vidURL});
 
   static List<Launch> allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
@@ -35,6 +35,14 @@ class Launch {
 
   factory Launch.fromJson(Map<String, dynamic> json) {
     print (json);
+    String vidURL;
+    if (json['vidURLs'].length > 0){
+      vidURL = json['vidURLs'][0];
+    }
+    Mission mission;
+    if (json['missions'].length > 0){
+      mission = new Mission.fromJson(json['missions'][0]);
+    }
     return new Launch(
       id: json['id'],
       name: json['name'],
@@ -47,7 +55,8 @@ class Launch {
       launchServiceProvider: new Agency.fromJson(json['lsp']),
       rocket: new Rocket.fromJson(json['rocket']),
       location: new Location.fromJson(json['location']),
-      missions: new List<Mission>.from(json['missions'].map((mission) => new Mission.fromJson(mission))),
+      mission: mission,
+      vidURL: vidURL,
     );
   }
 }

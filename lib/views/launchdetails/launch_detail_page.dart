@@ -51,7 +51,12 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     }
   }
 
+
   Future<void> _loadLaunch(int id) async {
+    setState(() {
+      _launches = null;
+      launch = null;
+    });
     http.Response response =
         await http.get('https://launchlibrary.net/1.4/launch/' + id.toString());
 
@@ -113,6 +118,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
               children: <Widget>[
                 new LaunchDetailHeader(
                   launch,
+                  loadLaunch: _loadLaunch,
                   avatarTag: widget.avatarTag,
                   backEnabled: backEnabled,
                 ),

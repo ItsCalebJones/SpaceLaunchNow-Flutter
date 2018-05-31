@@ -8,14 +8,20 @@ class LaunchDetailHeader extends StatelessWidget {
   static const BACKGROUND_IMAGE = 'images/profile_header_background.png';
 
   LaunchDetailHeader(
-    this.launch, {
+    this.launch,  {
+    @required this.loadLaunch,
     this.avatarTag,
     @required this.backEnabled,
   });
 
+  final ValueChanged<int> loadLaunch;
   final Launch launch;
   final Object avatarTag;
   final bool backEnabled;
+
+  void _handleTap() {
+    loadLaunch(launch.id);
+  }
 
   Widget _buildDiagonalImageBackground(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -96,7 +102,9 @@ class LaunchDetailHeader extends StatelessWidget {
                 icon: const Icon(Icons.refresh),
                 color: Colors.white,
                 tooltip: 'Refresh',
-                onPressed: () {}),
+                onPressed: () {
+                  _handleTap();
+                }),
           ),
         ],
       );
@@ -117,7 +125,7 @@ class LaunchDetailHeader extends StatelessWidget {
                 color: Colors.white,
                 tooltip: 'Refresh',
                 onPressed: () {
-
+                  _handleTap();
                 }),
           ),
         ],
