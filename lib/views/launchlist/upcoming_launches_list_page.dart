@@ -6,6 +6,7 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
@@ -26,6 +27,14 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   @override
   void initState() {
     super.initState();
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
+    Ads.showBannerAd();
+  }
+
+  @override
+  void dispose(){
+    Ads.dispose();
+    super.dispose();
   }
 
   void onLoadLaunchesComplete(List<Launch> items) {

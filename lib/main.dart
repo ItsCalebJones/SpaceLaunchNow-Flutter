@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
@@ -35,6 +36,8 @@ class Pages extends StatefulWidget {
 }
 
 class PagesState extends State<Pages> {
+
+
   TabController controller;
 
   PagesState(this._firebaseMessaging);
@@ -64,6 +67,7 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
     _prefs.then((SharedPreferences prefs) {
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
@@ -224,6 +228,12 @@ class PagesState extends State<Pages> {
           subscribeKSC: subscribeKSC,
           subscribeVAN: subscribeVAN));
     });
+  }
+
+  @override
+  void dispose(){
+    Ads.dispose();
+    super.dispose();
   }
 
   ThemeData get theme {
