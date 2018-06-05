@@ -1,4 +1,7 @@
 PODS:
+  - Firebase/AdMob (5.0.0):
+    - Firebase/Core
+    - Google-Mobile-Ads-SDK (= 7.30.0)
   - Firebase/Core (5.0.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.0.0)
@@ -7,6 +10,10 @@ PODS:
   - Firebase/Messaging (5.0.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (= 3.0.0)
+  - firebase_admob (0.0.1):
+    - Firebase/AdMob
+    - Firebase/Core
+    - Flutter
   - firebase_analytics (0.0.1):
     - Firebase/Core
     - Flutter
@@ -29,6 +36,9 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
+  - flutter_iap (0.0.1):
+    - Flutter
+  - Google-Mobile-Ads-SDK (7.30.0)
   - GoogleMaps (2.7.0):
     - GoogleMaps/Maps (= 2.7.0)
   - GoogleMaps/Base (2.7.0)
@@ -56,13 +66,15 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - firebase_analytics (from `Pods/.symlinks/plugins/firebase_analytics/ios`)
-  - firebase_messaging (from `Pods/.symlinks/plugins/firebase_messaging/ios`)
-  - Flutter (from `Pods/.symlinks/flutter/ios`)
-  - map_view (from `Pods/.symlinks/plugins/map_view/ios`)
-  - share (from `Pods/.symlinks/plugins/share/ios`)
-  - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences/ios`)
-  - url_launcher (from `Pods/.symlinks/plugins/url_launcher/ios`)
+  - "firebase_admob (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.4+1/ios`)"
+  - firebase_analytics (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.0/ios`)
+  - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.1/ios`)
+  - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios`)
+  - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.1.0/ios`)
+  - map_view (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.12/ios`)
+  - share (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
+  - shared_preferences (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.1/ios`)
+  - url_launcher (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.1/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -71,29 +83,35 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseInstanceID
     - FirebaseMessaging
+    - Google-Mobile-Ads-SDK
     - GoogleMaps
     - GoogleToolboxForMac
     - nanopb
     - Protobuf
 
 EXTERNAL SOURCES:
+  firebase_admob:
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.4+1/ios"
   firebase_analytics:
-    :path: Pods/.symlinks/plugins/firebase_analytics/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.0/ios"
   firebase_messaging:
-    :path: Pods/.symlinks/plugins/firebase_messaging/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.1/ios"
   Flutter:
-    :path: Pods/.symlinks/flutter/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios"
+  flutter_iap:
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.1.0/ios"
   map_view:
-    :path: Pods/.symlinks/plugins/map_view/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.12/ios"
   share:
-    :path: Pods/.symlinks/plugins/share/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios"
   shared_preferences:
-    :path: Pods/.symlinks/plugins/shared_preferences/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.1/ios"
   url_launcher:
-    :path: Pods/.symlinks/plugins/url_launcher/ios
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.1/ios"
 
 SPEC CHECKSUMS:
   Firebase: 4bd804448ab2596794698773d41520a0af101e65
+  firebase_admob: b8cc46113ddf88a62fec340e9446607a5061a872
   firebase_analytics: fcc60a9de4b8e07aa5af8941303a7f5fe6e0383f
   firebase_messaging: a5f5d4a9491b660f33a1f94bd0596558f820bad1
   FirebaseAnalytics: 19812b49fa5f283dd6b23edf8a14b5d477029ab8
@@ -101,6 +119,8 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
   FirebaseMessaging: f2360a966ecfb0d14facf0fbdf306efc2df0ddbe
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  flutter_iap: c134cf9ab8e60291931d13431cdae36f5e0724ae
+  Google-Mobile-Ads-SDK: 7404f68120ae8682afeb5af001fbf4aad731c78e
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   map_view: da5875d2bc7b2871e4b7ed3e9e8e4509fc62d7bd
@@ -110,6 +130,6 @@ SPEC CHECKSUMS:
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   url_launcher: 92b89c1029a0373879933c21642958c874539095
 
-PODFILE CHECKSUM: 989808cd64b5e6e4394d17d18aa1e3580c2d0648
+PODFILE CHECKSUM: ccf3b481a930d087fe99514b4b16f8c472e6adad
 
 COCOAPODS: 1.5.2

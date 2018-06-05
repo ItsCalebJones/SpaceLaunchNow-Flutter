@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/launch_detail_footer.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
@@ -32,8 +31,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
-    Ads.showBannerAd();
     if (widget.launch != null) {
       launch = widget.launch;
       setController();
@@ -86,7 +83,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   @override
   void dispose() {
-    Ads.dispose();
     _controller.dispose();
     super.dispose();
   }

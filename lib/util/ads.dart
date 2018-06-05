@@ -120,7 +120,7 @@ class Ads {
     if(_bannerAd==null)setBannerAd();
     _bannerAd
       ..load()
-      ..show(anchorOffset: 56.0);
+      ..show(anchorOffset: 49.0);
   }
 
   static void hideBannerAd(){

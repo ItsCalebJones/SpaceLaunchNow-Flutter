@@ -34,8 +34,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
-    Ads.showBannerAd();
     List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'launches');
     if (launches != null){
       _launches = launches;
@@ -46,7 +44,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
 
   @override
   void dispose(){
-    Ads.dispose();
     super.dispose();
   }
 

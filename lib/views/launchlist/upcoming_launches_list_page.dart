@@ -27,13 +27,10 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
-    Ads.showBannerAd();
   }
 
   @override
   void dispose(){
-    Ads.dispose();
     super.dispose();
   }
 

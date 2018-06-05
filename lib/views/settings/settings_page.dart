@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -179,15 +180,31 @@ class NotificationFilterPageState extends State<SettingsPage> {
         subtitle: new Text(
             'Change appereance settings.'),
       ),
-      new ListTile(
-        title: const Text('Use Dark Theme'),
-        onTap: () {
-          _handleNightMode(
-              !widget.configuration.nightMode);
-        },
-        trailing: new Switch(
-          value: widget.configuration.nightMode,
-          onChanged: _handleNightMode,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Use Dark Theme'),
+          onTap: () {
+            _handleNightMode(
+                !widget.configuration.nightMode);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.nightMode,
+            onChanged: _handleNightMode,
+          ),
+        ),
+      ),
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Hide Ads'),
+          subtitle: const Text('Support continued development and get rid of ads!'),
+          onTap: () {
+            _handleNightMode(
+                !widget.configuration.nightMode);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.nightMode,
+            onChanged: _handleNightMode,
+          ),
         ),
       ),
       new ListTile(
@@ -195,45 +212,53 @@ class NotificationFilterPageState extends State<SettingsPage> {
         subtitle: new Text(
               'Select what kind of notifications to receive.'),
       ),
-      new ListTile(
-        title: const Text('Allow 24 Hour Notifications'),
-        onTap: () {
-          _handleTwentyFourHour(
-              !widget.configuration.allowTwentyFourHourNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowTwentyFourHourNotifications,
-          onChanged: _handleTwentyFourHour,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow 24 Hour Notifications'),
+          onTap: () {
+            _handleTwentyFourHour(
+                !widget.configuration.allowTwentyFourHourNotifications);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.allowTwentyFourHourNotifications,
+            onChanged: _handleTwentyFourHour,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow One Hour Notifications'),
-        onTap: () {
-          _handleOneHour(!widget.configuration.allowOneHourNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowOneHourNotifications,
-          onChanged: _handleOneHour,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow One Hour Notifications'),
+          onTap: () {
+            _handleOneHour(!widget.configuration.allowOneHourNotifications);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.allowOneHourNotifications,
+            onChanged: _handleOneHour,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow Ten Minute Notifications'),
-        onTap: () {
-          _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowTenMinuteNotifications,
-          onChanged: _handleTenMinute,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow Ten Minute Notifications'),
+          onTap: () {
+            _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.allowTenMinuteNotifications,
+            onChanged: _handleTenMinute,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow Status Changed Notifications'),
-        onTap: () {
-          _handleTenMinute(!widget.configuration.allowStatusChanged);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowStatusChanged,
-          onChanged: _handleStatusChanged,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow Status Changed Notifications'),
+          onTap: () {
+            _handleTenMinute(!widget.configuration.allowStatusChanged);
+          },
+          trailing: new CupertinoSwitch(
+            value: widget.configuration.allowStatusChanged,
+            onChanged: _handleStatusChanged,
+          ),
         ),
       ),
     ];
@@ -257,7 +282,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     var theme = Theme.of(context);
 
     return new Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 40.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -270,7 +295,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     new Text("All"),
-                    new Switch(
+                    new CupertinoSwitch(
                       value: widget.configuration.subscribeALL,
                       onChanged: _handleAll,
                     )
@@ -280,7 +305,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     new Text("SpaceX"),
-                    new Switch(
+                    new CupertinoSwitch(
                       value: widget.configuration.subscribeSpaceX,
                       onChanged: _handleSpaceX,
                     )
@@ -290,7 +315,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     new Text("NASA"),
-                    new Switch(
+                    new CupertinoSwitch(
                       value: widget.configuration.subscribeNASA,
                       onChanged: _handleNASA,
                     )
@@ -300,7 +325,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     new Text("ULA"),
-                    new Switch(
+                    new CupertinoSwitch(
                       value: widget.configuration.subscribeULA,
                       onChanged: _handleULA,
                     )
@@ -310,7 +335,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     new Text("Roscosmos"),
-                    new Switch(
+                    new CupertinoSwitch(
                       value: widget.configuration.subscribeRoscosmos,
                       onChanged: _handleRoscosmos,
                     )
@@ -325,7 +350,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text("CASC"),
-                  new Switch(
+                  new CupertinoSwitch(
                     value: widget.configuration.subscribeCASC,
                     onChanged: _handleCASC,
                   )
@@ -335,7 +360,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text("Cape Canav. | KSC"),
-                  new Switch(
+                  new CupertinoSwitch(
                     value: widget.configuration.subscribeCAPE,
                     onChanged: _handleCAPE,
                   )
@@ -345,7 +370,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text("Plesetsk Cosmo."),
-                  new Switch(
+                  new CupertinoSwitch(
                     value: widget.configuration.subscribePLES,
                     onChanged: _handlePLES,
                   )
@@ -355,7 +380,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text("ISRO"),
-                  new Switch(
+                  new CupertinoSwitch(
                     value: widget.configuration.subscribeISRO,
                     onChanged: _handleISRO,
                   )
@@ -365,7 +390,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   new Text("Vandenberg"),
-                  new Switch(
+                  new CupertinoSwitch(
                     value: widget.configuration.subscribeVAN,
                     onChanged: _handleVAN,
                   )

@@ -11,6 +11,7 @@ import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_p
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
+import 'package:flutter_iap/flutter_iap.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -37,7 +38,7 @@ class Pages extends StatefulWidget {
 
 class PagesState extends State<Pages> {
 
-
+  bool showAds = false;
   TabController controller;
 
   PagesState(this._firebaseMessaging);
@@ -67,7 +68,7 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
+    initAds();
     _prefs.then((SharedPreferences prefs) {
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
@@ -389,5 +390,21 @@ class PagesState extends State<Pages> {
         },
       ),
     );
+  }
+
+  initAds() async {
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
+    IAPResponse response = await FlutterIap.fetchProducts(["me.calebjones.spacelaunchnowflutter"]);
+    List<IAPProduct> productIds = response.products;
+    if (!mounted)
+      return;
+
+    setState(() {
+      if (productIds.length > 0){
+        Ads.showBannerAd();
+      } else {
+        Ads.hideBannerAd();
+      }
+    });
   }
 }
