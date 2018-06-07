@@ -38,7 +38,8 @@ class Pages extends StatefulWidget {
 
 class PagesState extends State<Pages> {
 
-  bool showAds = false;
+  bool adShowing = false;
+  bool showAds = true;
   TabController controller;
 
   PagesState(this._firebaseMessaging);
@@ -46,6 +47,7 @@ class PagesState extends State<Pages> {
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
   AppConfiguration _configuration = new AppConfiguration(
+      showAds: true,
       nightMode: false,
       allowOneHourNotifications: true,
       allowTwentyFourHourNotifications: true,
@@ -68,8 +70,10 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
     initAds();
     _prefs.then((SharedPreferences prefs) {
+      bool showAds = prefs.getBool("showAds") ?? true;
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
@@ -211,6 +215,7 @@ class PagesState extends State<Pages> {
       });
 
       configurationUpdater(_configuration.copyWith(
+          showAds: showAds,
           nightMode: nightMode,
           allowOneHourNotifications: allowOneHourNotifications,
           allowTwentyFourHourNotifications: allowTwentyFourHourNotifications,
@@ -303,18 +308,34 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
+        if (!adShowing && _configuration.showAds){
+          Ads.showBannerAd();
+          adShowing = true;
+        }
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
+        if (!adShowing && _configuration.showAds){
+          Ads.showBannerAd();
+          adShowing = true;
+        }
         return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
+        if (!adShowing && _configuration.showAds){
+          Ads.showBannerAd();
+          adShowing = true;
+        }
         return new PreviousLaunchListPage(_configuration);
         break;
 
       case 3:
+        if (adShowing){
+          Ads.hideBannerAd();
+          adShowing = false;
+        }
         return new SettingsPage(_configuration, configurationUpdater);
 
       default:
@@ -393,17 +414,18 @@ class PagesState extends State<Pages> {
   }
 
   initAds() async {
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
-    IAPResponse response = await FlutterIap.fetchProducts(["me.calebjones.spacelaunchnowflutter"]);
+    IAPResponse response = await FlutterIap.restorePurchases();
     List<IAPProduct> productIds = response.products;
     if (!mounted)
       return;
 
     setState(() {
-      if (productIds.length > 0){
+      if (productIds.length <= 0 || _configuration.showAds){
         Ads.showBannerAd();
+        adShowing = true;
       } else {
         Ads.hideBannerAd();
+        adShowing = false;
       }
     });
   }

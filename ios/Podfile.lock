@@ -39,19 +39,11 @@ PODS:
   - flutter_iap (0.0.1):
     - Flutter
   - Google-Mobile-Ads-SDK (7.30.0)
-  - GoogleMaps (2.7.0):
-    - GoogleMaps/Maps (= 2.7.0)
-  - GoogleMaps/Base (2.7.0)
-  - GoogleMaps/Maps (2.7.0):
-    - GoogleMaps/Base
   - GoogleToolboxForMac/Defines (2.1.4)
   - GoogleToolboxForMac/Logger (2.1.4):
     - GoogleToolboxForMac/Defines (= 2.1.4)
   - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
     - GoogleToolboxForMac/Defines (= 2.1.4)
-  - map_view (0.0.1):
-    - Flutter
-    - GoogleMaps
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -71,7 +63,6 @@ DEPENDENCIES:
   - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.1/ios`)
   - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios`)
   - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.1.0/ios`)
-  - map_view (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.12/ios`)
   - share (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
   - shared_preferences (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.1/ios`)
   - url_launcher (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.1/ios`)
@@ -84,7 +75,6 @@ SPEC REPOS:
     - FirebaseInstanceID
     - FirebaseMessaging
     - Google-Mobile-Ads-SDK
-    - GoogleMaps
     - GoogleToolboxForMac
     - nanopb
     - Protobuf
@@ -100,8 +90,6 @@ EXTERNAL SOURCES:
     :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios"
   flutter_iap:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.1.0/ios"
-  map_view:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/map_view-0.0.12/ios"
   share:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios"
   shared_preferences:
@@ -121,15 +109,13 @@ SPEC CHECKSUMS:
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_iap: c134cf9ab8e60291931d13431cdae36f5e0724ae
   Google-Mobile-Ads-SDK: 7404f68120ae8682afeb5af001fbf4aad731c78e
-  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
-  map_view: da5875d2bc7b2871e4b7ed3e9e8e4509fc62d7bd
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   share: 8d04605548e55f7ce4ebb7b3e933f3c85028c9cf
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   url_launcher: 92b89c1029a0373879933c21642958c874539095
 
-PODFILE CHECKSUM: ccf3b481a930d087fe99514b4b16f8c472e6adad
+PODFILE CHECKSUM: 662f8e0a46eeec290ba8f8ed727fd7642e1e3b82
 
 COCOAPODS: 1.5.2

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:map_view/map_view.dart';
+import 'package:spacelaunchnow_flutter/map_view/map_view.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 

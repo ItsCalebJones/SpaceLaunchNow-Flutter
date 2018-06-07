@@ -2,18 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iap/flutter_iap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SettingsPage extends StatefulWidget {
+  static const String routeName = '/material/dialog';
   SettingsPage(this.configuration, this.updater);
 
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
-
 
   @override
   NotificationFilterPageState createState() =>
@@ -21,14 +22,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   FirebaseMessaging _firebaseMessaging;
 
   NotificationFilterPageState(this._firebaseMessaging);
 
   void _handleNightMode(bool value) {
-    sendUpdates(
-        widget.configuration.copyWith(nightMode: value));
+    sendUpdates(widget.configuration.copyWith(nightMode: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('nightMode', value));
     });
@@ -70,7 +71,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleAll(bool value) {
-
     sendUpdates(widget.configuration.copyWith(subscribeALL: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeALL', value));
@@ -159,6 +159,53 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (widget.updater != null) widget.updater(value);
   }
 
+  void _becomeSupporter(){
+    FlutterIap.buy("two_dollar_sku").then((IAPResponse response) {
+      String responseStatus = response.status;
+      print("Response: $responseStatus");
+      if (response.products != null && response.products.length > 0){
+        sendUpdates(widget.configuration.copyWith(showAds: false));
+        _prefs.then((SharedPreferences prefs) {
+          return (prefs.setBool('showAds', false));
+        });
+      }
+    }, onError: (error) {
+      // errors caught outside the framework
+      print("Error found $error");
+    });
+  }
+
+  void _removeAds (bool value){
+    if (!value){
+      FlutterIap.restorePurchases().then((IAPResponse response) {
+        if (response.products != null && response.products.length > 0) {
+          sendUpdates(widget.configuration.copyWith(showAds: value));
+          _prefs.then((SharedPreferences prefs) {
+            return (prefs.setBool('showAds', value));
+          });
+        } else {
+          final snackBar = new SnackBar(
+            content: new Text('Become a Supporter:'),
+            duration: new Duration(seconds: 5),
+            action: new SnackBarAction(
+                label: "Yes, please!",
+                onPressed: () {
+                  _becomeSupporter();
+                }
+            ),
+          );
+          // Find the Scaffold in the Widget tree and use it to show a SnackBar
+          Scaffold.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else {
+      sendUpdates(widget.configuration.copyWith(showAds: value));
+      _prefs.then((SharedPreferences prefs) {
+        return (prefs.setBool('showAds', value));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -177,15 +224,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
     final List<Widget> rows = <Widget>[
       new ListTile(
         title: new Text('Appearance', style: theme.textTheme.title),
-        subtitle: new Text(
-            'Change appereance settings.'),
+        subtitle: new Text('Change appereance settings.'),
       ),
       new MergeSemantics(
         child: new ListTile(
           title: const Text('Use Dark Theme'),
           onTap: () {
-            _handleNightMode(
-                !widget.configuration.nightMode);
+            _handleNightMode(!widget.configuration.nightMode);
           },
           trailing: new CupertinoSwitch(
             value: widget.configuration.nightMode,
@@ -195,22 +240,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
       ),
       new MergeSemantics(
         child: new ListTile(
-          title: const Text('Hide Ads'),
-          subtitle: const Text('Support continued development and get rid of ads!'),
+          title: const Text('Show Ads'),
           onTap: () {
-            _handleNightMode(
-                !widget.configuration.nightMode);
+            _removeAds(!widget.configuration.showAds);
           },
           trailing: new CupertinoSwitch(
-            value: widget.configuration.nightMode,
-            onChanged: _handleNightMode,
+            value: widget.configuration.showAds,
+            onChanged: _removeAds,
           ),
         ),
       ),
       new ListTile(
         title: new Text('Notification Settings', style: theme.textTheme.title),
-        subtitle: new Text(
-              'Select what kind of notifications to receive.'),
+        subtitle: new Text('Select what kind of notifications to receive.'),
       ),
       new MergeSemantics(
         child: new ListTile(
@@ -282,7 +324,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     var theme = Theme.of(context);
 
     return new Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 40.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 50.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
