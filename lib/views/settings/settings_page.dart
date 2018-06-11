@@ -36,7 +36,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleOneHour(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_one_hour");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("oneHour");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("oneHour");
+    }
     sendUpdates(
         widget.configuration.copyWith(allowOneHourNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -45,7 +49,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleTwentyFourHour(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_twenty_four");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("twentyFourHour");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+    }
+    _firebaseMessaging.subscribeToTopic("twentyFourHour");
     sendUpdates(
         widget.configuration.copyWith(allowTwentyFourHourNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -54,7 +63,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleTenMinute(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_ten_minute");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("tenMinutes");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+    }
     sendUpdates(
         widget.configuration.copyWith(allowTenMinuteNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -63,7 +76,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleStatusChanged(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_netstamp_changed");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("netstampChanged");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+    }
     sendUpdates(widget.configuration.copyWith(allowStatusChanged: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('allowStatusChanged', value));
@@ -71,6 +88,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleAll(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("all");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("all");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeALL: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeALL', value));
@@ -78,6 +100,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleULA(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ula");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("ula");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeULA: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeULA', value));
@@ -85,6 +112,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleSpaceX(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("spacex");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("spacex");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeSpaceX: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeSpaceX', value));
@@ -92,6 +124,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleNASA(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("nasa");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("nasa");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeNASA: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeNASA', value));
@@ -99,6 +136,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleArianespace(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("arianespace");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("arianespace");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeArianespace: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeArianespace', value));
@@ -106,6 +148,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleCASC(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("casc");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("casc");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeCASC: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeCASC', value));
@@ -113,6 +160,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleISRO(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("isro");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("isro");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeISRO: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeISRO', value));
@@ -120,6 +172,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleVAN(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("van");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("van");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeVAN: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeVAN', value));
@@ -127,6 +184,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleKSC(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ksc");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("ksc");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeKSC: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeKSC', value));
@@ -134,6 +196,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleCAPE(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("cape");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("cape");
+    }
     _handleKSC(value);
     sendUpdates(widget.configuration.copyWith(subscribeCAPE: value));
     _prefs.then((SharedPreferences prefs) {
@@ -142,6 +209,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handlePLES(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ples");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("ples");
+    }
     sendUpdates(widget.configuration.copyWith(subscribePLES: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribePLES', value));
@@ -149,6 +221,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleRoscosmos(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("roscosmos");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+    }
+    _handlePLES(value);
     sendUpdates(widget.configuration.copyWith(subscribeRoscosmos: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeRoscosmos', value));
@@ -401,7 +479,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
               new Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  new Text("Cape Canav. | KSC"),
+                  new Text("KSC, FL"),
                   new CupertinoSwitch(
                     value: widget.configuration.subscribeCAPE,
                     onChanged: _handleCAPE,
@@ -411,10 +489,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
               new Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  new Text("Plesetsk Cosmo."),
+                  new Text("Arianespace"),
                   new CupertinoSwitch(
-                    value: widget.configuration.subscribePLES,
-                    onChanged: _handlePLES,
+                    value: widget.configuration.subscribeArianespace,
+                    onChanged: _handleArianespace,
                   )
                 ],
               ),

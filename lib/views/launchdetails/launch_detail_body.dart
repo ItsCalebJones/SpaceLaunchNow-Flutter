@@ -101,7 +101,7 @@ class LaunchDetailBody extends StatelessWidget {
     if (mLaunch.vidURL != null) {
       materialButtons.add(new MaterialButton(
         elevation: 2.0,
-        minWidth: 160.0,
+        minWidth: 130.0,
         color: Colors.redAccent,
         textColor: Colors.white,
         onPressed: () {
@@ -114,7 +114,7 @@ class LaunchDetailBody extends StatelessWidget {
     String launchId = mLaunch.id.toString();
     materialButtons.add(new MaterialButton(
       elevation: 2.0,
-      minWidth: 160.0,
+      minWidth: 130.0,
       color: Colors.blue,
       textColor: Colors.white,
       onPressed: () {
@@ -128,7 +128,7 @@ class LaunchDetailBody extends StatelessWidget {
           const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: materialButtons,
       ),
     );
@@ -155,15 +155,13 @@ class LaunchDetailBody extends StatelessWidget {
 
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         new Divider(
-          indent: 8.0,
           color: Colors.white,
         ),
         _buildCountDown(textTheme),
         new Divider(
-          indent: 8.0,
           color: Colors.white,
         ),
         _buildActionButtons(theme),

@@ -97,6 +97,7 @@ class Ads {
   static bool testing;
 
   static BannerAd _bannerAd;
+  static bool adShowing = false;
   static InterstitialAd _fullScreenAd;
   static RewardedVideoAd _videoAd = RewardedVideoAd.instance;
 
@@ -115,17 +116,23 @@ class Ads {
     _videoAd = null;
   }
 
+  static bool isBannerShowing([State state]){
+    return adShowing;
+  }
+
   static void showBannerAd([State state]){
     if(state != null && !state.mounted) return;
     if(_bannerAd==null)setBannerAd();
     _bannerAd
       ..load()
       ..show(anchorOffset: 49.0);
+    adShowing = true;
   }
 
   static void hideBannerAd(){
     _bannerAd?.dispose();
     _bannerAd = null;
+    adShowing = false;
   }
 
   static void setBannerAd({

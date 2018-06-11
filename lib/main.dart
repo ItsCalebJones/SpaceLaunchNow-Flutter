@@ -38,7 +38,6 @@ class Pages extends StatefulWidget {
 
 class PagesState extends State<Pages> {
 
-  bool adShowing = false;
   bool showAds = true;
   TabController controller;
 
@@ -242,6 +241,10 @@ class PagesState extends State<Pages> {
     super.dispose();
   }
 
+  void hideAd(){
+    Ads.hideBannerAd();
+  }
+
   ThemeData get theme {
     if (_configuration.nightMode) {
       return kIOSThemeDark;
@@ -308,33 +311,29 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        if (!adShowing && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds){
           Ads.showBannerAd();
-          adShowing = true;
         }
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
-        if (!adShowing && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds){
           Ads.showBannerAd();
-          adShowing = true;
         }
         return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
-        if (!adShowing && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds){
           Ads.showBannerAd();
-          adShowing = true;
         }
         return new PreviousLaunchListPage(_configuration);
         break;
 
       case 3:
-        if (adShowing){
+        if (Ads.isBannerShowing()){
           Ads.hideBannerAd();
-          adShowing = false;
         }
         return new SettingsPage(_configuration, configurationUpdater);
 
@@ -386,7 +385,7 @@ class PagesState extends State<Pages> {
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
                         icon: new Icon(Icons.home),
-                        title: new Text("Next Launch")),
+                        title: new Text("Next")),
                     new BottomNavigationBarItem(
                         title: new Text('Upcoming'),
                         icon: new Icon(Icons.assignment)),
@@ -422,10 +421,8 @@ class PagesState extends State<Pages> {
     setState(() {
       if (productIds.length <= 0 || _configuration.showAds){
         Ads.showBannerAd();
-        adShowing = true;
       } else {
         Ads.hideBannerAd();
-        adShowing = false;
       }
     });
   }

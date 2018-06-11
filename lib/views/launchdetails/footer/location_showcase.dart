@@ -18,7 +18,7 @@ class LocationShowcase extends StatelessWidget {
     }
 
     Uri staticMapUri = staticMapProvider.getStaticUriWithMarkers(_markers,
-        width: 600, height: 400);
+        width: 600, height: 350);
 
   return new Column(
     children: <Widget>[

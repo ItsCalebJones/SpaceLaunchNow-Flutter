@@ -34,7 +34,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'launches');
+    List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'previousLaunches');
     if (launches != null){
       _launches = launches;
     } else {
@@ -53,7 +53,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     total = launches.total;
     offset = launches.offset;
     print("Count: " + count.toString() + " Total: " + total.toString() + " Offset: " + offset.toString());
-    PageStorage.of(context).writeState(context, launches.launches, identifier: 'launches');
+    PageStorage.of(context).writeState(context, launches.launches, identifier: 'previousLaunches');
     if (reload){
       _launches.clear();
     }
@@ -94,7 +94,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
 
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
-    var formatter = new DateFormat('MMM - yyyy');
+    var formatter = new DateFormat('MMM yyyy');
 
     if (index + count > _launches.length) {
       notifyThreshold();
@@ -111,14 +111,15 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
             backgroundImage: new NetworkImage(launch.rocket.imageURL),
           ),
         ),
-        title: new Text(launch.name),
+        title: new Text(launch.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 15.0)),
         subtitle: new Text(launch.location.name),
-        trailing: new Text(formatter.format(launch.net)),
+        trailing: new Text(formatter.format(launch.net), style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   void _navigateToLaunchDetails({Launch launch, Object avatarTag, int launchId}) {
+    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -56,7 +56,7 @@ class _LaunchShowcaseState extends State<LaunchShowcase>
             unselectedLabelColor: Colors.white70,
           ),
           new SizedBox.fromSize(
-            size: const Size.fromHeight(350.0),
+            size: const Size.fromHeight(400.0),
             child: new TabBarView(
               controller: _controller,
               children: _pages,

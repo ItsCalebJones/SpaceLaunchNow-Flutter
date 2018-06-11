@@ -9,13 +9,13 @@ class Countdown extends AnimatedWidget {
   @override
   build(BuildContext context) {
     var theme = Theme.of(context);
-    var textThemeDigits = theme.textTheme.title.copyWith(color: Colors.white, fontSize: 48.0);
-    var textThemeDivider = theme.textTheme.subhead.copyWith(color: Colors.white, fontSize: 36.0);
+    var textThemeDigits = theme.textTheme.title.copyWith(color: Colors.white, fontSize: 46.0);
+    var textThemeDivider = theme.textTheme.subhead.copyWith(color: Colors.white, fontSize: 34.0);
     var textThemeDescription = theme.textTheme.caption.copyWith(color: Colors.white70);
     Duration duration = new Duration(seconds: animation.value);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     return new Container(
-      padding: new EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+      padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 8.0, bottom: 8.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
