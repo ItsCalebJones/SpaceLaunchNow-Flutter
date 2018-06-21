@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -143,9 +144,7 @@ class LaunchDetailBody extends StatelessWidget {
         ).animate(animationController),
       );
     } else {
-      return new Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: new Text(mLaunch.net.toLocal().toString()));
+      return new Container(width: 0.0, height: 0.0);
     }
   }
 
@@ -153,23 +152,26 @@ class LaunchDetailBody extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
+    String status = Utils.getStatus(mLaunch.status);
+
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Divider(
-          color: Colors.white,
-        ),
         _buildCountDown(textTheme),
-        new Divider(
-          color: Colors.white,
-        ),
         _buildActionButtons(theme),
         new Padding(
           padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
           child: new Text(
             mLaunch.name,
             style: textTheme.headline.copyWith(color: Colors.white),
+          ),
+        ),
+        new Padding(
+          padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
+          child: new Text(
+            status,
+            style: textTheme.title.copyWith(color: Colors.white70),
           ),
         ),
         new Padding(

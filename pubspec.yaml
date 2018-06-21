@@ -11,10 +11,11 @@ dependencies:
 
   # https://pub.dartlang.org/packages/firebase_admob#-installing-tab-
   firebase_admob: "^0.5.4+1"
-  firebase_messaging: '^1.0.1'
+  firebase_messaging: '^1.0.2'
   firebase_analytics: '^1.0.0'
   url_launcher: '^3.0.1'
   flutter_iap: '^1.0.1'
+  flutter_billing: '^0.2.2'
   uri: "^0.11.1"
 
   # The following adds the Cupertino Icons font to your application.

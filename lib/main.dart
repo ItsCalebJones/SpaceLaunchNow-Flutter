@@ -37,9 +37,10 @@ class Pages extends StatefulWidget {
 }
 
 class PagesState extends State<Pages> {
-
   bool showAds = true;
   TabController controller;
+
+  GlobalKey stickyKey = new GlobalKey();
 
   PagesState(this._firebaseMessaging);
 
@@ -97,27 +98,27 @@ class PagesState extends State<Pages> {
       _firebaseMessaging.subscribeToTopic("flutter_debug");
 
       if (allowTenMinuteNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_ten_minute");
+        _firebaseMessaging.subscribeToTopic("tenMinutes");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_ten_minute");
+        _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
       }
 
       if (allowOneHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_one_hour");
+        _firebaseMessaging.subscribeToTopic("oneHour");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_one_hour");
+        _firebaseMessaging.unsubscribeFromTopic("oneHour");
       }
 
       if (allowTwentyFourHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_twenty_four");
+        _firebaseMessaging.subscribeToTopic("twentyFourHour");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_twenty_four");
+        _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
       }
 
       if (allowStatusChanged) {
-        _firebaseMessaging.subscribeToTopic("allow_netstamp_changed");
+        _firebaseMessaging.subscribeToTopic("netstampChanged");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_netstamp_changed");
+        _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
       }
 
       if (subscribeALL) {
@@ -236,12 +237,12 @@ class PagesState extends State<Pages> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     Ads.dispose();
     super.dispose();
   }
 
-  void hideAd(){
+  void hideAd() {
     Ads.hideBannerAd();
   }
 
@@ -249,7 +250,9 @@ class PagesState extends State<Pages> {
     if (_configuration.nightMode) {
       return kIOSThemeDark;
     } else {
-        return defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+      return defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
+          : kDefaultTheme;
     }
   }
 
@@ -311,28 +314,28 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        if (!Ads.isBannerShowing() && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
           Ads.showBannerAd();
         }
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
-        if (!Ads.isBannerShowing() && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
           Ads.showBannerAd();
         }
         return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
-        if (!Ads.isBannerShowing() && _configuration.showAds){
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
           Ads.showBannerAd();
         }
         return new PreviousLaunchListPage(_configuration);
         break;
 
       case 3:
-        if (Ads.isBannerShowing()){
+        if (Ads.isBannerShowing()) {
           Ads.hideBannerAd();
         }
         return new SettingsPage(_configuration, configurationUpdater);
@@ -360,8 +363,7 @@ class PagesState extends State<Pages> {
         },
         home: new Scaffold(
             body: new PageStorage(
-                bucket: pageStorageBucket,
-                child: pageChooser()),
+                bucket: pageStorageBucket, child: pageChooser()),
 //            floatingActionButton: new Builder(builder: (BuildContext context) {
 //              return new FloatingActionButton(
 //                  backgroundColor: Colors.blue[400],
@@ -374,6 +376,7 @@ class PagesState extends State<Pages> {
                 data: barTheme,
                 // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
+                  key: stickyKey,
                   type: BottomNavigationBarType.fixed,
                   currentIndex: pageIndex,
                   onTap: (int tappedIndex) {
@@ -384,8 +387,7 @@ class PagesState extends State<Pages> {
                   },
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
-                        icon: new Icon(Icons.home),
-                        title: new Text("Next")),
+                        icon: new Icon(Icons.home), title: new Text("Next")),
                     new BottomNavigationBarItem(
                         title: new Text('Upcoming'),
                         icon: new Icon(Icons.assignment)),
@@ -396,10 +398,7 @@ class PagesState extends State<Pages> {
                         title: new Text('Settings'),
                         icon: new Icon(Icons.settings)),
                   ],
-                )
-            )
-        )
-    );
+                ))));
   }
 
   void _navigateToLaunchDetails(int launchId) {
@@ -415,11 +414,10 @@ class PagesState extends State<Pages> {
   initAds() async {
     IAPResponse response = await FlutterIap.restorePurchases();
     List<IAPProduct> productIds = response.products;
-    if (!mounted)
-      return;
+    if (!mounted) return;
 
     setState(() {
-      if (productIds.length <= 0 || _configuration.showAds){
+      if (productIds.length <= 0 || _configuration.showAds) {
         Ads.showBannerAd();
       } else {
         Ads.hideBannerAd();

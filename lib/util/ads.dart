@@ -1,4 +1,5 @@
 library ads;
+import 'package:flutter/cupertino.dart';
 ///
 ///
 ///
@@ -14,6 +15,9 @@ import 'package:flutter/widgets.dart' show State;
 import 'package:firebase_admob/firebase_admob.dart';
 
 import 'package:flutter/foundation.dart' show VoidCallback;
+import 'package:path/path.dart';
+
+import 'dart:math' as math;
 
 typedef void AdEventListener(MobileAdEvent event);
 
@@ -122,10 +126,11 @@ class Ads {
 
   static void showBannerAd([State state]){
     if(state != null && !state.mounted) return;
+    double offset = 56.0;
     if(_bannerAd==null)setBannerAd();
     _bannerAd
       ..load()
-      ..show(anchorOffset: 49.0);
+      ..show(anchorOffset: offset);
     adShowing = true;
   }
 

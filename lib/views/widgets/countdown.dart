@@ -16,27 +16,37 @@ class Countdown extends AnimatedWidget {
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     return new Container(
       padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 8.0, bottom: 8.0),
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: new Column(
         children: <Widget>[
-          new Column(
-            children: <Widget>[ new Text(prettyDuration.days, style: textThemeDigits),
-            new Text("DAYS", style: textThemeDescription)]
+          new Divider(
+            color: Colors.white,
           ),
-          new Text(":", style: textThemeDivider),
-          new Column(
-              children: <Widget>[ new Text(prettyDuration.hours, style: textThemeDigits),
-              new Text("HOURS", style: textThemeDescription)]
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Column(
+                children: <Widget>[ new Text(prettyDuration.days, style: textThemeDigits),
+                new Text("DAYS", style: textThemeDescription)]
+              ),
+              new Text(":", style: textThemeDivider),
+              new Column(
+                  children: <Widget>[ new Text(prettyDuration.hours, style: textThemeDigits),
+                  new Text("HOURS", style: textThemeDescription)]
+              ),
+              new Text(":", style: textThemeDivider),
+              new Column(
+                  children: <Widget>[ new Text(prettyDuration.minutes, style: textThemeDigits),
+                  new Text("MINUTES",style: textThemeDescription)]
+              ),
+              new Text(":", style: textThemeDivider),
+              new Column(
+                  children: <Widget>[ new Text(prettyDuration.seconds, style: textThemeDigits),
+                  new Text("SECONDS", style: textThemeDescription)]
+              ),
+            ],
           ),
-          new Text(":", style: textThemeDivider),
-          new Column(
-              children: <Widget>[ new Text(prettyDuration.minutes, style: textThemeDigits),
-              new Text("MINUTES",style: textThemeDescription)]
-          ),
-          new Text(":", style: textThemeDivider),
-          new Column(
-              children: <Widget>[ new Text(prettyDuration.seconds, style: textThemeDigits),
-              new Text("SECONDS", style: textThemeDescription)]
+          new Divider(
+            color: Colors.white,
           ),
         ],
       ),

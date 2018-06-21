@@ -53,12 +53,12 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     total = launches.total;
     offset = launches.offset;
     print("Count: " + count.toString() + " Total: " + total.toString() + " Offset: " + offset.toString());
-    PageStorage.of(context).writeState(context, launches.launches, identifier: 'previousLaunches');
     if (reload){
       _launches.clear();
     }
     setState(() {
       _launches.addAll(launches.launches);
+      PageStorage.of(context).writeState(context, _launches, identifier: 'previousLaunches');
     });
   }
 

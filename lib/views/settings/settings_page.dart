@@ -7,9 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_billing/flutter_billing.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
+
   SettingsPage(this.configuration, this.updater);
 
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
@@ -25,6 +27,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   FirebaseMessaging _firebaseMessaging;
+
+  final Billing _billing = new Billing(onError: (e) {
+    // optionally handle exception
+    print(e);
+  });
 
   NotificationFilterPageState(this._firebaseMessaging);
 
@@ -103,6 +110,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("ula");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("ula");
     }
     sendUpdates(widget.configuration.copyWith(subscribeULA: value));
@@ -115,6 +123,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("spacex");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("spacex");
     }
     sendUpdates(widget.configuration.copyWith(subscribeSpaceX: value));
@@ -127,6 +136,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("nasa");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("nasa");
     }
     sendUpdates(widget.configuration.copyWith(subscribeNASA: value));
@@ -139,6 +149,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("arianespace");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("arianespace");
     }
     sendUpdates(widget.configuration.copyWith(subscribeArianespace: value));
@@ -151,6 +162,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("casc");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("casc");
     }
     sendUpdates(widget.configuration.copyWith(subscribeCASC: value));
@@ -163,6 +175,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("isro");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("isro");
     }
     sendUpdates(widget.configuration.copyWith(subscribeISRO: value));
@@ -175,6 +188,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("van");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("van");
     }
     sendUpdates(widget.configuration.copyWith(subscribeVAN: value));
@@ -187,6 +201,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("ksc");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("ksc");
     }
     sendUpdates(widget.configuration.copyWith(subscribeKSC: value));
@@ -199,6 +214,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("cape");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("cape");
     }
     _handleKSC(value);
@@ -212,6 +228,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("ples");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("ples");
     }
     sendUpdates(widget.configuration.copyWith(subscribePLES: value));
@@ -224,6 +241,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (value) {
       _firebaseMessaging.subscribeToTopic("roscosmos");
     } else {
+      _handleAll(value);
       _firebaseMessaging.unsubscribeFromTopic("roscosmos");
     }
     _handlePLES(value);
@@ -237,40 +255,48 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (widget.updater != null) widget.updater(value);
   }
 
-  void _becomeSupporter(){
-    FlutterIap.buy("two_dollar_sku").then((IAPResponse response) {
-      String responseStatus = response.status;
-      print("Response: $responseStatus");
-      if (response.products != null && response.products.length > 0){
-        sendUpdates(widget.configuration.copyWith(showAds: false));
-        _prefs.then((SharedPreferences prefs) {
-          return (prefs.setBool('showAds', false));
-        });
-      }
-    }, onError: (error) {
-      // errors caught outside the framework
-      print("Error found $error");
-    });
+  void _becomeSupporter() {
+      _billing.purchase('2018_founder').then((bool purchased){
+        if (purchased){
+          _removeAds(false);
+        }
+      });
+//    FlutterIap.fetchProducts(["me.spacelaunchnow.spacelaunchnow"]).then((IAPResponse response){
+//      List<IAPProduct> productIds = response.products;
+//      FlutterIap.buy(productIds.first.productIdentifier).then((IAPResponse response) {
+//        String responseStatus = response.status;
+//        print("Response: $responseStatus");
+//        if (response.products != null && response.products.length > 0) {
+//          sendUpdates(widget.configuration.copyWith(showAds: false));
+//          _prefs.then((SharedPreferences prefs) {
+//            return (prefs.setBool('showAds', false));
+//          });
+//        }
+//      }, onError: (error) {
+//        // errors caught outside the framework
+//        print("Error found $error");
+//      });
+//    });
   }
 
-  void _removeAds (bool value){
-    if (!value){
-      FlutterIap.restorePurchases().then((IAPResponse response) {
-        if (response.products != null && response.products.length > 0) {
+  void _removeAds(bool value) {
+    if (!value) {
+      _billing.getPurchases().then((Set<String> purchases){
+        final bool purchased = purchases.contains('2018_founder');
+        if (purchased){
           sendUpdates(widget.configuration.copyWith(showAds: value));
           _prefs.then((SharedPreferences prefs) {
             return (prefs.setBool('showAds', value));
           });
         } else {
           final snackBar = new SnackBar(
-            content: new Text('Become a Supporter:'),
+            content: new Text('Become a Supporter?'),
             duration: new Duration(seconds: 5),
             action: new SnackBarAction(
                 label: "Yes, please!",
                 onPressed: () {
                   _becomeSupporter();
-                }
-            ),
+                }),
           );
           // Find the Scaffold in the Widget tree and use it to show a SnackBar
           Scaffold.of(context).showSnackBar(snackBar);
@@ -310,7 +336,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           onTap: () {
             _handleNightMode(!widget.configuration.nightMode);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.nightMode,
             onChanged: _handleNightMode,
           ),
@@ -322,7 +348,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           onTap: () {
             _removeAds(!widget.configuration.showAds);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.showAds,
             onChanged: _removeAds,
           ),
@@ -339,7 +365,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             _handleTwentyFourHour(
                 !widget.configuration.allowTwentyFourHourNotifications);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.allowTwentyFourHourNotifications,
             onChanged: _handleTwentyFourHour,
           ),
@@ -351,7 +377,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           onTap: () {
             _handleOneHour(!widget.configuration.allowOneHourNotifications);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.allowOneHourNotifications,
             onChanged: _handleOneHour,
           ),
@@ -363,7 +389,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           onTap: () {
             _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.allowTenMinuteNotifications,
             onChanged: _handleTenMinute,
           ),
@@ -375,7 +401,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           onTap: () {
             _handleTenMinute(!widget.configuration.allowStatusChanged);
           },
-          trailing: new CupertinoSwitch(
+          trailing: new Switch(
             value: widget.configuration.allowStatusChanged,
             onChanged: _handleStatusChanged,
           ),
@@ -403,121 +429,129 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     return new Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 50.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          new Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new Text("All"),
-                    new CupertinoSwitch(
-                      value: widget.configuration.subscribeALL,
-                      onChanged: _handleAll,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    new Text("SpaceX"),
-                    new CupertinoSwitch(
-                      value: widget.configuration.subscribeSpaceX,
-                      onChanged: _handleSpaceX,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Text("NASA"),
-                    new CupertinoSwitch(
-                      value: widget.configuration.subscribeNASA,
-                      onChanged: _handleNASA,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    new Text("ULA"),
-                    new CupertinoSwitch(
-                      value: widget.configuration.subscribeULA,
-                      onChanged: _handleULA,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Text("Roscosmos"),
-                    new CupertinoSwitch(
-                      value: widget.configuration.subscribeRoscosmos,
-                      onChanged: _handleRoscosmos,
-                    )
-                  ],
-                ),
-              ]),
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("CASC"),
-                  new CupertinoSwitch(
-                    value: widget.configuration.subscribeCASC,
-                    onChanged: _handleCASC,
-                  )
-                ],
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('All'),
+              onTap: () {
+                _handleAll(!widget.configuration.subscribeALL);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeALL,
+                onChanged: _handleAll,
               ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("KSC, FL"),
-                  new CupertinoSwitch(
-                    value: widget.configuration.subscribeCAPE,
-                    onChanged: _handleCAPE,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("Arianespace"),
-                  new CupertinoSwitch(
-                    value: widget.configuration.subscribeArianespace,
-                    onChanged: _handleArianespace,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("ISRO"),
-                  new CupertinoSwitch(
-                    value: widget.configuration.subscribeISRO,
-                    onChanged: _handleISRO,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("Vandenberg"),
-                  new CupertinoSwitch(
-                    value: widget.configuration.subscribeVAN,
-                    onChanged: _handleVAN,
-                  )
-                ],
-              ),
-            ],
+            ),
           ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('SpaceX'),
+              onTap: () {
+                _handleSpaceX(!widget.configuration.subscribeSpaceX);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeSpaceX,
+                onChanged: _handleSpaceX,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('NASA'),
+              onTap: () {
+                _handleNASA(!widget.configuration.subscribeNASA);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeNASA,
+                onChanged: _handleNASA,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('ULA'),
+              onTap: () {
+                _handleULA(!widget.configuration.subscribeULA);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeULA,
+                onChanged: _handleULA,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Roscosmos'),
+              onTap: () {
+                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeRoscosmos,
+                onChanged: _handleRoscosmos,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('CASC'),
+              onTap: () {
+                _handleCASC(!widget.configuration.subscribeCASC);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeCASC,
+                onChanged: _handleCASC,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Cape Canaveral | KSC'),
+              onTap: () {
+                _handleCAPE(!widget.configuration.subscribeCAPE);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeCAPE,
+                onChanged: _handleCAPE,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Arianespace'),
+              onTap: () {
+                _handleArianespace(!widget.configuration.subscribeArianespace);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeArianespace,
+                onChanged: _handleArianespace,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('ISRO'),
+              onTap: () {
+                _handleISRO(!widget.configuration.subscribeISRO);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeISRO,
+                onChanged: _handleISRO,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('Vandenberg'),
+            onTap: () {
+              _handleVAN(!widget.configuration.subscribeVAN);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeVAN,
+              onChanged: _handleVAN,
+            ),
+          ))
         ],
       ),
     );
