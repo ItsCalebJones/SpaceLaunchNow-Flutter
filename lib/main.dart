@@ -17,6 +17,12 @@ void main() => runApp(new SpaceLaunchNow());
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
+  static bool get isInDebugMode {
+    bool inDebugMode = false;
+    assert(inDebugMode = true);
+    return inDebugMode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -90,7 +96,11 @@ class PagesState extends State<Pages> {
       bool subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
       bool subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
 
-      _firebaseMessaging.subscribeToTopic("flutter_debug");
+      if (SpaceLaunchNow.isInDebugMode){
+        _firebaseMessaging.subscribeToTopic("flutter_debug");
+      } else {
+        _firebaseMessaging.subscribeToTopic("flutter_production");
+      }
 
       if (allowTenMinuteNotifications) {
         _firebaseMessaging.subscribeToTopic("allow_ten_minute");
