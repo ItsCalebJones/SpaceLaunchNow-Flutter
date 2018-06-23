@@ -6,7 +6,7 @@ import 'package:spacelaunchnow_flutter/models/launches.dart';
 abstract class LaunchesRepository {
   Future<List<Launch>> fetch([String lsp]);
 
-  Future<List<Launch>> fetchUpcoming([String lsp]);
+  Future<Launches> fetchUpcoming({String lsp, String offset, String search});
 
   Future<Launches> fetchPrevious({String lsp, String offset, String search});
 

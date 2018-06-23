@@ -76,20 +76,32 @@ class LaunchesRepositoryImpl implements LaunchesRepository {
   }
 
   @override
-  Future<List<Launch>> fetchUpcoming([String lsp]) {
-    String _kLaunchesUrl = BASE_URL + '/launch/next/50';
-    if (lsp != null){
-      _kLaunchesUrl = _kLaunchesUrl + '/?lsp=' + lsp;
+  Future<Launches> fetchUpcoming({String lsp, String offset, String search}) {
+    String _kLaunchesUrl = BASE_URL + '/launch/next/100?mode=verbose&limit=15';
+    if (lsp != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&lsp=' + lsp;
     }
+
+    if (offset != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+    }
+
+    if (search != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&name=' + search;
+    }
+    print(_kLaunchesUrl);
     return http.get(_kLaunchesUrl).then((http.Response response) {
-      final String jsonBody = response.body;
+      final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
-      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
-        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      if (statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException(
+            "Error while getting Launches [StatusCode:$statusCode, Error:${response
+                .reasonPhrase}]");
       }
 
-      return Launch.allFromResponse(jsonBody);
+      print("Returning!");
+      return Launches.fromJson(jsonBody);
     });
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:map_view/map_view.dart';
+import 'package:spacelaunchnow_flutter/map_view/map_view.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 
@@ -18,7 +18,7 @@ class LocationShowcase extends StatelessWidget {
     }
 
     Uri staticMapUri = staticMapProvider.getStaticUriWithMarkers(_markers,
-        width: 600, height: 400);
+        width: 600, height: 350);
 
   return new Column(
     children: <Widget>[

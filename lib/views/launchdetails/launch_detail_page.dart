@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/launch_detail_footer.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class LaunchDetailPage extends StatefulWidget {
-  LaunchDetailPage(this._configuration,{this.launch, this.launchId, this.avatarTag});
+  LaunchDetailPage(this._configuration,
+      {this.launch, this.launchId, this.avatarTag});
 
   final AppConfiguration _configuration;
   final Launch launch;
@@ -32,8 +32,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
-    Ads.showBannerAd();
     if (widget.launch != null) {
       launch = widget.launch;
       setController();
@@ -53,7 +51,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       backEnabled = false;
     }
   }
-
 
   Future<void> _loadLaunch(int id) async {
     setState(() {
@@ -76,7 +73,9 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         await http.get('https://launchlibrary.net/1.4/launch/next/1');
 
     _nextLaunches = Launch.allFromResponse(response.body);
-    PageStorage.of(context).writeState(context, _nextLaunches.first, identifier: 'next_launch');
+    PageStorage
+        .of(context)
+        .writeState(context, _nextLaunches.first, identifier: 'next_launch');
     setState(() {
       _launches = _nextLaunches;
       launch = _nextLaunches.first;
@@ -86,7 +85,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   @override
   void dispose() {
-    Ads.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -95,7 +93,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   Widget build(BuildContext context) {
     Widget content;
     List<Color> colors = [];
-    if (!widget._configuration.nightMode){
+    if (!widget._configuration.nightMode) {
       colors.addAll([Colors.blue[700], Colors.blue[600]]);
     } else {
       colors.addAll([Colors.grey[800], Colors.blueGrey[700]]);
@@ -113,33 +111,37 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         child: new CircularProgressIndicator(),
       );
     } else {
-      content = new Scaffold(
-        body: new SingleChildScrollView(
-          child: new Container(
-            decoration: linearGradient,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new LaunchDetailHeader(
-                  launch,
-                  loadLaunch: _loadLaunch,
-                  avatarTag: widget.avatarTag,
-                  backEnabled: backEnabled,
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: new LaunchDetailBody(
+      content = new Scaffold(body: new LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return new SingleChildScrollView(
+          child: new ConstrainedBox(
+            constraints: new BoxConstraints(minHeight: constraints.maxHeight),
+            child: new Container(
+              decoration: linearGradient,
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new LaunchDetailHeader(
                     launch,
-                    _controller,
-                    launch.net.difference(new DateTime.now()).inSeconds,
+                    loadLaunch: _loadLaunch,
+                    avatarTag: widget.avatarTag,
+                    backEnabled: backEnabled,
                   ),
-                ),
-                new LaunchShowcase(launch),
-              ],
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: new LaunchDetailBody(
+                      launch,
+                      _controller,
+                      launch.net.difference(new DateTime.now()).inSeconds,
+                    ),
+                  ),
+                  new LaunchShowcase(launch),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }));
     }
     return content;
   }

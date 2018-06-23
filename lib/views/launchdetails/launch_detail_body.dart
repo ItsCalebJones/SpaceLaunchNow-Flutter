@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -101,7 +102,7 @@ class LaunchDetailBody extends StatelessWidget {
     if (mLaunch.vidURL != null) {
       materialButtons.add(new MaterialButton(
         elevation: 2.0,
-        minWidth: 160.0,
+        minWidth: 130.0,
         color: Colors.redAccent,
         textColor: Colors.white,
         onPressed: () {
@@ -114,7 +115,7 @@ class LaunchDetailBody extends StatelessWidget {
     String launchId = mLaunch.id.toString();
     materialButtons.add(new MaterialButton(
       elevation: 2.0,
-      minWidth: 160.0,
+      minWidth: 130.0,
       color: Colors.blue,
       textColor: Colors.white,
       onPressed: () {
@@ -128,7 +129,7 @@ class LaunchDetailBody extends StatelessWidget {
           const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: materialButtons,
       ),
     );
@@ -143,9 +144,7 @@ class LaunchDetailBody extends StatelessWidget {
         ).animate(animationController),
       );
     } else {
-      return new Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: new Text(mLaunch.net.toLocal().toString()));
+      return new Container(width: 0.0, height: 0.0);
     }
   }
 
@@ -153,25 +152,26 @@ class LaunchDetailBody extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
+    String status = Utils.getStatus(mLaunch.status);
+
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Divider(
-          indent: 8.0,
-          color: Colors.white,
-        ),
         _buildCountDown(textTheme),
-        new Divider(
-          indent: 8.0,
-          color: Colors.white,
-        ),
         _buildActionButtons(theme),
         new Padding(
           padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
           child: new Text(
             mLaunch.name,
             style: textTheme.headline.copyWith(color: Colors.white),
+          ),
+        ),
+        new Padding(
+          padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
+          child: new Text(
+            status,
+            style: textTheme.title.copyWith(color: Colors.white70),
           ),
         ),
         new Padding(

@@ -1,18 +1,22 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iap/flutter_iap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_billing/flutter_billing.dart';
 
 class SettingsPage extends StatefulWidget {
+  static const String routeName = '/material/dialog';
+
   SettingsPage(this.configuration, this.updater);
 
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
-
 
   @override
   NotificationFilterPageState createState() =>
@@ -20,21 +24,30 @@ class SettingsPage extends StatefulWidget {
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   FirebaseMessaging _firebaseMessaging;
+
+  final Billing _billing = new Billing(onError: (e) {
+    // optionally handle exception
+    print(e);
+  });
 
   NotificationFilterPageState(this._firebaseMessaging);
 
   void _handleNightMode(bool value) {
-    sendUpdates(
-        widget.configuration.copyWith(nightMode: value));
+    sendUpdates(widget.configuration.copyWith(nightMode: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('nightMode', value));
     });
   }
 
   void _handleOneHour(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_one_hour");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("oneHour");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("oneHour");
+    }
     sendUpdates(
         widget.configuration.copyWith(allowOneHourNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -43,7 +56,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleTwentyFourHour(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_twenty_four");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("twentyFourHour");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+    }
+    _firebaseMessaging.subscribeToTopic("twentyFourHour");
     sendUpdates(
         widget.configuration.copyWith(allowTwentyFourHourNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -52,7 +70,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleTenMinute(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_ten_minute");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("tenMinutes");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+    }
     sendUpdates(
         widget.configuration.copyWith(allowTenMinuteNotifications: value));
     _prefs.then((SharedPreferences prefs) {
@@ -61,7 +83,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleStatusChanged(bool value) {
-    _firebaseMessaging.subscribeToTopic("allow_netstamp_changed");
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("netstampChanged");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+    }
     sendUpdates(widget.configuration.copyWith(allowStatusChanged: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('allowStatusChanged', value));
@@ -69,7 +95,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleAll(bool value) {
-
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("all");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("all");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeALL: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeALL', value));
@@ -77,6 +107,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleULA(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ula");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("ula");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeULA: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeULA', value));
@@ -84,6 +120,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleSpaceX(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("spacex");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("spacex");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeSpaceX: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeSpaceX', value));
@@ -91,6 +133,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleNASA(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("nasa");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("nasa");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeNASA: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeNASA', value));
@@ -98,6 +146,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleArianespace(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("arianespace");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("arianespace");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeArianespace: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeArianespace', value));
@@ -105,6 +159,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleCASC(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("casc");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("casc");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeCASC: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeCASC', value));
@@ -112,6 +172,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleISRO(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("isro");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("isro");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeISRO: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeISRO', value));
@@ -119,6 +185,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleVAN(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("van");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("van");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeVAN: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeVAN', value));
@@ -126,6 +198,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleKSC(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ksc");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("ksc");
+    }
     sendUpdates(widget.configuration.copyWith(subscribeKSC: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeKSC', value));
@@ -133,6 +211,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleCAPE(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("cape");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("cape");
+    }
     _handleKSC(value);
     sendUpdates(widget.configuration.copyWith(subscribeCAPE: value));
     _prefs.then((SharedPreferences prefs) {
@@ -141,6 +225,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handlePLES(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("ples");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("ples");
+    }
     sendUpdates(widget.configuration.copyWith(subscribePLES: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribePLES', value));
@@ -148,6 +238,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleRoscosmos(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("roscosmos");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+    }
+    _handlePLES(value);
     sendUpdates(widget.configuration.copyWith(subscribeRoscosmos: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeRoscosmos', value));
@@ -156,6 +253,61 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   void sendUpdates(AppConfiguration value) {
     if (widget.updater != null) widget.updater(value);
+  }
+
+  void _becomeSupporter() {
+      _billing.purchase('2018_founder').then((bool purchased){
+        if (purchased){
+          _removeAds(false);
+        }
+      });
+//    FlutterIap.fetchProducts(["me.spacelaunchnow.spacelaunchnow"]).then((IAPResponse response){
+//      List<IAPProduct> productIds = response.products;
+//      FlutterIap.buy(productIds.first.productIdentifier).then((IAPResponse response) {
+//        String responseStatus = response.status;
+//        print("Response: $responseStatus");
+//        if (response.products != null && response.products.length > 0) {
+//          sendUpdates(widget.configuration.copyWith(showAds: false));
+//          _prefs.then((SharedPreferences prefs) {
+//            return (prefs.setBool('showAds', false));
+//          });
+//        }
+//      }, onError: (error) {
+//        // errors caught outside the framework
+//        print("Error found $error");
+//      });
+//    });
+  }
+
+  void _removeAds(bool value) {
+    if (!value) {
+      _billing.getPurchases().then((Set<String> purchases){
+        final bool purchased = purchases.contains('2018_founder');
+        if (purchased){
+          sendUpdates(widget.configuration.copyWith(showAds: value));
+          _prefs.then((SharedPreferences prefs) {
+            return (prefs.setBool('showAds', value));
+          });
+        } else {
+          final snackBar = new SnackBar(
+            content: new Text('Become a Supporter?'),
+            duration: new Duration(seconds: 5),
+            action: new SnackBarAction(
+                label: "Yes, please!",
+                onPressed: () {
+                  _becomeSupporter();
+                }),
+          );
+          // Find the Scaffold in the Widget tree and use it to show a SnackBar
+          Scaffold.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else {
+      sendUpdates(widget.configuration.copyWith(showAds: value));
+      _prefs.then((SharedPreferences prefs) {
+        return (prefs.setBool('showAds', value));
+      });
+    }
   }
 
   @override
@@ -176,64 +328,83 @@ class NotificationFilterPageState extends State<SettingsPage> {
     final List<Widget> rows = <Widget>[
       new ListTile(
         title: new Text('Appearance', style: theme.textTheme.title),
-        subtitle: new Text(
-            'Change appereance settings.'),
+        subtitle: new Text('Change appereance settings.'),
       ),
-      new ListTile(
-        title: const Text('Use Dark Theme'),
-        onTap: () {
-          _handleNightMode(
-              !widget.configuration.nightMode);
-        },
-        trailing: new Switch(
-          value: widget.configuration.nightMode,
-          onChanged: _handleNightMode,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Use Dark Theme'),
+          onTap: () {
+            _handleNightMode(!widget.configuration.nightMode);
+          },
+          trailing: new Switch(
+            value: widget.configuration.nightMode,
+            onChanged: _handleNightMode,
+          ),
+        ),
+      ),
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Show Ads'),
+          onTap: () {
+            _removeAds(!widget.configuration.showAds);
+          },
+          trailing: new Switch(
+            value: widget.configuration.showAds,
+            onChanged: _removeAds,
+          ),
         ),
       ),
       new ListTile(
         title: new Text('Notification Settings', style: theme.textTheme.title),
-        subtitle: new Text(
-              'Select what kind of notifications to receive.'),
+        subtitle: new Text('Select what kind of notifications to receive.'),
       ),
-      new ListTile(
-        title: const Text('Allow 24 Hour Notifications'),
-        onTap: () {
-          _handleTwentyFourHour(
-              !widget.configuration.allowTwentyFourHourNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowTwentyFourHourNotifications,
-          onChanged: _handleTwentyFourHour,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow 24 Hour Notifications'),
+          onTap: () {
+            _handleTwentyFourHour(
+                !widget.configuration.allowTwentyFourHourNotifications);
+          },
+          trailing: new Switch(
+            value: widget.configuration.allowTwentyFourHourNotifications,
+            onChanged: _handleTwentyFourHour,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow One Hour Notifications'),
-        onTap: () {
-          _handleOneHour(!widget.configuration.allowOneHourNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowOneHourNotifications,
-          onChanged: _handleOneHour,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow One Hour Notifications'),
+          onTap: () {
+            _handleOneHour(!widget.configuration.allowOneHourNotifications);
+          },
+          trailing: new Switch(
+            value: widget.configuration.allowOneHourNotifications,
+            onChanged: _handleOneHour,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow Ten Minute Notifications'),
-        onTap: () {
-          _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowTenMinuteNotifications,
-          onChanged: _handleTenMinute,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow Ten Minute Notifications'),
+          onTap: () {
+            _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
+          },
+          trailing: new Switch(
+            value: widget.configuration.allowTenMinuteNotifications,
+            onChanged: _handleTenMinute,
+          ),
         ),
       ),
-      new ListTile(
-        title: const Text('Allow Status Changed Notifications'),
-        onTap: () {
-          _handleTenMinute(!widget.configuration.allowStatusChanged);
-        },
-        trailing: new Switch(
-          value: widget.configuration.allowStatusChanged,
-          onChanged: _handleStatusChanged,
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow Status Changed Notifications'),
+          onTap: () {
+            _handleTenMinute(!widget.configuration.allowStatusChanged);
+          },
+          trailing: new Switch(
+            value: widget.configuration.allowStatusChanged,
+            onChanged: _handleStatusChanged,
+          ),
         ),
       ),
     ];
@@ -257,122 +428,130 @@ class NotificationFilterPageState extends State<SettingsPage> {
     var theme = Theme.of(context);
 
     return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 50.0),
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          new Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new Text("All"),
-                    new Switch(
-                      value: widget.configuration.subscribeALL,
-                      onChanged: _handleAll,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    new Text("SpaceX"),
-                    new Switch(
-                      value: widget.configuration.subscribeSpaceX,
-                      onChanged: _handleSpaceX,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Text("NASA"),
-                    new Switch(
-                      value: widget.configuration.subscribeNASA,
-                      onChanged: _handleNASA,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    new Text("ULA"),
-                    new Switch(
-                      value: widget.configuration.subscribeULA,
-                      onChanged: _handleULA,
-                    )
-                  ],
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Text("Roscosmos"),
-                    new Switch(
-                      value: widget.configuration.subscribeRoscosmos,
-                      onChanged: _handleRoscosmos,
-                    )
-                  ],
-                ),
-              ]),
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("CASC"),
-                  new Switch(
-                    value: widget.configuration.subscribeCASC,
-                    onChanged: _handleCASC,
-                  )
-                ],
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('All'),
+              onTap: () {
+                _handleAll(!widget.configuration.subscribeALL);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeALL,
+                onChanged: _handleAll,
               ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("Cape Canav. | KSC"),
-                  new Switch(
-                    value: widget.configuration.subscribeCAPE,
-                    onChanged: _handleCAPE,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("Plesetsk Cosmo."),
-                  new Switch(
-                    value: widget.configuration.subscribePLES,
-                    onChanged: _handlePLES,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("ISRO"),
-                  new Switch(
-                    value: widget.configuration.subscribeISRO,
-                    onChanged: _handleISRO,
-                  )
-                ],
-              ),
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Text("Vandenberg"),
-                  new Switch(
-                    value: widget.configuration.subscribeVAN,
-                    onChanged: _handleVAN,
-                  )
-                ],
-              ),
-            ],
+            ),
           ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('SpaceX'),
+              onTap: () {
+                _handleSpaceX(!widget.configuration.subscribeSpaceX);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeSpaceX,
+                onChanged: _handleSpaceX,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('NASA'),
+              onTap: () {
+                _handleNASA(!widget.configuration.subscribeNASA);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeNASA,
+                onChanged: _handleNASA,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('ULA'),
+              onTap: () {
+                _handleULA(!widget.configuration.subscribeULA);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeULA,
+                onChanged: _handleULA,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Roscosmos'),
+              onTap: () {
+                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeRoscosmos,
+                onChanged: _handleRoscosmos,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('CASC'),
+              onTap: () {
+                _handleCASC(!widget.configuration.subscribeCASC);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeCASC,
+                onChanged: _handleCASC,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Cape Canaveral | KSC'),
+              onTap: () {
+                _handleCAPE(!widget.configuration.subscribeCAPE);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeCAPE,
+                onChanged: _handleCAPE,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Arianespace'),
+              onTap: () {
+                _handleArianespace(!widget.configuration.subscribeArianespace);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeArianespace,
+                onChanged: _handleArianespace,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('ISRO'),
+              onTap: () {
+                _handleISRO(!widget.configuration.subscribeISRO);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeISRO,
+                onChanged: _handleISRO,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('Vandenberg'),
+            onTap: () {
+              _handleVAN(!widget.configuration.subscribeVAN);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeVAN,
+              onChanged: _handleVAN,
+            ),
+          ))
         ],
       ),
     );

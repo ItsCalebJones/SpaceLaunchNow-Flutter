@@ -11,6 +11,7 @@ import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_p
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
+import 'package:flutter_iap/flutter_iap.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -42,15 +43,17 @@ class Pages extends StatefulWidget {
 }
 
 class PagesState extends State<Pages> {
-
-
+  bool showAds = true;
   TabController controller;
+
+  GlobalKey stickyKey = new GlobalKey();
 
   PagesState(this._firebaseMessaging);
 
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
   AppConfiguration _configuration = new AppConfiguration(
+      showAds: true,
       nightMode: false,
       allowOneHourNotifications: true,
       allowTwentyFourHourNotifications: true,
@@ -74,7 +77,9 @@ class PagesState extends State<Pages> {
   void initState() {
     super.initState();
     Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
+    initAds();
     _prefs.then((SharedPreferences prefs) {
+      bool showAds = prefs.getBool("showAds") ?? true;
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
@@ -103,27 +108,27 @@ class PagesState extends State<Pages> {
       }
 
       if (allowTenMinuteNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_ten_minute");
+        _firebaseMessaging.subscribeToTopic("tenMinutes");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_ten_minute");
+        _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
       }
 
       if (allowOneHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_one_hour");
+        _firebaseMessaging.subscribeToTopic("oneHour");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_one_hour");
+        _firebaseMessaging.unsubscribeFromTopic("oneHour");
       }
 
       if (allowTwentyFourHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("allow_twenty_four");
+        _firebaseMessaging.subscribeToTopic("twentyFourHour");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_twenty_four");
+        _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
       }
 
       if (allowStatusChanged) {
-        _firebaseMessaging.subscribeToTopic("allow_netstamp_changed");
+        _firebaseMessaging.subscribeToTopic("netstampChanged");
       } else {
-        _firebaseMessaging.unsubscribeFromTopic("allow_netstamp_changed");
+        _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
       }
 
       if (subscribeALL) {
@@ -220,6 +225,7 @@ class PagesState extends State<Pages> {
       });
 
       configurationUpdater(_configuration.copyWith(
+          showAds: showAds,
           nightMode: nightMode,
           allowOneHourNotifications: allowOneHourNotifications,
           allowTwentyFourHourNotifications: allowTwentyFourHourNotifications,
@@ -241,16 +247,22 @@ class PagesState extends State<Pages> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     Ads.dispose();
     super.dispose();
+  }
+
+  void hideAd() {
+    Ads.hideBannerAd();
   }
 
   ThemeData get theme {
     if (_configuration.nightMode) {
       return kIOSThemeDark;
     } else {
-        return defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme;
+      return defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
+          : kDefaultTheme;
     }
   }
 
@@ -312,18 +324,30 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
+          Ads.showBannerAd();
+        }
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
+          Ads.showBannerAd();
+        }
         return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
+        if (!Ads.isBannerShowing() && _configuration.showAds) {
+          Ads.showBannerAd();
+        }
         return new PreviousLaunchListPage(_configuration);
         break;
 
       case 3:
+        if (Ads.isBannerShowing()) {
+          Ads.hideBannerAd();
+        }
         return new SettingsPage(_configuration, configurationUpdater);
 
       default:
@@ -349,8 +373,7 @@ class PagesState extends State<Pages> {
         },
         home: new Scaffold(
             body: new PageStorage(
-                bucket: pageStorageBucket,
-                child: pageChooser()),
+                bucket: pageStorageBucket, child: pageChooser()),
 //            floatingActionButton: new Builder(builder: (BuildContext context) {
 //              return new FloatingActionButton(
 //                  backgroundColor: Colors.blue[400],
@@ -363,6 +386,7 @@ class PagesState extends State<Pages> {
                 data: barTheme,
                 // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
+                  key: stickyKey,
                   type: BottomNavigationBarType.fixed,
                   currentIndex: pageIndex,
                   onTap: (int tappedIndex) {
@@ -373,8 +397,7 @@ class PagesState extends State<Pages> {
                   },
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
-                        icon: new Icon(Icons.home),
-                        title: new Text("Next Launch")),
+                        icon: new Icon(Icons.home), title: new Text("Next")),
                     new BottomNavigationBarItem(
                         title: new Text('Upcoming'),
                         icon: new Icon(Icons.assignment)),
@@ -385,10 +408,7 @@ class PagesState extends State<Pages> {
                         title: new Text('Settings'),
                         icon: new Icon(Icons.settings)),
                   ],
-                )
-            )
-        )
-    );
+                ))));
   }
 
   void _navigateToLaunchDetails(int launchId) {
@@ -399,5 +419,19 @@ class PagesState extends State<Pages> {
         },
       ),
     );
+  }
+
+  initAds() async {
+    IAPResponse response = await FlutterIap.restorePurchases();
+    List<IAPProduct> productIds = response.products;
+    if (!mounted) return;
+
+    setState(() {
+      if (productIds.length <= 0 || _configuration.showAds) {
+        Ads.showBannerAd();
+      } else {
+        Ads.hideBannerAd();
+      }
+    });
   }
 }

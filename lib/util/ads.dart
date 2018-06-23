@@ -1,4 +1,5 @@
 library ads;
+import 'package:flutter/cupertino.dart';
 ///
 ///
 ///
@@ -14,6 +15,9 @@ import 'package:flutter/widgets.dart' show State;
 import 'package:firebase_admob/firebase_admob.dart';
 
 import 'package:flutter/foundation.dart' show VoidCallback;
+import 'package:path/path.dart';
+
+import 'dart:math' as math;
 
 typedef void AdEventListener(MobileAdEvent event);
 
@@ -97,6 +101,7 @@ class Ads {
   static bool testing;
 
   static BannerAd _bannerAd;
+  static bool adShowing = false;
   static InterstitialAd _fullScreenAd;
   static RewardedVideoAd _videoAd = RewardedVideoAd.instance;
 
@@ -115,17 +120,24 @@ class Ads {
     _videoAd = null;
   }
 
+  static bool isBannerShowing([State state]){
+    return adShowing;
+  }
+
   static void showBannerAd([State state]){
     if(state != null && !state.mounted) return;
+    double offset = 56.0;
     if(_bannerAd==null)setBannerAd();
     _bannerAd
       ..load()
-      ..show(anchorOffset: 56.0);
+      ..show(anchorOffset: offset);
+    adShowing = true;
   }
 
   static void hideBannerAd(){
     _bannerAd?.dispose();
     _bannerAd = null;
+    adShowing = false;
   }
 
   static void setBannerAd({

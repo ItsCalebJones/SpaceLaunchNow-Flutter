@@ -19,8 +19,10 @@ class AppConfiguration {
     @required this.subscribeVAN,
     @required this.subscribeALL,
     @required this.nightMode,
+    @required this.showAds,
   })
-      : assert (nightMode != null),
+      : assert(showAds != null),
+        assert(nightMode != null),
         assert(allowOneHourNotifications != null),
         assert(allowTwentyFourHourNotifications != null),
         assert(allowTenMinuteNotifications != null),
@@ -38,6 +40,7 @@ class AppConfiguration {
         assert(subscribeVAN != null),
         assert(subscribeALL != null);
 
+  bool showAds;
   bool nightMode;
   bool allowOneHourNotifications;
   bool allowTwentyFourHourNotifications;
@@ -57,6 +60,7 @@ class AppConfiguration {
   bool subscribeALL;
 
   AppConfiguration copyWith({
+    bool showAds,
     bool nightMode,
     bool allowOneHourNotifications,
     bool allowTwentyFourHourNotifications,
@@ -76,6 +80,7 @@ class AppConfiguration {
     bool subscribeALL,
   }) {
     return new AppConfiguration(
+      showAds: showAds ?? this.showAds,
       nightMode: nightMode ?? this.nightMode,
       allowOneHourNotifications: allowOneHourNotifications ??
           this.allowOneHourNotifications,
