@@ -255,7 +255,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
-				"${PODS_ROOT}/../../../flutter/bin/cache/artifacts/engine/ios-release/Flutter.framework",
+				"${PODS_ROOT}/../../../flutter/bin/cache/artifacts/engine/ios/Flutter.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_billing/flutter_billing.framework",

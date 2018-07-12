@@ -29,7 +29,8 @@ class SpaceLaunchNow extends StatelessWidget {
     return new MaterialApp(
         title: 'Space Launch Now',
         home: new Pages(_firebaseMessaging),
-        routes: <String, WidgetBuilder>{});
+        routes: <String, WidgetBuilder>{},
+        debugShowCheckedModeBanner: false);
   }
 }
 
@@ -76,7 +77,7 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: false);
     initAds();
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
