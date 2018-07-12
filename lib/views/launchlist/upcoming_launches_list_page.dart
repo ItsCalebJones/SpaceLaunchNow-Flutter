@@ -76,7 +76,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
           label: 'Refresh',
           onPressed: () {
             // Some code to undo the change!
-            onRefresh();
+            _handleRefresh();
           },
         ),
       )
@@ -148,7 +148,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       );
 
       content = new RefreshIndicator(
-          onRefresh: onRefresh,
+          onRefresh: _handleRefresh,
           child: listView
       );
     }
@@ -173,6 +173,12 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   }
 
   _buildMaterialSearchPage(BuildContext context) {
+    var backgroundColor;
+    if (widget._configuration.nightMode){
+      backgroundColor = Colors.black26;
+    } else {
+      backgroundColor = Colors.white;
+    }
     return new MaterialPageRoute<String>(
         settings: new RouteSettings(
           name: 'material_search',
@@ -181,6 +187,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         builder: (BuildContext context) {
           return new Material(
             child: new MaterialSearch<Launch>(
+              barBackgroundColor: backgroundColor,
               placeholder: 'Search',
               results: _launches.map((Launch v) => new MaterialSearchResult<Launch>(
                 icon: Icons.launch,
@@ -248,35 +255,19 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     }
   }
 
-  Future<Null> onRefresh() async {
-    final Completer<Null> completer = new Completer<Null>();
+  Future<Null> _handleRefresh() async {
     loading == false;
     total = 0;
     offset = 0;
     count = 0;
-    print("Going to fetch");
     searchActive = false;
-    if (total != 0 || offset > total) {
-      print("$total, $offset, $total");
-      completer.complete(null);
-      return completer.future;
-    } else {
-      loading = true;
-      _repository.fetchUpcoming(offset: offset.toString())
-          .then((launches) {
-        print("Loaded successfully.");
-        onLoadLaunchesComplete(launches, true);
-        completer.complete(null);
-        return completer.future;
-      })
-          .catchError((onError) {
-        print("Failed!");
-        print(onError);
-        onLoadContactsError();
-        completer.complete(null);
-        return completer.future;
-      });
-    }
+    loading = true;
+    Launches responseLaunches = await _repository.fetchUpcoming(offset: offset.toString())
+        .catchError((onError){
+      onLoadContactsError();
+    });
+    onLoadLaunchesComplete(responseLaunches);
+    return null;
   }
 
   void _getLaunchBySearch(String value) {
