@@ -8,7 +8,7 @@ import 'map_view_type.dart';
 
 class StaticMapProvider {
   final String googleMapsApiKey;
-  static const int defaultZoomLevel = 4;
+  static const int defaultZoomLevel = 7;
   static const int defaultWidth = 600;
   static const int defaultHeight = 400;
   static const StaticMapViewType defaultMaptype = StaticMapViewType.roadmap;
@@ -40,7 +40,7 @@ class StaticMapProvider {
 
   Uri getStaticUriWithMarkers(List<Marker> markers,
       {int width, int height, StaticMapViewType maptype, Location center}) {
-    return _buildUrl(markers, center, null, width ?? defaultWidth,
+    return _buildUrl(markers, center, defaultZoomLevel, width ?? defaultWidth,
         height ?? defaultHeight, maptype ?? defaultMaptype);
   }
 
@@ -90,6 +90,7 @@ class StaticMapProvider {
       });
       String markersString = markers.join('|');
       finalUri.queryParameters = {
+        'zoom': zoomLevel.toString(),
         'markers': markersString,
         'size': '${width ?? defaultWidth}x${height ?? defaultHeight}',
         'maptype': _getMapTypeQueryParam(mapType),

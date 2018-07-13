@@ -29,8 +29,7 @@ class SpaceLaunchNow extends StatelessWidget {
     return new MaterialApp(
         title: 'Space Launch Now',
         home: new Pages(_firebaseMessaging),
-        routes: <String, WidgetBuilder>{},
-        debugShowCheckedModeBanner: false);
+        routes: <String, WidgetBuilder>{});
   }
 }
 
@@ -78,7 +77,7 @@ class PagesState extends State<Pages> {
   void initState() {
     super.initState();
     Ads.init('ca-app-pub-9824528399164059/8172962746', testing: false);
-    initAds();
+
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
       bool nightMode = prefs.getBool("nightMode") ?? false;
@@ -245,6 +244,7 @@ class PagesState extends State<Pages> {
           subscribeKSC: subscribeKSC,
           subscribeVAN: subscribeVAN));
     });
+    initAds();
   }
 
   @override
@@ -325,23 +325,17 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        if (!Ads.isBannerShowing() && _configuration.showAds) {
-          Ads.showBannerAd();
-        }
+        checkAd();
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
-        if (!Ads.isBannerShowing() && _configuration.showAds) {
-          Ads.showBannerAd();
-        }
+        checkAd();
         return new UpcomingLaunchListPage(_configuration);
         break;
 
       case 2:
-        if (!Ads.isBannerShowing() && _configuration.showAds) {
-          Ads.showBannerAd();
-        }
+        checkAd();
         return new PreviousLaunchListPage(_configuration);
         break;
 
@@ -423,16 +417,26 @@ class PagesState extends State<Pages> {
   }
 
   initAds() async {
-    IAPResponse response = await FlutterIap.restorePurchases();
-    List<IAPProduct> productIds = response.products;
-    if (!mounted) return;
+//    IAPResponse response = await FlutterIap.restorePurchases();
+//    List<IAPProduct> productIds = response.products;
+//    if (!mounted) return;
+//
+//    setState(() {
+//      if (productIds.length <= 0 && _configuration.showAds) {
+//        Ads.showBannerAd();
+//      } else {
+//        Ads.hideBannerAd();
+//      }
+//    });
+  }
 
-    setState(() {
-      if (productIds.length <= 0 || _configuration.showAds) {
-        Ads.showBannerAd();
-      } else {
+  void checkAd() {
+    if (!Ads.isBannerShowing() && _configuration.showAds) {
+      Ads.showBannerAd();
+    } else if (!_configuration.showAds) {
+      if (Ads.isBannerShowing()) {
         Ads.hideBannerAd();
       }
-    });
+    }
   }
 }

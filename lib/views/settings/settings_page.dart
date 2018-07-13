@@ -8,6 +8,7 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_billing/flutter_billing.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
@@ -256,11 +257,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _becomeSupporter() {
-      _billing.purchase('2018_founder').then((bool purchased){
-        if (purchased){
-          _removeAds(false);
-        }
-      });
+    _billing.purchase('2018_founder').then((bool purchased) {
+      if (purchased) {
+        _showAds(false);
+      }
+    });
 //    FlutterIap.fetchProducts(["me.spacelaunchnow.spacelaunchnow"]).then((IAPResponse response){
 //      List<IAPProduct> productIds = response.products;
 //      FlutterIap.buy(productIds.first.productIdentifier).then((IAPResponse response) {
@@ -279,16 +280,16 @@ class NotificationFilterPageState extends State<SettingsPage> {
 //    });
   }
 
-  void _removeAds(bool value) {
+  void _showAds(bool value) {
+    sendUpdates(widget.configuration.copyWith(showAds: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('showAds', value));
+    });
+
     if (!value) {
-      _billing.getPurchases().then((Set<String> purchases){
+      _billing.getPurchases().then((Set<String> purchases) {
         final bool purchased = purchases.contains('2018_founder');
-        if (purchased){
-          sendUpdates(widget.configuration.copyWith(showAds: value));
-          _prefs.then((SharedPreferences prefs) {
-            return (prefs.setBool('showAds', value));
-          });
-        } else {
+        if (!purchased) {
           final snackBar = new SnackBar(
             content: new Text('Become a Supporter?'),
             duration: new Duration(seconds: 5),
@@ -301,11 +302,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
           // Find the Scaffold in the Widget tree and use it to show a SnackBar
           Scaffold.of(context).showSnackBar(snackBar);
         }
-      });
-    } else {
-      sendUpdates(widget.configuration.copyWith(showAds: value));
-      _prefs.then((SharedPreferences prefs) {
-        return (prefs.setBool('showAds', value));
       });
     }
   }
@@ -346,11 +342,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
         child: new ListTile(
           title: const Text('Show Ads'),
           onTap: () {
-            _removeAds(!widget.configuration.showAds);
+            _showAds(!widget.configuration.showAds);
           },
           trailing: new Switch(
             value: widget.configuration.showAds,
-            onChanged: _removeAds,
+            onChanged: _showAds,
           ),
         ),
       ),
@@ -419,10 +415,48 @@ class NotificationFilterPageState extends State<SettingsPage> {
           subtitle: new Text(
               'Select which agencies you want to receive launch notifications.'),
         ),
-        buildNotificationFilters(context)
+        buildNotificationFilters(context),
+        new Container(
+          padding: new EdgeInsets.only(top: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text('About', style: theme.textTheme.title)
+            ],
+          ),
+        ),
+        new Divider(),
+        new MergeSemantics(
+          child: new ListTile(
+            title: new Text('Privacy Policy'),
+            subtitle: new Text('View the Space Launch Now privacy policy here.'),
+            onTap: () {
+              _launchURL("https://spacelaunchnow.me/app/privacy");
+            },
+          ),
+        ),
+        new MergeSemantics(
+          child: new ListTile(
+            title: new Text('Terms of Use'),
+            subtitle: new Text(
+                'By using this application you agree to the Terms of Use.'),
+            onTap: () {
+              _launchURL("https://spacelaunchnow.me/app/tos");
+            },
+          ),
+        ),
       ],
     );
   }
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
   Widget buildNotificationFilters(BuildContext context) {
     var theme = Theme.of(context);
