@@ -76,7 +76,7 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
-    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: false);
+    Ads.init('ca-app-pub-9824528399164059/8172962746', testing: true);
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
@@ -431,12 +431,10 @@ class PagesState extends State<Pages> {
   }
 
   void checkAd() {
-    if (!Ads.isBannerShowing() && _configuration.showAds) {
+    if (_configuration.showAds) {
       Ads.showBannerAd();
     } else if (!_configuration.showAds) {
-      if (Ads.isBannerShowing()) {
         Ads.hideBannerAd();
-      }
     }
   }
 }

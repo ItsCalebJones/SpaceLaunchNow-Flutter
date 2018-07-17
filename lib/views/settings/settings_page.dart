@@ -421,16 +421,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text('About', style: theme.textTheme.title)
-            ],
+            children: <Widget>[new Text('About', style: theme.textTheme.title)],
           ),
         ),
         new Divider(),
         new MergeSemantics(
           child: new ListTile(
             title: new Text('Privacy Policy'),
-            subtitle: new Text('View the Space Launch Now privacy policy here.'),
+            subtitle:
+                new Text('View the Space Launch Now privacy policy here.'),
             onTap: () {
               _launchURL("https://spacelaunchnow.me/app/privacy");
             },
@@ -446,17 +445,43 @@ class NotificationFilterPageState extends State<SettingsPage> {
             },
           ),
         ),
+        new MergeSemantics(
+          child: new ListTile(
+            title: new Text('Become a Supporter'),
+            subtitle: new Text(
+                'Remove ads and support development.'),
+            onTap: () {
+              _becomeSupporter();
+            },
+          ),
+        ),
+        new MergeSemantics(
+          child: new ListTile(
+            title: new Text('Restore Purchases'),
+            subtitle: new Text(
+                'Click here to restore in app purchases.'),
+            onTap: () async {
+              final Set<String> purchases = await _billing.getPurchases();
+              final snackBar = new SnackBar(
+                content: new Text('Purchase history restored!'),
+                duration: new Duration(seconds: 5),
+              );
+              // Find the Scaffold in the Widget tree and use it to show a SnackBar
+              Scaffold.of(context).showSnackBar(snackBar);
+            },
+          ),
+        ),
       ],
     );
   }
 
-_launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
 
   Widget buildNotificationFilters(BuildContext context) {
     var theme = Theme.of(context);
