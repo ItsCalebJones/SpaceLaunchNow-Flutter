@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_billing/flutter_billing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -29,12 +28,30 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   FirebaseMessaging _firebaseMessaging;
 
-  final Billing _billing = new Billing(onError: (e) {
-    // optionally handle exception
-    print(e);
-  });
-
   NotificationFilterPageState(this._firebaseMessaging);
+
+  List<String> _productIds = [];
+
+  @override
+  initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    List<String> productIds = ["2018_founder"];
+
+    IAPResponse response = await FlutterIap.fetchProducts(productIds);
+    productIds = response.products
+        .map((IAPProduct product) => product.productIdentifier)
+        .toList();
+
+    if (!mounted) return;
+
+    setState(() {
+      _productIds = productIds;
+    });
+  }
 
   void _handleNightMode(bool value) {
     sendUpdates(widget.configuration.copyWith(nightMode: value));
@@ -257,27 +274,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _becomeSupporter() {
-    _billing.purchase('2018_founder').then((bool purchased) {
-      if (purchased) {
-        _showAds(false);
+    FlutterIap.buy(_productIds.first).then((IAPResponse response) {
+      String responseStatus = response.status;
+      print("Response: $responseStatus");
+      if (response.products != null && response.products.length > 0) {
+        sendUpdates(widget.configuration.copyWith(showAds: false));
+        _prefs.then((SharedPreferences prefs) {
+          return (prefs.setBool('showAds', false));
+        });
       }
+    }, onError: (error) {
+      // errors caught outside the framework
+      print("Error found $error");
     });
-//    FlutterIap.fetchProducts(["me.spacelaunchnow.spacelaunchnow"]).then((IAPResponse response){
-//      List<IAPProduct> productIds = response.products;
-//      FlutterIap.buy(productIds.first.productIdentifier).then((IAPResponse response) {
-//        String responseStatus = response.status;
-//        print("Response: $responseStatus");
-//        if (response.products != null && response.products.length > 0) {
-//          sendUpdates(widget.configuration.copyWith(showAds: false));
-//          _prefs.then((SharedPreferences prefs) {
-//            return (prefs.setBool('showAds', false));
-//          });
-//        }
-//      }, onError: (error) {
-//        // errors caught outside the framework
-//        print("Error found $error");
-//      });
-//    });
   }
 
   void _showAds(bool value) {
@@ -285,25 +294,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
     });
-
-    if (!value) {
-      _billing.getPurchases().then((Set<String> purchases) {
-        final bool purchased = purchases.contains('2018_founder');
-        if (!purchased) {
-          final snackBar = new SnackBar(
-            content: new Text('Become a Supporter?'),
-            duration: new Duration(seconds: 5),
-            action: new SnackBarAction(
-                label: "Yes, please!",
-                onPressed: () {
-                  _becomeSupporter();
-                }),
-          );
-          // Find the Scaffold in the Widget tree and use it to show a SnackBar
-          Scaffold.of(context).showSnackBar(snackBar);
-        }
-      });
-    }
   }
 
   @override
@@ -448,8 +438,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         new MergeSemantics(
           child: new ListTile(
             title: new Text('Become a Supporter'),
-            subtitle: new Text(
-                'Remove ads and support development.'),
+            subtitle: new Text('Remove ads and support development.'),
             onTap: () {
               _becomeSupporter();
             },
@@ -458,16 +447,21 @@ class NotificationFilterPageState extends State<SettingsPage> {
         new MergeSemantics(
           child: new ListTile(
             title: new Text('Restore Purchases'),
-            subtitle: new Text(
-                'Click here to restore in app purchases.'),
+            subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
-              final Set<String> purchases = await _billing.getPurchases();
-              final snackBar = new SnackBar(
-                content: new Text('Purchase history restored!'),
-                duration: new Duration(seconds: 5),
-              );
-              // Find the Scaffold in the Widget tree and use it to show a SnackBar
-              Scaffold.of(context).showSnackBar(snackBar);
+              FlutterIap.restorePurchases().then((IAPResponse response) {
+                String responseStatus = response.status;
+                print("Response: $responseStatus");
+                final snackBar = new SnackBar(
+                  content: new Text('Purchase history restored!'),
+                  duration: new Duration(seconds: 5),
+                );
+                // Find the Scaffold in the Widget tree and use it to show a SnackBar
+                Scaffold.of(context).showSnackBar(snackBar);
+              }, onError: (error) {
+                // errors caught outside the framework
+                print("Error found $error");
+              });
             },
           ),
         ),

@@ -36,8 +36,6 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
-  - flutter_billing (0.0.1):
-    - Flutter
   - flutter_iap (1.2.0):
     - Flutter
   - Google-Mobile-Ads-SDK (7.30.0)
@@ -64,7 +62,6 @@ DEPENDENCIES:
   - firebase_analytics (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.1/ios`)
   - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.3/ios`)
   - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release`)
-  - flutter_billing (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_billing-0.2.2/ios`)
   - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.1/ios`)
   - share (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
   - shared_preferences (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.2/ios`)
@@ -91,8 +88,6 @@ EXTERNAL SOURCES:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.3/ios"
   Flutter:
     :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release"
-  flutter_billing:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_billing-0.2.2/ios"
   flutter_iap:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.1/ios"
   share:
@@ -112,7 +107,6 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
   FirebaseMessaging: f2360a966ecfb0d14facf0fbdf306efc2df0ddbe
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  flutter_billing: 0d1729942437371ed109944d57e435f820404b97
   flutter_iap: eed3f3c673f834990847993011e8b3e8401c6b47
   Google-Mobile-Ads-SDK: 7404f68120ae8682afeb5af001fbf4aad731c78e
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
