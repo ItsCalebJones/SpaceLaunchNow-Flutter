@@ -9,6 +9,26 @@ import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
+
+class ElapsedTime {
+  final int hundreds;
+  final int seconds;
+  final int minutes;
+
+  ElapsedTime({
+    this.hundreds,
+    this.seconds,
+    this.minutes,
+  });
+}
+
+class Dependencies {
+
+  final List<ValueChanged<ElapsedTime>> timerListeners = <ValueChanged<ElapsedTime>>[];
+  final Stopwatch stopwatch = new Stopwatch();
+  final int timerMillisecondsRefreshRate = 30;
+}
+
 class LaunchDetailPage extends StatefulWidget {
   LaunchDetailPage(this._configuration,
       {this.launch, this.launchId, this.avatarTag});
@@ -28,6 +48,9 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   List<Launch> _launches = [];
   Launch launch;
   bool backEnabled;
+  Timer timer;
+  final int timerMillisecondsRefreshRate = 100;
+  final Stopwatch stopwatch = new Stopwatch();
 
   @override
   void initState() {
@@ -50,7 +73,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       }
       backEnabled = false;
     }
+    timer = new Timer.periodic(new Duration(milliseconds: timerMillisecondsRefreshRate), callback);
   }
+
+  void callback(Timer timer) {}
 
   Future<void> _loadLaunch(int id) async {
     setState(() {
@@ -131,8 +157,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                     child: new LaunchDetailBody(
                       launch,
-                      _controller,
-                      launch.net.difference(new DateTime.now()).inSeconds,
                     ),
                   ),
                   new LaunchShowcase(launch),
