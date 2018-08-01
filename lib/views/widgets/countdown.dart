@@ -49,6 +49,14 @@ class CountdownState extends State<Countdown> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    dependencies.stopwatch.stop();
+    timer?.cancel();
+    timer = null;
+    super.dispose();
+  }
+
   void onTick(ElapsedTime elapsed) {
     if (elapsed.minutes != minutes || elapsed.seconds != seconds) {
       setState(() {
