@@ -9,13 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 class LaunchDetailBody extends StatelessWidget {
   LaunchDetailBody(
     this.mLaunch,
-    this.animationController,
-    this.startValue,
   );
 
   final Launch mLaunch;
-  final AnimationController animationController;
-  final int startValue;
 
   Widget _buildLocationInfo(TextTheme textTheme) {
     return new Row(
@@ -136,13 +132,8 @@ class LaunchDetailBody extends StatelessWidget {
   }
 
   Widget _buildCountDown(TextTheme textTheme) {
-    if (startValue > 0) {
-      return new Countdown(
-        animation: new StepTween(
-          begin: startValue,
-          end: 0,
-        ).animate(animationController),
-      );
+    if (mLaunch.net.difference(new DateTime.now()).inSeconds > 0) {
+      return new Countdown(mLaunch);
     } else {
       return new Container(width: 0.0, height: 0.0);
     }

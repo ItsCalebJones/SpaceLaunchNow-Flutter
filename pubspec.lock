@@ -77,21 +77,21 @@ packages:
       name: firebase_admob
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.5"
+    version: "0.5.6"
   firebase_analytics:
     dependency: "direct main"
     description:
       name: firebase_analytics
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -100,9 +100,11 @@ packages:
   flutter_iap:
     dependency: "direct main"
     description:
-      name: flutter_iap
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "1183991ae06803a024c0959b0485b54e98feda9a"
+      resolved-ref: "1183991ae06803a024c0959b0485b54e98feda9a"
+      url: "git://github.com/JackAppDev/flutter_iap.git"
+    source: git
     version: "1.2.1"
   flutter_test:
     dependency: "direct dev"
@@ -414,7 +416,7 @@ packages:
       name: uri
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.2"
+    version: "0.11.3"
   url_launcher:
     dependency: "direct main"
     description:
