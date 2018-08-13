@@ -14,10 +14,7 @@ dependencies:
   firebase_messaging: '^1.0.2'
   firebase_analytics: '^1.0.0'
   url_launcher: '^3.0.1'
-  flutter_iap:
-    git:
-      url: git://github.com/JackAppDev/flutter_iap.git
-      ref: 1183991ae06803a024c0959b0485b54e98feda9a
+  flutter_iap: "^1.2.2"
   uri: "^0.11.1"
 
   # The following adds the Cupertino Icons Afont to your application.

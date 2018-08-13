@@ -48,7 +48,7 @@ class LaunchesRepositoryImpl implements LaunchesRepository {
 
   @override
   Future<Launches> fetchPrevious({String lsp, String offset, String search}) {
-    String currentDate = new DateFormat("yyyy-MM-dd").format(new DateTime.now());
+    String currentDate = new DateFormat("yyyy-MM-dd").format(new DateTime.now().add(new Duration(days: 1)));
     String _kLaunchesUrl = BASE_URL + '/launch/1960-01-01/' + currentDate;
     print("Fetching!");
     _kLaunchesUrl = _kLaunchesUrl + '/?sort=desc&limit=15';
