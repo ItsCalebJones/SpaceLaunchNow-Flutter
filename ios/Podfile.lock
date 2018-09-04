@@ -58,11 +58,11 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - firebase_admob (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.6/ios`)
-  - firebase_analytics (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.2/ios`)
-  - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.4/ios`)
+  - firebase_admob (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/ios`)
+  - firebase_analytics (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.3/ios`)
+  - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios`)
   - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release`)
-  - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/git/flutter_iap-1183991ae06803a024c0959b0485b54e98feda9a/ios`)
+  - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios`)
   - share (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
   - shared_preferences (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.2/ios`)
   - url_launcher (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios`)
@@ -81,15 +81,15 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   firebase_admob:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.6/ios"
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/ios"
   firebase_analytics:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.2/ios"
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.3/ios"
   firebase_messaging:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.4/ios"
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios"
   Flutter:
     :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release"
   flutter_iap:
-    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/git/flutter_iap-1183991ae06803a024c0959b0485b54e98feda9a/ios"
+    :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios"
   share:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios"
   shared_preferences:

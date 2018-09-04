@@ -14,7 +14,7 @@ dependencies:
   firebase_messaging: '^1.0.2'
   firebase_analytics: '^1.0.0'
   url_launcher: '^3.0.1'
-  flutter_iap: "^1.2.2"
+  flutter_iap: "^1.2.3"
   uri: "^0.11.1"
 
   # The following adds the Cupertino Icons Afont to your application.
@@ -38,7 +38,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #  assets:
+  assets:
+    - api-keys.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

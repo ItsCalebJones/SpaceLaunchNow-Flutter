@@ -33,7 +33,7 @@ class _LaunchShowcaseState extends State<LaunchShowcase>
     ];
     _pages = [
       new MissionShowcase(launch),
-      new LocationShowcase(launch),
+      new LocationShowcaseWidget(launch),
       new AgenciesShowcase(launch),
     ];
     _controller = new TabController(

@@ -282,17 +282,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
         _prefs.then((SharedPreferences prefs) {
           return (prefs.setBool('showAds', false));
         });
+      } else {
+        sendUpdates(widget.configuration.copyWith(showAds: true));
+        _prefs.then((SharedPreferences prefs) {
+          return (prefs.setBool('showAds', true));
+        });
       }
     }, onError: (error) {
       // errors caught outside the framework
       print("Error found $error");
-    });
-  }
-
-  void _showAds(bool value) {
-    sendUpdates(widget.configuration.copyWith(showAds: value));
-    _prefs.then((SharedPreferences prefs) {
-      return (prefs.setBool('showAds', value));
+      sendUpdates(widget.configuration.copyWith(showAds: true));
+      _prefs.then((SharedPreferences prefs) {
+        return (prefs.setBool('showAds', true));
+      });
     });
   }
 
@@ -325,18 +327,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
           trailing: new Switch(
             value: widget.configuration.nightMode,
             onChanged: _handleNightMode,
-          ),
-        ),
-      ),
-      new MergeSemantics(
-        child: new ListTile(
-          title: const Text('Show Ads'),
-          onTap: () {
-            _showAds(!widget.configuration.showAds);
-          },
-          trailing: new Switch(
-            value: widget.configuration.showAds,
-            onChanged: _showAds,
           ),
         ),
       ),
@@ -452,8 +442,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
               FlutterIap.restorePurchases().then((IAPResponse response) {
                 String responseStatus = response.status;
                 print("Response: $responseStatus");
+                if (response.products != null && response.products.length > 0) {
+                  sendUpdates(widget.configuration.copyWith(showAds: false));
+                  _prefs.then((SharedPreferences prefs) {
+                    return (prefs.setBool('showAds', false));
+                  });
+                }
                 final snackBar = new SnackBar(
-                  content: new Text('Purchase history restored!'),
+                  content: new Text('Purchase history restored: ' + response.status),
                   duration: new Duration(seconds: 5),
                 );
                 // Find the Scaffold in the Widget tree and use it to show a SnackBar
