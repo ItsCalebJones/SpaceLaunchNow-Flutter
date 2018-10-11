@@ -274,19 +274,21 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _becomeSupporter() {
+    print("Becoming supporter!");
     FlutterIap.buy(_productIds.first).then((IAPResponse response) {
       String responseStatus = response.status;
+      print(response);
       print("Response: $responseStatus");
-      if (response.products != null && response.products.length > 0) {
-        sendUpdates(widget.configuration.copyWith(showAds: false));
-        _prefs.then((SharedPreferences prefs) {
-          return (prefs.setBool('showAds', false));
-        });
-      } else {
-        sendUpdates(widget.configuration.copyWith(showAds: true));
-        _prefs.then((SharedPreferences prefs) {
-          return (prefs.setBool('showAds', true));
-        });
+      if (response.purchases != null) {
+        List<String> purchasedIds = response.purchases
+            .map((IAPPurchase purchase) => purchase.productIdentifier)
+            .toList();
+        if (purchasedIds.length > 0) {
+          sendUpdates(widget.configuration.copyWith(showAds: false));
+          _prefs.then((SharedPreferences prefs) {
+            return (prefs.setBool('showAds', false));
+          });
+        }
       }
     }, onError: (error) {
       // errors caught outside the framework
@@ -295,6 +297,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _prefs.then((SharedPreferences prefs) {
         return (prefs.setBool('showAds', true));
       });
+    });
+  }
+
+  void _showAds(bool value) {
+    sendUpdates(widget.configuration.copyWith(showAds: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('showAds', value));
     });
   }
 
@@ -327,6 +336,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
           trailing: new Switch(
             value: widget.configuration.nightMode,
             onChanged: _handleNightMode,
+          ),
+        ),
+      ),
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Show Ads'),
+          onTap: () {
+            _showAds(!widget.configuration.showAds);
+          },
+          trailing: new Switch(
+            value: widget.configuration.showAds,
+            onChanged: _showAds,
           ),
         ),
       ),
@@ -440,13 +461,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
               FlutterIap.restorePurchases().then((IAPResponse response) {
+                print(response);
                 String responseStatus = response.status;
                 print("Response: $responseStatus");
-                if (response.products != null && response.products.length > 0) {
-                  sendUpdates(widget.configuration.copyWith(showAds: false));
-                  _prefs.then((SharedPreferences prefs) {
-                    return (prefs.setBool('showAds', false));
-                  });
+                if (response.purchases != null) {
+                  List<String> purchasedIds = response.purchases
+                      .map((IAPPurchase purchase) => purchase.productIdentifier)
+                      .toList();
+                  if (purchasedIds.length > 0) {
+                    sendUpdates(widget.configuration.copyWith(showAds: false));
+                    _prefs.then((SharedPreferences prefs) {
+                      return (prefs.setBool('showAds', false));
+                    });
+                  }
                 }
                 final snackBar = new SnackBar(
                   content: new Text('Purchase history restored: ' + response.status),
