@@ -3,7 +3,7 @@ class Agency {
   final String name;
   final String abbrev;
   final String countryCode;
-  final int type;
+  final String type;
   final String infoURL;
   final String wikiURL;
 //  final List<String> infoURLs;
@@ -12,20 +12,14 @@ class Agency {
 
   factory Agency.fromJson(Map<String, dynamic> json) {
     if (json != null) {
-
-      String infoURL;
-      if (json['infoURLs'] != null && json['infoURLs'].length > 0){
-        infoURL = json['infoURLs'][0];
-      }
       return new Agency(
         id: json['id'],
         name: json['name'],
         abbrev: json['abbrev'],
-        countryCode: json['countryCode'],
+        countryCode: json['country_code'],
         type: json['type'],
-        infoURL: infoURL,
-        wikiURL: json['wikiURL'],
-//      infoURLs: json['infoURLs'],
+        infoURL: json['info_url'],
+        wikiURL: json['wiki_url'],
       );
     } return null;
   }

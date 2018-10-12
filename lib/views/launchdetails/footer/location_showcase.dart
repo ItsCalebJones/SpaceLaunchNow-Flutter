@@ -32,9 +32,8 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
     // During development, if you change this code,
     // you will need to do a full restart instead of just a hot reload
     List<Marker> _markers = <Marker>[];
-    for (Pad pad in launch.location.pads){
-      _markers.add(new Marker(pad.id.toString(), pad.name, pad.latitude, pad.longitude));
-    }
+    Pad pad = launch.pad;
+    _markers.add(new Marker(pad.id.toString(), pad.name, pad.latitude, pad.longitude));
 
     // You can't use async/await here,
     // We can't mark this method as async because of the @override
@@ -62,7 +61,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               ),
             ),
       ),
-      new Text(launch.location.pads.first.name, style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white),),
+      new Text(launch.pad.name, style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white),),
     ],
   );
   }

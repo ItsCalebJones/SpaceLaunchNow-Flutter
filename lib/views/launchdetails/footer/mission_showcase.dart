@@ -9,47 +9,12 @@ class MissionShowcase extends StatelessWidget {
   final Launch launch;
 
   _buildPayloads(TextTheme textTheme) {
-    List<Widget> payloads = [];
-    if (launch.mission.payloads != null && launch.mission.payloads.length > 0) {
-      payloads.add(new Text(
-        "Payloads",
-        style: textTheme.title.copyWith(color: Colors.white),
-        textAlign: TextAlign.center,
-      ));
-      for (Payload payload in launch.mission.payloads) {
-        payloads.addAll(
-          <Widget>[
-            new Text(
-              payload.name,
-              style: textTheme.subhead.copyWith(color: Colors.white),
-              textAlign: TextAlign.left,
-            ),
-            new Text(
-              "Description currently unavailable.",
-              style: textTheme.body1.copyWith(color: Colors.white),
-              textAlign: TextAlign.left,
-            ),
-            new Text(
-              "Weight: Unknown",
-              style: textTheme.body1.copyWith(color: Colors.white),
-              textAlign: TextAlign.left,
-            ),
-            new Text(
-              "Size: Unknown",
-              style: textTheme.body1.copyWith(color: Colors.white),
-              textAlign: TextAlign.left,
-            )
-          ],
-        );
-      }
-      return new Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: payloads,
-      );
-    } else {
-      return new Text("No Payload data available.",
-          style: textTheme.title.copyWith(color: Colors.white));
+    var orbit = "Unknown Orbit";
+    if (launch.mission.orbit != null) {
+      orbit = launch.mission.orbit;
     }
+      return new Text(orbit,
+          style: textTheme.title.copyWith(color: Colors.white));
   }
 
   @override

@@ -84,11 +84,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       launch = null;
     });
     http.Response response =
-        await http.get('https://launchlibrary.net/1.4/launch/' + id.toString());
+        await http.get('https://spacelaunchnow.me/3.2.0/launch/' + id.toString() + '/?mode=detailed');
 
     setState(() {
-      _launches = Launch.allFromResponse(response.body);
-      launch = _launches.first;
+      launch = Launch.fromResponse(response.body);
       setController();
     });
   }
@@ -96,7 +95,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   Future<void> _loadNextLaunch() async {
     List<Launch> _nextLaunches;
     http.Response response =
-        await http.get('https://launchlibrary.net/1.4/launch/next/1');
+        await http.get('https://spacelaunchnow.me/3.2.0/launch/upcoming/?limit=1&mode=detailed');
 
     _nextLaunches = Launch.allFromResponse(response.body);
     PageStorage

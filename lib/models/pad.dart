@@ -1,3 +1,5 @@
+import 'package:spacelaunchnow_flutter/models/location.dart';
+
 class Pad {
   final int id;
   final String name;
@@ -6,9 +8,10 @@ class Pad {
   final String mapURL;
   final num latitude;
   final num longitude;
+  final Location location;
 
   Pad({this.id, this.name, this.infoURL, this.wikiURL, this.mapURL,
-    this.latitude, this.longitude});
+    this.latitude, this.longitude, this.location});
 
   factory Pad.fromJson(Map<String, dynamic> json) {
     return new Pad(
@@ -17,8 +20,9 @@ class Pad {
       infoURL: json['infoURL'],
       wikiURL: json['wikiURL'],
       mapURL: json['mapURL'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      latitude: num.parse(json['latitude']),
+      longitude: num.parse(json['longitude']),
+      location: new Location.fromJson(json['location'])
     );
   }
 }

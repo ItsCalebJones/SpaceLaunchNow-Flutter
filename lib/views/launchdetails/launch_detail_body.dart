@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +23,7 @@ class LaunchDetailBody extends StatelessWidget {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              mLaunch.location.name,
+              mLaunch.pad.location.name,
               maxLines: 2,
               style: textTheme.subhead.copyWith(color: Colors.white70),
               overflow: TextOverflow.fade,
@@ -132,7 +131,10 @@ class LaunchDetailBody extends StatelessWidget {
   }
 
   Widget _buildCountDown(TextTheme textTheme) {
-    if (mLaunch.net.difference(new DateTime.now()).inSeconds > 0) {
+    DateTime net = mLaunch.net;
+    DateTime current = new DateTime.now();
+    var diff = net.difference(current);
+    if (diff.inSeconds > 0) {
       return new Countdown(mLaunch);
     } else {
       return new Container(width: 0.0, height: 0.0);
@@ -143,7 +145,7 @@ class LaunchDetailBody extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
-    String status = Utils.getStatus(mLaunch.status);
+    String status = mLaunch.status.name;
 
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
