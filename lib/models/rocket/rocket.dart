@@ -4,13 +4,16 @@ import 'package:spacelaunchnow_flutter/models/rocket/launcher_configuration.dart
 class Rocket {
   final int id;
   final LauncherConfiguration configuration;
-  final List<FirstStage> firstStages;
+  final Iterable<FirstStage> firstStages;
 
   Rocket({this.id, this.configuration, this.firstStages});
 
   factory Rocket.fromJson(Map<String, dynamic> json) {
     var firstStagesJson = json['first_stage'];
-    List<FirstStage> listFirstStages = new List<FirstStage>.from(firstStagesJson);
+    final listFirstStages = (firstStagesJson as List).map((i) => new FirstStage.fromJson(i));
+    for (final item in listFirstStages) {
+      print(item.launcher.serialNumber);
+    }
 
     return Rocket(
         id: json['id'],

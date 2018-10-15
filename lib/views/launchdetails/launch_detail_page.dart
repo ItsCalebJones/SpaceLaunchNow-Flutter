@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/views/launchdetails/footer/launch_detail_footer.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -119,7 +118,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     Widget content;
     List<Color> colors = [];
     if (!widget._configuration.nightMode) {
-      colors.addAll([Colors.blue[700], Colors.blue[600]]);
+      colors.addAll([Colors.blue[700], Colors.blueGrey[400]]);
     } else {
       colors.addAll([Colors.grey[800], Colors.blueGrey[700]]);
     }
@@ -154,11 +153,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                   ),
                   new Padding(
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                    child: new LaunchDetailBody(
+                    child: new LaunchDetailBodyWidget(
                       launch,
                     ),
                   ),
-                  new LaunchShowcase(launch),
                 ],
               ),
             ),

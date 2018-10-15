@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/util/utils.dart';
+import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
+import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
+import 'package:spacelaunchnow_flutter/views/launchdetails/footer/mission_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LaunchDetailBody extends StatelessWidget {
-  LaunchDetailBody(
+class LaunchDetailBodyWidget extends StatefulWidget {
+  final Launch launch;
+
+  LaunchDetailBodyWidget(this.launch);
+
+  @override
+  State createState() => new LaunchDetailBodyState(this.launch);
+}
+
+class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
+  LaunchDetailBodyState(
     this.mLaunch,
   );
 
@@ -56,29 +69,58 @@ class LaunchDetailBody extends StatelessWidget {
     );
   }
 
-  Widget _buildWeatherInfo(TextTheme textTheme) {
-    if (mLaunch.probability != -1) {
-      String probability =
-          "Probability: " + mLaunch.probability.toString() + "%";
-      return new Row(
-        children: <Widget>[
-          new Icon(
-            Icons.cloud,
-            color: Colors.white,
-          ),
-          new Expanded(
-            child: new Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                probability,
-                maxLines: 2,
-                style: textTheme.subhead.copyWith(color: Colors.white70),
-                overflow: TextOverflow.fade,
-              ),
+  Widget _buildLandingInfo(TextTheme textTheme) {
+    if (mLaunch.rocket.firstStages.length > 0) {
+      bool landingAttempt = false;
+      String landingLocation = "Landing: ";
+      String landingSuccess = "";
+      for (var i = 0; i < mLaunch.rocket.firstStages.length; i++) {
+        final item = mLaunch.rocket.firstStages.elementAt(i);
+        if (item.landing.attempt){
+          landingAttempt = true;
+        }
+        if (landingLocation.length == 9) {
+          landingLocation = landingLocation + item.landing.location.abbrev;
+
+          if (item.landing.success){
+            landingLocation = landingLocation + " (Success)";
+          } else if (!item.landing.success) {
+            landingLocation = landingLocation + " (Failed)";
+          }
+        } else {
+          landingLocation = landingLocation + ", " + item.landing.location.abbrev;
+          if (item.landing.success){
+            landingLocation = landingLocation + " (Success)";
+          } else if (!item.landing.success) {
+            landingLocation = landingLocation + " (Failed)";
+          }
+        }
+      }
+      if (landingAttempt) {
+        return new Column(
+          children: <Widget>[
+            new Row(
+              children: <Widget>[
+                new Icon(
+                  Icons.flight_land,
+                  color: Colors.white,
+                ),
+                new Expanded(
+                  child: new Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text(
+                      landingLocation,
+                      maxLines: 2,
+                      style: textTheme.subhead.copyWith(color: Colors.white70),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      );
+          ],
+        );
+      }
     } else {
       return Row();
     }
@@ -145,26 +187,30 @@ class LaunchDetailBody extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
-    String status = mLaunch.status.name;
+    String status = Utils.getStatus(mLaunch.status.id);
 
     return new Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        new Padding(
+          padding: const EdgeInsets.only(top: 12.0, left: 4.0, right: 4.0),
+          child: new Chip(
+            label: new Text(
+              status,
+              style: textTheme.title.copyWith(color: Colors.white),
+            ),
+            backgroundColor: Colors.green,
+          ),
+        ),
         _buildCountDown(textTheme),
         _buildActionButtons(theme),
         new Padding(
-          padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
+          padding: const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
           child: new Text(
             mLaunch.name,
             style: textTheme.headline.copyWith(color: Colors.white),
-          ),
-        ),
-        new Padding(
-          padding: const EdgeInsets.only(top: 4.0, left: 2.0, right: 0.0),
-          child: new Text(
-            status,
-            style: textTheme.title.copyWith(color: Colors.white70),
+            textAlign: TextAlign.center,
           ),
         ),
         new Padding(
@@ -179,9 +225,18 @@ class LaunchDetailBody extends StatelessWidget {
         ),
         new Padding(
           padding: const EdgeInsets.only(
-              top: 2.0, left: 8.0, right: 8.0, bottom: 4.0),
-          child: _buildWeatherInfo(textTheme),
+              top: 2.0, left: 8.0, right: 8.0, bottom: 2.0),
+          child: _buildLandingInfo(textTheme),
         ),
+        new MissionShowcase(mLaunch),
+        new Divider(
+          color: Colors.white,
+        ),
+        new AgenciesShowcase(mLaunch),
+        new Divider(
+          color: Colors.white,
+        ),
+        new LocationShowcaseWidget(mLaunch),
       ],
     );
   }
