@@ -38,6 +38,22 @@ class Agency {
 
   factory Agency.fromJson(Map<String, dynamic> json) {
     if (json != null) {
+
+      var logoURL = json['logo_url'];
+      if (logoURL == null) {
+        logoURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+      }
+
+      var imageURL = json['image_url'];
+      if (imageURL == null) {
+        imageURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+      }
+
+      var nationURL = json['nation_url'];
+      if (nationURL == null) {
+        nationURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+      }
+
       return new Agency(
         id: json['id'],
         name: json['name'],
@@ -49,9 +65,9 @@ class Agency {
         successfulLaunches: json['successful_launches'],
         failedLaunches: json['failed_launches'],
         pendingLaunches: json['pending_launches'],
-        logoURL: json['logo_url'],
-        imageURL: json['image_url'],
-        nationURL: json['nation_url'],
+        logoURL: logoURL,
+        imageURL: imageURL,
+        nationURL: nationURL,
         type: json['type'],
         infoURL: json['info_url'],
         wikiURL: json['wiki_url'],

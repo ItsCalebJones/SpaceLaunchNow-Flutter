@@ -19,14 +19,27 @@ class AgenciesShowcase extends StatelessWidget {
     String lspDescription = "";
 
     if (lsp != null) {
-      lspName = lsp.name;
-      lspAdmin = lsp.administrator;
-      lspfounded = "Founded: " + lsp.foundingYear;
-      lspDescription = lsp.description;
+      String lspFoundedYear = lsp.foundingYear;
+      if (lspFoundedYear != null){
+        lspfounded = "Founded: " + lsp.foundingYear;
+      }
+
+      if (lsp.name != null) {
+        lspName = lsp.name;
+      }
+      if (lsp.administrator != null) {
+        lspAdmin = lsp.administrator;
+      }
+      if (lsp.description != null) {
+        lspDescription = lsp.description;
+      }
     }
 
     Widget _buildFlights() {
-      if (lsp != null) {
+      if (lsp != null
+          && lsp.successfulLaunches != null
+          && lsp.failedLaunches != null
+          && lsp.pendingLaunches != null) {
         return new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,

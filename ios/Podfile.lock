@@ -61,7 +61,7 @@ DEPENDENCIES:
   - firebase_admob (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/ios`)
   - firebase_analytics (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.3/ios`)
   - firebase_messaging (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios`)
-  - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios`)
+  - Flutter (from `/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release`)
   - flutter_iap (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios`)
   - share (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
   - shared_preferences (from `/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.2/ios`)
@@ -87,7 +87,7 @@ EXTERNAL SOURCES:
   firebase_messaging:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios"
   Flutter:
-    :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios"
+    :path: "/Users/ALPCJONESM2/Development/flutter/bin/cache/artifacts/engine/ios-release"
   flutter_iap:
     :path: "/Users/ALPCJONESM2/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios"
   share:
