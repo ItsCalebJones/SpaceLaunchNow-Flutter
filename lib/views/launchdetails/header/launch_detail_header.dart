@@ -27,7 +27,7 @@ class LaunchDetailHeader extends StatelessWidget {
 
     return new DiagonallyCutColoredImage(
       new Image.network(
-        launch.rocket.imageURL,
+        launch.rocket.configuration.image,
         width: screenWidth,
         height: 240.0,
         fit: BoxFit.cover,
@@ -50,7 +50,7 @@ class LaunchDetailHeader extends StatelessWidget {
           ),
           child: new CircleAvatar(
             foregroundColor: Colors.white,
-            backgroundImage: new NetworkImage(launch.rocket.imageURL),
+            backgroundImage: new NetworkImage(launch.rocket.configuration.image),
             radius: 100.0,
             backgroundColor: Colors.white,
           ),
@@ -67,7 +67,7 @@ class LaunchDetailHeader extends StatelessWidget {
         ),
         child: new CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(launch.rocket.imageURL),
+          backgroundImage: new NetworkImage(launch.rocket.configuration.image),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),

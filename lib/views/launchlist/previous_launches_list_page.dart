@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
-import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/models/launches.dart';
+import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
@@ -23,10 +23,11 @@ class PreviousLaunchListPage extends StatefulWidget {
 }
 
 class _LaunchListPageState extends State<PreviousLaunchListPage> {
-  List<Launch> _launches = [];
-  int count = 0;
-  int total = 0;
+  List<LaunchList> _launches = [];
+  int nextOffset = 0;
+  int totalCount = 0;
   int offset = 0;
+  int limit = 30;
   bool loading = false;
   bool searchActive = false;
   LaunchesRepository _repository = new Injector().launchRepository;
@@ -34,7 +35,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    List<Launch> launches = PageStorage.of(context).readState(context, identifier: 'previousLaunches');
+    List<LaunchList> launches = PageStorage.of(context).readState(context, identifier: 'previousLaunches');
     if (launches != null){
       _launches = launches;
     } else {
@@ -47,12 +48,11 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     super.dispose();
   }
 
-  void onLoadLaunchesComplete(Launches launches, [bool reload = false]) {
+  void onLoadLaunchesComplete(LaunchesList launches, [bool reload = false]) {
     loading = false;
-    count = launches.count;
-    total = launches.total;
-    offset = launches.offset;
-    print("Count: " + count.toString() + " Total: " + total.toString() + " Offset: " + offset.toString());
+    nextOffset = launches.nextOffset;
+    totalCount = launches.count;
+    print("Next: " + nextOffset.toString() + " Total: " + totalCount.toString());
     if (reload){
       _launches.clear();
     }
@@ -96,7 +96,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     var launch = _launches[index];
     var formatter = new DateFormat('MMM yyyy');
 
-    if (index + count > _launches.length) {
+    if (index > _launches.length - 10) {
       notifyThreshold();
     }
 
@@ -104,26 +104,26 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     return new Padding(
       padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
       child: new ListTile(
-        onTap: () => _navigateToLaunchDetails(launch: launch, avatarTag: index),
+        onTap: () => _navigateToLaunchDetails(launch: null, avatarTag: index, launchId: launch.id),
         leading: new Hero(
           tag: index,
           child: new CircleAvatar(
-            backgroundImage: new NetworkImage(launch.rocket.imageURL),
+            backgroundImage: new NetworkImage(launch.image),
           ),
         ),
         title: new Text(launch.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location.name),
+        subtitle: new Text(launch.location),
         trailing: new Text(formatter.format(launch.net), style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
-  void _navigateToLaunchDetails({Launch launch, Object avatarTag, int launchId}) {
+  void _navigateToLaunchDetails({LaunchList launch, Object avatarTag, int launchId}) {
     Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(widget._configuration, launch: launch, avatarTag: avatarTag, launchId: launchId,);
+          return new LaunchDetailPage(widget._configuration, launch: null, avatarTag: avatarTag, launchId: launchId,);
         },
       ),
     );
@@ -186,10 +186,10 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         ),
         builder: (BuildContext context) {
           return new Material(
-            child: new MaterialSearch<Launch>(
+            child: new MaterialSearch<LaunchList>(
               barBackgroundColor: backgroundColor,
               placeholder: 'Search',
-              results: _launches.map((Launch v) => new MaterialSearchResult<Launch>(
+              results: _launches.map((LaunchList v) => new MaterialSearchResult<LaunchList>(
                 icon: Icons.launch,
                 value: v,
                 text: v.name,
@@ -216,7 +216,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
               searchActive = true;
               _getLaunchBySearch(value);
             }
-          } else if (value == Launch) {
+          } else if (value == LaunchList) {
               _navigateToLaunchDetails(launch: value);
           }
 //      setState(() => Launch_name = value as Launch);
@@ -231,9 +231,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   }
 
   void notifyThreshold() {
-    if (!searchActive) {
       lockedLoadNext();
-    }
   }
 
   void lockedLoadNext() {
@@ -244,9 +242,8 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
 
   void loadNext() {
     loading = true;
-    int newOffset = (offset + count);
-    if (total == 0 || newOffset < total) {
-      _repository.fetchPrevious(offset: newOffset.toString())
+    if (totalCount == 0 || nextOffset != null) {
+      _repository.fetchPrevious(limit: limit.toString(), offset: nextOffset.toString())
           .then((launches) => onLoadLaunchesComplete(launches))
           .catchError((onError) {
         print(onError);
@@ -256,13 +253,15 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   }
 
   Future<Null> _handleRefresh() async {
+    _launches.clear();
     loading == false;
-    total = 0;
+    totalCount = 0;
     offset = 0;
-    count = 0;
+    nextOffset = 0;
     searchActive = false;
     loading = true;
-    Launches responseLaunches = await _repository.fetchPrevious(offset: offset.toString())
+    LaunchesList responseLaunches = await _repository.fetchPrevious(limit: limit.toString(),
+        offset: nextOffset.toString())
         .catchError((onError){
       onLoadContactsError();
     });
@@ -271,9 +270,15 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   }
 
   void _getLaunchBySearch(String value) {
+    _launches.clear();
     loading = true;
+    totalCount = 0;
+    limit = 0;
+    nextOffset = 0;
     searchActive = true;
-    _repository.fetchPrevious(search: value).then((launches){
+    _repository.fetchPrevious(limit: limit.toString(),
+        offset: nextOffset.toString(),
+        search: value).then((launches){
       onLoadLaunchesComplete(launches, true);
     }).catchError((onError){
       onLoadContactsError(true);

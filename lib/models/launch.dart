@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/agency.dart';
 import 'package:spacelaunchnow_flutter/models/location.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
-import 'package:spacelaunchnow_flutter/models/rocket.dart';
+import 'package:spacelaunchnow_flutter/models/pad.dart';
+import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
+import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class Launch {
   final int id;
@@ -11,26 +12,28 @@ class Launch {
   final DateTime windowStart;
   final DateTime windowEnd;
   final DateTime net;
-//  final List<String> vidURLs;
   final int probability;
-  final int status;
-  final Agency launchServiceProvider;
+  final Status status;
   final Rocket rocket;
-  final Location location;
+  final Pad pad;
   final Mission mission;
   final String vidURL;
   const Launch({this.id, this.name, this.status, this.windowStart, this.windowEnd,
-    this.net,  this.probability, this.launchServiceProvider,
-    this.rocket, this.location, this.mission, this.vidURL});
+    this.net,  this.probability, this.rocket, this.pad, this.mission, this.vidURL});
 
   static List<Launch> allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
 
-    return decodedJson['launches']
+    return decodedJson['results']
         .cast<Map<String, dynamic>>()
         .map((obj) => Launch.fromJson(obj))
         .toList()
         .cast<Launch>();
+  }
+
+  static Launch fromResponse(String response) {
+    var decodedJson = json.decode(response).cast<String, dynamic>();
+    return Launch.fromJson(decodedJson);
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
@@ -39,22 +42,21 @@ class Launch {
     if (json['vidURLs'].length > 0){
       vidURL = json['vidURLs'][0];
     }
-    Mission mission;
-    if (json['missions'].length > 0){
-      mission = new Mission.fromJson(json['missions'][0]);
+    var mission;
+    if (json['mission'] != null){
+      mission = new Mission.fromJson(json['mission']);
     }
+
     return new Launch(
       id: json['id'],
       name: json['name'],
-      status: json['status'],
-      windowStart: DateTime.parse(json['isostart']),
-      windowEnd: DateTime.parse(json['isoend']),
-      net: DateTime.parse(json['isonet']),
-//      vidURLs: new List<String>.from(json['launches']),
+      status: new Status.fromJson(json['status']),
+      windowStart: DateTime.parse(json['window_start']),
+      windowEnd: DateTime.parse(json['window_end']),
+      net: DateTime.parse(json['net']),
       probability: json['probability'],
-      launchServiceProvider: new Agency.fromJson(json['lsp']),
       rocket: new Rocket.fromJson(json['rocket']),
-      location: new Location.fromJson(json['location']),
+      pad: new Pad.fromJson(json['pad']),
       mission: mission,
       vidURL: vidURL,
     );

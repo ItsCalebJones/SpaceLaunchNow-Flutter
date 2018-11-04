@@ -12,18 +12,63 @@ class AgenciesShowcase extends StatelessWidget {
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
 
-    Agency lsp = mLaunch.launchServiceProvider;
+    Agency lsp = mLaunch.rocket.configuration.launchServiceProvider;
+    String lspName = "Unknown";
+    String lspAdmin = "Unknown Administrator";
+    String lspfounded = "Founded: Unknown";
+    String lspDescription = "";
+
+    if (lsp != null) {
+      String lspFoundedYear = lsp.foundingYear;
+      if (lspFoundedYear != null){
+        lspfounded = "Founded: " + lsp.foundingYear;
+      }
+
+      if (lsp.name != null) {
+        lspName = lsp.name;
+      }
+      if (lsp.administrator != null) {
+        lspAdmin = lsp.administrator;
+      }
+      if (lsp.description != null) {
+        lspDescription = lsp.description;
+      }
+    }
+
+    Widget _buildFlights() {
+      if (lsp != null
+          && lsp.successfulLaunches != null
+          && lsp.failedLaunches != null
+          && lsp.pendingLaunches != null) {
+        return new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Text(
+              "Successful: " + lsp.successfulLaunches.toString(),
+              style: textTheme.subhead.copyWith(color: Colors.white),
+              textAlign: TextAlign.start,
+            ),
+            new Text(
+              "Failed: " + lsp.failedLaunches.toString(),
+              style: textTheme.subhead.copyWith(color: Colors.white),
+              textAlign: TextAlign.start,
+            ),
+            new Text(
+              "Pending: " + lsp.pendingLaunches.toString(),
+              style: textTheme.subhead.copyWith(color: Colors.white),
+              textAlign: TextAlign.start,
+            ),
+          ],
+        );
+      }
+      return null;
+    }
 
     Widget _buildLSP() {
       List<Widget> lspWidgets = [];
       List<Widget> lspButtons = [];
       if (lsp != null) {
-        lspWidgets.add(new Text(
-          lsp.name,
-          style: textTheme.subhead.copyWith(color: Colors.white),
-          textAlign: TextAlign.left,
-        ));
-
         if (lsp.infoURL != null) {
           lspButtons.add(new MaterialButton(
             elevation: 2.0,
@@ -66,113 +111,58 @@ class AgenciesShowcase extends StatelessWidget {
           textAlign: TextAlign.left,
         ));
       }
+
       return new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          new Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top:8.0, bottom: 4.0),
+            child: Image.network(lsp.logoURL,
+              height: 150.0,
+              fit: BoxFit.contain,
+            ),
+          ),
           new Text(
-            "Launch Service Provider",
+            lspName,
             style: textTheme.title.copyWith(color: Colors.white),
             textAlign: TextAlign.center,
           ),
-          new Column(
-              children: lspWidgets
-          ),
-        ],
-      );
-    }
-
-    if (mLaunch.mission != null) {
-      List<Agency> missionAgency = mLaunch.mission.agencies;
-
-      Widget _buildMission() {
-        List<Widget> agencyWidgets = [];
-
-        if (missionAgency != null && missionAgency.length > 0) {
-          for (Agency agency in missionAgency) {
-            List<Widget> agencyButtons = [];
-            agencyWidgets.addAll([
-              new Text(
-                agency.name,
-                style: textTheme.subhead.copyWith(color: Colors.white),
-                textAlign: TextAlign.left,
-              )
-            ]);
-
-            if (agency.infoURL != null) {
-              agencyButtons.add(new MaterialButton(
-                elevation: 2.0,
-                minWidth: 140.0,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  launch(agency.infoURL);
-                },
-                child: new Text('Info URL'),
-              ));
-            }
-
-            if (agency.wikiURL != null) {
-              agencyButtons.add(new MaterialButton(
-                elevation: 2.0,
-                minWidth: 140.0,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  launch(agency.wikiURL);
-                },
-                child: new Text('Wiki URL'),
-              ));
-            }
-
-            if (agencyButtons.length > 0) {
-              agencyWidgets.add(new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: agencyButtons,
-                ),
-              ));
-            }
-          }
-        } else {
-          agencyWidgets.add(new Text(
-            "Unknown",
+          new Text(
+            lspAdmin,
             style: textTheme.subhead.copyWith(color: Colors.white),
-            textAlign: TextAlign.left,
-          ));
-        }
-        return new Column(
-          children: <Widget>[
-            new Text(
-              "Mission Agencies",
-              style: textTheme.title.copyWith(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            new Column(
-              children: agencyWidgets,
-            ),
-          ],
-        );
-      }
-
-      return new Column(
-        children: <Widget>[
+            textAlign: TextAlign.center,
+          ),
+          new Text(
+            lspfounded,
+            style: textTheme.subhead.copyWith(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+          new Divider(
+            color: Colors.white,
+          ),
+          _buildFlights(),
+          new Divider(
+            color: Colors.white,
+          ),
           new Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: _buildLSP()),
-          new Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: _buildMission()),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            child: new Text(
+              lspDescription,
+              style: textTheme.body1.copyWith(color: Colors.white),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          new Column(children: lspWidgets),
         ],
       );
-    } else {
-      return new Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: new Column(
-          children: <Widget>[
-            _buildLSP()
-          ],
-        ),
-      );
     }
+
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Column(
+        children: <Widget>[_buildLSP()],
+      ),
+    );
   }
 }

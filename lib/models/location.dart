@@ -6,9 +6,8 @@ class Location {
   final String countryCode;
   final String infoURL;
   final String wikiURL;
-  final List<Pad> pads;
 
-  Location({this.id, this.name,  this.countryCode,  this.infoURL, this.wikiURL, this.pads});
+  Location({this.id, this.name,  this.countryCode,  this.infoURL, this.wikiURL});
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
@@ -17,7 +16,6 @@ class Location {
       countryCode: json['countryCode'],
       infoURL: json['infoURL'],
       wikiURL: json['wikiURL'],
-      pads: new List<Pad>.from(json['pads'].map((location) => new Pad.fromJson(location))),
     );
   }
 }

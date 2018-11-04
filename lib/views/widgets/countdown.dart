@@ -92,7 +92,7 @@ class CountdownState extends State<Countdown> {
     Duration duration = new Duration(seconds: launch.net.difference(new DateTime.now()).inSeconds);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     return new Container(
-      padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 8.0, bottom: 8.0),
+      padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 4.0, bottom: 4.0),
       child: new Column(
         children: <Widget>[
           new Divider(
