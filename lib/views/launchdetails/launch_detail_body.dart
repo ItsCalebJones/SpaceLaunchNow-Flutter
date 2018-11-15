@@ -81,15 +81,18 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         }
         if (landingLocation.length == 9) {
           landingLocation = landingLocation + item.landing.location.abbrev;
-
-          if (item.landing.success){
+          if (item.landing.success == null){
+            landingLocation = landingLocation;
+          } else if (item.landing.success){
             landingLocation = landingLocation + " (Success)";
           } else if (!item.landing.success) {
             landingLocation = landingLocation + " (Failed)";
           }
         } else {
           landingLocation = landingLocation + ", " + item.landing.location.abbrev;
-          if (item.landing.success){
+          if (item.landing.success == null){
+            landingLocation = landingLocation;
+          } else if (item.landing.success){
             landingLocation = landingLocation + " (Success)";
           } else if (!item.landing.success) {
             landingLocation = landingLocation + " (Failed)";
