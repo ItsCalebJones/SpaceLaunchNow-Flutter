@@ -58,7 +58,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              new DateFormat.yMMMMEEEEd().format(mLaunch.net),
+              new DateFormat.yMMMMEEEEd().add_Hms().format(mLaunch.net),
               maxLines: 2,
               style: textTheme.subhead.copyWith(color: Colors.white70),
               overflow: TextOverflow.fade,
