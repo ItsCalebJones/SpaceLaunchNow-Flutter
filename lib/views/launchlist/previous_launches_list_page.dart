@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +109,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         leading: new Hero(
           tag: index,
           child: new CircleAvatar(
-            backgroundImage: new NetworkImage(launch.image),
+            backgroundImage: new CachedNetworkImageProvider(launch.image),
           ),
         ),
         title: new Text(launch.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 15.0)),
