@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
+import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
@@ -206,12 +207,12 @@ class PagesState extends State<Pages> {
         },
         onLaunch: (Map<String, dynamic> message) {
           print("onLaunch: $message");
-          final int launchId = int.parse(message['launch_id']);
+          final String launchId = message['launch_uuid'];
           _navigateToLaunchDetails(launchId);
         },
         onResume: (Map<String, dynamic> message) {
           print("onResume: $message");
-          final int launchId = int.parse(message['launch_id']);
+          final String launchId = message['launch_uuid'];
           _navigateToLaunchDetails(launchId);
         },
       );
@@ -304,7 +305,7 @@ class PagesState extends State<Pages> {
   }
 
   void _showItemDialog(Map<String, dynamic> message) {
-    final int launchId = int.parse(message['launch_id']);
+    final String launchId = message['launch_uuid'];
     showDialog<bool>(
       context: context,
       builder: (_) => _buildDialog(context, message),
@@ -342,6 +343,11 @@ class PagesState extends State<Pages> {
         break;
 
       case 3:
+        checkAd();
+        return new EventListPage(_configuration);
+        break;
+
+      case 4:
         if (Ads.isBannerShowing()) {
           Ads.hideBannerAd();
         }
@@ -402,13 +408,16 @@ class PagesState extends State<Pages> {
                         title: new Text('Previous'),
                         icon: new Icon(Icons.history)),
                     new BottomNavigationBarItem(
+                        title: new Text('Events'),
+                        icon: new Icon(Icons.event)),
+                    new BottomNavigationBarItem(
                         title: new Text('Settings'),
                         icon: new Icon(Icons.settings)),
                   ],
                 ))));
   }
 
-  void _navigateToLaunchDetails(int launchId) {
+  void _navigateToLaunchDetails(String launchId) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -8,7 +8,7 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
-import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
+import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:material_search/material_search.dart';
@@ -31,7 +31,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   int limit = 30;
   bool loading = false;
   bool searchActive = false;
-  LaunchesRepository _repository = new Injector().launchRepository;
+  SLNRepository _repository = new Injector().slnRepository;
 
   @override
   void initState() {
@@ -119,7 +119,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     );
   }
 
-  void _navigateToLaunchDetails({LaunchList launch, Object avatarTag, int launchId}) {
+  void _navigateToLaunchDetails({LaunchList launch, Object avatarTag, String launchId}) {
     Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
@@ -211,12 +211,8 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         .push(_buildMaterialSearchPage(context))
         .then((dynamic value) {
           if (value is String){
-            if (isNumeric(value)){
-              _navigateToLaunchDetails(launchId: int.parse(value));
-            } else {
               searchActive = true;
               _getLaunchBySearch(value);
-            }
           } else if (value == LaunchList) {
               _navigateToLaunchDetails(launch: value);
           }

@@ -142,17 +142,17 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch.vidURL != null) {
       materialButtons.add(new MaterialButton(
         elevation: 2.0,
-        minWidth: 130.0,
-        color: Colors.redAccent,
-        textColor: Colors.white,
-        onPressed: () {
+          minWidth: 130.0,
+          color: Colors.redAccent,
+          textColor: Colors.white,
+          onPressed: () {
           _launchURL(mLaunch.vidURL);
         },
         child: new Text('Watch'),
       ));
     }
 
-    String launchId = mLaunch.id.toString();
+    String launchId = mLaunch.id;
     materialButtons.add(new MaterialButton(
       elevation: 2.0,
       minWidth: 130.0,

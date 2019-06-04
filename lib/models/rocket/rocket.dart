@@ -9,7 +9,7 @@ class Rocket {
   Rocket({this.id, this.configuration, this.firstStages});
 
   factory Rocket.fromJson(Map<String, dynamic> json) {
-    var firstStagesJson = json['first_stage'];
+    var firstStagesJson = json['launcher_stage'];
     final listFirstStages = (firstStagesJson as List).map((i) => new FirstStage.fromJson(i));
     for (final item in listFirstStages) {
       print(item.launcher.serialNumber);

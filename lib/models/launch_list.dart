@@ -7,7 +7,7 @@ import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class LaunchList {
-  final int id;
+  final String id;
   final String name;
   final DateTime windowStart;
   final DateTime windowEnd;
