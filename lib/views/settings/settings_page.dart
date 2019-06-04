@@ -276,7 +276,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void _becomeSupporter() {
     print("Becoming supporter!");
     FlutterIap.buy(_productIds.first).then((IAPResponse response) {
-      String responseStatus = response.status;
+      String responseStatus = response.status.name;
       print(response);
       print("Response: $responseStatus");
       if (response.purchases != null) {
@@ -462,7 +462,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             onTap: () async {
               FlutterIap.restorePurchases().then((IAPResponse response) {
                 print(response);
-                String responseStatus = response.status;
+                String responseStatus = response.status.name;
                 print("Response: $responseStatus");
                 if (response.purchases != null) {
                   List<String> purchasedIds = response.purchases
@@ -476,7 +476,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   }
                 }
                 final snackBar = new SnackBar(
-                  content: new Text('Purchase history restored: ' + response.status),
+                  content: new Text('Purchase history restored: ' + response.status.name),
                   duration: new Duration(seconds: 5),
                 );
                 // Find the Scaffold in the Widget tree and use it to show a SnackBar
