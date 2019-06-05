@@ -11,12 +11,20 @@ class AppConfiguration {
     @required this.subscribeArianespace,
     @required this.subscribeULA,
     @required this.subscribeRoscosmos,
-    @required this.subscribeCASC,
+    @required this.subscribeBlueOrigin,
+    @required this.subscribeRocketLab,
+    @required this.subscribeNorthrop,
     @required this.subscribeCAPE,
     @required this.subscribePLES,
     @required this.subscribeISRO,
     @required this.subscribeKSC,
     @required this.subscribeVAN,
+
+    @required this.subscribeWallops,
+    @required this.subscribeNZ,
+    @required this.subscribeJapan,
+    @required this.subscribeFG,
+
     @required this.subscribeALL,
     @required this.nightMode,
     @required this.showAds,
@@ -32,12 +40,20 @@ class AppConfiguration {
         assert(subscribeArianespace != null),
         assert(subscribeULA != null),
         assert(subscribeRoscosmos != null),
-        assert(subscribeCASC != null),
+        assert(subscribeBlueOrigin != null),
+        assert(subscribeRocketLab != null),
+        assert(subscribeNorthrop != null),
         assert(subscribeCAPE != null),
         assert(subscribePLES != null),
         assert(subscribeISRO != null),
         assert(subscribeKSC != null),
         assert(subscribeVAN != null),
+
+        assert(subscribeWallops != null),
+        assert(subscribeNZ != null),
+        assert(subscribeJapan != null),
+        assert(subscribeFG != null),
+
         assert(subscribeALL != null);
 
   bool showAds;
@@ -51,12 +67,20 @@ class AppConfiguration {
   bool subscribeArianespace;
   bool subscribeULA;
   bool subscribeRoscosmos;
-  bool subscribeCASC;
+  bool subscribeBlueOrigin;
+  bool subscribeRocketLab;
+  bool subscribeNorthrop;
   bool subscribeCAPE;
   bool subscribePLES;
   bool subscribeISRO;
   bool subscribeKSC;
   bool subscribeVAN;
+
+  bool subscribeWallops;
+  bool subscribeNZ;
+  bool subscribeJapan;
+  bool subscribeFG;
+
   bool subscribeALL;
 
   AppConfiguration copyWith({
@@ -71,12 +95,21 @@ class AppConfiguration {
     bool subscribeArianespace,
     bool subscribeULA,
     bool subscribeRoscosmos,
+    bool subscribeBlueOrigin,
+    bool subscribeRocketLab,
+    bool subscribeNorthrop,
     bool subscribeCASC,
     bool subscribeCAPE,
     bool subscribePLES,
     bool subscribeISRO,
     bool subscribeKSC,
     bool subscribeVAN,
+
+    bool subscribeWallops,
+    bool subscribeNZ,
+    bool subscribeJapan,
+    bool subscribeFG,
+
     bool subscribeALL,
   }) {
     return new AppConfiguration(
@@ -94,12 +127,20 @@ class AppConfiguration {
       subscribeArianespace: subscribeArianespace ?? this.subscribeArianespace,
       subscribeULA: subscribeULA ?? this.subscribeULA,
       subscribeRoscosmos: subscribeRoscosmos ?? this.subscribeRoscosmos,
-      subscribeCASC: subscribeCASC ?? this.subscribeCASC,
+      subscribeBlueOrigin: subscribeBlueOrigin ?? this.subscribeBlueOrigin,
+      subscribeRocketLab: subscribeRocketLab ?? this.subscribeRocketLab,
+      subscribeNorthrop: subscribeNorthrop ?? this.subscribeNorthrop,
       subscribeCAPE: subscribeCAPE ?? this.subscribeCAPE,
       subscribePLES: subscribePLES ?? this.subscribePLES,
       subscribeISRO: subscribeISRO ?? this.subscribeISRO,
       subscribeKSC: subscribeKSC ?? this.subscribeKSC,
       subscribeVAN: subscribeVAN ?? this.subscribeVAN,
+
+      subscribeWallops: subscribeWallops ?? this.subscribeWallops,
+      subscribeNZ: subscribeNZ ?? this.subscribeNZ,
+      subscribeJapan: subscribeJapan ?? this.subscribeJapan,
+      subscribeFG: subscribeFG ?? this.subscribeFG,
+
       subscribeALL: subscribeALL ?? this.subscribeALL,
     );
   }

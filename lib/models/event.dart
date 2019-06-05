@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/event_type.dart';
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
 
 class Event {
   final int id;
   final String name;
   final String description;
-  final EventType type;
+  final String type;
   final String location;
   final String newsUrl;
   final String videoUrl;
@@ -33,7 +32,7 @@ class Event {
     return new Event(
         id: json['id'],
         name: json['name'],
-        type: new EventType.fromJson(json['type']),
+        type: json['type']['name'],
         description: json['description'],
         location: json['location'],
         newsUrl: json['news_url'],

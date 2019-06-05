@@ -51,7 +51,6 @@ class LaunchList {
   }
 
   factory LaunchList.fromJson(Map<String, dynamic> json) {
-    print(json);
     var image = json['image'];
     if (image == null) {
       image = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";

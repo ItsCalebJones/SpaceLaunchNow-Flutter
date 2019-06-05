@@ -15,9 +15,11 @@ import 'package:material_search/material_search.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class PreviousLaunchListPage extends StatefulWidget {
-  PreviousLaunchListPage(this._configuration);
+  PreviousLaunchListPage(this._configuration, this.searchQuery, this.searchActive);
 
   final AppConfiguration _configuration;
+  final String searchQuery;
+  final bool searchActive;
 
   @override
   _LaunchListPageState createState() => new _LaunchListPageState();
@@ -30,14 +32,19 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   int offset = 0;
   int limit = 30;
   bool loading = false;
-  bool searchActive = false;
   SLNRepository _repository = new Injector().slnRepository;
 
   @override
   void initState() {
     super.initState();
     List<LaunchList> launches = PageStorage.of(context).readState(context, identifier: 'previousLaunches');
-    if (launches != null){
+    if (launches != null) {
+      _launches = launches;
+    }
+
+    if (widget.searchActive){
+      _getLaunchBySearch(widget.searchQuery);
+    } else if (launches != null) {
       _launches = launches;
     } else {
       lockedLoadNext();
@@ -47,6 +54,22 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void dispose(){
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(PreviousLaunchListPage oldWidget) {
+    if (oldWidget.searchActive != widget.searchActive ||
+        oldWidget.searchQuery != widget.searchQuery) {
+      // values changed, restart animation.
+      setState(() {
+        if (widget.searchActive) {
+          _getLaunchBySearch(widget.searchQuery);
+        } else {
+          _handleRefresh();
+        }
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void onLoadLaunchesComplete(LaunchesList launches, [bool reload = false]) {
@@ -154,70 +177,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       );
     }
 
-    return new Scaffold(
-      appBar: new PlatformAdaptiveAppBar(
-          color: Theme.of(context).primaryColor,
-          text: "Previous",
-          platform: appBarTheme.platform,
-          actions: <Widget>[
-            new IconButton(
-              onPressed: () {
-                _showMaterialSearch(context);
-              },
-              tooltip: 'Search',
-              icon: new Icon(Icons.search),
-            )
-          ],
-      ),
-      body: content,
-    );
-  }
-
-  _buildMaterialSearchPage(BuildContext context) {
-    var backgroundColor;
-    if (widget._configuration.nightMode){
-      backgroundColor = Colors.black26;
-    } else {
-      backgroundColor = Colors.white;
-    }
-    return new MaterialPageRoute<String>(
-        settings: new RouteSettings(
-          name: 'material_search',
-          isInitialRoute: false,
-        ),
-        builder: (BuildContext context) {
-          return new Material(
-            child: new MaterialSearch<LaunchList>(
-              barBackgroundColor: backgroundColor,
-              placeholder: 'Search',
-              results: _launches.map((LaunchList v) => new MaterialSearchResult<LaunchList>(
-                icon: Icons.launch,
-                value: v,
-                text: v.name,
-              )).toList(),
-              filter: (dynamic value, String criteria) {
-                return value.name.toLowerCase().trim()
-                    .contains(new RegExp(r'' + criteria.toLowerCase().trim() + ''));
-              },
-              onSelect: (dynamic value) => Navigator.of(context).pop(value.id.toString()),
-              onSubmit: (String value) => Navigator.of(context).pop(value),
-            ),
-          );
-        }
-    );
-  }
-  _showMaterialSearch(BuildContext context) {
-    Navigator.of(context)
-        .push(_buildMaterialSearchPage(context))
-        .then((dynamic value) {
-          if (value is String){
-              searchActive = true;
-              _getLaunchBySearch(value);
-          } else if (value == LaunchList) {
-              _navigateToLaunchDetails(launch: value);
-          }
-//      setState(() => Launch_name = value as Launch);
-    });
+    return content;
   }
 
   bool isNumeric(String s) {
@@ -255,7 +215,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     totalCount = 0;
     offset = 0;
     nextOffset = 0;
-    searchActive = false;
     loading = true;
     LaunchesList responseLaunches = await _repository.fetchPrevious(limit: limit.toString(),
         offset: nextOffset.toString())
@@ -272,7 +231,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     totalCount = 0;
     limit = 0;
     nextOffset = 0;
-    searchActive = true;
     _repository.fetchPrevious(limit: limit.toString(),
         offset: nextOffset.toString(),
         search: value).then((launches){

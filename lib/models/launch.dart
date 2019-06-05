@@ -37,7 +37,6 @@ class Launch {
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
-    print (json);
     String vidURL;
     if (json['vidURLs'].length > 0){
       vidURL = json['vidURLs'][0];
