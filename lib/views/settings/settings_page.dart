@@ -60,6 +60,25 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
+  void _handleNews(bool value) {
+
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("featured_news");
+      _firebaseMessaging.subscribeToTopic("event_notification");
+      _firebaseMessaging.subscribeToTopic("event_webcast");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("featured_news");
+      _firebaseMessaging.unsubscribeFromTopic("event_notification");
+      _firebaseMessaging.unsubscribeFromTopic("event_webcast");
+    }
+
+    sendUpdates(
+        widget.configuration.copyWith(subscribeNewsAndEvents: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('newsAndEvents', value));
+    });
+  }
+
   void _handleOneHour(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("oneHour");
@@ -518,6 +537,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
           trailing: new Switch(
             value: widget.configuration.allowStatusChanged,
             onChanged: _handleStatusChanged,
+          ),
+        ),
+      ),
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow News and Events Notifications'),
+          onTap: () {
+            _handleNews(
+                !widget.configuration.subscribeNewsAndEvents);
+          },
+          trailing: new Switch(
+            value: widget.configuration.subscribeNewsAndEvents,
+            onChanged: _handleNews,
           ),
         ),
       ),

@@ -6,6 +6,9 @@ class AppConfiguration {
     @required this.allowTwentyFourHourNotifications,
     @required this.allowTenMinuteNotifications,
     @required this.allowStatusChanged,
+
+    @required this.subscribeNewsAndEvents,
+
     @required this.subscribeSpaceX,
     @required this.subscribeNASA,
     @required this.subscribeArianespace,
@@ -35,6 +38,9 @@ class AppConfiguration {
         assert(allowTwentyFourHourNotifications != null),
         assert(allowTenMinuteNotifications != null),
         assert(allowStatusChanged != null),
+
+        assert(subscribeNewsAndEvents != null),
+
         assert(subscribeSpaceX != null),
         assert(subscribeNASA != null),
         assert(subscribeArianespace != null),
@@ -62,6 +68,7 @@ class AppConfiguration {
   bool allowTwentyFourHourNotifications;
   bool allowTenMinuteNotifications;
   bool allowStatusChanged;
+  bool subscribeNewsAndEvents;
   bool subscribeSpaceX;
   bool subscribeNASA;
   bool subscribeArianespace;
@@ -90,6 +97,7 @@ class AppConfiguration {
     bool allowTwentyFourHourNotifications,
     bool allowTenMinuteNotifications,
     bool allowStatusChanged,
+    bool subscribeNewsAndEvents,
     bool subscribeSpaceX,
     bool subscribeNASA,
     bool subscribeArianespace,
@@ -122,6 +130,7 @@ class AppConfiguration {
       allowTenMinuteNotifications: allowTenMinuteNotifications ??
           this.allowTenMinuteNotifications,
       allowStatusChanged: allowStatusChanged ?? this.allowStatusChanged,
+      subscribeNewsAndEvents: subscribeNewsAndEvents ?? this.subscribeNewsAndEvents,
       subscribeSpaceX: subscribeSpaceX ?? this.subscribeSpaceX,
       subscribeNASA: subscribeNASA ?? this.subscribeNASA,
       subscribeArianespace: subscribeArianespace ?? this.subscribeArianespace,

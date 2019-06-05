@@ -61,6 +61,7 @@ class PagesState extends State<Pages> {
     allowTwentyFourHourNotifications: true,
     allowTenMinuteNotifications: false,
     allowStatusChanged: true,
+    subscribeNewsAndEvents: true,
     subscribeALL: true,
     subscribeSpaceX: true,
     subscribeNASA: true,
@@ -97,6 +98,7 @@ class PagesState extends State<Pages> {
       bool allowTenMinuteNotifications =
           prefs.getBool("allowTenMinuteNotifications") ?? false;
       bool allowStatusChanged = prefs.getBool("allowStatusChanged") ?? true;
+      bool subscribeNewsAndEvents = prefs.getBool("newsAndEvents") ?? true;
       bool subscribeALL = prefs.getBool("subscribeALL") ?? true;
       bool subscribeSpaceX = prefs.getBool("subscribeSpaceX") ?? true;
       bool subscribeNASA = prefs.getBool("subscribeNASA") ?? true;
@@ -118,11 +120,11 @@ class PagesState extends State<Pages> {
       bool subscribeFG = prefs.getBool("subscribeFG") ?? true;
 
       if (SpaceLaunchNow.isInDebugMode) {
-        _firebaseMessaging.subscribeToTopic("flutter_debug");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_production");
+        _firebaseMessaging.subscribeToTopic("flutter_debug_v2");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
       } else {
-        _firebaseMessaging.subscribeToTopic("flutter_production");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
+        _firebaseMessaging.subscribeToTopic("flutter_production_v2");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
       }
 
       if (allowTenMinuteNotifications) {
@@ -143,10 +145,28 @@ class PagesState extends State<Pages> {
         _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
       }
 
+      if (subscribeNewsAndEvents) {
+        _firebaseMessaging.subscribeToTopic("featured_news");
+        _firebaseMessaging.subscribeToTopic("event_notification");
+        _firebaseMessaging.subscribeToTopic("event_webcast");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("featured_news");
+        _firebaseMessaging.unsubscribeFromTopic("event_notification");
+        _firebaseMessaging.unsubscribeFromTopic("event_webcast");
+      }
+
       if (allowStatusChanged) {
         _firebaseMessaging.subscribeToTopic("netstampChanged");
+        _firebaseMessaging.subscribeToTopic("success");
+        _firebaseMessaging.subscribeToTopic("failure");
+        _firebaseMessaging.subscribeToTopic("partial_failure");
+        _firebaseMessaging.subscribeToTopic("inFlight");
       } else {
         _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+        _firebaseMessaging.unsubscribeFromTopic("success");
+        _firebaseMessaging.unsubscribeFromTopic("failure");
+        _firebaseMessaging.unsubscribeFromTopic("partial_failure");
+        _firebaseMessaging.unsubscribeFromTopic("inFlight");
       }
 
       if (subscribeALL) {
