@@ -47,6 +47,7 @@ PODS:
   - Flutter (1.0.0)
   - flutter_iap (1.2.0):
     - Flutter
+    - SwiftProtobuf
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -90,6 +91,7 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
+  - SwiftProtobuf (1.5.0)
   - url_launcher (0.0.1):
     - Flutter
 
@@ -98,11 +100,11 @@ DEPENDENCIES:
   - "firebase_analytics (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios`)"
   - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios`)
   - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios`)
-  - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios`)
+  - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios`)
   - "path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios`)"
   - share (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
-  - shared_preferences (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.3/ios`)
-  - sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.1/ios`)
+  - "shared_preferences (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/ios`)"
+  - sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.5/ios`)
   - url_launcher (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios`)
 
 SPEC REPOS:
@@ -119,6 +121,7 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - Protobuf
+    - SwiftProtobuf
 
 EXTERNAL SOURCES:
   firebase_admob:
@@ -130,15 +133,15 @@ EXTERNAL SOURCES:
   Flutter:
     :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios"
   flutter_iap:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-1.2.3/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios"
   path_provider:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios"
   share:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios"
   shared_preferences:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.3/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/ios"
   sqflite:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.1/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.5/ios"
   url_launcher:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios"
 
@@ -153,7 +156,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   FirebaseMessaging: 0f14a264b0d7f867e8eff5d3556bc5d0d4e57888
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  flutter_iap: eed3f3c673f834990847993011e8b3e8401c6b47
+  flutter_iap: 185a9f1f077dce0759b09b95044b7e92f50ebfe9
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   Google-Mobile-Ads-SDK: 8f07cc8eac6649fe648cabc97d67c8d20173624a
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
@@ -164,6 +167,7 @@ SPEC CHECKSUMS:
   share: 8d04605548e55f7ce4ebb7b3e933f3c85028c9cf
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   sqflite: d1612813fa7db7c667bed9f1d1b508deffc56999
+  SwiftProtobuf: 241400280f912735c1e1b9fe675fdd2c6c4d42e2
   url_launcher: 92b89c1029a0373879933c21642958c874539095
 
 PODFILE CHECKSUM: 662f8e0a46eeec290ba8f8ed727fd7642e1e3b82
