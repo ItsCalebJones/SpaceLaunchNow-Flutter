@@ -11,7 +11,7 @@ dependencies:
 
   # https://pub.dartlang.org/packages/firebase_admob#-installing-tab-
   firebase_admob: "^0.5.5"
-  firebase_messaging: '^1.0.2'
+  firebase_messaging: '^5.0.2'
   firebase_analytics: '^1.0.0'
   url_launcher: '^3.0.1'
   flutter_iap: "^2.0.0-pre1"

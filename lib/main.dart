@@ -14,6 +14,7 @@ import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(new SpaceLaunchNow());
 
@@ -54,6 +55,7 @@ class PagesState extends State<Pages> {
 
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
+  int newsAndEventsIndex = 0;
   AppConfiguration _configuration = new AppConfiguration(
     showAds: true,
     nightMode: false,
@@ -147,12 +149,10 @@ class PagesState extends State<Pages> {
 
       if (subscribeNewsAndEvents) {
         _firebaseMessaging.subscribeToTopic("featured_news");
-        _firebaseMessaging.subscribeToTopic("event_notification");
-        _firebaseMessaging.subscribeToTopic("event_webcast");
+        _firebaseMessaging.subscribeToTopic("events");
       } else {
         _firebaseMessaging.unsubscribeFromTopic("featured_news");
-        _firebaseMessaging.unsubscribeFromTopic("event_notification");
-        _firebaseMessaging.unsubscribeFromTopic("event_webcast");
+        _firebaseMessaging.unsubscribeFromTopic("events");
       }
 
       if (allowStatusChanged) {
@@ -274,17 +274,61 @@ class PagesState extends State<Pages> {
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) {
           print("onMessage: $message");
-          _showItemDialog(message);
+          if (message.containsKey('launch_uuid')) {
+            _showLaunchDialog(message);
+          }
+
+          if (message['data'].containsKey('notification_type')) {
+            if (message['data']['notification_type'] == 'featured_news') {
+              changeTab(2);
+              newsAndEventsIndex = 0;
+              _openBrowser(message['data']['item']['url']);
+            } else if (message['data']['notification_type'] == 'event_notification' ||
+                message['data']['notification_type'] == 'event_webcast') {
+              changeTab(2);
+              newsAndEventsIndex = 1;
+            }
+          }
         },
         onLaunch: (Map<String, dynamic> message) {
           print("onLaunch: $message");
-          final String launchId = message['launch_uuid'];
-          _navigateToLaunchDetails(launchId);
+          if (message.containsKey('launch_uuid')) {
+            _navigateToLaunchDetails(message['launch_uuid']);
+          }
+
+          if (message.containsKey('notification_type')) {
+            if (message['notification_type'] == 'featured_news') {
+              changeTab(2);
+              newsAndEventsIndex = 0;
+              _openBrowser(message['item']['url']);
+            } else if (message['notification_type'] == 'event_notification' ||
+                message['notification_type'] == 'event_webcast') {
+              setState(() {
+                changeTab(2);
+                newsAndEventsIndex = 1;
+              });
+            }
+          }
         },
         onResume: (Map<String, dynamic> message) {
           print("onResume: $message");
-          final String launchId = message['launch_uuid'];
-          _navigateToLaunchDetails(launchId);
+          if (message['data'].containsKey('launch_uuid')) {
+            _navigateToLaunchDetails(message['data']['launch_uuid']);
+          }
+
+          if (message['data'].containsKey('notification_type')) {
+            if (message['data']['notification_type'] == 'featured_news') {
+              changeTab(2);
+              newsAndEventsIndex = 0;
+              _openBrowser(message['data']['item']['url']);
+            } else if (message['data']['notification_type'] == 'event_notification' ||
+                message['data']['notification_type'] == 'event_webcast') {
+              setState(() {
+                changeTab(2);
+                newsAndEventsIndex = 1;
+              });
+            }
+          }
         },
       );
       _firebaseMessaging.requestNotificationPermissions(
@@ -377,7 +421,7 @@ class PagesState extends State<Pages> {
     );
   }
 
-  void _showItemDialog(Map<String, dynamic> message) {
+  void _showLaunchDialog(Map<String, dynamic> message) {
     final String launchId = message['launch_uuid'];
     showDialog<bool>(
       context: context,
@@ -412,7 +456,7 @@ class PagesState extends State<Pages> {
 
       case 2:
         checkAd();
-        return new NewsAndEventsPage(_configuration);
+        return new NewsAndEventsPage(_configuration, newsAndEventsIndex);
         break;
 
       case 3:
@@ -429,6 +473,13 @@ class PagesState extends State<Pages> {
         );
     }
   }
+
+  void changeTab(int index) {
+    setState(() {
+      this.pageIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -512,6 +563,14 @@ class PagesState extends State<Pages> {
       Ads.showBannerAd();
     } else if (!_configuration.showAds) {
       Ads.hideBannerAd();
+    }
+  }
+
+  _openBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

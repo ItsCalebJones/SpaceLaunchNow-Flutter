@@ -64,12 +64,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     if (value) {
       _firebaseMessaging.subscribeToTopic("featured_news");
-      _firebaseMessaging.subscribeToTopic("event_notification");
-      _firebaseMessaging.subscribeToTopic("event_webcast");
+      _firebaseMessaging.subscribeToTopic("events");
     } else {
       _firebaseMessaging.unsubscribeFromTopic("featured_news");
-      _firebaseMessaging.unsubscribeFromTopic("event_notification");
-      _firebaseMessaging.unsubscribeFromTopic("event_webcast");
+      _firebaseMessaging.unsubscribeFromTopic("events");
     }
 
     sendUpdates(
