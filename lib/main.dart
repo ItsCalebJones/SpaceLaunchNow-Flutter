@@ -283,7 +283,8 @@ class PagesState extends State<Pages> {
               changeTab(2);
               newsAndEventsIndex = 0;
               _openBrowser(message['data']['item']['url']);
-            } else if (message['data']['notification_type'] == 'event_notification' ||
+            } else if (message['data']['notification_type'] ==
+                    'event_notification' ||
                 message['data']['notification_type'] == 'event_webcast') {
               changeTab(2);
               newsAndEventsIndex = 1;
@@ -298,9 +299,11 @@ class PagesState extends State<Pages> {
 
           if (message.containsKey('notification_type')) {
             if (message['notification_type'] == 'featured_news') {
-              changeTab(2);
-              newsAndEventsIndex = 0;
-              _openBrowser(message['item']['url']);
+              setState(() {
+                changeTab(2);
+                newsAndEventsIndex = 0;
+                _openBrowser(message['item']['url']);
+              });
             } else if (message['notification_type'] == 'event_notification' ||
                 message['notification_type'] == 'event_webcast') {
               setState(() {
@@ -318,10 +321,13 @@ class PagesState extends State<Pages> {
 
           if (message['data'].containsKey('notification_type')) {
             if (message['data']['notification_type'] == 'featured_news') {
-              changeTab(2);
-              newsAndEventsIndex = 0;
-              _openBrowser(message['data']['item']['url']);
-            } else if (message['data']['notification_type'] == 'event_notification' ||
+              setState(() {
+                changeTab(2);
+                newsAndEventsIndex = 0;
+                _openBrowser(message['data']['item']['url']);
+              });
+            } else if (message['data']['notification_type'] ==
+                    'event_notification' ||
                 message['data']['notification_type'] == 'event_webcast') {
               setState(() {
                 changeTab(2);
@@ -479,7 +485,6 @@ class PagesState extends State<Pages> {
       this.pageIndex = index;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
