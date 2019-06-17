@@ -62,7 +62,7 @@ class Utils {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544~1458002511';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544~3347511713';
+      return 'ca-app-pub-3940256099942544~1458002511';
     }
     return null;
   }
@@ -74,5 +74,11 @@ class Utils {
       return 'ca-app-pub-3940256099942544/6300978111';
     }
     return null;
+  }
+
+  static bool get isInDebugMode {
+    bool inDebugMode = false;
+    assert(inDebugMode = true);
+    return inDebugMode;
   }
 }

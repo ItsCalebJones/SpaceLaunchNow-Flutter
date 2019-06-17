@@ -217,51 +217,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             textAlign: TextAlign.center,
           ),
         ),
-        Container(
-          margin: EdgeInsets.all(1.0),
-          child: new AdmobBanner(
-            adUnitId: Utils.getBannerAdUnitId(),
-            adSize: AdmobBannerSize.BANNER,
-            listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-              switch (event) {
-                case AdmobAdEvent.loaded:
-                  print('Admob banner loaded!');
-                  break;
-
-                case AdmobAdEvent.opened:
-                  print('Admob banner opened!');
-                  break;
-
-                case AdmobAdEvent.closed:
-                  print('Admob banner closed!');
-                  break;
-
-                case AdmobAdEvent.failedToLoad:
-                  print(
-                      'Admob banner failed to load. Error code: ${args['errorCode']}');
-                  break;
-                case AdmobAdEvent.clicked:
-                  // TODO: Handle this case.
-                  break;
-                case AdmobAdEvent.impression:
-                  // TODO: Handle this case.
-                  break;
-                case AdmobAdEvent.leftApplication:
-                  // TODO: Handle this case.
-                  break;
-                case AdmobAdEvent.completed:
-                  // TODO: Handle this case.
-                  break;
-                case AdmobAdEvent.rewarded:
-                  // TODO: Handle this case.
-                  break;
-                case AdmobAdEvent.started:
-                  // TODO: Handle this case.
-                  break;
-              }
-            }
-          ),
-        ),
+        _buildAdWidget(),
         new Padding(
           padding: const EdgeInsets.only(
               top: 4.0, left: 8.0, right: 8.0, bottom: 2.0),
@@ -293,5 +249,53 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   @override
   Widget build(BuildContext context) {
     return _buildContentCard(context);
+  }
+
+  Widget _buildAdWidget() {
+    return Container(
+      margin: EdgeInsets.all(4.0),
+      child: new AdmobBanner(
+          adUnitId: Utils.getBannerAdUnitId(),
+          adSize: AdmobBannerSize.LEADERBOARD,
+          listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+            switch (event) {
+              case AdmobAdEvent.loaded:
+                print('Admob banner loaded!');
+                break;
+
+              case AdmobAdEvent.opened:
+                print('Admob banner opened!');
+                break;
+
+              case AdmobAdEvent.closed:
+                print('Admob banner closed!');
+                break;
+
+              case AdmobAdEvent.failedToLoad:
+                print(
+                    'Admob banner failed to load. Error code: ${args['errorCode']} Message: ${args['error']}');
+                break;
+              case AdmobAdEvent.clicked:
+                print('Admob banner clicked!');
+                break;
+              case AdmobAdEvent.impression:
+                print('Admob banner impression!');
+                break;
+              case AdmobAdEvent.leftApplication:
+                print('Admob banner left!');
+                break;
+              case AdmobAdEvent.completed:
+                print('Admob banner completed!');
+                break;
+              case AdmobAdEvent.rewarded:
+              // TODO: Handle this case.
+                break;
+              case AdmobAdEvent.started:
+                print('Admob banner started!');
+                break;
+            }
+          }
+      ),
+    );
   }
 }
