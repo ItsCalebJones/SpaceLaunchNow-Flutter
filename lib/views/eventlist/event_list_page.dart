@@ -8,7 +8,6 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event.dart';
 import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -96,7 +95,7 @@ class _EventListPageState extends State<EventListPage> {
 
   Widget _buildEventTile(BuildContext context, int index) {
     var event = _events[index];
-    var formatter = new DateFormat('MMM yyyy');
+    var formatter = new DateFormat.jm().add_yMMMMEEEEd();
 
     return new Padding(
       padding:
@@ -157,7 +156,6 @@ class _EventListPageState extends State<EventListPage> {
 
   void _navigateToLaunchDetails(
       {Events event, Object avatarTag, String launchId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

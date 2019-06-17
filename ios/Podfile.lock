@@ -1,15 +1,19 @@
 PODS:
-  - Firebase/AdMob (5.12.0):
+  - admob_flutter (0.3.1):
+    - Firebase/AdMob
     - Firebase/Core
-    - Google-Mobile-Ads-SDK (~> 7.35)
-  - Firebase/Core (5.12.0):
+    - Flutter
+  - Firebase/AdMob (6.2.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.3.0)
-  - Firebase/CoreOnly (5.12.0):
-    - FirebaseCore (= 5.1.7)
-  - Firebase/Messaging (5.12.0):
+    - Google-Mobile-Ads-SDK (~> 7.44)
+  - Firebase/Core (6.2.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (= 3.2.1)
+    - FirebaseAnalytics (= 6.0.1)
+  - Firebase/CoreOnly (6.2.0):
+    - FirebaseCore (= 6.0.2)
+  - Firebase/Messaging (6.2.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.0.2)
   - firebase_admob (0.0.1):
     - Firebase/AdMob
     - Firebase/Core
@@ -21,28 +25,31 @@ PODS:
     - Firebase/Core
     - Firebase/Messaging
     - Flutter
-  - FirebaseAnalytics (5.3.0):
-    - FirebaseCore (~> 5.1)
-    - FirebaseInstanceID (~> 3.3)
-    - GoogleAppMeasurement (~> 5.3)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+  - FirebaseAnalytics (6.0.1):
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleAppMeasurement (= 6.0.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - FirebaseAnalyticsInterop (1.1.0)
-  - FirebaseCore (5.1.7):
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.3.0):
-    - FirebaseCore (~> 5.1)
-    - GoogleUtilities/Environment (~> 5.3)
-    - GoogleUtilities/UserDefaults (~> 5.3)
-  - FirebaseMessaging (3.2.1):
+  - FirebaseAnalyticsInterop (1.2.0)
+  - FirebaseCore (6.0.2):
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/Logger (~> 6.0)
+  - FirebaseInstanceID (4.1.1):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseMessaging (4.0.2):
     - FirebaseAnalyticsInterop (~> 1.1)
-    - FirebaseCore (~> 5.1)
-    - FirebaseInstanceID (~> 3.0)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/Reachability (~> 5.2)
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.2)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Reachability (~> 6.2)
+    - GoogleUtilities/UserDefaults (~> 6.2)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
   - flutter_iap (1.2.0):
@@ -51,30 +58,31 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - Google-Mobile-Ads-SDK (7.35.2)
-  - GoogleAppMeasurement (5.3.0):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+  - Google-Mobile-Ads-SDK (7.44.0):
+    - GoogleAppMeasurement (~> 6.0)
+  - GoogleAppMeasurement (6.0.1):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (5.3.5):
+  - GoogleUtilities/AppDelegateSwizzler (6.2.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.3.5)
-  - GoogleUtilities/Logger (5.3.5):
+  - GoogleUtilities/Environment (6.2.0)
+  - GoogleUtilities/Logger (6.2.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.3.5):
+  - GoogleUtilities/MethodSwizzler (6.2.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.3.5):
+  - GoogleUtilities/Network (6.2.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.3.5)"
-  - GoogleUtilities/Reachability (5.3.5):
+  - "GoogleUtilities/NSData+zlib (6.2.0)"
+  - GoogleUtilities/Reachability (6.2.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.3.5):
+  - GoogleUtilities/UserDefaults (6.2.0):
     - GoogleUtilities/Logger
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
@@ -83,7 +91,7 @@ PODS:
   - nanopb/encode (0.3.901)
   - path_provider (0.0.1):
     - Flutter
-  - Protobuf (3.6.1)
+  - Protobuf (3.8.0)
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -96,9 +104,10 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/ios`)
+  - admob_flutter (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/admob_flutter-0.3.1/ios`)
+  - "firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+1/ios`)"
   - "firebase_analytics (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios`)"
-  - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios`)
+  - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios`)
   - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios`)
   - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios`)
   - "path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios`)"
@@ -124,12 +133,14 @@ SPEC REPOS:
     - SwiftProtobuf
 
 EXTERNAL SOURCES:
+  admob_flutter:
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/admob_flutter-0.3.1/ios"
   firebase_admob:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+1/ios"
   firebase_analytics:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios"
   firebase_messaging:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-1.0.5/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios"
   Flutter:
     :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios"
   flutter_iap:
@@ -146,30 +157,31 @@ EXTERNAL SOURCES:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios"
 
 SPEC CHECKSUMS:
-  Firebase: 9190018e296139d938b99521cde0c15a6e8d2946
-  firebase_admob: b8cc46113ddf88a62fec340e9446607a5061a872
-  firebase_analytics: 06fd3e199bfbc003a9949b90f3e3c6332fa1299e
-  firebase_messaging: a5f5d4a9491b660f33a1f94bd0596558f820bad1
-  FirebaseAnalytics: 63202d2665de4e6adcbdce189135255d8b5962ba
-  FirebaseAnalyticsInterop: e5f21be9af6548372e2f0815834ff909bff395a2
-  FirebaseCore: 027d350adc039aa5483357c6f56556f117c5170e
-  FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
-  FirebaseMessaging: 0f14a264b0d7f867e8eff5d3556bc5d0d4e57888
-  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  flutter_iap: 185a9f1f077dce0759b09b95044b7e92f50ebfe9
+  admob_flutter: 73ae2c104b529d8059f91661206e806e9205623a
+  Firebase: 5965bac23e7fcb5fa6d926ed429c9ecef8a2014e
+  firebase_admob: ba3d9c8874c03ccc2b87ae30c50d1630b522a693
+  firebase_analytics: bd50d8f5d3f42dcab6da67944a849062470b0a19
+  firebase_messaging: b25b2fa94e685146bcf9d706ed87b4e95cd2a17d
+  FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
+  FirebaseAnalyticsInterop: efbe45c8385ec626e29f9525e5ebd38520dfb6c1
+  FirebaseCore: b0f0262acebfa540e5f97b3832dbb13186980822
+  FirebaseInstanceID: cdb3827746d53ece7ae87a5c51c25c3055443366
+  FirebaseMessaging: 20b6626c41be7840aed7a3dd9a14003efae3d588
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_iap: cd3fed5ae80fe3d9e92943a22c8607bf8b029bbc
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  Google-Mobile-Ads-SDK: 8f07cc8eac6649fe648cabc97d67c8d20173624a
-  GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
-  GoogleUtilities: bb6ff5a302c97a0bc9820dad775505778c5a2676
+  Google-Mobile-Ads-SDK: 1e72b4f438d997ab0f2ee62b3a7b0cbcc87c47cb
+  GoogleAppMeasurement: 51d8d9ea48f0ca44484d29cfbdef976fbd4fc336
+  GoogleUtilities: 996e0db07153674fd1b54b220fda3a3dc3547cba
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  share: 8d04605548e55f7ce4ebb7b3e933f3c85028c9cf
-  shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
-  sqflite: d1612813fa7db7c667bed9f1d1b508deffc56999
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
+  share: ee3d34d3969ad17fc3043eab552e4f082aacfed1
+  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
   SwiftProtobuf: 241400280f912735c1e1b9fe675fdd2c6c4d42e2
-  url_launcher: 92b89c1029a0373879933c21642958c874539095
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
 
 PODFILE CHECKSUM: 662f8e0a46eeec290ba8f8ed727fd7642e1e3b82
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.1

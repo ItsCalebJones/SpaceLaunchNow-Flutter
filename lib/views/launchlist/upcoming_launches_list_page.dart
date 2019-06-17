@@ -9,7 +9,6 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:material_search/material_search.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -44,12 +43,20 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         context, identifier: 'upcomingLaunches');
     if (launches != null) {
       _launches = launches;
+      nextOffset = PageStorage.of(context).readState(
+          context, identifier: 'upcomingLaunchesNextOffset');
+      totalCount = PageStorage.of(context).readState(
+          context, identifier: 'upcomingLaunchesnextTotalCount');
     }
 
     if (widget.searchActive){
       _getLaunchBySearch(widget.searchQuery);
     } else if (launches != null) {
       _launches = launches;
+      nextOffset = PageStorage.of(context).readState(
+          context, identifier: 'upcomingLaunchesNextOffset');
+      totalCount = PageStorage.of(context).readState(
+          context, identifier: 'upcomingLaunchesnextTotalCount');
     } else {
       lockedLoadNext();
     }
@@ -89,6 +96,10 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       _launches.addAll(launches.launches);
       PageStorage.of(context).writeState(
           context, _launches, identifier: 'upcomingLaunches');
+      PageStorage.of(context).writeState(
+          context, nextOffset, identifier: 'upcomingLaunchesNextOffset');
+      PageStorage.of(context).writeState(
+          context, totalCount, identifier: 'upcomingLaunchesnextTotalCount');
     });
   }
 
@@ -158,7 +169,6 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
 
   void _navigateToLaunchDetails(
       {LaunchList launch, Object avatarTag, String launchId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

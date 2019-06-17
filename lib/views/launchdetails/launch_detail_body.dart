@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
@@ -214,6 +215,51 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             mLaunch.name,
             style: textTheme.headline.copyWith(color: Colors.white),
             textAlign: TextAlign.center,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(1.0),
+          child: new AdmobBanner(
+            adUnitId: Utils.getBannerAdUnitId(),
+            adSize: AdmobBannerSize.BANNER,
+            listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+              switch (event) {
+                case AdmobAdEvent.loaded:
+                  print('Admob banner loaded!');
+                  break;
+
+                case AdmobAdEvent.opened:
+                  print('Admob banner opened!');
+                  break;
+
+                case AdmobAdEvent.closed:
+                  print('Admob banner closed!');
+                  break;
+
+                case AdmobAdEvent.failedToLoad:
+                  print(
+                      'Admob banner failed to load. Error code: ${args['errorCode']}');
+                  break;
+                case AdmobAdEvent.clicked:
+                  // TODO: Handle this case.
+                  break;
+                case AdmobAdEvent.impression:
+                  // TODO: Handle this case.
+                  break;
+                case AdmobAdEvent.leftApplication:
+                  // TODO: Handle this case.
+                  break;
+                case AdmobAdEvent.completed:
+                  // TODO: Handle this case.
+                  break;
+                case AdmobAdEvent.rewarded:
+                  // TODO: Handle this case.
+                  break;
+                case AdmobAdEvent.started:
+                  // TODO: Handle this case.
+                  break;
+              }
+            }
           ),
         ),
         new Padding(

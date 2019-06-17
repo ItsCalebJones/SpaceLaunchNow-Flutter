@@ -11,7 +11,6 @@ import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -137,23 +136,24 @@ class _NewsListPageState extends State<NewsListPage> {
                   children: <Widget>[
                     new Text(
                       news.title,
+                      maxLines: 2,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
                         shadows: <Shadow>[
                           Shadow(
-                            offset: Offset(1.0, 1.0),
+                            offset: Offset(0.5, 0.5),
                             blurRadius: 5.0,
-                            color: Color.fromARGB(189, 0, 0, 0),
+                            color: Color.fromARGB(255, 0, 0, 0),
                           ),
                           Shadow(
-                            offset: Offset(1.0, 1.0),
+                            offset: Offset(0.5, 0.5),
                             blurRadius: 10.0,
-                            color: Color.fromARGB(75, 0, 0, 255),
+                            color: Color.fromARGB(79, 0, 0, 255),
                           ),
                         ],
                       ),
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.center,
                     ),
                     new Text(news.newsSiteLong,
                         style: TextStyle(
@@ -161,18 +161,18 @@ class _NewsListPageState extends State<NewsListPage> {
                           color: Colors.white,
                           shadows: <Shadow>[
                             Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 3.0,
-                              color: Color.fromARGB(189, 0, 0, 0),
+                              offset: Offset(0.5, 0.5),
+                              blurRadius: 5.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
                             ),
                             Shadow(
                               offset: Offset(1.0, 1.0),
                               blurRadius: 8.0,
-                              color: Color.fromARGB(75, 0, 0, 255),
+                              color: Color.fromARGB(79, 0, 0, 255),
                             ),
                           ],
                         ),
-                        textAlign: TextAlign.left),
+                        textAlign: TextAlign.center),
                   ],
                 ),
               ),
