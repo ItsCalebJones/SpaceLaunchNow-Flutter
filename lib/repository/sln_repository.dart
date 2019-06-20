@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
+import 'package:spacelaunchnow_flutter/models/news_response.dart';
 
-abstract class LaunchesRepository {
+abstract class SLNRepository {
   Future<List<Launch>> fetch([String lsp]);
 
   Future<LaunchesList> fetchUpcoming({String lsp, String limit, String offset, String search});
@@ -12,6 +13,10 @@ abstract class LaunchesRepository {
   Future<LaunchesList> fetchPrevious({String lsp, String limit, String offset, String search});
 
   Future<List<Launch>> fetchNext([String lsp]);
+
+  Future<Events> fetchNextEvent({String limit, String offset});
+
+  Future<NewsResponse> fetchNews({int page});
 
 }
 

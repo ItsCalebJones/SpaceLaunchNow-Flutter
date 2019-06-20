@@ -13,7 +13,7 @@ class LaunchDetailHeader extends StatelessWidget {
     @required this.backEnabled,
   });
 
-  final ValueChanged<int> loadLaunch;
+  final ValueChanged<String> loadLaunch;
   final Launch launch;
   final Object avatarTag;
   final bool backEnabled;

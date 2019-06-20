@@ -7,7 +7,7 @@ import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class Launch {
-  final int id;
+  final String id;
   final String name;
   final DateTime windowStart;
   final DateTime windowEnd;
@@ -37,7 +37,6 @@ class Launch {
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
-    print (json);
     String vidURL;
     if (json['vidURLs'].length > 0){
       vidURL = json['vidURLs'][0];

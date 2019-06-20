@@ -7,7 +7,7 @@ import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class LaunchList {
-  final int id;
+  final String id;
   final String name;
   final DateTime windowStart;
   final DateTime windowEnd;
@@ -51,7 +51,6 @@ class LaunchList {
   }
 
   factory LaunchList.fromJson(Map<String, dynamic> json) {
-    print(json);
     var image = json['image'];
     if (image == null) {
       image = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";

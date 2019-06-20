@@ -58,7 +58,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              new DateFormat.yMMMMEEEEd().add_Hms().format(mLaunch.net),
+              new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy").format(mLaunch.net.toLocal()),
               maxLines: 2,
               style: textTheme.subhead.copyWith(color: Colors.white70),
               overflow: TextOverflow.fade,
@@ -142,17 +142,17 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch.vidURL != null) {
       materialButtons.add(new MaterialButton(
         elevation: 2.0,
-        minWidth: 130.0,
-        color: Colors.redAccent,
-        textColor: Colors.white,
-        onPressed: () {
+          minWidth: 130.0,
+          color: Colors.redAccent,
+          textColor: Colors.white,
+          onPressed: () {
           _launchURL(mLaunch.vidURL);
         },
         child: new Text('Watch'),
       ));
     }
 
-    String launchId = mLaunch.id.toString();
+    String launchId = mLaunch.id;
     materialButtons.add(new MaterialButton(
       elevation: 2.0,
       minWidth: 130.0,

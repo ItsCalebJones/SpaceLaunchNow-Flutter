@@ -1,6 +1,6 @@
 
-import 'package:spacelaunchnow_flutter/repository/launches_repository_impl.dart';
-import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
+import 'package:spacelaunchnow_flutter/repository/sln_repository_impl.dart';
+import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 
 /// Simple DI
 class Injector {
@@ -13,7 +13,7 @@ class Injector {
 
   Injector._internal();
 
-  LaunchesRepository get launchRepository {
-        return new LaunchesRepositoryImpl();
+  SLNRepository get slnRepository {
+        return new SLNRepositoryImpl();
   }
 }

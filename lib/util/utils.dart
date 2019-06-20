@@ -1,3 +1,4 @@
+import 'dart:io';
 
 class Utils {
 
@@ -55,5 +56,29 @@ class Utils {
     }
 
     return missionStatus;
+  }
+
+  static String getAppId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544~1458002511';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9824528399164059~9376512243';
+    }
+    return null;
+  }
+
+  static String getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/2934735716';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9824528399164059/9843416106';
+    }
+    return null;
+  }
+
+  static bool get isInDebugMode {
+    bool inDebugMode = false;
+    assert(inDebugMode = true);
+    return inDebugMode;
   }
 }

@@ -60,6 +60,23 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
+  void _handleNews(bool value) {
+
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("featured_news");
+      _firebaseMessaging.subscribeToTopic("events");
+    } else {
+      _firebaseMessaging.unsubscribeFromTopic("featured_news");
+      _firebaseMessaging.unsubscribeFromTopic("events");
+    }
+
+    sendUpdates(
+        widget.configuration.copyWith(subscribeNewsAndEvents: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('newsAndEvents', value));
+    });
+  }
+
   void _handleOneHour(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("oneHour");
@@ -118,6 +135,44 @@ class NotificationFilterPageState extends State<SettingsPage> {
     } else {
       _firebaseMessaging.unsubscribeFromTopic("all");
     }
+
+    setState(() {
+      if (!widget.configuration.subscribeALL) {
+        widget.configuration.subscribeALL = true;
+        widget.configuration.subscribeSpaceX = true;
+        widget.configuration.subscribeNASA = true;
+        widget.configuration.subscribeULA = true;
+        widget.configuration.subscribeBlueOrigin = true;
+        widget.configuration.subscribeRocketLab = true;
+        widget.configuration.subscribeNorthrop = true;
+        widget.configuration.subscribeArianespace = true;
+
+        widget.configuration.subscribeCAPE = true;
+        widget.configuration.subscribeRoscosmos = true;
+        widget.configuration.subscribeISRO = true;
+        widget.configuration.subscribeVAN = true;
+        widget.configuration.subscribeWallops = true;
+        widget.configuration.subscribeNZ = true;
+        widget.configuration.subscribeJapan = true;
+        widget.configuration.subscribeFG = true;
+
+        _handleSpaceX(true);
+        _handleNASA(true);
+        _handleULA(true);
+        _handleBlueOrigin(true);
+        _handleRocketLab(true);
+        _handleNorthrop(true);
+        _handleArianespace(true);
+        _handleCAPE(true);
+        _handleRoscosmos(true);
+        _handleISRO(true);
+        _handleVAN(true);
+        _handleWallops(true);
+        _handleNZ(true);
+        _handleJapan(true);
+        _handleFG(true);
+      }
+    });
     sendUpdates(widget.configuration.copyWith(subscribeALL: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeALL', value));
@@ -176,16 +231,42 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
-  void _handleCASC(bool value) {
+  void _handleBlueOrigin(bool value) {
     if (value) {
-      _firebaseMessaging.subscribeToTopic("casc");
+      _firebaseMessaging.subscribeToTopic("blueOrigin");
     } else {
       _handleAll(value);
-      _firebaseMessaging.unsubscribeFromTopic("casc");
+      _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
     }
-    sendUpdates(widget.configuration.copyWith(subscribeCASC: value));
+    sendUpdates(widget.configuration.copyWith(subscribeBlueOrigin: value));
     _prefs.then((SharedPreferences prefs) {
-      return (prefs.setBool('subscribeCASC', value));
+      return (prefs.setBool('subscribeBlueOrigin', value));
+    });
+  }
+
+  void _handleRocketLab(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("rocketLab");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("rocketLab");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeRocketLab: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeRocketLab', value));
+    });
+  }
+
+  void _handleNorthrop(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("northrop");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("northrop");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeNorthrop: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeNorthrop', value));
     });
   }
 
@@ -242,6 +323,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
+  //TODO Careful here
   void _handlePLES(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("ples");
@@ -269,6 +351,58 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
+  void _handleWallops(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("wallops");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("wallops");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeWallops: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeWallops', value));
+    });
+  }
+
+  void _handleNZ(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("newZealand");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("newZealand");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeNZ: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeNZ', value));
+    });
+  }
+
+  void _handleJapan(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("japan");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("japan");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeJapan: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeJapan', value));
+    });
+  }
+
+  void _handleFG(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("frenchGuiana");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeFG: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeFG', value));
+    });
+  }
+
   void sendUpdates(AppConfiguration value) {
     if (widget.updater != null) widget.updater(value);
   }
@@ -276,7 +410,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void _becomeSupporter() {
     print("Becoming supporter!");
     FlutterIap.buy(_productIds.first).then((IAPResponse response) {
-      String responseStatus = response.status;
+      String responseStatus = response.status.name;
       print(response);
       print("Response: $responseStatus");
       if (response.purchases != null) {
@@ -404,6 +538,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
           ),
         ),
       ),
+      new MergeSemantics(
+        child: new ListTile(
+          title: const Text('Allow News and Events Notifications'),
+          onTap: () {
+            _handleNews(
+                !widget.configuration.subscribeNewsAndEvents);
+          },
+          trailing: new Switch(
+            value: widget.configuration.subscribeNewsAndEvents,
+            onChanged: _handleNews,
+          ),
+        ),
+      ),
     ];
     return new ListView(
       shrinkWrap: true,
@@ -412,13 +559,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
           children: rows,
         ),
         new ListTile(
-          title: new Text('Notification Filters', style: theme.textTheme.title),
+          title: new Text('Favorites Filters', style: theme.textTheme.title),
           subtitle: new Text(
-              'Select which agencies you want to receive launch notifications.'),
+              'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
         buildNotificationFilters(context),
         new Container(
-          padding: new EdgeInsets.only(top: 16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -462,7 +608,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             onTap: () async {
               FlutterIap.restorePurchases().then((IAPResponse response) {
                 print(response);
-                String responseStatus = response.status;
+                String responseStatus = response.status.name;
                 print("Response: $responseStatus");
                 if (response.purchases != null) {
                   List<String> purchasedIds = response.purchases
@@ -476,7 +622,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   }
                 }
                 final snackBar = new SnackBar(
-                  content: new Text('Purchase history restored: ' + response.status),
+                  content: new Text(
+                      'Purchase history restored: ' + response.status.name),
                   duration: new Duration(seconds: 5),
                 );
                 // Find the Scaffold in the Widget tree and use it to show a SnackBar
@@ -504,14 +651,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
     var theme = Theme.of(context);
 
     return new Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 50.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('All'),
+              title: const Text('Follow All'),
               onTap: () {
                 _handleAll(!widget.configuration.subscribeALL);
               },
@@ -521,6 +668,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          new ListTile(
+            title: new Text('Agencies', style: theme.textTheme.title),
+            subtitle: new Text('Select your favorite launch agencies.'),
+          ),
+          new Divider(),
           new MergeSemantics(
             child: new ListTile(
               title: const Text('SpaceX'),
@@ -559,37 +711,37 @@ class NotificationFilterPageState extends State<SettingsPage> {
           ),
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('Roscosmos'),
+              title: const Text('Blue Origin'),
               onTap: () {
-                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+                _handleBlueOrigin(!widget.configuration.subscribeBlueOrigin);
               },
               trailing: new Switch(
-                value: widget.configuration.subscribeRoscosmos,
-                onChanged: _handleRoscosmos,
+                value: widget.configuration.subscribeBlueOrigin,
+                onChanged: _handleBlueOrigin,
               ),
             ),
           ),
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('CASC'),
+              title: const Text('Rocket Lab'),
               onTap: () {
-                _handleCASC(!widget.configuration.subscribeCASC);
+                _handleRocketLab(!widget.configuration.subscribeRocketLab);
               },
               trailing: new Switch(
-                value: widget.configuration.subscribeCASC,
-                onChanged: _handleCASC,
+                value: widget.configuration.subscribeRocketLab,
+                onChanged: _handleRocketLab,
               ),
             ),
           ),
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('Cape Canaveral | KSC'),
+              title: const Text('Northrop Gruman'),
               onTap: () {
-                _handleCAPE(!widget.configuration.subscribeCAPE);
+                _handleNorthrop(!widget.configuration.subscribeNorthrop);
               },
               trailing: new Switch(
-                value: widget.configuration.subscribeCAPE,
-                onChanged: _handleCAPE,
+                value: widget.configuration.subscribeNorthrop,
+                onChanged: _handleNorthrop,
               ),
             ),
           ),
@@ -605,9 +757,38 @@ class NotificationFilterPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          new ListTile(
+            title: new Text('Locations', style: theme.textTheme.title),
+            subtitle: new Text('Select your favorite launch locations.'),
+          ),
+          new Divider(),
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('ISRO'),
+              title: const Text('Florida'),
+              onTap: () {
+                _handleCAPE(!widget.configuration.subscribeCAPE);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeCAPE,
+                onChanged: _handleCAPE,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('Russia'),
+              onTap: () {
+                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeRoscosmos,
+                onChanged: _handleRoscosmos,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('India'),
               onTap: () {
                 _handleISRO(!widget.configuration.subscribeISRO);
               },
@@ -626,6 +807,50 @@ class NotificationFilterPageState extends State<SettingsPage> {
             trailing: new Switch(
               value: widget.configuration.subscribeVAN,
               onChanged: _handleVAN,
+            ),
+          )),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('Wallops'),
+            onTap: () {
+              _handleWallops(!widget.configuration.subscribeWallops);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeWallops,
+              onChanged: _handleWallops,
+            ),
+          )),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('New Zealand'),
+            onTap: () {
+              _handleNZ(!widget.configuration.subscribeNZ);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeNZ,
+              onChanged: _handleNZ,
+            ),
+          )),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('Japan'),
+            onTap: () {
+              _handleJapan(!widget.configuration.subscribeJapan);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeJapan,
+              onChanged: _handleJapan,
+            ),
+          )),
+          new MergeSemantics(
+              child: new ListTile(
+            title: const Text('French Guiana'),
+            onTap: () {
+              _handleFG(!widget.configuration.subscribeFG);
+            },
+            trailing: new Switch(
+              value: widget.configuration.subscribeFG,
+              onChanged: _handleFG,
             ),
           ))
         ],

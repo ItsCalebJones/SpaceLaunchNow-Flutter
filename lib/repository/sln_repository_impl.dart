@@ -2,14 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
-import 'package:spacelaunchnow_flutter/repository/launches_repository.dart';
+import 'package:spacelaunchnow_flutter/models/news_response.dart';
+import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 
-class LaunchesRepositoryImpl implements LaunchesRepository {
+class SLNRepositoryImpl implements SLNRepository {
 
-  static const BASE_URL = "https://spacelaunchnow.me/3.2.0";
+  static const BASE_URL = "https://spacelaunchnow.me/api/3.3.0";
+  static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v1";
 
 
   Future<List<Launch>> fetch([String lsp]){
@@ -100,6 +103,47 @@ class LaunchesRepositoryImpl implements LaunchesRepository {
 
       print("Returning!");
       return LaunchesList.fromJson(jsonBody);
+    });
+  }
+
+  @override
+  Future<Events> fetchNextEvent({ String limit, String offset}) {
+    String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=detailed&limit=' + limit;
+
+    if (offset != null){
+      _kEventsUrl = _kEventsUrl + '&offset=' + offset;
+    }
+
+    return http.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(response.body);
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return Events.fromJson(jsonBody);
+    });
+  }
+
+  @override
+  Future<NewsResponse> fetchNews({int page}) {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles?limit=30';
+
+    if (page != null){
+      _kEventsUrl = _kEventsUrl + '&page=' + page.toString();
+    }
+
+    print(_kEventsUrl);
+    return http.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(response.body);
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return NewsResponse.fromJson(jsonBody);
     });
   }
 }
