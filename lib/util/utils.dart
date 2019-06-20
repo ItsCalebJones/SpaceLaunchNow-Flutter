@@ -62,7 +62,7 @@ class Utils {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544~1458002511';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544~1458002511';
+      return 'ca-app-pub-9824528399164059~9376512243';
     }
     return null;
   }
@@ -71,7 +71,7 @@ class Utils {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111';
+      return 'ca-app-pub-9824528399164059/9843416106';
     }
     return null;
   }

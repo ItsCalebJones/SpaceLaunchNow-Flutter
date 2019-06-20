@@ -24,7 +24,6 @@ dependencies:
   font_awesome_flutter: ^8.4.0
   material_design_icons_flutter: ^3.2.3695
   flutter_vector_icons: ^0.1.0
-  admob_flutter: "^0.3.1"
 
   # The following adds the Cupertino Icons Afont to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -9,6 +9,7 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:material_search/material_search.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -136,7 +137,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
 
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
-    var formatter = new DateFormat('MMM yyyy');
+    var formatter = new DateFormat.yMd();
 
     if (index > _launches.length - 10) {
       notifyThreshold();
@@ -169,6 +170,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
 
   void _navigateToLaunchDetails(
       {LaunchList launch, Object avatarTag, String launchId}) {
+    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

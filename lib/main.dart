@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
@@ -20,7 +20,6 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
-  Admob.initialize(Utils.getAppId());
   runApp(new SpaceLaunchNow());
 }
 
@@ -96,6 +95,7 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+    Ads.init('ca-app-pub-9824528399164059/8172962746');
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
@@ -127,6 +127,9 @@ class PagesState extends State<Pages> {
       bool subscribeNZ = prefs.getBool("subscribeNZ") ?? true;
       bool subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
       bool subscribeFG = prefs.getBool("subscribeFG") ?? true;
+
+      _firebaseMessaging.unsubscribeFromTopic("flutter_production");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
 
       if (SpaceLaunchNow.isInDebugMode) {
         _firebaseMessaging.subscribeToTopic("flutter_debug_v2");
@@ -324,33 +327,30 @@ class PagesState extends State<Pages> {
 
         onResume: (Map<String, dynamic> message) async {
           print("onResume: $message");
-          if (message['data'].containsKey('launch_uuid')) {
-            _navigateToLaunchDetails(message['data']['launch_uuid']);
+          if (message.containsKey('launch_uuid')) {
+            _navigateToLaunchDetails(message['launch_uuid']);
           }
 
-          if (message['data'].containsKey('notification_type')) {
-            if (message['data']['notification_type'] == 'featured_news') {
-              final item = json.decode(message['data']['item']);
+          if (message.containsKey('notification_type')) {
+            if (message['notification_type'] == 'featured_news') {
+              final item = json.decode(message['item']);
               setState(() {
                 changeTab(2);
                 newsAndEventsIndex = 0;
               });
               _openBrowser(item['url']);
-            } else if (message['data']['notification_type'] ==
+            } else if (message['notification_type'] ==
                     'event_notification' ||
-                message['data']['notification_type'] == 'event_webcast') {
+                message['notification_type'] == 'event_webcast') {
               setState(() {
                 changeTab(2);
                 newsAndEventsIndex = 1;
               });
-            } else {
-              print("Fucking Dart");
             }
           } else {
             print("Didn't find anything.");
           }
         },
-
       );
       _firebaseMessaging.requestNotificationPermissions(
           const IosNotificationSettings(sound: true, badge: true, alert: true));
@@ -390,10 +390,12 @@ class PagesState extends State<Pages> {
 
   @override
   void dispose() {
+    Ads.dispose();
     super.dispose();
   }
 
   void hideAd() {
+    Ads.hideBannerAd();
   }
 
   ThemeData get theme {
@@ -464,18 +466,24 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (this.pageIndex) {
       case 0:
+        checkAd();
         return new LaunchDetailPage(_configuration);
         break;
 
       case 1:
+        checkAd();
         return new LaunchesTabPage(_configuration);
         break;
 
       case 2:
+        checkAd();
         return new NewsAndEventsPage(_configuration, newsAndEventsIndex);
         break;
 
       case 3:
+        if (Ads.isBannerShowing()) {
+          Ads.hideBannerAd();
+        }
         return new SettingsPage(_configuration, configurationUpdater);
 
       default:
@@ -508,13 +516,6 @@ class PagesState extends State<Pages> {
         home: new Scaffold(
             body: new PageStorage(
                 bucket: pageStorageBucket, child: pageChooser()),
-            floatingActionButton: new Builder(builder: (BuildContext context) {
-              return new FloatingActionButton(
-                  backgroundColor: theme.accentColor,
-                  child: const Icon(Icons.notifications),
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed('/notifications'));
-            }),
 //            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
                 data: barTheme,
@@ -568,6 +569,14 @@ class PagesState extends State<Pages> {
 //        Ads.hideBannerAd();
 //      }
 //    });
+  }
+
+  void checkAd() {
+    if (_configuration.showAds) {
+      Ads.showBannerAd();
+    } else if (!_configuration.showAds) {
+      Ads.hideBannerAd();
+    }
   }
 
 

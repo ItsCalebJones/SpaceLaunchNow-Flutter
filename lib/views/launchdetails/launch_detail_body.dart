@@ -1,4 +1,3 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
@@ -59,7 +58,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              new DateFormat.yMMMMEEEEd().add_Hms().format(mLaunch.net),
+              new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy").format(mLaunch.net.toLocal()),
               maxLines: 2,
               style: textTheme.subhead.copyWith(color: Colors.white70),
               overflow: TextOverflow.fade,
@@ -217,7 +216,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             textAlign: TextAlign.center,
           ),
         ),
-        _buildAdWidget(),
         new Padding(
           padding: const EdgeInsets.only(
               top: 4.0, left: 8.0, right: 8.0, bottom: 2.0),
@@ -249,53 +247,5 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   @override
   Widget build(BuildContext context) {
     return _buildContentCard(context);
-  }
-
-  Widget _buildAdWidget() {
-    return Container(
-      margin: EdgeInsets.all(4.0),
-      child: new AdmobBanner(
-          adUnitId: Utils.getBannerAdUnitId(),
-          adSize: AdmobBannerSize.LEADERBOARD,
-          listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-            switch (event) {
-              case AdmobAdEvent.loaded:
-                print('Admob banner loaded!');
-                break;
-
-              case AdmobAdEvent.opened:
-                print('Admob banner opened!');
-                break;
-
-              case AdmobAdEvent.closed:
-                print('Admob banner closed!');
-                break;
-
-              case AdmobAdEvent.failedToLoad:
-                print(
-                    'Admob banner failed to load. Error code: ${args['errorCode']} Message: ${args['error']}');
-                break;
-              case AdmobAdEvent.clicked:
-                print('Admob banner clicked!');
-                break;
-              case AdmobAdEvent.impression:
-                print('Admob banner impression!');
-                break;
-              case AdmobAdEvent.leftApplication:
-                print('Admob banner left!');
-                break;
-              case AdmobAdEvent.completed:
-                print('Admob banner completed!');
-                break;
-              case AdmobAdEvent.rewarded:
-              // TODO: Handle this case.
-                break;
-              case AdmobAdEvent.started:
-                print('Admob banner started!');
-                break;
-            }
-          }
-      ),
-    );
   }
 }

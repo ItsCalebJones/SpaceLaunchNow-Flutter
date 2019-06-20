@@ -95,7 +95,7 @@ class _EventListPageState extends State<EventListPage> {
 
   Widget _buildEventTile(BuildContext context, int index) {
     var event = _events[index];
-    var formatter = new DateFormat.jm().add_yMMMMEEEEd();
+    var formatter = new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy");
 
     return new Padding(
       padding:
@@ -127,7 +127,7 @@ class _EventListPageState extends State<EventListPage> {
                       .of(context)
                       .textTheme
                       .caption),
-              new Text(formatter.format(event.date),
+              new Text(formatter.format(event.date.toLocal()),
                   style: Theme
                       .of(context)
                       .textTheme

@@ -1,8 +1,4 @@
 PODS:
-  - admob_flutter (0.3.1):
-    - Firebase/AdMob
-    - Firebase/Core
-    - Flutter
   - Firebase/AdMob (6.2.0):
     - Firebase/CoreOnly
     - Google-Mobile-Ads-SDK (~> 7.44)
@@ -104,11 +100,10 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - admob_flutter (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/admob_flutter-0.3.1/ios`)
   - "firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+1/ios`)"
   - "firebase_analytics (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios`)"
   - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios`)
-  - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios`)
+  - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release`)
   - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios`)
   - "path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios`)"
   - share (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
@@ -133,8 +128,6 @@ SPEC REPOS:
     - SwiftProtobuf
 
 EXTERNAL SOURCES:
-  admob_flutter:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/admob_flutter-0.3.1/ios"
   firebase_admob:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+1/ios"
   firebase_analytics:
@@ -142,7 +135,7 @@ EXTERNAL SOURCES:
   firebase_messaging:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios"
   Flutter:
-    :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios"
+    :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release"
   flutter_iap:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios"
   path_provider:
@@ -157,7 +150,6 @@ EXTERNAL SOURCES:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios"
 
 SPEC CHECKSUMS:
-  admob_flutter: 73ae2c104b529d8059f91661206e806e9205623a
   Firebase: 5965bac23e7fcb5fa6d926ed429c9ecef8a2014e
   firebase_admob: ba3d9c8874c03ccc2b87ae30c50d1630b522a693
   firebase_analytics: bd50d8f5d3f42dcab6da67944a849062470b0a19
