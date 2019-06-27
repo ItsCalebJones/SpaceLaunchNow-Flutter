@@ -99,7 +99,7 @@ class _EventListPageState extends State<EventListPage> {
 
     return new Padding(
       padding:
-      const EdgeInsets.only(top: 4.0, bottom: 4.0, left: 8.0, right: 8.0),
+      const EdgeInsets.only(top: 0.0, bottom: 4.0, left: 8.0, right: 8.0),
       child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
@@ -108,7 +108,8 @@ class _EventListPageState extends State<EventListPage> {
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
                   image: new CachedNetworkImageProvider(event.featureImage),
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.fill,
+                  alignment: Alignment.topCenter,
                   fadeInDuration: new Duration(milliseconds: 75),
                   fadeInCurve: Curves.easeIn,
                 ),

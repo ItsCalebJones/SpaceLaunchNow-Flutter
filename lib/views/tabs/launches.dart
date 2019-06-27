@@ -51,9 +51,11 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
       return AppBar(
         leading: Icon(Icons.search),
         title: TextField(
+          style: new TextStyle(color: Colors.white),
           onSubmitted: _search,
           decoration: InputDecoration(
             hintText: "Example: SpaceX, Delta IV, JWST...",
+            hintStyle: TextStyle(color: Colors.white),
           ),
         ),
         bottom: TabBar(

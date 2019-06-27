@@ -38,6 +38,7 @@ class SpaceLaunchNow extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: 'Space Launch Now',
+        debugShowCheckedModeBanner: false,
         home: new Pages(_firebaseMessaging),
         routes: <String, WidgetBuilder>{});
   }
@@ -509,6 +510,7 @@ class PagesState extends State<Pages> {
     return MaterialApp(
         title: 'Space Launch Now',
         theme: theme,
+        debugShowCheckedModeBanner: false,
         routes: <String, WidgetBuilder>{
           '/settings': (BuildContext context) =>
               new SettingsPage(_configuration, configurationUpdater),

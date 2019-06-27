@@ -53,7 +53,6 @@ class _NewsListPageState extends State<NewsListPage> {
   }
 
   void onLoadResponseComplete(NewsResponse response, [bool reload = false]) {
-    print("Here!?");
     loading = false;
     totalPages = response.totalPages;
     page = response.page;
@@ -119,63 +118,84 @@ class _NewsListPageState extends State<NewsListPage> {
         child: new Stack(
           children: <Widget>[
             new Positioned.fill(
-              child: new FadeInImage(
-                placeholder: new AssetImage('assets/placeholder.png'),
-                image: new CachedNetworkImageProvider(news.featureImage),
+              child: CachedNetworkImage(
+                imageUrl: news.featureImage,
+                placeholder: (context, url) => Image.asset(
+                      "assets/placeholder.png",
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+                errorWidget: (context, url, error) => new Icon(Icons.error),
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
-                fadeInDuration: new Duration(milliseconds: 75),
-                fadeInCurve: Curves.easeIn,
               ),
             ),
             new Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    new Text(
-                      news.title,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(0.5, 0.5),
-                            blurRadius: 5.0,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
-                          Shadow(
-                            offset: Offset(0.5, 0.5),
-                            blurRadius: 10.0,
-                            color: Color.fromARGB(79, 0, 0, 255),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    new Text(news.newsSiteLong,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(0.5, 0.5),
-                              blurRadius: 5.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 8.0,
-                              color: Color.fromARGB(79, 0, 0, 255),
-                            ),
-                          ],
+              child: new Stack(children: <Widget>[
+                new Positioned.fill(
+                  child: new LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    var diff = constraints.maxHeight - 60;
+                    return Padding(
+                      padding: EdgeInsets.only(top: diff),
+                      child: new Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(0, 0, 0, 0.35),
                         ),
-                        textAlign: TextAlign.center),
-                  ],
+                      ),
+                    );
+                  }),
                 ),
-              ),
+                new Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        new Text(
+                          news.title,
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(0.5, 0.5),
+                                blurRadius: 5.0,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              Shadow(
+                                offset: Offset(0.5, 0.5),
+                                blurRadius: 10.0,
+                                color: Color.fromARGB(79, 0, 0, 255),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        new Text(news.newsSiteLong,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(0.5, 0.5),
+                                  blurRadius: 5.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                Shadow(
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 8.0,
+                                  color: Color.fromARGB(79, 0, 0, 255),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center),
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
             ),
           ],
         ),
