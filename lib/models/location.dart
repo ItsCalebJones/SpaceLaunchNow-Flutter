@@ -1,13 +1,13 @@
-import 'package:spacelaunchnow_flutter/models/pad.dart';
-
 class Location {
   final int id;
   final String name;
   final String countryCode;
   final String infoURL;
   final String wikiURL;
+  final String mapImage;
 
-  Location({this.id, this.name,  this.countryCode,  this.infoURL, this.wikiURL});
+  Location({this.id, this.name,  this.countryCode,  this.infoURL, this.wikiURL,
+  this.mapImage});
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
@@ -16,6 +16,7 @@ class Location {
       countryCode: json['countryCode'],
       infoURL: json['infoURL'],
       wikiURL: json['wikiURL'],
+      mapImage: json['map_image'],
     );
   }
 }

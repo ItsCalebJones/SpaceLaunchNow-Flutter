@@ -83,7 +83,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       launch = null;
     });
     http.Response response =
-        await http.get('https://spacelaunchnow.me/api/3.3.0/launch/' + id.toString() + '/?mode=detailed');
+        await http.get('https://spacelaunchnow.me/api/3.4.0/launch/' + id.toString() + '/?mode=detailed');
 
     setState(() {
       launch = Launch.fromResponse(response.body);
@@ -94,7 +94,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   Future<void> _loadNextLaunch() async {
     List<Launch> _nextLaunches;
     http.Response response =
-        await http.get('https://spacelaunchnow.me/api/3.3.0/launch/upcoming/?limit=1&mode=detailed');
+        await http.get('https://spacelaunchnow.me/api/3.4.0/launch/upcoming/?limit=1&mode=detailed');
 
     _nextLaunches = Launch.allFromResponse(response.body);
     PageStorage

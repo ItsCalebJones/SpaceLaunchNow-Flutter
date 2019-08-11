@@ -12,7 +12,7 @@ class AgenciesShowcase extends StatelessWidget {
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
 
-    Agency lsp = mLaunch.rocket.configuration.launchServiceProvider;
+    Agency lsp = mLaunch.launchServiceProvider;
     String lspName = "Unknown";
     String lspAdmin = "Unknown Administrator";
     String lspfounded = "Founded: Unknown";
