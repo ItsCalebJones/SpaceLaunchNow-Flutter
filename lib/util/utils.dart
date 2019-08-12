@@ -8,7 +8,7 @@ class Utils {
 
       case 1: {
         //statements;
-        missionStatus = "Launch is GO";
+        missionStatus = "Launch is Go";
       }
       break;
 
@@ -26,7 +26,7 @@ class Utils {
 
       case 4: {
         //statements;
-        missionStatus = "Launch Failure";
+        missionStatus = "Launch Failure Occured";
       }
       break;
 

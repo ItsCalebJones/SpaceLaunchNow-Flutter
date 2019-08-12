@@ -26,26 +26,21 @@ class LaunchDetailHeader extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
 
     return new DiagonallyCutColoredImage(
-      new Image.network(
-        launch.rocket.configuration.image,
-        width: screenWidth,
-        height: 240.0,
-        fit: BoxFit.cover,
-      ),
-      color: SpaceLaunchNowColors.blue_transparent,
+      image: launch.image,
+      screenWidth: screenWidth,
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(BuildContext context) {
     if (avatarTag != null) {
       return new Hero(
         tag: avatarTag,
         child: new Container(
           width: 200.0,
           height: 200.0,
-          padding: const EdgeInsets.all(4.0), // borde width
+          padding: const EdgeInsets.all(2.0), // borde width
           decoration: new BoxDecoration(
-          color: const Color(0xFFFFFFFF), // border color
+          color: Theme.of(context).highlightColor, // border color
           shape: BoxShape.circle,
           ),
           child: new CircleAvatar(
@@ -60,9 +55,9 @@ class LaunchDetailHeader extends StatelessWidget {
       return new Container(
         width: 200.0,
         height: 200.0,
-        padding: const EdgeInsets.all(4.0), // borde width
+        padding: const EdgeInsets.all(2.0), // borde width
         decoration: new BoxDecoration(
-          color: const Color(0xFFFFFFFF), // border color
+          color: Theme.of(context).highlightColor, // border color
           shape: BoxShape.circle,
         ),
         child: new CircleAvatar(
@@ -87,7 +82,7 @@ class LaunchDetailHeader extends StatelessWidget {
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
-            child: _buildAvatar(),
+            child: _buildAvatar(context),
           ),
           new Positioned(
             top: 24.0,
@@ -114,7 +109,7 @@ class LaunchDetailHeader extends StatelessWidget {
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
-            child: _buildAvatar(),
+            child: _buildAvatar(context),
           ),
           new Positioned(
             top: 24.0,

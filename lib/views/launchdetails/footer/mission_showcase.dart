@@ -7,77 +7,129 @@ class MissionShowcase extends StatelessWidget {
 
   final Launch launch;
 
-  _buildOrbit(TextTheme textTheme) {
-    var orbit = "Unknown";
+  Widget _buildOrbit(TextTheme textTheme) {
+    var orbit = "Unknown Orbit";
     if (launch.mission.orbit != null) {
       orbit = launch.mission.orbit;
     }
-      return new Text(orbit,
-          style: textTheme.subhead.copyWith(color: Colors.white));
+    return new Row(
+      children: <Widget>[
+        new Text(
+          "Orbit:",
+          style: textTheme.subtitle,
+          textAlign: TextAlign.center,
+        ),
+        new Expanded(
+          child: new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text(
+              orbit,
+              maxLines: 2,
+              style: textTheme.subhead,
+              overflow: TextOverflow.fade,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMissionType(TextTheme textTheme) {
+    return new Row(
+      children: <Widget>[
+        new Text(
+          "Type:",
+          style: textTheme.subtitle,
+          textAlign: TextAlign.center,
+        ),
+        new Expanded(
+          child: new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text(
+              launch.mission.typeName,
+              maxLines: 2,
+              style: textTheme.subhead,
+              overflow: TextOverflow.fade,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
+    var widgets = new List<Widget>();
     Mission mission = launch.mission;
+    if (launch.infographic != null) {
+      widgets.add(new Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        child: new InkWell(
+          child: new Center(
+            child: new Image.network(launch.infographic),
+          ),
+        ),
+      ));
+      widgets.add(new Text(
+        "Credit @geoffdbarrett",
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.caption,
+      ));
+    }
     if (mission != null) {
       String typeName = launch.mission.typeName;
       String missionName = launch.mission.name;
       String missionDescription = launch.mission.description;
-      return new Padding(
+      widgets.add(new Padding(
         padding: const EdgeInsets.all(8.0),
         child: new SingleChildScrollView(
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new Text(
-                "$missionName",
-                style: textTheme.title.copyWith(color: Colors.white),
-              ),
-              new Text(
-                "Type: $typeName",
-                style: textTheme.title.copyWith(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
               new Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 0.0),
                 child: new Text(
                   "$missionDescription",
-                  style: textTheme.body1.copyWith(color: Colors.white),
+                  style: textTheme.body1.copyWith(),
                   textAlign: TextAlign.left,
                 ),
               ),
               new Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: new Text(
-                  "Target Orbit",
-                  style: textTheme.title.copyWith(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
+                padding: const EdgeInsets.only(
+                    top: 4.0, left: 0.0, right: 0.0, bottom: 2.0),
+                child: _buildMissionType(textTheme),
               ),
-              _buildOrbit(textTheme),
+              new Padding(
+                padding: const EdgeInsets.only(
+                    top: 4.0, left: 0.0, right: 0.0, bottom: 2.0),
+                child: _buildOrbit(textTheme),
+              ),
             ],
           ),
         ),
-      );
+      ));
     } else {
-      return new Padding(
+      widgets.add(new Padding(
         padding: const EdgeInsets.all(8.0),
         child: new Column(
           children: <Widget>[
             new Text(
               launch.name,
-              style: textTheme.title.copyWith(color: Colors.white),
+              style: textTheme.title.copyWith(),
             ),
             new Text(
               "Type: Unknown",
-              style: textTheme.title.copyWith(color: Colors.white),
+              style: textTheme.subtitle.copyWith(),
               textAlign: TextAlign.center,
             ),
           ],
         ),
-      );
+      ));
     }
+    return new Column(
+      children: widgets,
+    );
   }
 }

@@ -141,7 +141,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
           child: new ConstrainedBox(
             constraints: new BoxConstraints(minHeight: constraints.maxHeight),
             child: new Container(
-              decoration: linearGradient,
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

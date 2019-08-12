@@ -30,7 +30,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       children: <Widget>[
         new Icon(
           Icons.place,
-          color: Colors.white,
         ),
         new Expanded(
           child: new Padding(
@@ -38,7 +37,42 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: new Text(
               mLaunch.pad.location.name,
               maxLines: 2,
-              style: textTheme.subhead.copyWith(color: Colors.white70),
+              style: textTheme.subhead,
+              overflow: TextOverflow.fade,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusInfo(TextTheme textTheme) {
+    var icon = Icons.event;
+    if (mLaunch.status.id == 1) {
+      icon = Icons.thumb_up;
+    } else if (mLaunch.status.id == 2) {
+      icon = Icons.thumb_down;
+    } else if (mLaunch.status.id == 3) {
+      icon = Icons.check;
+    } else if (mLaunch.status.id == 4) {
+      icon = Icons.close;
+    } else if (mLaunch.status.id == 5) {
+      icon = Icons.pause;
+    } else if (mLaunch.status.id == 6) {
+      icon = Icons.flight_takeoff;
+    } else if (mLaunch.status.id == 7) {
+      icon = Icons.close;
+    }
+    return new Row(
+      children: <Widget>[
+        new Icon(icon),
+        new Expanded(
+          child: new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text(
+              Utils.getStatus(mLaunch.status.id),
+              maxLines: 2,
+              style: textTheme.subhead,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -52,15 +86,15 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       children: <Widget>[
         new Icon(
           Icons.timer,
-          color: Colors.white,
         ),
         new Expanded(
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy").format(mLaunch.net.toLocal()),
+              new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
+                  .format(mLaunch.net.toLocal()),
               maxLines: 2,
-              style: textTheme.subhead.copyWith(color: Colors.white70),
+              style: textTheme.subhead,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -76,26 +110,29 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       String landingSuccess = "";
       for (var i = 0; i < mLaunch.rocket.firstStages.length; i++) {
         final item = mLaunch.rocket.firstStages.elementAt(i);
-        if (item.landing.attempt){
+        if (item.landing.attempt) {
           landingAttempt = true;
-        }
-        if (landingLocation.length == 9) {
-          landingLocation = landingLocation + item.landing.location.abbrev;
-          if (item.landing.success == null){
-            landingLocation = landingLocation;
-          } else if (item.landing.success){
-            landingLocation = landingLocation + " (Success)";
-          } else if (!item.landing.success) {
-            landingLocation = landingLocation + " (Failed)";
-          }
-        } else {
-          landingLocation = landingLocation + ", " + item.landing.location.abbrev;
-          if (item.landing.success == null){
-            landingLocation = landingLocation;
-          } else if (item.landing.success){
-            landingLocation = landingLocation + " (Success)";
-          } else if (!item.landing.success) {
-            landingLocation = landingLocation + " (Failed)";
+          if (item.landing.location != null) {
+            if (landingLocation.length == 9) {
+              landingLocation = landingLocation + item.landing.location.abbrev;
+              if (item.landing.success == null) {
+                landingLocation = landingLocation;
+              } else if (item.landing.success) {
+                landingLocation = landingLocation + " (Success)";
+              } else if (!item.landing.success) {
+                landingLocation = landingLocation + " (Failed)";
+              }
+            } else {
+              landingLocation =
+                  landingLocation + ", " + item.landing.location.abbrev;
+              if (item.landing.success == null) {
+                landingLocation = landingLocation;
+              } else if (item.landing.success) {
+                landingLocation = landingLocation + " (Success)";
+              } else if (!item.landing.success) {
+                landingLocation = landingLocation + " (Failed)";
+              }
+            }
           }
         }
       }
@@ -114,7 +151,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                     child: new Text(
                       landingLocation,
                       maxLines: 2,
-                      style: textTheme.subhead.copyWith(color: Colors.white70),
+                      style: textTheme.subhead,
                       overflow: TextOverflow.fade,
                     ),
                   ),
@@ -142,10 +179,10 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch.vidURL != null) {
       materialButtons.add(new MaterialButton(
         elevation: 2.0,
-          minWidth: 130.0,
-          color: Colors.redAccent,
-          textColor: Colors.white,
-          onPressed: () {
+        minWidth: 130.0,
+        color: Colors.redAccent,
+        textColor: Colors.white,
+        onPressed: () {
           _launchURL(mLaunch.vidURL);
         },
         child: new Text('Watch'),
@@ -166,7 +203,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
 
     return new Padding(
       padding:
-          const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
+          const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0, bottom: 0.0),
       child: new Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -193,28 +230,22 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     String status = Utils.getStatus(mLaunch.status.id);
 
     return new Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Padding(
-          padding: const EdgeInsets.only(top: 12.0, left: 4.0, right: 4.0),
-          child: new Chip(
-            label: new Text(
-              status,
-              style: textTheme.title.copyWith(color: Colors.white),
-            ),
-            backgroundColor: Colors.green,
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+          child: new Text(
+            mLaunch.name,
+            style: textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.start,
           ),
         ),
         _buildCountDown(textTheme),
-        _buildActionButtons(theme),
         new Padding(
-          padding: const EdgeInsets.only(top: 4.0, left: 8.0, right: 8.0),
-          child: new Text(
-            mLaunch.name,
-            style: textTheme.headline.copyWith(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
+          padding: const EdgeInsets.only(
+              top: 4.0, left: 8.0, right: 8.0, bottom: 2.0),
+          child: _buildStatusInfo(textTheme),
         ),
         new Padding(
           padding: const EdgeInsets.only(
@@ -231,15 +262,11 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               top: 2.0, left: 8.0, right: 8.0, bottom: 2.0),
           child: _buildLandingInfo(textTheme),
         ),
+        _buildActionButtons(theme),
         new MissionShowcase(mLaunch),
-        new Divider(
-          color: Colors.white,
-        ),
-        new AgenciesShowcase(mLaunch),
-        new Divider(
-          color: Colors.white,
-        ),
         new LocationShowcaseWidget(mLaunch),
+        new AgenciesShowcase(mLaunch),
+        new SizedBox(height: 125),
       ],
     );
   }
