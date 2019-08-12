@@ -35,62 +35,127 @@ class AgenciesShowcase extends StatelessWidget {
       }
     }
 
-    Widget _buildFlights() {
+    Widget _buildStats() {
       if (lsp != null &&
           lsp.successfulLaunches != null &&
           lsp.failedLaunches != null &&
           lsp.pendingLaunches != null) {
-        return new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              "Successful: " + lsp.successfulLaunches.toString(),
-              style: textTheme.subhead.copyWith(),
-              textAlign: TextAlign.start,
-            ),
-            new Text(
-              "Failed: " + lsp.failedLaunches.toString(),
-              style: textTheme.subhead.copyWith(),
-              textAlign: TextAlign.start,
-            ),
-            new Text(
-              "Pending: " + lsp.pendingLaunches.toString(),
-              style: textTheme.subhead.copyWith(),
-              textAlign: TextAlign.start,
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Text(
+                "Launch Stats",
+                style: textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+              ),
+              new Text(
+                "Successful: " + lsp.successfulLaunches.toString(),
+                style: textTheme.subhead.copyWith(),
+                textAlign: TextAlign.start,
+              ),
+              new Text(
+                "Failed: " + lsp.failedLaunches.toString(),
+                style: textTheme.subhead.copyWith(),
+                textAlign: TextAlign.start,
+              ),
+              new Text(
+                "Pending: " + lsp.pendingLaunches.toString(),
+                style: textTheme.subhead.copyWith(),
+                textAlign: TextAlign.start,
+              ),
+            ],
+          ),
         );
       }
       return null;
     }
 
     Widget _buildAvatar() {
-
       if (lsp.nationURL != null) {
-        return new Padding(
-            padding: const EdgeInsets.only(
-                left: 16.0, right: 16.0, top: 8.0, bottom: 4.0),
-            child: new Container(
-              width: 200.0,
-              height: 200.0,
-              padding: const EdgeInsets.all(2.0),
-              // borde width
-              decoration: new BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .highlightColor, // border color
-                shape: BoxShape.circle,
-              ),
-              child: new CircleAvatar(
-                foregroundColor: Colors.white,
-                backgroundImage: new NetworkImage(lsp.nationURL),
-                radius: 100.0,
-                backgroundColor: Colors.white,
-              ),
-            ));
+        return Row(
+          children: <Widget>[
+            new Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+                child: new Container(
+                  width: 125.0,
+                  height: 125.0,
+                  padding: const EdgeInsets.all(2.0),
+                  // borde width
+                  decoration: new BoxDecoration(
+                    color: Theme.of(context).highlightColor, // border color
+                    shape: BoxShape.circle,
+                  ),
+                  child: new CircleAvatar(
+                    foregroundColor: Colors.white,
+                    backgroundImage: new NetworkImage(lsp.nationURL),
+                    radius: 50.0,
+                    backgroundColor: Colors.white,
+                  ),
+                )),
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    lspName,
+                    style: textTheme.title,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    lspAdmin,
+                    style: textTheme.subhead.copyWith(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    lspfounded,
+                    style: textTheme.subhead.copyWith(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
       } else
-        return new Container();
+        return new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                lspName,
+                style: textTheme.title,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                lspAdmin,
+                style: textTheme.subhead.copyWith(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                lspfounded,
+                style: textTheme.subhead.copyWith(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        );
     }
 
     Widget _buildLSP() {
@@ -106,7 +171,7 @@ class AgenciesShowcase extends StatelessWidget {
             onPressed: () {
               launch(lsp.infoURL);
             },
-            child: new Text('Info URL'),
+            child: new Text('Website'),
           ));
         }
 
@@ -119,7 +184,7 @@ class AgenciesShowcase extends StatelessWidget {
             onPressed: () {
               launch(lsp.wikiURL);
             },
-            child: new Text('Wiki URL'),
+            child: new Text('Wiki'),
           ));
         }
 
@@ -141,57 +206,32 @@ class AgenciesShowcase extends StatelessWidget {
       }
 
       return new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _buildAvatar(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new Text(
-              lspName,
-              style: textTheme.title,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          new Text(
-            lspAdmin,
-            style: textTheme.subhead.copyWith(),
-            textAlign: TextAlign.center,
-          ),
-          new Text(
-            lspfounded,
-            style: textTheme.subhead.copyWith(),
-            textAlign: TextAlign.center,
-          ),
+          new Column(children: lspWidgets),
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: new Divider(),
-          ),
-          _buildFlights(),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: new Divider(),
           ),
           new Padding(
             padding: const EdgeInsets.only(
-                top: 8.0, bottom: 8.0, left: 12.0, right: 12.0),
+                top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
             child: new Text(
               lspDescription,
               style: textTheme.body1.copyWith(),
               textAlign: TextAlign.start,
             ),
           ),
-          new Column(children: lspWidgets),
+          _buildStats(),
         ],
       );
     }
 
     return new Padding(
       padding: const EdgeInsets.all(0.0),
-      child: Card(
-        child: new Column(
-          children: <Widget>[_buildLSP()],
-        ),
+      child: new Column(
+        children: <Widget>[_buildLSP()],
       ),
     );
   }

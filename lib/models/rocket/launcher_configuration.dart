@@ -8,7 +8,7 @@ class LauncherConfiguration {
   final String fullName;
   final String variant;
   final String image;
-  final Agency launchServiceProvider;
+  final Agency manufacturer;
   final int minStage;
   final int maxStage;
   final num length;
@@ -17,6 +17,11 @@ class LauncherConfiguration {
   final int geoCapacity;
   final int leoCapacity;
   final int thrust;
+  final int totalLaunchCount;
+  final int consecutiveSuccessfulLaunches;
+  final int successfulLaunches;
+  final int failedLaunches;
+  final int pendingLaunches;
   final String infoUrl;
   final String wikiUrl;
 
@@ -38,7 +43,12 @@ class LauncherConfiguration {
       this.wikiUrl,
       this.id,
       this.image,
-      this.launchServiceProvider});
+      this.manufacturer,
+      this.consecutiveSuccessfulLaunches,
+      this.totalLaunchCount,
+      this.successfulLaunches,
+      this.failedLaunches,
+      this.pendingLaunches});
 
   factory LauncherConfiguration.fromJson(Map<String, dynamic> json) {
     var image = json['image_url'];
@@ -49,12 +59,11 @@ class LauncherConfiguration {
     return LauncherConfiguration(
       id: json['id'],
       image: image,
-      launchServiceProvider:
-          new Agency.fromJson(json['launch_service_provider']),
+      manufacturer: new Agency.fromJson(json['manufacturer']),
       name: json['name'],
       description: json['description'],
       family: json['family'],
-      fullName: json['fullName'],
+      fullName: json['full_name'],
       variant: json['variant'],
       minStage: json['min_stage'],
       maxStage: json['max_stage'],
@@ -66,6 +75,11 @@ class LauncherConfiguration {
       thrust: json['to_thrust'],
       infoUrl: json['info_url'],
       wikiUrl: json['wiki_url'],
+      consecutiveSuccessfulLaunches: json['consecutive_successful_launches'],
+      totalLaunchCount: json['total_launch_count'],
+      successfulLaunches: json['successful_launches'],
+      failedLaunches: json['failed_launches'],
+      pendingLaunches: json['pending_launches'],
     );
   }
 }

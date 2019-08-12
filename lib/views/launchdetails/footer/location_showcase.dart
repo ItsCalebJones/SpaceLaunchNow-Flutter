@@ -82,9 +82,19 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return new Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        new Padding(
+            padding: const EdgeInsets.only(left: 8.0, right:8.0, top:16.0, bottom: 8.0),
+            child: new Text(
+              "Launch Location",
+              textAlign: TextAlign.left,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+            )),
         new Padding(
           padding: const EdgeInsets.only(
               top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
@@ -94,15 +104,14 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
             ),
           ),
         ),
-        new Padding(
-          padding: const EdgeInsets.only(
-              top: 2.0, left: 16.0, right: 16.0, bottom: 4.0),
-          child: new Text(
-            _launch.pad.location.name,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption.copyWith(),
-          ),
-        ),
+       Align(
+         alignment: Alignment.center,
+         child: new Text(
+              _launch.pad.location.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.caption.copyWith(),
+            ),
+       ),
         new Padding(
           padding: const EdgeInsets.only(
               top: 8.0, bottom: 0.0, left: 8.0, right: 8.0),
@@ -112,10 +121,13 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
             ),
           ),
         ),
-        new Text(
-          _launch.pad.name,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.caption,
+        Align(
+          alignment: Alignment.center,
+          child: new Text(
+            _launch.pad.name,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.caption,
+          ),
         ),
         _buildActionButtons(theme),
       ],

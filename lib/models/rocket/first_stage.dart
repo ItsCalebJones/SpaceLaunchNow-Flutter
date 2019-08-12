@@ -12,12 +12,22 @@ class FirstStage {
       {this.type, this.reused, this.flightNumber, this.launcher, this.landing});
 
   factory FirstStage.fromJson(Map<String, dynamic> json) {
+    var landing;
+    if (json['landing'] != null){
+      landing = new Landing.fromJson(json['landing']);
+    }
+
+    var launcher;
+    if (json['launcher'] != null){
+      launcher = new Launcher.fromJson(json['launcher']);
+    }
+
     return FirstStage(
       type: json['type'],
       reused: json['reused'],
       flightNumber: json['launcher_flight_number'],
-      launcher: new Launcher.fromJson(json['launcher']),
-      landing: new Landing.fromJson(json['landing']),
+      launcher: launcher,
+      landing: landing,
     );
   }
 }

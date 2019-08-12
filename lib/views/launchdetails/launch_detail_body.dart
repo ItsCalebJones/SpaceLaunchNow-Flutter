@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/mission_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'footer/vehicle_showcase.dart';
 
 class LaunchDetailBodyWidget extends StatefulWidget {
   final Launch launch;
@@ -223,6 +226,14 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     }
   }
 
+  Widget _buildSpace(){
+    if (Ads.isBannerShowing()) {
+      return new SizedBox(height: 50);
+    } else {
+      return new SizedBox(height: 0);
+    }
+  }
+
   Widget _buildContentCard(BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
@@ -234,10 +245,10 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+          padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
             mLaunch.name,
-            style: textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.headline.copyWith(fontWeight: FontWeight.bold,fontSize: 30),
             textAlign: TextAlign.start,
           ),
         ),
@@ -264,9 +275,10 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         new MissionShowcase(mLaunch),
-        new LocationShowcaseWidget(mLaunch),
+        new VehicleShowcase(mLaunch),
         new AgenciesShowcase(mLaunch),
-        new SizedBox(height: 125),
+        new LocationShowcaseWidget(mLaunch),
+        _buildSpace(),
       ],
     );
   }
