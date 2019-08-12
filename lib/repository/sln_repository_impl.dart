@@ -11,7 +11,7 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 
 class SLNRepositoryImpl implements SLNRepository {
 
-  static const BASE_URL = "https://spacelaunchnow.me/api/3.3.0";
+  static const BASE_URL = "https://spacelaunchnow.me/api/3.4.0";
   static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v1";
 
 

@@ -50,9 +50,6 @@ class Agency {
       }
 
       var nationURL = json['nation_url'];
-      if (nationURL == null) {
-        nationURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
-      }
 
       return new Agency(
         id: json['id'],

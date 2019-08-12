@@ -12,7 +12,7 @@ class AgenciesShowcase extends StatelessWidget {
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
 
-    Agency lsp = mLaunch.rocket.configuration.launchServiceProvider;
+    Agency lsp = mLaunch.launchServiceProvider;
     String lspName = "Unknown";
     String lspAdmin = "Unknown Administrator";
     String lspfounded = "Founded: Unknown";
@@ -20,7 +20,7 @@ class AgenciesShowcase extends StatelessWidget {
 
     if (lsp != null) {
       String lspFoundedYear = lsp.foundingYear;
-      if (lspFoundedYear != null){
+      if (lspFoundedYear != null) {
         lspfounded = "Founded: " + lsp.foundingYear;
       }
 
@@ -36,33 +36,61 @@ class AgenciesShowcase extends StatelessWidget {
     }
 
     Widget _buildFlights() {
-      if (lsp != null
-          && lsp.successfulLaunches != null
-          && lsp.failedLaunches != null
-          && lsp.pendingLaunches != null) {
+      if (lsp != null &&
+          lsp.successfulLaunches != null &&
+          lsp.failedLaunches != null &&
+          lsp.pendingLaunches != null) {
         return new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Text(
               "Successful: " + lsp.successfulLaunches.toString(),
-              style: textTheme.subhead.copyWith(color: Colors.white),
+              style: textTheme.subhead.copyWith(),
               textAlign: TextAlign.start,
             ),
             new Text(
               "Failed: " + lsp.failedLaunches.toString(),
-              style: textTheme.subhead.copyWith(color: Colors.white),
+              style: textTheme.subhead.copyWith(),
               textAlign: TextAlign.start,
             ),
             new Text(
               "Pending: " + lsp.pendingLaunches.toString(),
-              style: textTheme.subhead.copyWith(color: Colors.white),
+              style: textTheme.subhead.copyWith(),
               textAlign: TextAlign.start,
             ),
           ],
         );
       }
       return null;
+    }
+
+    Widget _buildAvatar() {
+
+      if (lsp.nationURL != null) {
+        return new Padding(
+            padding: const EdgeInsets.only(
+                left: 16.0, right: 16.0, top: 8.0, bottom: 4.0),
+            child: new Container(
+              width: 200.0,
+              height: 200.0,
+              padding: const EdgeInsets.all(2.0),
+              // borde width
+              decoration: new BoxDecoration(
+                color: Theme
+                    .of(context)
+                    .highlightColor, // border color
+                shape: BoxShape.circle,
+              ),
+              child: new CircleAvatar(
+                foregroundColor: Colors.white,
+                backgroundImage: new NetworkImage(lsp.nationURL),
+                radius: 100.0,
+                backgroundColor: Colors.white,
+              ),
+            ));
+      } else
+        return new Container();
     }
 
     Widget _buildLSP() {
@@ -107,7 +135,7 @@ class AgenciesShowcase extends StatelessWidget {
       } else {
         lspWidgets.add(new Text(
           "Unknown",
-          style: textTheme.subhead.copyWith(color: Colors.white),
+          style: textTheme.subhead.copyWith(),
           textAlign: TextAlign.left,
         ));
       }
@@ -116,41 +144,41 @@ class AgenciesShowcase extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top:8.0, bottom: 4.0),
-            child: Image.network(lsp.logoURL,
-              height: 150.0,
-              fit: BoxFit.contain,
+          _buildAvatar(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: new Text(
+              lspName,
+              style: textTheme.title,
+              textAlign: TextAlign.center,
             ),
           ),
           new Text(
-            lspName,
-            style: textTheme.title.copyWith(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          new Text(
             lspAdmin,
-            style: textTheme.subhead.copyWith(color: Colors.white),
+            style: textTheme.subhead.copyWith(),
             textAlign: TextAlign.center,
           ),
           new Text(
             lspfounded,
-            style: textTheme.subhead.copyWith(color: Colors.white),
+            style: textTheme.subhead.copyWith(),
             textAlign: TextAlign.center,
           ),
-          new Divider(
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: new Divider(),
           ),
           _buildFlights(),
-          new Divider(
-            color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: new Divider(),
           ),
           new Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 12.0, right: 12.0),
             child: new Text(
               lspDescription,
-              style: textTheme.body1.copyWith(color: Colors.white),
-              textAlign: TextAlign.left,
+              style: textTheme.body1.copyWith(),
+              textAlign: TextAlign.start,
             ),
           ),
           new Column(children: lspWidgets),
@@ -159,9 +187,11 @@ class AgenciesShowcase extends StatelessWidget {
     }
 
     return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Column(
-        children: <Widget>[_buildLSP()],
+      padding: const EdgeInsets.all(0.0),
+      child: Card(
+        child: new Column(
+          children: <Widget>[_buildLSP()],
+        ),
       ),
     );
   }

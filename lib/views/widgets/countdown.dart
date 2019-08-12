@@ -86,17 +86,16 @@ class CountdownState extends State<Countdown> {
   @override
   build(BuildContext context) {
     var theme = Theme.of(context);
-    var textThemeDigits = theme.textTheme.title.copyWith(color: Colors.white, fontSize: 46.0);
-    var textThemeDivider = theme.textTheme.subhead.copyWith(color: Colors.white, fontSize: 34.0);
-    var textThemeDescription = theme.textTheme.caption.copyWith(color: Colors.white70);
+    var textThemeDigits = theme.textTheme.title.copyWith(fontSize: 46.0);
+    var textThemeDivider = theme.textTheme.subhead.copyWith(fontSize: 34.0);
+    var textThemeDescription = theme.textTheme.caption;
     Duration duration = new Duration(seconds: launch.net.difference(new DateTime.now()).inSeconds);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     return new Container(
-      padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 4.0, bottom: 4.0),
+      padding: new EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0, bottom: 0.0),
       child: new Column(
         children: <Widget>[
           new Divider(
-            color: Colors.white,
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -123,7 +122,6 @@ class CountdownState extends State<Countdown> {
             ],
           ),
           new Divider(
-            color: Colors.white,
           ),
         ],
       ),

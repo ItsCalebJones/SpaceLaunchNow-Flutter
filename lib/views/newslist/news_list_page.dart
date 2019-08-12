@@ -113,7 +113,7 @@ class _NewsListPageState extends State<NewsListPage> {
       semanticContainer: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: new InkWell(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(2),
         onTap: () => _openBrowser(news),
         child: new Stack(
           children: <Widget>[
@@ -140,7 +140,7 @@ class _NewsListPageState extends State<NewsListPage> {
                       padding: EdgeInsets.only(top: diff),
                       child: new Container(
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(0, 0, 0, 0.35),
+                          color: Color.fromRGBO(0, 0, 0, 0.65),
                         ),
                       ),
                     );
@@ -156,7 +156,7 @@ class _NewsListPageState extends State<NewsListPage> {
                           news.title,
                           maxLines: 2,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Colors.white,
                             shadows: <Shadow>[
                               Shadow(
@@ -175,7 +175,7 @@ class _NewsListPageState extends State<NewsListPage> {
                         ),
                         new Text(news.newsSiteLong,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 10,
                               color: Colors.white,
                               shadows: <Shadow>[
                                 Shadow(
