@@ -54,7 +54,7 @@ class LauncherConfiguration {
     var image = json['image_url'];
     if (image == null) {
       image =
-          "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+          "";
     }
     return LauncherConfiguration(
       id: json['id'],

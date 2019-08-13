@@ -9,6 +9,10 @@ class Agency {
   final int successfulLaunches;
   final int failedLaunches;
   final int pendingLaunches;
+  final int consecutiveSuccessfulLandings;
+  final int successfulLandings;
+  final int failedLandings;
+  final int attemptedLandings;
   final String type;
   final String logoURL;
   final String imageURL;
@@ -25,6 +29,10 @@ class Agency {
       this.successfulLaunches,
       this.failedLaunches,
       this.pendingLaunches,
+      this.consecutiveSuccessfulLandings,
+      this.successfulLandings,
+      this.failedLandings,
+      this.attemptedLandings,
       this.imageURL,
       this.logoURL,
       this.nationURL,
@@ -41,12 +49,12 @@ class Agency {
 
       var logoURL = json['logo_url'];
       if (logoURL == null) {
-        logoURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+        logoURL = "";
       }
 
       var imageURL = json['image_url'];
       if (imageURL == null) {
-        imageURL = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+        imageURL = "";
       }
 
       var nationURL = json['nation_url'];
@@ -62,6 +70,10 @@ class Agency {
         successfulLaunches: json['successful_launches'],
         failedLaunches: json['failed_launches'],
         pendingLaunches: json['pending_launches'],
+        consecutiveSuccessfulLandings: json['consecutive_successful_landings'],
+        successfulLandings: json['successful_landings'],
+        failedLandings: json['failed_landings'],
+        attemptedLandings: json['attempted_landings'],
         logoURL: logoURL,
         imageURL: imageURL,
         nationURL: nationURL,

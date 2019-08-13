@@ -89,7 +89,11 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
             Tab( text: "Previous",),
           ],
         ),
-        title: Text(myTitle),
+        title: Text(myTitle,
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold),),
       );
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
@@ -42,37 +43,27 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
     List<Widget> materialButtons = [];
 
     if (_launch.pad.mapURL != null) {
-      materialButtons.add(new MaterialButton(
-        elevation: 2.0,
-        minWidth: 130.0,
-        color: Colors.blue,
-        textColor: Colors.white,
+      materialButtons.add(new CupertinoButton (
         onPressed: () {
           _launchURL(_launch.pad.mapURL);
         },
-        child: new Text('Explore Map'),
+        child: new Text('Map'),
       ));
     }
 
     if (_launch.pad.wikiURL != null) {
-      materialButtons.add(new MaterialButton(
-        elevation: 2.0,
-        minWidth: 130.0,
-        color: Colors.redAccent,
-        textColor: Colors.white,
+      materialButtons.add(new CupertinoButton (
         onPressed: () {
           _launchURL(_launch.pad.wikiURL);
         },
-        child: new Text('Location Wiki'),
+        child: new Text('Wiki'),
       ));
     }
 
     return new Padding(
-      padding:
-          const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
+      padding: const EdgeInsets.all(8.0),
       child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: materialButtons,
       ),
     );
@@ -86,7 +77,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Padding(
-            padding: const EdgeInsets.only(left: 8.0, right:8.0, top:16.0, bottom: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right:8.0, top:8.0, bottom: 8.0),
             child: new Text(
               "Launch Location",
               textAlign: TextAlign.left,
@@ -95,6 +86,25 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
                   .headline
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             )),
+        new Padding(
+            padding: const EdgeInsets.only(left: 8.0, right:8.0,),
+            child: new Text(
+              _launch.pad.name,
+              textAlign: TextAlign.left,
+              style: Theme.of(context)
+                  .textTheme
+                  .title,
+            )),
+        new Padding(
+            padding: const EdgeInsets.only(left: 8.0, right:8.0,),
+            child: new Text(
+              _launch.pad.location.name,
+              textAlign: TextAlign.left,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle,
+            )),
+        _buildActionButtons(theme),
         new Padding(
           padding: const EdgeInsets.only(
               top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
@@ -129,7 +139,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
             style: Theme.of(context).textTheme.caption,
           ),
         ),
-        _buildActionButtons(theme),
+        new SizedBox(height: 100)
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
+import 'package:spacelaunchnow_flutter/util/utils.dart';
 
 class MissionShowcase extends StatelessWidget {
   MissionShowcase(this.launch);
@@ -16,18 +17,16 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         new Text(
           "Orbit:",
-          style: textTheme.subtitle.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: new Text(
-              orbit,
-              maxLines: 2,
-              style: textTheme.subhead,
-              overflow: TextOverflow.fade,
-            ),
+        new Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: new Text(
+            orbit,
+            maxLines: 2,
+            style: textTheme.body1,
+            overflow: TextOverflow.fade,
           ),
         ),
       ],
@@ -39,18 +38,15 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         new Text(
           "Type:",
-          style: textTheme.subtitle.copyWith(fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.start,
         ),
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: new Text(
-              launch.mission.typeName,
-              maxLines: 2,
-              style: textTheme.subhead,
-              overflow: TextOverflow.fade,
-            ),
+        new Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: new Text(
+            launch.mission.typeName,
+            maxLines: 2,
+            style: textTheme.body1,
           ),
         ),
       ],
@@ -59,18 +55,16 @@ class MissionShowcase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme
-        .of(context)
-        .textTheme;
+    var textTheme = Theme.of(context).textTheme;
     var widgets = new List<Widget>();
     Mission mission = launch.mission;
     widgets.add(Padding(
-      padding: const EdgeInsets.only(left: 8.0, right:8.0, top:16.0, bottom: 8.0),
+      padding:
+          const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 0.0),
       child: new Text(
         "Mission Details",
         textAlign: TextAlign.left,
-        style: Theme
-            .of(context)
+        style: Theme.of(context)
             .textTheme
             .headline
             .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
@@ -78,7 +72,7 @@ class MissionShowcase extends StatelessWidget {
     ));
     if (launch.infographic != null) {
       widgets.add(new Padding(
-        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
         child: new InkWell(
           child: new Center(
             child: new Image.network(launch.infographic),
@@ -88,10 +82,7 @@ class MissionShowcase extends StatelessWidget {
       widgets.add(new Text(
         "Credit @geoffdbarrett",
         textAlign: TextAlign.center,
-        style: Theme
-            .of(context)
-            .textTheme
-            .caption,
+        style: Theme.of(context).textTheme.caption,
       ));
     }
     if (mission != null) {
@@ -99,7 +90,7 @@ class MissionShowcase extends StatelessWidget {
       String missionName = launch.mission.name;
       String missionDescription = launch.mission.description;
       widgets.add(new Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
         child: new SingleChildScrollView(
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -129,7 +120,7 @@ class MissionShowcase extends StatelessWidget {
       ));
     } else {
       widgets.add(new Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0.0),
         child: new Column(
           children: <Widget>[
             new Text(
@@ -145,6 +136,7 @@ class MissionShowcase extends StatelessWidget {
         ),
       ));
     }
+
     return new Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

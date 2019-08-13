@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -9,14 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -431,7 +427,7 @@ class PagesState extends State<Pages> {
     } else {
       return defaultTargetPlatform == TargetPlatform.iOS
           ? kIOSTheme
-          : kDefaultTheme;
+          : kIOSTheme;
     }
   }
 
@@ -561,7 +557,7 @@ class PagesState extends State<Pages> {
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
                         icon: new Icon(MaterialCommunityIcons.home),
-                        title: new Text("Next")),
+                        title: new Text("Home")),
                     new BottomNavigationBarItem(
                         title: new Text('Launches'),
                         icon: new Icon(MaterialCommunityIcons.rocket)),

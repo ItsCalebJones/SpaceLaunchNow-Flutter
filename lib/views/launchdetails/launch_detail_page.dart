@@ -154,6 +154,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                     child: new LaunchDetailBodyWidget(
                       launch,
+                      widget._configuration
                     ),
                   ),
                 ],

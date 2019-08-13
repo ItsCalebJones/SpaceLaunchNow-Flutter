@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +17,7 @@ import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:material_search/material_search.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeListPage extends StatefulWidget {
@@ -133,35 +135,47 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Widget _buildLaunchTile(BuildContext context, int index) {
-    var launch = _launches[index];
-    var formatter = new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy");
+  Widget _buildLaunchTile(BuildContext context, Launch launch) {
+    var formatter = new DateFormat("EEEE, MMMM d, yyyy");
 
     return new Padding(
       padding:
-          const EdgeInsets.only(top: 0.0, bottom: 4.0, left: 8.0, right: 8.0),
+          const EdgeInsets.only(top: 0.0, bottom: 8.0, left: 8.0, right: 8.0),
       child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
+                width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
-                  image: new CachedNetworkImageProvider(launch.image),
+                  image: new CachedNetworkImageProvider(_getLaunchImage(launch)),
                   fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
-                  height: 150,
+                  height: 175.0,
+                  alignment: Alignment.center,
                   fadeInDuration: new Duration(milliseconds: 75),
                   fadeInCurve: Curves.easeIn,
                 ),
               ),
-              new Text(launch.name, style: Theme.of(context).textTheme.title),
-              new Text(launch.pad.location.name,
-                  style: Theme.of(context).textTheme.subtitle),
-              new Text("Type: " + launch.mission.typeName ?? "Unknonwn",
-                  style: Theme.of(context).textTheme.caption),
-              new Text(formatter.format(launch.net.toLocal()),
-                  style: Theme.of(context).textTheme.caption),
+              _buildCountDown(launch),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
+                child: new Text(launch.name,
+                    style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: new Text(launch.pad.location.name,
+                    style: Theme.of(context).textTheme.body2),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: new Text(formatter.format(launch.net.toLocal()),
+                    style: Theme.of(context).textTheme.body2),
+              ),
               Container(
                 padding: const EdgeInsets.only(
                     top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
@@ -197,20 +211,28 @@ class _HomeListPageState extends State<HomeListPage> {
     );
   }
 
+  Widget _buildCountDown(Launch mLaunch) {
+    DateTime net = mLaunch.net;
+    DateTime current = new DateTime.now();
+    var diff = net.difference(current);
+    if (diff.inSeconds > 0) {
+      return new Countdown(mLaunch);
+    } else {
+      return new Container(width: 0.0, height: 0.0);
+    }
+  }
+
   Widget _buildLaunchButtons(Launch launch) {
     List<Widget> eventButtons = [];
 
     if (launch != null) {
       eventButtons.add(new Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: new RaisedButton(
+        padding: const EdgeInsets.all(4.0),
+        child: new CupertinoButton(
           child: const Text(
             'Explore',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(),
           ),
-          color: Colors.blue,
-          elevation: 4.0,
-          splashColor: Colors.blueGrey,
           onPressed: () {
             _navigateToLaunchDetails(launch: launch, launchId: launch.id);
           }, //
@@ -219,21 +241,21 @@ class _HomeListPageState extends State<HomeListPage> {
     }
     if (launch.vidURL != null) {
       eventButtons.add(new Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: new RaisedButton(
+          padding: const EdgeInsets.all(4.0),
+          child: new CupertinoButton(
             child: const Text(
               'Watch',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.red),
             ),
-            color: Colors.redAccent,
-            elevation: 4.0,
-            splashColor: Colors.blueGrey,
             onPressed: () {
               _openBrowser(launch.vidURL);
             }, //
           )));
     }
-    return new Row(children: eventButtons);
+    return new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: eventButtons
+    );
   }
 
   _openBrowser(String url) async {
@@ -258,23 +280,36 @@ class _HomeListPageState extends State<HomeListPage> {
         child: new Text("No Launches Loaded"),
       );
     } else {
-      ListView listView = new ListView.builder(
-        itemCount: _launches.length,
-        itemBuilder: _buildLaunchTile,
-      );
+      List<Widget> widgets = new List<Widget>();
+      for (var item in _launches){
+          widgets.add(_buildLaunchTile(context, item));
+      }
+      widgets.add(new SizedBox(height: 50));
+
 
       content = new Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () {
+                _handleRefresh();
+              },
+            )
+          ],
           title: new Text(
-            "Launches",
-            textAlign: TextAlign.left,
+            "Favorited Launches",
             style: Theme.of(context)
                 .textTheme
                 .headline
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+                .copyWith(fontWeight: FontWeight.bold),
           ),
         ),
-        body: listView,
+        body: SingleChildScrollView(
+          child: new Column(
+            children: widgets,
+          ),
+        ),
       );
     }
     return content;
@@ -472,5 +507,19 @@ class _HomeListPageState extends State<HomeListPage> {
         locations = _buildLocationFilter();
       }
     });
+  }
+
+  String _getLaunchImage(Launch launch) {
+    if (launch.image != null){
+      return launch.image;
+    } else if (launch.infographic != null){
+      return launch.infographic;
+    } else if (launch.rocket.configuration.image != null && launch.rocket.configuration.image.length > 0){
+      return launch.rocket.configuration.image;
+    } else if (launch.launchServiceProvider.imageURL != null && launch.rocket.configuration.image.length > 0){
+      return launch.launchServiceProvider.imageURL;
+    } else {
+      return "";
+    }
   }
 }

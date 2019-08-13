@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
@@ -7,6 +8,7 @@ import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/mission_showcase.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,8 +16,9 @@ import 'footer/vehicle_showcase.dart';
 
 class LaunchDetailBodyWidget extends StatefulWidget {
   final Launch launch;
+  final AppConfiguration _configuration;
 
-  LaunchDetailBodyWidget(this.launch);
+  LaunchDetailBodyWidget(this.launch, this._configuration);
 
   @override
   State createState() => new LaunchDetailBodyState(this.launch);
@@ -113,7 +116,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       String landingSuccess = "";
       for (var i = 0; i < mLaunch.rocket.firstStages.length; i++) {
         final item = mLaunch.rocket.firstStages.elementAt(i);
-        if (item.landing.attempt) {
+        if (item.landing !=null && item.landing.attempt) {
           landingAttempt = true;
           if (item.landing.location != null) {
             if (landingLocation.length == 9) {
@@ -180,11 +183,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
     if (mLaunch.vidURL != null) {
-      materialButtons.add(new MaterialButton(
-        elevation: 2.0,
-        minWidth: 130.0,
-        color: Colors.redAccent,
-        textColor: Colors.white,
+      materialButtons.add(new CupertinoButton (
         onPressed: () {
           _launchURL(mLaunch.vidURL);
         },
@@ -193,11 +192,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     }
 
     String launchId = mLaunch.id;
-    materialButtons.add(new MaterialButton(
-      elevation: 2.0,
-      minWidth: 130.0,
-      color: Colors.blue,
-      textColor: Colors.white,
+    materialButtons.add(new CupertinoButton (
       onPressed: () {
         share("https://spacelaunchnow.me/launch/$launchId");
       },
@@ -275,7 +270,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         new MissionShowcase(mLaunch),
-        new VehicleShowcase(mLaunch),
+        new VehicleShowcase(mLaunch, widget._configuration),
         new AgenciesShowcase(mLaunch),
         new LocationShowcaseWidget(mLaunch),
         _buildSpace(),

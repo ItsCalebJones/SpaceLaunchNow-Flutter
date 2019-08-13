@@ -473,10 +473,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new PlatformAdaptiveAppBar(
-        text: "Settings",
-        color: Theme.of(context).primaryColor,
-        platform: Theme.of(context).platform,
+      appBar: new AppBar(
+        title: Text("Settings",
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       body: buildSettingsPane(context),
     );
