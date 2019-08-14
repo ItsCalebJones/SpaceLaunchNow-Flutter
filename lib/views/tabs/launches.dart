@@ -49,13 +49,15 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   PreferredSizeWidget _appBar() {
     if (searchViewActive) {
       return AppBar(
+        centerTitle: false,
+        elevation: 0.0,
         leading: Icon(Icons.search),
         title: TextField(
-          style: new TextStyle(color: Colors.white),
+          style: new TextStyle(),
           onSubmitted: _search,
           decoration: InputDecoration(
             hintText: "Example: SpaceX, Delta IV, JWST...",
-            hintStyle: TextStyle(color: Colors.white),
+            hintStyle: TextStyle(),
           ),
         ),
         bottom: TabBar(
@@ -77,6 +79,8 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
       );
     } else {
       return AppBar(
+        centerTitle: false,
+        elevation: 0.0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -89,7 +93,11 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
             Tab( text: "Previous",),
           ],
         ),
-        title: Text(myTitle),
+        title: Text(myTitle,
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold),),
       );
     }
   }

@@ -53,7 +53,7 @@ class LaunchList {
   factory LaunchList.fromJson(Map<String, dynamic> json) {
     var image = json['image'];
     if (image == null) {
-      image = "https:\/\/s3.amazonaws.com\/launchlibrary\/RocketImages\/placeholder_1920.png";
+      image = "https://spacelaunchnow.me/static/img/placeholder.jpg";
     }
 
     return new LaunchList(

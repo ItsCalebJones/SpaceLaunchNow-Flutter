@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -9,16 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'views/homelist/home_list_page.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations(
@@ -89,6 +87,8 @@ class PagesState extends State<Pages> {
     subscribeISRO: true,
     subscribeKSC: true,
     subscribeVAN: true,
+    subscribeRussia: true,
+    subscribeChina: true,
     subscribeWallops: true,
     subscribeNZ: true,
     subscribeJapan: true,
@@ -126,7 +126,8 @@ class PagesState extends State<Pages> {
       bool subscribeISRO = prefs.getBool("subscribeISRO") ?? true;
       bool subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
       bool subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
-
+      bool subscribeChina = prefs.getBool("subscribeChina") ?? true;
+      bool subscribeRussia = prefs.getBool("subscribeRussia") ?? true;
       bool subscribeWallops = prefs.getBool("subscribeWallops") ?? true;
       bool subscribeNZ = prefs.getBool("subscribeNZ") ?? true;
       bool subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
@@ -279,6 +280,18 @@ class PagesState extends State<Pages> {
         _firebaseMessaging.unsubscribeFromTopic("japan");
       }
 
+      if (subscribeRussia) {
+        _firebaseMessaging.subscribeToTopic("russia");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("japan");
+      }
+
+      if (subscribeChina) {
+        _firebaseMessaging.subscribeToTopic("china");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("china");
+      }
+
       if (subscribeFG) {
         _firebaseMessaging.subscribeToTopic("frenchGuiana");
       } else {
@@ -383,6 +396,12 @@ class PagesState extends State<Pages> {
           subscribeRocketLab: subscribeRocketLab,
           subscribeBlueOrigin: subscribeBlueOrigin,
           subscribeNorthrop: subscribeNorthrop,
+          subscribeRussia: subscribeRussia,
+          subscribeChina: subscribeChina,
+          subscribeWallops: subscribeWallops,
+          subscribeNZ: subscribeNZ,
+          subscribeJapan: subscribeJapan,
+          subscribeFG: subscribeFG,
           subscribeCAPE: subscribeCAPE,
           subscribePLES: subscribePLES,
           subscribeISRO: subscribeISRO,
@@ -408,7 +427,7 @@ class PagesState extends State<Pages> {
     } else {
       return defaultTargetPlatform == TargetPlatform.iOS
           ? kIOSTheme
-          : kDefaultTheme;
+          : kIOSTheme;
     }
   }
 
@@ -471,7 +490,7 @@ class PagesState extends State<Pages> {
     switch (this.pageIndex) {
       case 0:
         checkAd();
-        return new LaunchDetailPage(_configuration);
+        return new HomeListPage(_configuration);
         break;
 
       case 1:
@@ -538,7 +557,7 @@ class PagesState extends State<Pages> {
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
                         icon: new Icon(MaterialCommunityIcons.home),
-                        title: new Text("Next")),
+                        title: new Text("Home")),
                     new BottomNavigationBarItem(
                         title: new Text('Launches'),
                         icon: new Icon(MaterialCommunityIcons.rocket)),

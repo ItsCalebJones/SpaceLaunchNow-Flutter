@@ -10,6 +10,7 @@ class Launches {
   Launches({this.launches, this.nextOffset, this.count});
 
   factory Launches.fromJson(Map<String, dynamic> json) {
+
     int offset;
     if (json['next'] != null) {
       Uri offsetUri = Uri.parse(json['next']);

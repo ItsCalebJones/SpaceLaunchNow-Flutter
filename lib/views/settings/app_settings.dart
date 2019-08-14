@@ -23,6 +23,8 @@ class AppConfiguration {
     @required this.subscribeKSC,
     @required this.subscribeVAN,
 
+    @required this.subscribeRussia,
+    @required this.subscribeChina,
     @required this.subscribeWallops,
     @required this.subscribeNZ,
     @required this.subscribeJapan,
@@ -55,6 +57,8 @@ class AppConfiguration {
         assert(subscribeKSC != null),
         assert(subscribeVAN != null),
 
+        assert(subscribeRussia != null),
+        assert(subscribeChina != null),
         assert(subscribeWallops != null),
         assert(subscribeNZ != null),
         assert(subscribeJapan != null),
@@ -83,6 +87,8 @@ class AppConfiguration {
   bool subscribeKSC;
   bool subscribeVAN;
 
+  bool subscribeRussia;
+  bool subscribeChina;
   bool subscribeWallops;
   bool subscribeNZ;
   bool subscribeJapan;
@@ -113,6 +119,8 @@ class AppConfiguration {
     bool subscribeKSC,
     bool subscribeVAN,
 
+    bool subscribeRussia,
+    bool subscribeChina,
     bool subscribeWallops,
     bool subscribeNZ,
     bool subscribeJapan,
@@ -145,6 +153,8 @@ class AppConfiguration {
       subscribeKSC: subscribeKSC ?? this.subscribeKSC,
       subscribeVAN: subscribeVAN ?? this.subscribeVAN,
 
+      subscribeRussia: subscribeRussia ?? this.subscribeRussia,
+      subscribeChina: subscribeChina ?? this.subscribeChina,
       subscribeWallops: subscribeWallops ?? this.subscribeWallops,
       subscribeNZ: subscribeNZ ?? this.subscribeNZ,
       subscribeJapan: subscribeJapan ?? this.subscribeJapan,

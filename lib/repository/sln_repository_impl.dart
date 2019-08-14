@@ -107,6 +107,39 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
+  Future<Launches> fetchUpcomingHome({String lsps, String locations, String limit, String offset}) {
+    String _kLaunchesUrl = BASE_URL + '/launch/upcoming/?mode=detailed&limit=' + limit;
+    if (lsps != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&lsp__ids=' + lsps;
+    }
+
+    if (locations != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&location__ids=' + locations;
+    }
+
+    if (offset != null) {
+      _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+    }
+
+    print(_kLaunchesUrl);
+    return http.get(_kLaunchesUrl).then((http.Response response) {
+      final jsonBody = json.decode(response.body);
+      final statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException(
+            "Error while getting Launches [StatusCode:$statusCode,"
+                " Error:${response.reasonPhrase}]");
+      }
+
+      print("Returning!");
+      print(jsonBody);
+      Launches launches = Launches.fromJson(jsonBody);
+      return Launches.fromJson(jsonBody);
+    });
+  }
+
+  @override
   Future<Events> fetchNextEvent({ String limit, String offset}) {
     String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=detailed&limit=' + limit;
 

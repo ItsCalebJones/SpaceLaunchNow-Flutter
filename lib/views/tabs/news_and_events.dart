@@ -38,6 +38,8 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            elevation: 0.0,
+            centerTitle: false,
             bottom: TabBar(
               controller: _tabController,
               tabs: [
@@ -52,7 +54,11 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
                 )
               ],
             ),
-            title: Text('Space Launch News'),
+            title: Text('Space Launch News',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline
+                  .copyWith(fontWeight: FontWeight.bold),),
           ),
           body: TabBarView(
             controller: _tabController,

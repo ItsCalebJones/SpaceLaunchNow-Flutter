@@ -132,47 +132,50 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void _handleAll(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("all");
+      setState(() {
+        if (!widget.configuration.subscribeALL) {
+          widget.configuration.subscribeALL = true;
+          widget.configuration.subscribeSpaceX = true;
+          widget.configuration.subscribeNASA = true;
+          widget.configuration.subscribeULA = true;
+          widget.configuration.subscribeBlueOrigin = true;
+          widget.configuration.subscribeRocketLab = true;
+          widget.configuration.subscribeNorthrop = true;
+          widget.configuration.subscribeArianespace = true;
+
+          widget.configuration.subscribeCAPE = true;
+          widget.configuration.subscribeRoscosmos = true;
+          widget.configuration.subscribeISRO = true;
+          widget.configuration.subscribeVAN = true;
+          widget.configuration.subscribeWallops = true;
+          widget.configuration.subscribeNZ = true;
+          widget.configuration.subscribeJapan = true;
+          widget.configuration.subscribeFG = true;
+          widget.configuration.subscribeChina = true;
+          widget.configuration.subscribeRussia = true;
+
+          _handleSpaceX(true);
+          _handleNASA(true);
+          _handleULA(true);
+          _handleBlueOrigin(true);
+          _handleRocketLab(true);
+          _handleNorthrop(true);
+          _handleArianespace(true);
+          _handleCAPE(true);
+          _handleRoscosmos(true);
+          _handleISRO(true);
+          _handleVAN(true);
+          _handleWallops(true);
+          _handleNZ(true);
+          _handleJapan(true);
+          _handleFG(true);
+          _handleRussia(true);
+          _handleChina(true);
+        }
+      });
     } else {
       _firebaseMessaging.unsubscribeFromTopic("all");
     }
-
-    setState(() {
-      if (!widget.configuration.subscribeALL) {
-        widget.configuration.subscribeALL = true;
-        widget.configuration.subscribeSpaceX = true;
-        widget.configuration.subscribeNASA = true;
-        widget.configuration.subscribeULA = true;
-        widget.configuration.subscribeBlueOrigin = true;
-        widget.configuration.subscribeRocketLab = true;
-        widget.configuration.subscribeNorthrop = true;
-        widget.configuration.subscribeArianespace = true;
-
-        widget.configuration.subscribeCAPE = true;
-        widget.configuration.subscribeRoscosmos = true;
-        widget.configuration.subscribeISRO = true;
-        widget.configuration.subscribeVAN = true;
-        widget.configuration.subscribeWallops = true;
-        widget.configuration.subscribeNZ = true;
-        widget.configuration.subscribeJapan = true;
-        widget.configuration.subscribeFG = true;
-
-        _handleSpaceX(true);
-        _handleNASA(true);
-        _handleULA(true);
-        _handleBlueOrigin(true);
-        _handleRocketLab(true);
-        _handleNorthrop(true);
-        _handleArianespace(true);
-        _handleCAPE(true);
-        _handleRoscosmos(true);
-        _handleISRO(true);
-        _handleVAN(true);
-        _handleWallops(true);
-        _handleNZ(true);
-        _handleJapan(true);
-        _handleFG(true);
-      }
-    });
     sendUpdates(widget.configuration.copyWith(subscribeALL: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeALL', value));
@@ -270,6 +273,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
+  void _handleRussia(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("russia");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("russia");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeRussia: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeRussia', value));
+    });
+  }
+
   void _handleISRO(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("isro");
@@ -306,6 +322,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
     sendUpdates(widget.configuration.copyWith(subscribeKSC: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('subscribeKSC', value));
+    });
+  }
+
+  void _handleChina(bool value) {
+    if (value) {
+      _firebaseMessaging.subscribeToTopic("china");
+    } else {
+      _handleAll(value);
+      _firebaseMessaging.unsubscribeFromTopic("china");
+    }
+    sendUpdates(widget.configuration.copyWith(subscribeChina: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('subscribeChina', value));
     });
   }
 
@@ -444,10 +473,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new PlatformAdaptiveAppBar(
-        text: "Settings",
-        color: Theme.of(context).primaryColor,
-        platform: Theme.of(context).platform,
+      appBar: new AppBar(
+        centerTitle: false,
+        title: Text("Settings",
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       body: buildSettingsPane(context),
     );
@@ -711,6 +744,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
           ),
           new MergeSemantics(
             child: new ListTile(
+              title: const Text('ROSCOSMOS'),
+              onTap: () {
+                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeRoscosmos,
+                onChanged: _handleRoscosmos,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
               title: const Text('Blue Origin'),
               onTap: () {
                 _handleBlueOrigin(!widget.configuration.subscribeBlueOrigin);
@@ -778,11 +823,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
             child: new ListTile(
               title: const Text('Russia'),
               onTap: () {
-                _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
+                _handleRussia(!widget.configuration.subscribeRussia);
               },
               trailing: new Switch(
-                value: widget.configuration.subscribeRoscosmos,
-                onChanged: _handleRoscosmos,
+                value: widget.configuration.subscribeRussia,
+                onChanged: _handleRussia,
               ),
             ),
           ),
@@ -795,6 +840,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
               trailing: new Switch(
                 value: widget.configuration.subscribeISRO,
                 onChanged: _handleISRO,
+              ),
+            ),
+          ),
+          new MergeSemantics(
+            child: new ListTile(
+              title: const Text('China'),
+              onTap: () {
+                _handleChina(!widget.configuration.subscribeChina);
+              },
+              trailing: new Switch(
+                value: widget.configuration.subscribeChina,
+                onChanged: _handleChina,
               ),
             ),
           ),
