@@ -474,6 +474,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        centerTitle: false,
         title: Text("Settings",
           style: Theme.of(context)
               .textTheme

@@ -38,6 +38,8 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            elevation: 0.0,
+            centerTitle: false,
             bottom: TabBar(
               controller: _tabController,
               tabs: [

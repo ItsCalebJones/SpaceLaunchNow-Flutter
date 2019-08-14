@@ -5,6 +5,7 @@ class Launcher {
   final String serialNumber;
   final String status;
   final int previousFlights;
+  final String image;
 
   Launcher(
       {this.id,
@@ -12,7 +13,8 @@ class Launcher {
       this.flightProven,
       this.serialNumber,
       this.status,
-      this.previousFlights});
+      this.previousFlights,
+      this.image});
 
   factory Launcher.fromJson(Map<String, dynamic> json) {
     return Launcher(
@@ -21,7 +23,8 @@ class Launcher {
       flightProven: json['flight_proven'],
       serialNumber: json['serial_number'],
       status: json['status'],
-      previousFlights: json['previous_flights']
+      previousFlights: json['previous_flights'],
+      image: json['image_url']
     );
   }
 }

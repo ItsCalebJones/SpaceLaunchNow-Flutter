@@ -135,12 +135,34 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
+  Color getPrimaryColor() {
+    if (widget._configuration.nightMode) {
+      return Colors.grey[800];
+    } else {
+      return Colors.blue[500];
+    }
+  }
+
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
     var formatter = new DateFormat("EEEE, MMMM d, yyyy");
 
+    var title = launch.launchServiceProvider.name + " | " + launch.rocket.configuration.name;
+
+    var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
+    if (launch.launchServiceProvider.nationURL != null &&
+        launch.launchServiceProvider.nationURL.length > 0){
+      url = launch.launchServiceProvider.nationURL;
+    } else if (launch.launchServiceProvider.imageURL != null &&
+        launch.launchServiceProvider.imageURL.length > 0){
+      url = launch.launchServiceProvider.imageURL;
+    } else if (launch.pad.location.mapImage != null &&
+        launch.pad.location.mapImage.length > 0){
+      url = launch.pad.location.mapImage;
+    }
+
     return new Padding(
       padding:
-          const EdgeInsets.only(top: 0.0, bottom: 8.0, left: 8.0, right: 8.0),
+          const EdgeInsets.only(top: 8.0, bottom: 4.0, left: 8.0, right: 8.0),
       child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
@@ -148,10 +170,69 @@ class _HomeListPageState extends State<HomeListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
+//                color: getPrimaryColor(),
+                child: Row(
+                  children: <Widget>[
+                    new Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, right: 4.0, top: 8.0, bottom: 8.0),
+                        child: new Container(
+                          width: 75.0,
+                          height: 75.0,
+                          padding: const EdgeInsets.all(2.0),
+                          // borde width
+                          decoration: new BoxDecoration(
+                            color:
+                                Theme.of(context).highlightColor, // border color
+                            shape: BoxShape.circle,
+                          ),
+                          child: new CircleAvatar(
+                            foregroundColor: Colors.white,
+                            backgroundImage: new NetworkImage(url),
+                            radius: 50.0,
+                            backgroundColor: Colors.white,
+                          ),
+                        )),
+                    Flexible(
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                            child: new Text(
+                              title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            child: new Text(launch.pad.location.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.body2),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            child: new Text(formatter.format(launch.net.toLocal()),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.body2),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
-                  image: new CachedNetworkImageProvider(_getLaunchImage(launch)),
+                  image:
+                      new CachedNetworkImageProvider(_getLaunchImage(launch)),
                   fit: BoxFit.cover,
                   height: 175.0,
                   alignment: Alignment.center,
@@ -163,18 +244,11 @@ class _HomeListPageState extends State<HomeListPage> {
               Padding(
                 padding: const EdgeInsets.only(
                     top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(launch.name,
-                    style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                child: new Text(launch.pad.location.name,
-                    style: Theme.of(context).textTheme.body2),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                child: new Text(formatter.format(launch.net.toLocal()),
-                    style: Theme.of(context).textTheme.body2),
+                child: new Text(launch.mission.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontWeight: FontWeight.bold)),
               ),
               Container(
                 padding: const EdgeInsets.only(
@@ -254,8 +328,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
     return new Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: eventButtons
-    );
+        children: eventButtons);
   }
 
   _openBrowser(String url) async {
@@ -268,51 +341,49 @@ class _HomeListPageState extends State<HomeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content;
+    List<Widget> content = new List<Widget>();
     print("Upcoming build!");
 
     if (_launches.isEmpty && loading) {
-      content = new Center(
+      content.add(new Center(
         child: new CircularProgressIndicator(),
-      );
+      ));
     } else if (_launches.isEmpty) {
-      content = new Center(
+      content.add(Center(
         child: new Text("No Launches Loaded"),
-      );
+      ));
     } else {
-      List<Widget> widgets = new List<Widget>();
-      for (var item in _launches){
-          widgets.add(_buildLaunchTile(context, item));
+      for (var item in _launches) {
+        content.add(_buildLaunchTile(context, item));
       }
-      widgets.add(new SizedBox(height: 50));
-
-
-      content = new Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                _handleRefresh();
-              },
-            )
-          ],
-          title: new Text(
-            "Favorited Launches",
-            style: Theme.of(context)
-                .textTheme
-                .headline
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: new Column(
-            children: widgets,
-          ),
-        ),
-      );
+      content.add(new SizedBox(height: 50));
     }
-    return content;
+
+    Widget view = new Scaffold(
+        body: new CustomScrollView(slivers: <Widget>[
+      new SliverAppBar(
+        elevation: 0.0,
+        expandedHeight: 50,
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              _handleRefresh();
+            },
+          )
+        ],
+        title: new Text(
+          'Favorite Launches',
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+      ),
+      new SliverList(delegate: new SliverChildListDelegate(content))
+    ]));
+    return view;
   }
 
   bool isNumeric(String s) {
@@ -510,13 +581,15 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   String _getLaunchImage(Launch launch) {
-    if (launch.image != null){
+    if (launch.image != null) {
       return launch.image;
-    } else if (launch.infographic != null){
+    } else if (launch.infographic != null) {
       return launch.infographic;
-    } else if (launch.rocket.configuration.image != null && launch.rocket.configuration.image.length > 0){
+    } else if (launch.rocket.configuration.image != null &&
+        launch.rocket.configuration.image.length > 0) {
       return launch.rocket.configuration.image;
-    } else if (launch.launchServiceProvider.imageURL != null && launch.rocket.configuration.image.length > 0){
+    } else if (launch.launchServiceProvider.imageURL != null &&
+        launch.rocket.configuration.image.length > 0) {
       return launch.launchServiceProvider.imageURL;
     } else {
       return "";

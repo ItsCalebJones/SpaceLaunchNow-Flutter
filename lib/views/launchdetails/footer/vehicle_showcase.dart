@@ -50,13 +50,15 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 padding: const EdgeInsets.all(2.0),
                 // borde width
                 decoration: new BoxDecoration(
-                  color: Theme.of(context).highlightColor, // border color
+                  color: Theme
+                      .of(context)
+                      .highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundImage:
-                      new NetworkImage(_launch.rocket.configuration.image),
+                  new NetworkImage(_launch.rocket.configuration.image),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -135,11 +137,11 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           new Text(
             "$vehicle Stats",
             style:
-                theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+            theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +159,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.successfulLaunches
-                                  .toString() ??
+                              .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -178,7 +180,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.failedLaunches
-                                  .toString() ??
+                              .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -219,7 +221,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.length.toString() +
-                                  "m" ??
+                              "m" ??
                               "" + "m",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -240,7 +242,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.launchMass.toString() +
-                                  "T" ??
+                              "T" ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -286,8 +288,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration
-                                  .consecutiveSuccessfulLaunches
-                                  .toString() ??
+                              .consecutiveSuccessfulLaunches
+                              .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -308,7 +310,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.pendingLaunches
-                                  .toString() ??
+                              .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -349,7 +351,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.diameter.toString() +
-                                  "m" ??
+                              "m" ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -370,7 +372,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.thrust.toString() +
-                                  "kn" ??
+                              "kn" ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -440,7 +442,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   Widget _buildDescription(ThemeData theme) {
     return new Padding(
       padding:
-          const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+      const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
       child: new Text(
         _launch.rocket.configuration.description ?? "",
         style: theme.textTheme.body1,
@@ -454,8 +456,11 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(widget._configuration, launch: null,
-            launchId: launchId,);
+          return new LaunchDetailPage(
+            widget._configuration,
+            launch: null,
+            launchId: launchId,
+          );
         },
       ),
     );
@@ -473,7 +478,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           child: new Text(
             "Launch Vehicle",
             textAlign: TextAlign.left,
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
@@ -491,102 +497,44 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   _buildLauncher(ThemeData theme) {
     List<Widget> widgets = new List<Widget>();
     if (_launch.rocket.firstStages.length > 0) {
+      var booster;
+      if (_launch.rocket.firstStages.length > 1){
+        booster = "Boosters";
+      } else {
+        booster = "Booster";
+      }
+      widgets.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          booster,
+          style: theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ));
       for (var booster in _launch.rocket.firstStages) {
-        var title = booster.type + " - " + booster.launcher.serialNumber;
-        var status = booster.launcher.status.substring(0, 1).toUpperCase() +
-            booster.launcher.status.substring(1).toLowerCase();
         widgets.add(Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                title,
-                style: theme.textTheme.headline
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              new Row(
-                children: <Widget>[
-                  new Text(
-                    "Status:",
-                    style: theme.textTheme.subhead
-                        .copyWith(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(
-                      status,
-                      maxLines: 1,
-                      style: theme.textTheme.subhead,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ],
-              ),
-              new Row(
-                children: <Widget>[
-                  new Text(
-                    "Flight:",
-                    style: theme.textTheme.subhead
-                        .copyWith(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(
-                      booster.flightNumber.toString(),
-                      maxLines: 1,
-                      style: theme.textTheme.subhead,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ],
-              ),
-              new Row(
-                children: <Widget>[
-                  new Text(
-                    "Turnaround Time:",
-                    style: theme.textTheme.subhead
-                        .copyWith(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(
-                      booster.turnAround.toString() + " Days",
-                      maxLines: 1,
-                      style: theme.textTheme.subhead,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ],
-              ),
-              new Column(mainAxisAlignment: MainAxisAlignment.start,
+              _buildBoosterAvatar(theme, booster),
+              new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _buildLanding(theme, booster)),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: new Text(booster.launcher.details),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: new Padding(
-                  padding: const EdgeInsets.only(top:8.0),
-                  child: new CupertinoButton(
-                    color: Colors.blue,
-                    child: Text("Previous Flight"),
-                    onPressed: () {_navigateToLaunchDetails(launchId: booster.previousFlightUUID);}
-                  ),
-                ),
-              ),
+              _checkPrevious(booster),
             ],
           ),
         ));
       }
     }
     return new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,
     );
   }
@@ -595,14 +543,336 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     List<Widget> widgets = new List<Widget>();
     if (booster.landing != null &&
         booster.landing.attempt != null &&
-        booster.landing.attempt
-    ) {
-      widgets.add(Text("Landing",
-        style: theme.textTheme.headline
-            .copyWith(fontWeight: FontWeight.bold),));
-      widgets.add(Text(booster.landing.type.name?? ""));
-      widgets.add(Text(booster.landing.location.name?? ""));
+        booster.landing.attempt) {
+      widgets.add(Text(
+        "Landing",
+        style: theme.textTheme.title.copyWith(fontWeight: FontWeight.bold),
+      ));
+      if (booster.landing.success != null && booster.landing.success) {
+        widgets.add(new Row(
+          children: <Widget>[
+            new Icon(
+              Icons.check_circle,
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                "Successful Landing",
+                maxLines: 1,
+                style: theme.textTheme.subtitle,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ],
+        ),);
+      } else {
+        widgets.add(
+          new Row(
+            children: <Widget>[
+              new Icon(
+                Icons.thumb_down,
+              ),
+              new Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: new Text(
+                  "Failed",
+                  maxLines: 1,
+                  style: theme.textTheme.subtitle,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      if (!booster.landing.attempt) {
+        widgets.add(new Row(
+          children: <Widget>[
+            new Icon(
+              Icons.error,
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                "No Landing",
+                maxLines: 1,
+                style: theme.textTheme.subtitle,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ],
+        ));
+      }
+      if (booster.landing.type != null) {
+        widgets.add(new Row(
+          children: <Widget>[
+            new Icon(
+              Icons.developer_board,
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                booster.landing.type.name ?? "",
+                maxLines: 1,
+                style: theme.textTheme.subtitle,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ],
+        ));
+      }
+      if (booster.landing.location != null) {
+        widgets.add(new Row(
+          children: <Widget>[
+            new Icon(
+              Icons.map,
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                booster.landing.location.name ?? "",
+                maxLines: 1,
+                style: theme.textTheme.subtitle,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ],
+        ));
+      }
     }
     return widgets;
+  }
+
+  _checkPrevious(FirstStage booster) {
+    if (booster.previousFlightUUID != null &&
+        _launch.id != booster.previousFlightUUID) {
+      return Align(
+        alignment: Alignment.center,
+        child: new Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: new CupertinoButton(
+              child: Text("Previous Flight"),
+              onPressed: () {
+                _navigateToLaunchDetails(launchId: booster.previousFlightUUID);
+              }),
+        ),
+      );
+    } else {
+      return new Container();
+    }
+  }
+
+  _buildBoosterAvatar(ThemeData theme, FirstStage booster) {
+    var title = booster.launcher.serialNumber;
+    var status = booster.launcher.status.substring(0, 1).toUpperCase() +
+        booster.launcher.status.substring(1).toLowerCase();
+    var turnaroundTime = "N/A";
+    if (booster.turnAround != null && booster.turnAround > 0) {
+      turnaroundTime = booster.turnAround.toString() + " Days";
+    }
+
+    if (booster.launcher.image != null) {
+      return Row(
+        children: <Widget>[
+          new Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+              child: new Container(
+                width: 125.0,
+                height: 125.0,
+                padding: const EdgeInsets.all(2.0),
+                // borde width
+                decoration: new BoxDecoration(
+                  color: Theme
+                      .of(context)
+                      .highlightColor, // border color
+                  shape: BoxShape.circle,
+                ),
+                child: new CircleAvatar(
+                  foregroundColor: Colors.white,
+                  backgroundImage:
+                  new NetworkImage(booster.launcher.image),
+                  radius: 50.0,
+                  backgroundColor: Colors.white,
+                ),
+              )),
+          Flexible(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: theme.textTheme.headline
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(
+                      "Type:",
+                      style: theme.textTheme.subtitle
+                          .copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: new Text(
+                        booster.type,
+                        maxLines: 1,
+                        style: theme.textTheme.caption,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(
+                      "Status:",
+                      style: theme.textTheme.subtitle
+                          .copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: new Text(
+                        status,
+                        maxLines: 1,
+                        style: theme.textTheme.caption,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(
+                      "Flight:",
+                      style: theme.textTheme.subtitle
+                          .copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: new Text(
+                        booster.flightNumber.toString(),
+                        maxLines: 1,
+                        style: theme.textTheme.caption,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(
+                      "Turnaround Time:",
+                      style: theme.textTheme.subtitle
+                          .copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: new Text(
+                        turnaroundTime,
+                        maxLines: 1,
+                        style: theme.textTheme.caption,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      );
+    } else
+      return new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: theme.textTheme.headline
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            new Row(
+              children: <Widget>[
+                new Text(
+                  "Type:",
+                  style: theme.textTheme.subtitle
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    booster.type,
+                    maxLines: 1,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Text(
+                  "Status:",
+                  style: theme.textTheme.subtitle
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    status,
+                    maxLines: 1,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Text(
+                  "Flight:",
+                  style: theme.textTheme.subtitle
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    booster.flightNumber.toString(),
+                    maxLines: 1,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Text(
+                  "Turnaround Time:",
+                  style: theme.textTheme.subtitle
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    turnaroundTime,
+                    maxLines: 1,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
+            ),
+          ]);
   }
 }
