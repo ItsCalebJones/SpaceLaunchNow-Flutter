@@ -475,6 +475,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: false,
+        elevation: 0.0,
         title: Text("Settings",
           style: Theme.of(context)
               .textTheme
@@ -627,6 +628,16 @@ class NotificationFilterPageState extends State<SettingsPage> {
         ),
         new MergeSemantics(
           child: new ListTile(
+            title: new Text('On the Web'),
+            subtitle: new Text(
+                'Use Space Launch Now on the web!'),
+            onTap: () {
+              _launchURL("https://spacelaunchnow.me/");
+            },
+          ),
+        ),
+        new MergeSemantics(
+          child: new ListTile(
             title: new Text('Become a Supporter'),
             subtitle: new Text('Remove ads and support development.'),
             onTap: () {
@@ -668,6 +679,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             },
           ),
         ),
+        new Spacer(100)
       ],
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 final ThemeData kIOSTheme = new ThemeData(
   primaryColorBrightness: Brightness.light,
   primarySwatch: Colors.blue,
-  primaryColor: Colors.grey[100],
+  primaryColor: Colors.grey[200],
   accentColor: Colors.red,
   fontFamily: "AvenirNextCondensed-Regular ",
   textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
@@ -23,11 +23,11 @@ final ThemeData kIOSThemeDark = new ThemeData(
 
 final ThemeData kIOSThemeBar = new ThemeData(
     primaryColorBrightness: Brightness.light,
-    canvasColor: Colors.blue,
+    canvasColor: Colors.grey[200],
     primarySwatch: Colors.blue,
-    primaryColor: Colors.white,
+    primaryColor: Colors.blue[600],
     fontFamily: "AvenirNextCondensed-Regular ",
-    textTheme: new Typography(platform: TargetPlatform.iOS).white.apply(fontFamily: "AvenirNextCondensed-Regular ")
+    textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
 );
 
 final ThemeData kIOSThemeDarkBar = new ThemeData(
@@ -48,7 +48,7 @@ final ThemeData kIOSThemeDarkAppBar = kIOSThemeDark;
 final ThemeData kDefaultTheme = new ThemeData(
   primaryColorBrightness: Brightness.dark,
   primarySwatch: Colors.blue,
-  primaryColor: Colors.blue[500],
+    primaryColor: Colors.grey[200],
   accentColor: Colors.red[500],
   fontFamily: "AvenirNextCondensed-Regular ",
   textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")

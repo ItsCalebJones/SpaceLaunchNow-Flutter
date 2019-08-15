@@ -21,7 +21,7 @@ dependencies:
   sqflite: ^1.1.0
   flutter_staggered_grid_view: "^0.3.0"
   twitter: 1.0.0
-  font_awesome_flutter: ^8.4.0
+  font_awesome_flutter: ^8.5.0
   material_design_icons_flutter: ^3.2.3695
   flutter_vector_icons: ^0.1.0
 
@@ -47,7 +47,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - api-keys.json
     - config.yaml
     - assets/
 

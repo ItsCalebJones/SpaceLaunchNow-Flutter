@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -298,11 +299,13 @@ class _HomeListPageState extends State<HomeListPage> {
 
   Widget _buildLaunchButtons(Launch launch) {
     List<Widget> eventButtons = [];
+    List<Widget> iconButtons = [];
 
     if (launch != null) {
       eventButtons.add(new Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.only(top:4.0, bottom: 4.0, left: 8.0, right: 8.0),
         child: new CupertinoButton(
+          color: getPrimaryColor(),
           child: const Text(
             'Explore',
             style: TextStyle(),
@@ -313,21 +316,45 @@ class _HomeListPageState extends State<HomeListPage> {
         ),
       ));
     }
+
     if (launch.vidURL != null) {
-      eventButtons.add(new Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: new CupertinoButton(
-            child: const Text(
-              'Watch',
-              style: TextStyle(color: Colors.red),
-            ),
+      iconButtons.add(new Padding(
+          padding: const EdgeInsets.only(top:4.0, bottom: 4.0, right: 8.0),
+          child: new IconButton(
+            icon: Icon(Icons.live_tv),
+            tooltip: 'Watch Launch',
             onPressed: () {
               _openBrowser(launch.vidURL);
             }, //
           )));
     }
+
+    if (launch.slug != null) {
+      iconButtons.add(new Padding(
+          padding: const EdgeInsets.only(top:4.0, bottom: 4.0,  right: 8.0),
+          child: new IconButton(
+            icon: Icon(Icons.share),
+            tooltip: 'Share',
+            onPressed: () {
+              share(launch.slug);
+            }, //
+          )));
+    }
+
+    eventButtons.add(Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: iconButtons,
+      ),
+    ));
+
+
+
     return new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: eventButtons);
   }
 

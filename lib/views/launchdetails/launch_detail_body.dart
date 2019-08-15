@@ -116,7 +116,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       String landingSuccess = "";
       for (var i = 0; i < mLaunch.rocket.firstStages.length; i++) {
         final item = mLaunch.rocket.firstStages.elementAt(i);
-        if (item.landing !=null && item.landing.attempt) {
+        if (item.landing != null && item.landing.attempt) {
           landingAttempt = true;
           if (item.landing.location != null) {
             if (landingLocation.length == 9) {
@@ -182,22 +182,60 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
 
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
+
+//    if (mLaunch.vidURL != null) {
+//      materialButtons.add(new Padding(
+//          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
+//          child: new IconButton(
+//            icon: Icon(Icons.live_tv),
+//            tooltip: 'Watch',
+//            onPressed: () {
+//              share(mLaunch.vidURL);
+//            }, //
+//          )));
+//    }
+//    if (mLaunch.vidURL != null) {
+//      materialButtons.add(new CupertinoButton(
+//        onPressed: () {
+//          _launchURL(mLaunch.vidURL);
+//        },
+//        child: new Text('Watch'),
+//      ));
+//    }
+
     if (mLaunch.vidURL != null) {
-      materialButtons.add(new CupertinoButton (
-        onPressed: () {
-          _launchURL(mLaunch.vidURL);
-        },
-        child: new Text('Watch'),
+      materialButtons.add(new Row(
+        children: <Widget>[
+          new Icon(Icons.live_tv),
+          new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new CupertinoButton(
+              onPressed: () {
+                _launchURL(mLaunch.vidURL);
+              },
+              child: new Text('Watch'),
+            ),
+          ),
+        ],
       ));
     }
 
-    String launchId = mLaunch.id;
-    materialButtons.add(new CupertinoButton (
-      onPressed: () {
-        share("https://spacelaunchnow.me/launch/$launchId");
-      },
-      child: new Text('Share'),
-    ));
+    if (mLaunch.slug != null) {
+      materialButtons.add(new Row(
+        children: <Widget>[
+          new Icon(Icons.share),
+          new Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new CupertinoButton(
+              onPressed: () {
+                _launchURL(mLaunch.slug);
+              },
+              child: new Text('Share',),
+            ),
+          ),
+        ],
+      ));
+    }
 
     return new Padding(
       padding:
@@ -221,7 +259,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     }
   }
 
-  Widget _buildSpace(){
+  Widget _buildSpace() {
     if (Ads.isBannerShowing()) {
       return new SizedBox(height: 50);
     } else {
@@ -243,7 +281,8 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
             mLaunch.name,
-            style: textTheme.headline.copyWith(fontWeight: FontWeight.bold,fontSize: 30),
+            style: textTheme.headline
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             textAlign: TextAlign.start,
           ),
         ),

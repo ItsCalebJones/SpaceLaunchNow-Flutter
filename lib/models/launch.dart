@@ -13,6 +13,7 @@ class Launch {
   final String name;
   final String infographic;
   final String image;
+  final String slug;
   final DateTime windowStart;
   final DateTime windowEnd;
   final DateTime net;
@@ -23,9 +24,23 @@ class Launch {
   final Pad pad;
   final Mission mission;
   final String vidURL;
-  const Launch({this.id, this.name, this.status, this.windowStart, this.windowEnd,
-    this.net,  this.probability, this.rocket, this.pad, this.mission, this.vidURL,
-  this.launchServiceProvider, this.image, this.infographic});
+
+  const Launch(
+      {this.id,
+      this.name,
+      this.status,
+      this.windowStart,
+      this.windowEnd,
+      this.net,
+      this.probability,
+      this.rocket,
+      this.pad,
+      this.mission,
+      this.vidURL,
+      this.launchServiceProvider,
+      this.image,
+      this.infographic,
+      this.slug});
 
   static List<Launch> allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
@@ -44,11 +59,11 @@ class Launch {
 
   factory Launch.fromJson(Map<String, dynamic> json) {
     String vidURL;
-    if (json['vidURLs'].length > 0){
+    if (json['vidURLs'].length > 0) {
       vidURL = json['vidURLs'][0];
     }
     var mission;
-    if (json['mission'] != null){
+    if (json['mission'] != null) {
       mission = new Mission.fromJson(json['mission']);
     }
 
@@ -57,6 +72,7 @@ class Launch {
       name: json['name'],
       infographic: json['infographic'],
       image: json['image'],
+      slug: json['slug'],
       status: new Status.fromJson(json['status']),
       windowStart: DateTime.parse(json['window_start']),
       windowEnd: DateTime.parse(json['window_end']),

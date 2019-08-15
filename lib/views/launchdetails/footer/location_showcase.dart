@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,27 +44,29 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
     List<Widget> materialButtons = [];
 
     if (_launch.pad.mapURL != null) {
-      materialButtons.add(new CupertinoButton (
+      materialButtons.add(new IconButton(
+        icon:Icon(FontAwesomeIcons.map),
         onPressed: () {
-          _launchURL(_launch.pad.mapURL);
+          launch(_launch.pad.mapURL);
         },
-        child: new Text('Map'),
+        tooltip: "Map",
       ));
     }
 
     if (_launch.pad.wikiURL != null) {
-      materialButtons.add(new CupertinoButton (
+      materialButtons.add(new IconButton(
+        icon:Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(_launch.pad.wikiURL);
+          launch(_launch.pad.wikiURL);
         },
-        child: new Text('Wiki'),
+        tooltip: "Wikipedia",
       ));
     }
 
     return new Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),
     );

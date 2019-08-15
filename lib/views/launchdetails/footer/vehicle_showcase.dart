@@ -8,6 +8,7 @@ import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../launch_detail_page.dart';
 
@@ -85,6 +86,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     softWrap: true,
                   ),
                 ),
+                _buildActionButtons(theme)
               ],
             ),
           )
@@ -413,27 +415,29 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     List<Widget> materialButtons = [];
 
     if (_launch.rocket.configuration.infoUrl != null) {
-      materialButtons.add(new CupertinoButton(
+      materialButtons.add(new IconButton(
+        icon:Icon(FontAwesomeIcons.desktop),
         onPressed: () {
           _launchURL(_launch.rocket.configuration.infoUrl);
         },
-        child: new Text('Website'),
+        tooltip: "Website",
       ));
     }
 
     if (_launch.rocket.configuration.wikiUrl != null) {
-      materialButtons.add(new CupertinoButton(
+      materialButtons.add(new IconButton(
+        icon:Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
           _launchURL(_launch.rocket.configuration.wikiUrl);
         },
-        child: new Text('Wiki'),
+        tooltip: "Website",
       ));
     }
 
     return new Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(0.0),
       child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),
     );
@@ -487,7 +491,6 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         ),
         _buildAvatar(theme),
         _buildDescription(theme),
-        _buildActionButtons(theme),
         _buildStats(theme),
         _buildLauncher(theme),
       ],

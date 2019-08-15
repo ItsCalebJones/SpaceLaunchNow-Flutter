@@ -83,6 +83,14 @@ class MissionShowcase extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: new Text(
+                  mission.name,
+                  style: textTheme.title,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              new Padding(
                 padding: const EdgeInsets.only(
                     top: 4.0, left: 0.0, right: 0.0, bottom: 2.0),
                 child: _buildMissionType(textTheme),
@@ -146,10 +154,13 @@ class MissionShowcase extends StatelessWidget {
               ),
             ),
           ),
-          new Text(
-            "Credit @geoffdbarrett",
-            textAlign: TextAlign.center,
-            style: textTheme.caption,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: new Text(
+              "Credit @geoffdbarrett",
+              textAlign: TextAlign.center,
+              style: textTheme.caption,
+            ),
           )
         ],
       );
