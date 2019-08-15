@@ -631,8 +631,14 @@ class _HomeListPageState extends State<HomeListPage> {
         launch.rocket.configuration.image.length > 0) {
       return launch.rocket.configuration.image;
     } else if (launch.launchServiceProvider.imageURL != null &&
-        launch.rocket.configuration.image.length > 0) {
+        launch.launchServiceProvider.imageURL.length > 0) {
       return launch.launchServiceProvider.imageURL;
+    } else if (launch.launchServiceProvider.nationURL != null &&
+        launch.launchServiceProvider.nationURL.length > 0) {
+      return launch.launchServiceProvider.nationURL;
+    } else if (launch.pad != null && launch.pad.mapImage != null &&
+        launch.pad.mapImage.length > 0) {
+    return launch.pad.mapImage;
     } else {
       return "";
     }

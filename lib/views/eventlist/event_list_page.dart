@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -239,43 +240,59 @@ class _EventListPageState extends State<EventListPage> {
 
   Widget _buildEventButtons(Event event) {
     List<Widget> eventButtons = [];
+    List<Widget> iconButtons = [];
 
     if (event.newsUrl != null) {
-      eventButtons.add(new Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: new RaisedButton(
-          child: const Text(
-            'Explore',
-            style: TextStyle(color: Colors.white),
+      eventButtons.add(
+        new CupertinoButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: new Icon(
+                  Icons.explore,
+                ),
+              ),
+              new Text(
+                'Explore',
+                style: TextStyle(),
+              ),
+            ],
           ),
-          color: Colors.blue,
-          elevation: 4.0,
-          splashColor: Colors.blueGrey,
           onPressed: () {
             _openBrowser(event.newsUrl);
           }, //
         ),
-      )
       );
     }
+
     if (event.videoUrl != null) {
-      eventButtons.add(new Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: new RaisedButton(
-            child: const Text(
-              'Watch',
-              style: TextStyle(color: Colors.white),
-            ),
-            color: Colors.redAccent,
-            elevation: 4.0,
-            splashColor: Colors.blueGrey,
+      iconButtons.add(new Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
+          child: new IconButton(
+            icon: Icon(Icons.live_tv),
+            tooltip: 'Watch Event',
             onPressed: () {
               _openBrowser(event.videoUrl);
             }, //
-          )
-      ));
+          )));
     }
-    return new Row(children: eventButtons);
+
+    eventButtons.add(Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: iconButtons,
+      ),
+    ));
+
+    return new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: eventButtons);
   }
 
   _openBrowser(String url) async {

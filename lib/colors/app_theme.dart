@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 final ThemeData kIOSTheme = new ThemeData(
   primaryColorBrightness: Brightness.light,
-  primarySwatch: Colors.blue,
+  primarySwatch: Colors.red,
   primaryColor: Colors.grey[200],
   accentColor: Colors.red,
   fontFamily: "AvenirNextCondensed-Regular ",
