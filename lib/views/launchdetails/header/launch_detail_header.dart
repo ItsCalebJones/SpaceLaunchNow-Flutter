@@ -25,13 +25,29 @@ class LaunchDetailHeader extends StatelessWidget {
   Widget _buildDiagonalImageBackground(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
 
+    var backgroundUrl = "";
+    if (launch.rocket.configuration.image != null &&
+        launch.rocket.configuration.image.length > 0){
+      backgroundUrl = launch.rocket.configuration.image;
+    } else if (launch.pad != null){
+      backgroundUrl = launch.pad.location.mapImage;
+    }
+
     return new DiagonallyCutColoredImage(
-      image: launch.image,
+      image: backgroundUrl,
       screenWidth: screenWidth,
     );
   }
 
   Widget _buildAvatar(BuildContext context) {
+    var avataruUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+    if (launch.rocket.configuration.image != null &&
+        launch.rocket.configuration.image.length > 0){
+      avataruUrl = launch.rocket.configuration.image;
+    } else if (launch.pad != null){
+      avataruUrl = launch.pad.mapImage;
+    }
+
     if (avatarTag != null) {
       return new Hero(
         tag: avatarTag,
@@ -45,7 +61,7 @@ class LaunchDetailHeader extends StatelessWidget {
           ),
           child: new CircleAvatar(
             foregroundColor: Colors.white,
-            backgroundImage: new NetworkImage(launch.rocket.configuration.image),
+            backgroundImage: new NetworkImage(avataruUrl),
             radius: 100.0,
             backgroundColor: Colors.white,
           ),
@@ -62,7 +78,7 @@ class LaunchDetailHeader extends StatelessWidget {
         ),
         child: new CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(launch.rocket.configuration.image),
+          backgroundImage: new NetworkImage(avataruUrl),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),
@@ -87,14 +103,13 @@ class LaunchDetailHeader extends StatelessWidget {
           new Positioned(
             top: 24.0,
             left: 4.0,
-            child: new BackButton(color: Colors.white),
+            child: new BackButton(),
           ),
           new Positioned(
             top: 24.0,
             right: 4.0,
             child: new IconButton(
                 icon: const Icon(Icons.refresh),
-                color: Colors.white,
                 tooltip: 'Refresh',
                 onPressed: () {
                   _handleTap();
@@ -116,7 +131,6 @@ class LaunchDetailHeader extends StatelessWidget {
             right: 4.0,
             child: new IconButton(
                 icon: const Icon(Icons.refresh),
-                color: Colors.white,
                 tooltip: 'Refresh',
                 onPressed: () {
                   _handleTap();

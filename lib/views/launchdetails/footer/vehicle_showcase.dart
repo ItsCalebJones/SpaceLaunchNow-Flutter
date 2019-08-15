@@ -39,6 +39,16 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildAvatar(ThemeData theme) {
+
+    var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
+    if (_launch.rocket.configuration.image != null &&
+        _launch.rocket.configuration.image.length > 0){
+      url = _launch.rocket.configuration.image;
+    } else if (_launch.rocket.configuration.manufacturer.imageURL != null &&
+        _launch.rocket.configuration.manufacturer.imageURL.length > 0) {
+      url = _launch.rocket.configuration.manufacturer.imageURL;
+    }
+
     if (_launch.rocket.configuration.image != null) {
       return Row(
         children: <Widget>[
@@ -59,7 +69,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundImage:
-                  new NetworkImage(_launch.rocket.configuration.image),
+                  new NetworkImage(url),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -130,6 +140,38 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     } else {
       gto = "N/A";
     }
+
+    var minStage = "";
+    if (_launch.rocket.configuration.minStage != null){
+      minStage = _launch.rocket.configuration.minStage.toString();
+    }
+
+    var maxStage = "";
+    if (_launch.rocket.configuration.maxStage != null){
+      maxStage = _launch.rocket.configuration.maxStage.toString();
+    }
+
+    var length = "";
+    if (_launch.rocket.configuration.length != null){
+      length = _launch.rocket.configuration.length.toString() + "m";
+    }
+
+    var launchMass = "";
+    if (_launch.rocket.configuration.launchMass != null){
+      launchMass = _launch.rocket.configuration.launchMass.toString() + " T";
+    }
+
+    var diameter = "";
+    if (_launch.rocket.configuration.diameter != null){
+      diameter = _launch.rocket.configuration.diameter.toString() + "m";
+    }
+
+    var thrust = "";
+    if (_launch.rocket.configuration.thrust != null){
+      thrust = _launch.rocket.configuration.thrust.toString() + " kn";
+    }
+
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Column(
@@ -201,9 +243,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.minStage.toString() ??
-                              "",
+                        child: new Text( minStage,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -221,10 +261,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.length.toString() +
-                              "m" ??
-                              "" + "m",
+                        child: new Text(length,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -243,9 +280,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration.launchMass.toString() +
-                              "T" ??
-                              "",
+                          launchMass,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -332,8 +367,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration.maxStage.toString() ??
-                              "",
+                          maxStage,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -351,10 +385,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.diameter.toString() +
-                              "m" ??
-                              "",
+                        child: new Text(diameter,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -372,10 +403,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.thrust.toString() +
-                              "kn" ??
-                              "",
+                        child: new Text(thrust,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,

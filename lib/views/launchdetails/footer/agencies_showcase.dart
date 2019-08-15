@@ -133,7 +133,14 @@ class AgenciesShowcase extends StatelessWidget {
     }
 
     Widget _buildAvatar() {
-      if (lsp.nationURL != null) {
+
+        var url = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+        if (lsp.nationURL != null && lsp.nationURL.length > 0){
+          url = lsp.nationURL;
+        } else if (lsp.imageURL != null && lsp.imageURL.length > 0){
+          url = lsp.imageURL;
+        }
+
         return Row(
           children: <Widget>[
             new Padding(
@@ -150,7 +157,7 @@ class AgenciesShowcase extends StatelessWidget {
                   ),
                   child: new CircleAvatar(
                     foregroundColor: Colors.white,
-                    backgroundImage: new NetworkImage(lsp.nationURL),
+                    backgroundImage: new NetworkImage(url),
                     radius: 50.0,
                     backgroundColor: Colors.white,
                   ),
@@ -187,37 +194,6 @@ class AgenciesShowcase extends StatelessWidget {
                 ],
               ),
             )
-          ],
-        );
-      } else
-        return new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                lspName,
-                style: textTheme.title,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                lspAdmin,
-                style: textTheme.subhead.copyWith(),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                lspfounded,
-                style: textTheme.subhead.copyWith(),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            _buildActionButtons(),
           ],
         );
     }
