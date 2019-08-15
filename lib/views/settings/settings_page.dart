@@ -679,7 +679,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             },
           ),
         ),
-        new Spacer(100)
+        new SizedBox(height: 50)
       ],
     );
   }

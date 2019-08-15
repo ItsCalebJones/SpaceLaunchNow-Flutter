@@ -147,17 +147,19 @@ class _HomeListPageState extends State<HomeListPage> {
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
     var formatter = new DateFormat("EEEE, MMMM d, yyyy");
 
-    var title = launch.launchServiceProvider.name + " | " + launch.rocket.configuration.name;
+    var title = launch.launchServiceProvider.name +
+        " | " +
+        launch.rocket.configuration.name;
 
     var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
     if (launch.launchServiceProvider.nationURL != null &&
-        launch.launchServiceProvider.nationURL.length > 0){
+        launch.launchServiceProvider.nationURL.length > 0) {
       url = launch.launchServiceProvider.nationURL;
     } else if (launch.launchServiceProvider.imageURL != null &&
-        launch.launchServiceProvider.imageURL.length > 0){
+        launch.launchServiceProvider.imageURL.length > 0) {
       url = launch.launchServiceProvider.imageURL;
     } else if (launch.pad.location.mapImage != null &&
-        launch.pad.location.mapImage.length > 0){
+        launch.pad.location.mapImage.length > 0) {
       url = launch.pad.location.mapImage;
     }
 
@@ -183,8 +185,8 @@ class _HomeListPageState extends State<HomeListPage> {
                           padding: const EdgeInsets.all(2.0),
                           // borde width
                           decoration: new BoxDecoration(
-                            color:
-                                Theme.of(context).highlightColor, // border color
+                            color: Theme.of(context)
+                                .highlightColor, // border color
                             shape: BoxShape.circle,
                           ),
                           child: new CircleAvatar(
@@ -200,24 +202,29 @@ class _HomeListPageState extends State<HomeListPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                            padding:
+                                const EdgeInsets.only(left: 16.0, right: 8.0),
                             child: new Text(
                               title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                              style: Theme.of(context).textTheme.title.copyWith(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            padding:
+                                const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: new Text(launch.pad.location.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.body2),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(formatter.format(launch.net.toLocal()),
+                            padding:
+                                const EdgeInsets.only(left: 16.0, right: 16.0),
+                            child: new Text(
+                                formatter.format(launch.net.toLocal()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.body2),
@@ -302,24 +309,34 @@ class _HomeListPageState extends State<HomeListPage> {
     List<Widget> iconButtons = [];
 
     if (launch != null) {
-      eventButtons.add(new Padding(
-        padding: const EdgeInsets.only(top:4.0, bottom: 4.0, left: 8.0, right: 8.0),
-        child: new CupertinoButton(
-          color: getPrimaryColor(),
-          child: const Text(
-            'Explore',
-            style: TextStyle(),
+      eventButtons.add(
+        new CupertinoButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: new Icon(
+                  Icons.explore,
+                ),
+              ),
+              new Text(
+                'Explore',
+                style: TextStyle(),
+              ),
+            ],
           ),
           onPressed: () {
             _navigateToLaunchDetails(launch: launch, launchId: launch.id);
           }, //
         ),
-      ));
+      );
     }
 
     if (launch.vidURL != null) {
       iconButtons.add(new Padding(
-          padding: const EdgeInsets.only(top:4.0, bottom: 4.0, right: 8.0),
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
           child: new IconButton(
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
@@ -331,7 +348,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
     if (launch.slug != null) {
       iconButtons.add(new Padding(
-          padding: const EdgeInsets.only(top:4.0, bottom: 4.0,  right: 8.0),
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
           child: new IconButton(
             icon: Icon(Icons.share),
             tooltip: 'Share',
@@ -349,8 +366,6 @@ class _HomeListPageState extends State<HomeListPage> {
         children: iconButtons,
       ),
     ));
-
-
 
     return new Row(
         crossAxisAlignment: CrossAxisAlignment.start,
