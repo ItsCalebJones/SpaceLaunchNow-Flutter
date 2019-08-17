@@ -249,22 +249,8 @@ class _HomeListPageState extends State<HomeListPage> {
                 ),
               ),
               _buildCountDown(launch),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(launch.mission.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(fontWeight: FontWeight.bold)),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(launch.mission.description ?? "",
-                    style: Theme.of(context).textTheme.body1,
-                    textAlign: TextAlign.left),
-              ),
+              _getMission(launch),
+              _getMissionDescription(launch),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -641,6 +627,36 @@ class _HomeListPageState extends State<HomeListPage> {
     return launch.pad.mapImage;
     } else {
       return "";
+    }
+  }
+
+  Widget _getMission(Launch launch) {
+    if (launch.mission != null){
+      return Padding(
+        padding: const EdgeInsets.only(
+            top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
+        child: new Text(launch.mission.name,
+            style: Theme.of(context)
+                .textTheme
+                .title
+                .copyWith(fontWeight: FontWeight.bold)),
+      );
+    } else {
+      return new Container();
+    }
+  }
+
+  Widget _getMissionDescription(Launch launch) {
+    if (launch.mission != null){
+      return Container(
+        padding: const EdgeInsets.only(
+            top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
+        child: new Text(launch.mission.description,
+            style: Theme.of(context).textTheme.body1,
+            textAlign: TextAlign.left),
+      );
+    } else {
+      return new Container();
     }
   }
 }
