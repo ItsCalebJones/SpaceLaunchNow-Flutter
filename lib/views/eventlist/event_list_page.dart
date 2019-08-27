@@ -27,7 +27,7 @@ class _EventListPageState extends State<EventListPage> {
   int nextOffset = 0;
   int totalCount = 0;
   int offset = 0;
-  int limit = 5;
+  int limit = 10;
   bool loading = false;
   bool searchActive = false;
   SLNRepository _repository = new Injector().slnRepository;
@@ -74,7 +74,7 @@ class _EventListPageState extends State<EventListPage> {
       });
       Scaffold.of(context).showSnackBar(new SnackBar(
         duration: new Duration(seconds: 10),
-        content: new Text('Unable to load launches matching search.'),
+        content: new Text('Unable to load events.'),
         action: new SnackBarAction(
           label: 'Refresh',
           onPressed: () {
@@ -104,18 +104,31 @@ class _EventListPageState extends State<EventListPage> {
       child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                child: FadeInImage(
-                  placeholder: new AssetImage('assets/placeholder.png'),
-                  image: new CachedNetworkImageProvider(event.featureImage),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.topCenter,
-                  fadeInDuration: new Duration(milliseconds: 75),
-                  fadeInCurve: Curves.easeIn,
+              CachedNetworkImage(
+                imageUrl: event.featureImage,
+                placeholder: (context, url) => DecoratedBox(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/placeholder.png'),
+                      // ...
+                    ),
+                    // ...
+                  ),
                 ),
+                errorWidget: (context, url, error) => DecoratedBox(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/placeholder.png'),
+                      // ...
+                    ),
+                    // ...
+                  ),
+                )
               ),
-              new Text(event.name, style: Theme
+              new Text(event.name, textAlign: TextAlign.center, style: Theme
                   .of(context)
                   .textTheme
                   .title),
@@ -142,6 +155,7 @@ class _EventListPageState extends State<EventListPage> {
                         .of(context)
                         .textTheme
                         .body1,
+                    maxLines: 5,
                     textAlign: TextAlign.left),
               ),
               Align(
@@ -225,7 +239,7 @@ class _EventListPageState extends State<EventListPage> {
     _events.clear();
     loading == false;
     totalCount = 0;
-    limit = 0;
+    limit = 10;
     nextOffset = 0;
     searchActive = false;
     loading = true;
@@ -270,7 +284,7 @@ class _EventListPageState extends State<EventListPage> {
 
     if (event.videoUrl != null) {
       iconButtons.add(new Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
+          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
           child: new IconButton(
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Event',
