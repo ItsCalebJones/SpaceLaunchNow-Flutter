@@ -138,10 +138,12 @@ class PagesState extends State<Pages> {
 
       if (SpaceLaunchNow.isInDebugMode) {
         _firebaseMessaging.subscribeToTopic("flutter_debug_v2");
+        _firebaseMessaging.subscribeToTopic("custom");
         _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
       } else {
         _firebaseMessaging.subscribeToTopic("flutter_production_v2");
         _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
+        _firebaseMessaging.subscribeToTopic("custom");
       }
 
       if (allowTenMinuteNotifications) {
