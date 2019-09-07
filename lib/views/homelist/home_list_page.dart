@@ -649,9 +649,12 @@ class _HomeListPageState extends State<HomeListPage> {
   Widget _getMissionDescription(Launch launch) {
     if (launch.mission != null){
       return Container(
+
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
         child: new Text(launch.mission.description,
+            maxLines: 10,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.body1,
             textAlign: TextAlign.left),
       );

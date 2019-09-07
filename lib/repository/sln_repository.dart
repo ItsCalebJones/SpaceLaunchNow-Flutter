@@ -21,6 +21,8 @@ abstract class SLNRepository {
 
   Future<NewsResponse> fetchNews({int page});
 
+  Future<NewsResponse> fetchNewsByLaunch({String id});
+
 }
 
 class FetchDataException implements Exception {

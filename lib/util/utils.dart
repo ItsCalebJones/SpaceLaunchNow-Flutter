@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'dart:ui';
+
 class Utils {
 
   static String getStatus(int status){
@@ -85,4 +87,5 @@ class Utils {
   static String capitalize(String s) {
     return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
   }
+
 }

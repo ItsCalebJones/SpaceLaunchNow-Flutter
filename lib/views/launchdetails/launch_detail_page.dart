@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/models/news_response.dart';
+import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -43,6 +46,7 @@ class LaunchDetailPage extends StatefulWidget {
 
 class _LaunchDetailsPageState extends State<LaunchDetailPage>
     with TickerProviderStateMixin {
+  List<News> _news = [];
   AnimationController _controller;
   List<Launch> _launches = [];
   Launch launch;
@@ -50,6 +54,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   Timer timer;
   final int timerMillisecondsRefreshRate = 100;
   final Stopwatch stopwatch = new Stopwatch();
+  SLNRepository _repository = new Injector().slnRepository;
 
   @override
   void initState() {
@@ -72,6 +77,9 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       }
       backEnabled = false;
     }
+    if (launch != null) {
+      _loadNews(launch.id);
+    }
     timer = new Timer.periodic(new Duration(milliseconds: timerMillisecondsRefreshRate), callback);
   }
 
@@ -87,6 +95,9 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
     setState(() {
       launch = Launch.fromResponse(response.body);
+      if (launch != null) {
+        _loadNews(launch.id);
+      }
       setController();
     });
   }
@@ -103,6 +114,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     setState(() {
       _launches = _nextLaunches;
       launch = _nextLaunches.first;
+      _loadNews(launch.id);
       setController();
     });
   }
@@ -154,7 +166,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                     child: new LaunchDetailBodyWidget(
                       launch,
-                      widget._configuration
+                      widget._configuration,
+                      _news
                     ),
                   ),
                 ],
@@ -176,5 +189,21 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       );
       _controller.forward();
     }
+  }
+
+  void _loadNews(String id) async {
+    NewsResponse response =
+        await _repository.fetchNewsByLaunch(id: id).catchError((onError) {
+    });
+    onLoadResponseComplete(response);
+  }
+
+  void onLoadResponseComplete(NewsResponse response, [bool reload = false]) {
+    if (reload) {
+      _news.clear();
+    }
+    setState(() {
+      _news.addAll(response.news);
+    });
   }
 }

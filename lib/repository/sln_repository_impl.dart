@@ -179,4 +179,25 @@ class SLNRepositoryImpl implements SLNRepository {
       return NewsResponse.fromJson(jsonBody);
     });
   }
+
+  @override
+  Future<NewsResponse> fetchNewsByLaunch({String id}) {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles?limit=30';
+
+    if (id != null){
+      _kEventsUrl = _kEventsUrl + '&launches=' + id;
+    }
+
+    print(_kEventsUrl);
+    return http.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(response.body);
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return NewsResponse.fromJson(jsonBody);
+    });
+  }
 }

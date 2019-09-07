@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
@@ -17,8 +19,9 @@ import 'footer/vehicle_showcase.dart';
 class LaunchDetailBodyWidget extends StatefulWidget {
   final Launch launch;
   final AppConfiguration _configuration;
+  final List<News> news;
 
-  LaunchDetailBodyWidget(this.launch, this._configuration);
+  LaunchDetailBodyWidget(this.launch, this._configuration, this.news);
 
   @override
   State createState() => new LaunchDetailBodyState(this.launch);
@@ -230,7 +233,9 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               onPressed: () {
                 _launchURL(mLaunch.slug);
               },
-              child: new Text('Share',),
+              child: new Text(
+                'Share',
+              ),
             ),
           ),
         ],
@@ -309,6 +314,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         new MissionShowcase(mLaunch),
+        _buildNews(),
         new VehicleShowcase(mLaunch, widget._configuration),
         new AgenciesShowcase(mLaunch),
         new LocationShowcaseWidget(mLaunch),
@@ -320,5 +326,50 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   @override
   Widget build(BuildContext context) {
     return _buildContentCard(context);
+  }
+
+  Widget _buildNews() {
+    if (widget.news.isNotEmpty) {
+      List<Widget> widgets = new List<Widget>();
+      widgets.add(
+        new Text(
+          "Related News",
+          textAlign: TextAlign.left,
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
+        ),
+      );
+      for (News news in widget.news) {
+        widgets.add(Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+              child: new ListTile(
+                onTap: () => _launchURL(news.url),
+                leading: new CircleAvatar(
+                  backgroundImage:
+                      new CachedNetworkImageProvider(news.featureImage),
+                ),
+                title: new Text(news.title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subhead
+                        .copyWith(fontSize: 15.0)),
+                subtitle: new Text(news.newsSiteLong),)
+
+            )));
+      }
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgets,
+        ),
+      );
+    } else {
+      return new SizedBox(height: 0);
+    }
   }
 }
