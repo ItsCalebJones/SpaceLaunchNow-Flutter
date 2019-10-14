@@ -51,7 +51,9 @@ class CountdownState extends State<Countdown> {
         new Duration(milliseconds: dependencies.timerMillisecondsRefreshRate),
         callback);
     dependencies.timerListeners.add(onTick);
-    dependencies.stopwatch.start();
+    if (launch.status.id != 2 || launch.status.id != 4 || launch.status.id != 5) {
+      dependencies.stopwatch.start();
+    }
     super.initState();
   }
 
@@ -65,10 +67,12 @@ class CountdownState extends State<Countdown> {
 
   void onTick(ElapsedTime elapsed) {
     if (elapsed.minutes != minutes || elapsed.seconds != seconds) {
-      setState(() {
-        minutes = elapsed.minutes;
-        seconds = elapsed.seconds;
-      });
+      if (mounted) {
+        setState(() {
+          minutes = elapsed.minutes;
+          seconds = elapsed.seconds;
+        });
+      }
     }
   }
 
@@ -101,20 +105,50 @@ class CountdownState extends State<Countdown> {
     PrettyDuration prettyDuration = new PrettyDuration(duration);
     String status = Utils.getStatus(launch.status.id);
     Color color;
+    var days = prettyDuration.days;
+    var hours = prettyDuration.hours;
+    var minutes = prettyDuration.minutes;
+    var seconds = prettyDuration.seconds;
+
     if (launch.status.id == 1) {
       color = Colors.green[600];
     } else if (launch.status.id == 2) {
       color = Colors.red[500];
+      days = "--";
+      hours = "--";
+      minutes = "--";
+      seconds = "--";
+
     } else if (launch.status.id == 3) {
       color = Colors.green[800];
+      days = "00";
+      hours = "00";
+      minutes = "00";
+      seconds = "00";
     } else if (launch.status.id == 4) {
       color = Colors.red[700];
+      days = "--";
+      hours = "--";
+      minutes = "--";
+      seconds = "--";
     } else if (launch.status.id == 5) {
       color = Colors.orange[500];
+      days = "--";
+      hours = "--";
+      minutes = "--";
+      seconds = "--";
     } else if (launch.status.id == 6) {
       color = Colors.blue[500];
+      days = "00";
+      hours = "00";
+      minutes = "00";
+      seconds = "00";
     } else if (launch.status.id == 7) {
       color = Colors.blueGrey[500];
+      days = "00";
+      hours = "00";
+      minutes = "00";
+      seconds = "00";
     }
     return new Container(
       padding:
@@ -145,22 +179,22 @@ class CountdownState extends State<Countdown> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               new Column(children: <Widget>[
-                new Text(prettyDuration.days, style: textThemeDigits),
+                new Text(days, style: textThemeDigits),
                 new Text("DAYS", style: textThemeDescription)
               ]),
               new Text(":", style: textThemeDivider),
               new Column(children: <Widget>[
-                new Text(prettyDuration.hours, style: textThemeDigits),
+                new Text(hours, style: textThemeDigits),
                 new Text("HOURS", style: textThemeDescription)
               ]),
               new Text(":", style: textThemeDivider),
               new Column(children: <Widget>[
-                new Text(prettyDuration.minutes, style: textThemeDigits),
+                new Text(minutes, style: textThemeDigits),
                 new Text("MINUTES", style: textThemeDescription)
               ]),
               new Text(":", style: textThemeDivider),
               new Column(children: <Widget>[
-                new Text(prettyDuration.seconds, style: textThemeDigits),
+                new Text(seconds, style: textThemeDigits),
                 new Text("SECONDS", style: textThemeDescription)
               ]),
             ],
