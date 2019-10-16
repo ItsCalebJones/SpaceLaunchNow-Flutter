@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,9 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+
+import 'product_store.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
@@ -30,12 +34,156 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productIds = [];
+  List<String> _productIds = ["2018_founder"];
+
+  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
+  StreamSubscription<List<PurchaseDetails>> _subscription;
+  List<String> _notFoundIds = [];
+  List<ProductDetails> _products = [];
+  List<PurchaseDetails> _purchases = [];
+  List<String> _consumables = [];
+  bool _isAvailable = false;
+  bool _purchasePending = false;
+  bool _loading = true;
+  String _queryProductError = null;
 
   @override
   initState() {
     super.initState();
     init();
+    Stream purchaseUpdated =
+        InAppPurchaseConnection.instance.purchaseUpdatedStream;
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
+    initStoreInfo();
+  }
+
+  Future<void> initStoreInfo() async {
+    final bool isAvailable = await _connection.isAvailable();
+    if (!isAvailable) {
+      setState(() {
+        _isAvailable = isAvailable;
+        _products = [];
+        _purchases = [];
+        _notFoundIds = [];
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    ProductDetailsResponse productDetailResponse =
+        await _connection.queryProductDetails(_productIds.toSet());
+    if (productDetailResponse.error != null) {
+      setState(() {
+        _queryProductError = productDetailResponse.error.message;
+        _isAvailable = isAvailable;
+        _products = productDetailResponse.productDetails;
+        _purchases = [];
+        _notFoundIds = productDetailResponse.notFoundIDs;
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    if (productDetailResponse.productDetails.isEmpty) {
+      setState(() {
+        _queryProductError = null;
+        _isAvailable = isAvailable;
+        _products = productDetailResponse.productDetails;
+        _purchases = [];
+        _notFoundIds = productDetailResponse.notFoundIDs;
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    final QueryPurchaseDetailsResponse purchaseResponse =
+        await _connection.queryPastPurchases();
+    if (purchaseResponse.error != null) {
+      // handle query past purchase error..
+    }
+    final List<PurchaseDetails> verifiedPurchases = [];
+    for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
+      if (await _verifyPurchase(purchase)) {
+        verifiedPurchases.add(purchase);
+      }
+    }
+    List<String> consumables = await ProductStore.load();
+    setState(() {
+      _isAvailable = isAvailable;
+      _products = productDetailResponse.productDetails;
+      _purchases = verifiedPurchases;
+      _notFoundIds = productDetailResponse.notFoundIDs;
+      _consumables = consumables;
+      _purchasePending = false;
+      _loading = false;
+    });
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+    // IMPORTANT!! Always verify a purchase before delivering the product.
+    // For the purpose of an example, we directly return true.
+    return Future<bool>.value(true);
+  }
+
+  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
+    // handle invalid purchase here if  _verifyPurchase` failed.
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        showPendingUI();
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          handleError(purchaseDetails.error);
+        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            deliverProduct(purchaseDetails);
+          } else {
+            _handleInvalidPurchase(purchaseDetails);
+          }
+        }
+      }
+    });
+  }
+
+  void deliverProduct(PurchaseDetails purchaseDetails) async {
+    // IMPORTANT!! Always verify a purchase purchase details before delivering the product.
+    setState(() {
+      _purchases.add(purchaseDetails);
+      _purchasePending = false;
+    });
+  }
+
+  void handleError(IAPError error) {
+    setState(() {
+      _purchasePending = false;
+    });
+  }
+
+  void showPendingUI() {
+    setState(() {
+      _purchasePending = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   init() async {
@@ -61,7 +209,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleNews(bool value) {
-
     if (value) {
       _firebaseMessaging.subscribeToTopic("featured_news");
       _firebaseMessaging.subscribeToTopic("events");
@@ -70,8 +217,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _firebaseMessaging.unsubscribeFromTopic("events");
     }
 
-    sendUpdates(
-        widget.configuration.copyWith(subscribeNewsAndEvents: value));
+    sendUpdates(widget.configuration.copyWith(subscribeNewsAndEvents: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('newsAndEvents', value));
     });
@@ -464,7 +610,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _showAds(bool value) {
-    sendUpdates(widget.configuration.copyWith(showAds: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
     });
@@ -476,11 +621,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
       appBar: new AppBar(
         centerTitle: false,
         elevation: 0.0,
-        title: Text("Settings",
+        title: Text(
+          "Settings",
           style: Theme.of(context)
               .textTheme
               .headline
-              .copyWith(fontWeight: FontWeight.bold),
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 32),
         ),
       ),
       body: buildSettingsPane(context),
@@ -491,6 +637,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     var theme = Theme.of(context);
 
     final List<Widget> rows = <Widget>[
+      _buildProductList(),
       new ListTile(
         title: new Text('Appearance', style: theme.textTheme.title),
         subtitle: new Text('Change appereance settings.'),
@@ -504,18 +651,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
           trailing: new Switch(
             value: widget.configuration.nightMode,
             onChanged: _handleNightMode,
-          ),
-        ),
-      ),
-      new MergeSemantics(
-        child: new ListTile(
-          title: const Text('Show Ads'),
-          onTap: () {
-            _showAds(!widget.configuration.showAds);
-          },
-          trailing: new Switch(
-            value: widget.configuration.showAds,
-            onChanged: _showAds,
           ),
         ),
       ),
@@ -576,8 +711,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         child: new ListTile(
           title: const Text('Allow News and Events Notifications'),
           onTap: () {
-            _handleNews(
-                !widget.configuration.subscribeNewsAndEvents);
+            _handleNews(!widget.configuration.subscribeNewsAndEvents);
           },
           trailing: new Switch(
             value: widget.configuration.subscribeNewsAndEvents,
@@ -629,19 +763,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
         new MergeSemantics(
           child: new ListTile(
             title: new Text('On the Web'),
-            subtitle: new Text(
-                'Use Space Launch Now on the web!'),
+            subtitle: new Text('Use Space Launch Now on the web!'),
             onTap: () {
               _launchURL("https://spacelaunchnow.me/");
-            },
-          ),
-        ),
-        new MergeSemantics(
-          child: new ListTile(
-            title: new Text('Become a Supporter'),
-            subtitle: new Text('Remove ads and support development.'),
-            onTap: () {
-              _becomeSupporter();
             },
           ),
         ),
@@ -690,6 +814,79 @@ class NotificationFilterPageState extends State<SettingsPage> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Card _buildProductList() {
+    if (_loading) {
+      return Card(
+          child: (ListTile(
+              leading: CircularProgressIndicator(),
+              title: Text('Loading In-App Products...'))));
+    }
+
+    if (!_isAvailable) {
+      return Card();
+    }
+    final ListTile productHeader = ListTile(
+        title: new Text('Become a Supporter',
+            style: Theme.of(context).textTheme.headline),
+        subtitle: new Text('Remove ads and support development.'));
+    List<ListTile> productList = <ListTile>[];
+
+    if (!_notFoundIds.isEmpty) {
+      productList.add(ListTile(
+          title: Text('[${_notFoundIds.join(", ")}] not found',
+              style: TextStyle(color: ThemeData.light().errorColor)),
+          subtitle: Text(
+              'This app needs special configuration to run. Please see example/README.md for instructions.')));
+    }
+
+    Map<String, PurchaseDetails> purchases =
+    Map.fromEntries(_purchases.map((PurchaseDetails purchase) {
+      if (Platform.isIOS) {
+        InAppPurchaseConnection.instance.completePurchase(purchase);
+      }
+      return MapEntry<String, PurchaseDetails>(purchase.productID, purchase);
+    }));
+
+    productList.addAll(_products.map(
+          (ProductDetails productDetails) {
+        PurchaseDetails previousPurchase = purchases[productDetails.id];
+        return ListTile(
+            title: Text(
+              productDetails.title,
+            ),
+            subtitle: Text(
+              productDetails.description,
+            ),
+            trailing: previousPurchase != null
+                ? Icon(Icons.check)
+                : FlatButton(
+              child: Text(productDetails.price),
+              color: Colors.green[800],
+              textColor: Colors.white,
+              onPressed: () {
+                PurchaseParam purchaseParam = PurchaseParam(
+                    productDetails: productDetails,
+                    applicationUserName: null,
+                    sandboxTesting: true);
+                    _connection.buyNonConsumable(purchaseParam: purchaseParam);
+              },
+            ));
+      },
+    ));
+
+    if (_purchases.isNotEmpty){
+      print("Purchases found!");
+      _showAds(false);
+    } else {
+      _showAds(true);
+      print("Purchases not found!");
+    }
+
+    return Card(
+        child:
+        Column(children: <Widget>[productHeader, Divider()] + productList));
   }
 
   Widget buildNotificationFilters(BuildContext context) {

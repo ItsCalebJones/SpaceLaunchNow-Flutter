@@ -80,6 +80,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.2.0):
     - GoogleUtilities/Logger
+  - in_app_purchase (0.0.1):
+    - Flutter
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -88,6 +90,8 @@ PODS:
   - path_provider (0.0.1):
     - Flutter
   - Protobuf (3.8.0)
+  - rate_my_app (0.1):
+    - Flutter
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -100,15 +104,17 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - "firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+3/ios`)"
+  - "firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+7/ios`)"
   - "firebase_analytics (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios`)"
-  - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios`)
+  - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.1.6/ios`)
   - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release`)
   - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios`)
-  - "path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios`)"
+  - "in_app_purchase (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/in_app_purchase-0.2.1+4/ios`)"
+  - path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.3.0/ios`)
+  - rate_my_app (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/rate_my_app-0.4.0/ios`)
   - share (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
-  - "shared_preferences (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/ios`)"
-  - sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.5/ios`)
+  - "shared_preferences (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+4/ios`)"
+  - "sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.7+1/ios`)"
   - url_launcher (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios`)
 
 SPEC REPOS:
@@ -129,45 +135,51 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   firebase_admob:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+3/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+7/ios"
   firebase_analytics:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios"
   firebase_messaging:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.0.3/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.1.6/ios"
   Flutter:
     :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release"
   flutter_iap:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios"
+  in_app_purchase:
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/in_app_purchase-0.2.1+4/ios"
   path_provider:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.5.0+1/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.3.0/ios"
+  rate_my_app:
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/rate_my_app-0.4.0/ios"
   share:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios"
   shared_preferences:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+4/ios"
   sqflite:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.5/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.7+1/ios"
   url_launcher:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios"
 
 SPEC CHECKSUMS:
   Firebase: 5965bac23e7fcb5fa6d926ed429c9ecef8a2014e
-  firebase_admob: ba3d9c8874c03ccc2b87ae30c50d1630b522a693
+  firebase_admob: d8c2bc95b5e0069406280ce6adb816cdee6aa595
   firebase_analytics: bd50d8f5d3f42dcab6da67944a849062470b0a19
-  firebase_messaging: b25b2fa94e685146bcf9d706ed87b4e95cd2a17d
+  firebase_messaging: 0d5c04cc40f58bd4bf7f2992c91050f9bc01bec3
   FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
   FirebaseAnalyticsInterop: efbe45c8385ec626e29f9525e5ebd38520dfb6c1
   FirebaseCore: b0f0262acebfa540e5f97b3832dbb13186980822
   FirebaseInstanceID: cdb3827746d53ece7ae87a5c51c25c3055443366
   FirebaseMessaging: 20b6626c41be7840aed7a3dd9a14003efae3d588
-  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_iap: cd3fed5ae80fe3d9e92943a22c8607bf8b029bbc
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   Google-Mobile-Ads-SDK: 1e72b4f438d997ab0f2ee62b3a7b0cbcc87c47cb
   GoogleAppMeasurement: 51d8d9ea48f0ca44484d29cfbdef976fbd4fc336
   GoogleUtilities: 996e0db07153674fd1b54b220fda3a3dc3547cba
+  in_app_purchase: 5e80de181441b1c149372237f5e65255455e175f
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
   Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
+  rate_my_app: 45513a2f4d9a55b7b46d19b64fc13882fd101157
   share: ee3d34d3969ad17fc3043eab552e4f082aacfed1
   shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a

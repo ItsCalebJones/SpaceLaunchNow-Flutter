@@ -58,7 +58,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
               style: Theme.of(context)
                   .textTheme
                   .headline
-                  .copyWith(fontWeight: FontWeight.bold),),
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 30),),
           ),
           body: TabBarView(
             controller: _tabController,

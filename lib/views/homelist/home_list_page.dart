@@ -280,14 +280,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildCountDown(Launch mLaunch) {
-    DateTime net = mLaunch.net;
-    DateTime current = new DateTime.now();
-    var diff = net.difference(current);
-    if (diff.inSeconds > 0) {
-      return new Countdown(mLaunch);
-    } else {
-      return new Container(width: 0.0, height: 0.0);
-    }
+    return new Countdown(mLaunch);
   }
 
   Widget _buildLaunchButtons(Launch launch) {
@@ -372,45 +365,32 @@ class _HomeListPageState extends State<HomeListPage> {
     List<Widget> content = new List<Widget>();
     print("Upcoming build!");
 
-    if (_launches.isEmpty && loading) {
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
-      ));
-    } else if (_launches.isEmpty) {
-      content.add(Center(
-        child: new Text("No Launches Loaded"),
-      ));
-    } else {
-      for (var item in _launches) {
-        content.add(_buildLaunchTile(context, item));
-      }
-      content.add(new SizedBox(height: 50));
-    }
-
     Widget view = new Scaffold(
         body: new CustomScrollView(slivers: <Widget>[
-      new SliverAppBar(
-        elevation: 0.0,
-        expandedHeight: 50,
-        centerTitle: false,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _handleRefresh();
-            },
-          )
-        ],
-        title: new Text(
-          'Favorite Launches',
-          style: Theme.of(context)
-              .textTheme
-              .headline
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
-      new SliverList(delegate: new SliverChildListDelegate(content))
-    ]));
+          new SliverAppBar(
+            elevation: 0.0,
+            expandedHeight: 50,
+            centerTitle: false,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  setState(() {
+                    _handleRefresh();
+                  });
+                },
+              )
+            ],
+            title: new Text(
+              'Favorite Launches',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
+            ),
+          ),
+          _buildBody()
+        ]));
     return view;
   }
 
@@ -448,6 +428,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Future<Null> _handleRefresh() async {
+    setState(() { });
     _launches.clear();
     totalCount = 0;
     limit = 5;
@@ -575,37 +556,36 @@ class _HomeListPageState extends State<HomeListPage> {
     return stringList;
   }
 
-  Future<void> checkFilters() async {
-    _prefs.then((SharedPreferences prefs) {
-      subscribeALL = prefs.getBool("subscribeALL") ?? true;
+  checkFilters() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    subscribeALL = prefs.getBool("subscribeALL") ?? true;
 
-      subscribeSpaceX = prefs.getBool("subscribeSpaceX") ?? true;
-      subscribeNASA = prefs.getBool("subscribeNASA") ?? true;
-      subscribeArianespace = prefs.getBool("subscribeArianespace") ?? true;
-      subscribeRoscosmos = prefs.getBool("subscribeRoscosmos") ?? true;
-      subscribeULA = prefs.getBool("subscribeULA") ?? true;
-      subscribeRocketLab = prefs.getBool("subscribeRocketLab") ?? true;
-      subscribeBlueOrigin = prefs.getBool("subscribeBlueOrigin") ?? true;
-      subscribeNorthrop = prefs.getBool("subscribeNorthrop") ?? true;
-      subscribeCAPE = prefs.getBool("subscribeCAPE") ?? true;
-      subscribePLES = prefs.getBool("subscribePLES") ?? true;
-      subscribeISRO = prefs.getBool("subscribeISRO") ?? true;
+    subscribeSpaceX = prefs.getBool("subscribeSpaceX") ?? true;
+    subscribeNASA = prefs.getBool("subscribeNASA") ?? true;
+    subscribeArianespace = prefs.getBool("subscribeArianespace") ?? true;
+    subscribeRoscosmos = prefs.getBool("subscribeRoscosmos") ?? true;
+    subscribeULA = prefs.getBool("subscribeULA") ?? true;
+    subscribeRocketLab = prefs.getBool("subscribeRocketLab") ?? true;
+    subscribeBlueOrigin = prefs.getBool("subscribeBlueOrigin") ?? true;
+    subscribeNorthrop = prefs.getBool("subscribeNorthrop") ?? true;
+    subscribeCAPE = prefs.getBool("subscribeCAPE") ?? true;
+    subscribePLES = prefs.getBool("subscribePLES") ?? true;
+    subscribeISRO = prefs.getBool("subscribeISRO") ?? true;
 
-      subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
-      subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
-      subscribeChina = prefs.getBool("subscribeChina") ?? true;
+    subscribeKSC = prefs.getBool("subscribeKSC") ?? true;
+    subscribeVAN = prefs.getBool("subscribeVAN") ?? true;
+    subscribeChina = prefs.getBool("subscribeChina") ?? true;
 
-      subscribeRussia = prefs.getBool("subscribeRussia") ?? true;
-      subscribeWallops = prefs.getBool("subscribeWallops") ?? true;
-      subscribeNZ = prefs.getBool("subscribeNZ") ?? true;
-      subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
+    subscribeRussia = prefs.getBool("subscribeRussia") ?? true;
+    subscribeWallops = prefs.getBool("subscribeWallops") ?? true;
+    subscribeNZ = prefs.getBool("subscribeNZ") ?? true;
+    subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
 
-      subscribeFG = prefs.getBool("subscribeFG") ?? true;
-      if (!subscribeALL) {
-        lsps = _buildLSPFilter();
-        locations = _buildLocationFilter();
-      }
-    });
+    subscribeFG = prefs.getBool("subscribeFG") ?? true;
+    if (!subscribeALL) {
+      lsps = _buildLSPFilter();
+      locations = _buildLocationFilter();
+    }
   }
 
   String _getLaunchImage(Launch launch) {
@@ -661,5 +641,26 @@ class _HomeListPageState extends State<HomeListPage> {
     } else {
       return new Container();
     }
+  }
+
+  Widget _buildBody() {
+    List<Widget> content = new List<Widget>();
+    if (_launches.isEmpty || loading) {
+      content.add(new SizedBox(height: 200));
+      content.add(new Center(
+        child: new CircularProgressIndicator(),
+      ));
+    } else if (_launches.isEmpty) {
+      content.add(new SizedBox(height: 200));
+      content.add(Center(
+        child: new Text("No Launches Loaded"),
+      ));
+    } else {
+      for (var item in _launches) {
+        content.add(_buildLaunchTile(context, item));
+      }
+      content.add(new SizedBox(height: 50));
+    }
+    return new SliverList(delegate: new SliverChildListDelegate(content));
   }
 }
