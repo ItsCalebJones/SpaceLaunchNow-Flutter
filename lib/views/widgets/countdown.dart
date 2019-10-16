@@ -51,7 +51,7 @@ class CountdownState extends State<Countdown> {
         new Duration(milliseconds: dependencies.timerMillisecondsRefreshRate),
         callback);
     dependencies.timerListeners.add(onTick);
-    if (launch.status.id != 2 || launch.status.id != 4 || launch.status.id != 5) {
+    if (launch.status.id == 1) {
       dependencies.stopwatch.start();
     }
     super.initState();

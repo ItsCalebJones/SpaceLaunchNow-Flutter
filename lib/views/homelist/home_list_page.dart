@@ -386,7 +386,7 @@ class _HomeListPageState extends State<HomeListPage> {
               style: Theme.of(context)
                   .textTheme
                   .headline
-                  .copyWith(fontWeight: FontWeight.bold),
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
             ),
           ),
           _buildBody()

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -15,8 +16,19 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 import 'views/homelist/home_list_page.dart';
+import 'views/settings/product_store.dart';
+
+RateMyApp _rateMyApp = RateMyApp(
+  preferencesPrefix: 'rateMyApp_',
+  minDays: 3,
+  minLaunches: 3,
+  remindDays: 5,
+  remindLaunches: 10,
+);
 
 void main() {
   SystemChrome.setPreferredOrientations(
@@ -57,6 +69,19 @@ class Pages extends StatefulWidget {
 class PagesState extends State<Pages> {
   bool showAds = true;
   TabController controller;
+
+  List<String> _productIds = ["2018_founder"];
+
+  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
+  StreamSubscription<List<PurchaseDetails>> _subscription;
+  List<String> _notFoundIds = [];
+  List<ProductDetails> _products = [];
+  List<PurchaseDetails> _purchases = [];
+  List<String> _consumables = [];
+  bool _isAvailable = false;
+  bool _purchasePending = false;
+  bool _loading = true;
+  String _queryProductError = null;
 
   GlobalKey stickyKey = new GlobalKey();
 
@@ -99,6 +124,38 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+    _rateMyApp.init().then((_) {
+      if (_rateMyApp.shouldOpenDialog) {
+
+        // Or if you prefer to show a star rating bar :
+        _rateMyApp.showStarRateDialog(
+          context,
+          title: 'Space Launch Now',
+          message: 'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
+          onRatingChanged: (stars) {
+            return [
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  print('Thanks for the ' + (stars == null ? '0' : stars.round().toString()) + ' star(s) !');
+                  // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
+                  _rateMyApp.doNotOpenAgain = true;
+                  _rateMyApp.save().then((v) => Navigator.pop(context));
+                },
+              ),
+            ];
+          },
+          ignoreIOS: false,
+          dialogStyle: DialogStyle(
+            titleAlign: TextAlign.center,
+            messageAlign: TextAlign.center,
+            messagePadding: EdgeInsets.only(bottom: 20),
+          ),
+          starRatingOptions: StarRatingOptions(),
+        );
+      }
+    });
+
     Ads.init('ca-app-pub-9824528399164059/8172962746');
 
     _prefs.then((SharedPreferences prefs) {
@@ -411,11 +468,145 @@ class PagesState extends State<Pages> {
           subscribeVAN: subscribeVAN));
     });
     initAds();
+    Stream purchaseUpdated =
+        InAppPurchaseConnection.instance.purchaseUpdatedStream;
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
+    initStoreInfo();
+  }
+
+  Future<void> initStoreInfo() async {
+    final bool isAvailable = await _connection.isAvailable();
+    if (!isAvailable) {
+      setState(() {
+        _isAvailable = isAvailable;
+        _products = [];
+        _purchases = [];
+        _notFoundIds = [];
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    ProductDetailsResponse productDetailResponse =
+    await _connection.queryProductDetails(_productIds.toSet());
+    if (productDetailResponse.error != null) {
+      setState(() {
+        _queryProductError = productDetailResponse.error.message;
+        _isAvailable = isAvailable;
+        _products = productDetailResponse.productDetails;
+        _purchases = [];
+        _notFoundIds = productDetailResponse.notFoundIDs;
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    if (productDetailResponse.productDetails.isEmpty) {
+      setState(() {
+        _queryProductError = null;
+        _isAvailable = isAvailable;
+        _products = productDetailResponse.productDetails;
+        _purchases = [];
+        _notFoundIds = productDetailResponse.notFoundIDs;
+        _consumables = [];
+        _purchasePending = false;
+        _loading = false;
+      });
+      return;
+    }
+
+    final QueryPurchaseDetailsResponse purchaseResponse =
+    await _connection.queryPastPurchases();
+    if (purchaseResponse.error != null) {
+      // handle query past purchase error..
+    }
+    final List<PurchaseDetails> verifiedPurchases = [];
+    for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
+      if (await _verifyPurchase(purchase)) {
+        verifiedPurchases.add(purchase);
+      }
+    }
+    List<String> consumables = await ProductStore.load();
+    setState(() {
+      _isAvailable = isAvailable;
+      _products = productDetailResponse.productDetails;
+      _purchases = verifiedPurchases;
+      _notFoundIds = productDetailResponse.notFoundIDs;
+      _consumables = consumables;
+      _purchasePending = false;
+      _loading = false;
+    });
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+    // IMPORTANT!! Always verify a purchase before delivering the product.
+    // For the purpose of an example, we directly return true.
+    return Future<bool>.value(true);
+  }
+
+  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
+    // handle invalid purchase here if  _verifyPurchase` failed.
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        showPendingUI();
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          handleError(purchaseDetails.error);
+        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            deliverProduct(purchaseDetails);
+          } else {
+            _handleInvalidPurchase(purchaseDetails);
+          }
+        }
+      }
+    });
+  }
+
+  void deliverProduct(PurchaseDetails purchaseDetails) async {
+    // IMPORTANT!! Always verify a purchase purchase details before delivering the product.
+    setState(() {
+      _purchases.add(purchaseDetails);
+      _purchasePending = false;
+    });
+  }
+
+  void handleError(IAPError error) {
+    setState(() {
+      _purchasePending = false;
+    });
+  }
+
+  void showPendingUI() {
+    setState(() {
+      _purchasePending = true;
+    });
+  }
+
+  void _showAds(bool value) {
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('showAds', value));
+    });
   }
 
   @override
   void dispose() {
     Ads.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -584,23 +775,15 @@ class PagesState extends State<Pages> {
   }
 
   initAds() async {
-//    IAPResponse response = await FlutterIap.restorePurchases();
-//    List<IAPProduct> productIds = response.products;
-//    if (!mounted) return;
-//
-//    setState(() {
-//      if (productIds.length <= 0 && _configuration.showAds) {
-//        Ads.showBannerAd();
-//      } else {
-//        Ads.hideBannerAd();
-//      }
-//    });
+
   }
 
-  void checkAd() {
-    if (_configuration.showAds) {
+  void checkAd() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    showAds = prefs.getBool("showAds") ?? true;
+    if (showAds && !_loading) {
       Ads.showBannerAd();
-    } else if (!_configuration.showAds) {
+    } else if (!showAds) {
       Ads.hideBannerAd();
     }
   }

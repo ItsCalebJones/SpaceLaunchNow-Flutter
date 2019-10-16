@@ -97,7 +97,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
           style: Theme.of(context)
               .textTheme
               .headline
-              .copyWith(fontWeight: FontWeight.bold),),
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 30))
       );
     }
   }
