@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iap/flutter_iap.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -50,7 +50,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   initState() {
     super.initState();
-    init();
     Stream purchaseUpdated =
         InAppPurchaseConnection.instance.purchaseUpdatedStream;
     _subscription = purchaseUpdated.listen((purchaseDetailsList) {
@@ -184,21 +183,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void dispose() {
     _subscription.cancel();
     super.dispose();
-  }
-
-  init() async {
-    List<String> productIds = ["2018_founder"];
-
-    IAPResponse response = await FlutterIap.fetchProducts(productIds);
-    productIds = response.products
-        .map((IAPProduct product) => product.productIdentifier)
-        .toList();
-
-    if (!mounted) return;
-
-    setState(() {
-      _productIds = productIds;
-    });
   }
 
   void _handleNightMode(bool value) {
@@ -582,33 +566,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (widget.updater != null) widget.updater(value);
   }
 
-  void _becomeSupporter() {
-    print("Becoming supporter!");
-    FlutterIap.buy(_productIds.first).then((IAPResponse response) {
-      String responseStatus = response.status.name;
-      print(response);
-      print("Response: $responseStatus");
-      if (response.purchases != null) {
-        List<String> purchasedIds = response.purchases
-            .map((IAPPurchase purchase) => purchase.productIdentifier)
-            .toList();
-        if (purchasedIds.length > 0) {
-          sendUpdates(widget.configuration.copyWith(showAds: false));
-          _prefs.then((SharedPreferences prefs) {
-            return (prefs.setBool('showAds', false));
-          });
-        }
-      }
-    }, onError: (error) {
-      // errors caught outside the framework
-      print("Error found $error");
-      sendUpdates(widget.configuration.copyWith(showAds: true));
-      _prefs.then((SharedPreferences prefs) {
-        return (prefs.setBool('showAds', true));
-      });
-    });
-  }
-
   void _showAds(bool value) {
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
@@ -774,34 +731,71 @@ class NotificationFilterPageState extends State<SettingsPage> {
             title: new Text('Restore Purchases'),
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
-              FlutterIap.restorePurchases().then((IAPResponse response) {
-                print(response);
-                String responseStatus = response.status.name;
-                print("Response: $responseStatus");
-                if (response.purchases != null) {
-                  List<String> purchasedIds = response.purchases
-                      .map((IAPPurchase purchase) => purchase.productIdentifier)
-                      .toList();
-                  if (purchasedIds.length > 0) {
-                    sendUpdates(widget.configuration.copyWith(showAds: false));
-                    _prefs.then((SharedPreferences prefs) {
-                      return (prefs.setBool('showAds', false));
-                    });
-                  }
-                }
-                final snackBar = new SnackBar(
-                  content: new Text(
-                      'Purchase history restored: ' + response.status.name),
-                  duration: new Duration(seconds: 5),
-                );
-                // Find the Scaffold in the Widget tree and use it to show a SnackBar
-                Scaffold.of(context).showSnackBar(snackBar);
-              }, onError: (error) {
-                // errors caught outside the framework
-                print("Error found $error");
-              });
+//              FlutterIap.restorePurchases().then((IAPResponse response) {
+//                print(response);
+//                String responseStatus = response.status.name;
+//                print("Response: $responseStatus");
+//                if (response.purchases != null) {
+//                  List<String> purchasedIds = response.purchases
+//                      .map((IAPPurchase purchase) => purchase.productIdentifier)
+//                      .toList();
+//                  if (purchasedIds.length > 0) {
+//                    sendUpdates(widget.configuration.copyWith(showAds: false));
+//                    _prefs.then((SharedPreferences prefs) {
+//                      return (prefs.setBool('showAds', false));
+//                    });
+//                  }
+//                }
+//                final snackBar = new SnackBar(
+//                  content: new Text(
+//                      'Purchase history restored: ' + response.status.name),
+//                  duration: new Duration(seconds: 5),
+//                );
+//                // Find the Scaffold in the Widget tree and use it to show a SnackBar
+//                Scaffold.of(context).showSnackBar(snackBar);
+//              }, onError: (error) {
+//                // errors caught outside the framework
+//                print("Error found $error");
+//              });
             },
           ),
+        ),
+        new Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.red)),
+                  onPressed: () {
+                    _launchURL("https://www.patreon.com/spacelaunchnow");
+                  },
+                  color: const Color(0xfff96854),
+                  textColor: Colors.white,
+                  child:
+                      Row(
+                        children: <Widget>[
+                          new Icon(FontAwesomeIcons.patreon, size: 14,),
+                          new SizedBox(width: 10),
+                          Text("Become a Patron", ),
+                        ],
+                      ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left:32.0, right: 32.0),
+              child: new Text("Consider supporting the development of "
+                  "Space Launch Now by becoming a patron with exclusive "
+                  "member only benefits!",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption.copyWith()),
+            ),
+          ],
         ),
         new SizedBox(height: 50)
       ],
@@ -842,7 +836,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
 
     Map<String, PurchaseDetails> purchases =
-    Map.fromEntries(_purchases.map((PurchaseDetails purchase) {
+        Map.fromEntries(_purchases.map((PurchaseDetails purchase) {
       if (Platform.isIOS) {
         InAppPurchaseConnection.instance.completePurchase(purchase);
       }
@@ -850,7 +844,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }));
 
     productList.addAll(_products.map(
-          (ProductDetails productDetails) {
+      (ProductDetails productDetails) {
         PurchaseDetails previousPurchase = purchases[productDetails.id];
         return ListTile(
             title: Text(
@@ -862,21 +856,22 @@ class NotificationFilterPageState extends State<SettingsPage> {
             trailing: previousPurchase != null
                 ? Icon(Icons.check)
                 : FlatButton(
-              child: Text(productDetails.price),
-              color: Colors.green[800],
-              textColor: Colors.white,
-              onPressed: () {
-                PurchaseParam purchaseParam = PurchaseParam(
-                    productDetails: productDetails,
-                    applicationUserName: null,
-                    sandboxTesting: true);
-                    _connection.buyNonConsumable(purchaseParam: purchaseParam);
-              },
-            ));
+                    child: Text(productDetails.price),
+                    color: Colors.green[800],
+                    textColor: Colors.white,
+                    onPressed: () {
+                      PurchaseParam purchaseParam = PurchaseParam(
+                          productDetails: productDetails,
+                          applicationUserName: null,
+                          sandboxTesting: true);
+                      _connection.buyNonConsumable(
+                          purchaseParam: purchaseParam);
+                    },
+                  ));
       },
     ));
 
-    if (_purchases.isNotEmpty){
+    if (_purchases.isNotEmpty) {
       print("Purchases found!");
       _showAds(false);
     } else {
@@ -886,7 +881,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     return Card(
         child:
-        Column(children: <Widget>[productHeader, Divider()] + productList));
+            Column(children: <Widget>[productHeader, Divider()] + productList));
   }
 
   Widget buildNotificationFilters(BuildContext context) {

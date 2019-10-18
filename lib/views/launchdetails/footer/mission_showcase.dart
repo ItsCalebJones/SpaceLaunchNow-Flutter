@@ -115,8 +115,10 @@ class MissionShowcase extends StatelessWidget {
       ));
     } else {
       widgets.add(new Padding(
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.only(left: 8.0),
         child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             new Text(
               _launch.name,
@@ -125,7 +127,6 @@ class MissionShowcase extends StatelessWidget {
             new Text(
               "Type: Unknown",
               style: textTheme.subtitle.copyWith(),
-              textAlign: TextAlign.center,
             ),
           ],
         ),
