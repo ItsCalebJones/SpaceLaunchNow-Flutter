@@ -54,7 +54,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
                 )
               ],
             ),
-            title: Text('Space Launch News',
+            title: Text('News',
               style: Theme.of(context)
                   .textTheme
                   .headline

@@ -382,7 +382,7 @@ class _HomeListPageState extends State<HomeListPage> {
               )
             ],
             title: new Text(
-              'Favorite Launches',
+              'Home',
               style: Theme.of(context)
                   .textTheme
                   .headline

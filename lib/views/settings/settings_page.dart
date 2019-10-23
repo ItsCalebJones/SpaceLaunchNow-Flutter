@@ -63,6 +63,45 @@ class NotificationFilterPageState extends State<SettingsPage> {
     initStoreInfo();
   }
 
+  // Gets past purchases
+  Future<void> _getPastPurchases() async {
+    QueryPurchaseDetailsResponse response =
+    await _connection.queryPastPurchases();
+    var purchases = "";
+
+    for (PurchaseDetails purchase in response.pastPurchases) {
+      purchases = purchases + " " + purchase.productID;
+      if (Platform.isIOS) {
+        InAppPurchaseConnection.instance.completePurchase(purchase);
+      }
+    }
+
+    if (_purchases.length > 0) {
+      sendUpdates(widget.configuration.copyWith(showAds: false));
+      _prefs.then((SharedPreferences prefs) {
+        return (prefs.setBool('showAds', false));
+      });
+      final snackBar = new SnackBar(
+        content: new Text('Purchase history restored - thank you for your support!'),
+        duration: new Duration(seconds: 5),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    } else {
+      final snackBar = new SnackBar(
+        content: new Text('Purchase history restored - no purchases found.'),
+        duration: new Duration(seconds: 5),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
+
+    // Find the Scaffold in the Widget tree and use it to show a SnackBar
+
+
+    setState(() {
+      _purchases = response.pastPurchases;
+    });
+  }
+
   Future<void> initStoreInfo() async {
     final bool isAvailable = await _connection.isAvailable();
     if (!isAvailable) {
@@ -775,27 +814,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
               FlutterIap.restorePurchases().then((IAPResponse response) {
-                print(response);
-                String responseStatus = response.status.name;
-                print("Response: $responseStatus");
-                if (response.purchases != null) {
-                  List<String> purchasedIds = response.purchases
-                      .map((IAPPurchase purchase) => purchase.productIdentifier)
-                      .toList();
-                  if (purchasedIds.length > 0) {
-                    sendUpdates(widget.configuration.copyWith(showAds: false));
-                    _prefs.then((SharedPreferences prefs) {
-                      return (prefs.setBool('showAds', false));
-                    });
-                  }
-                }
-                final snackBar = new SnackBar(
-                  content: new Text(
-                      'Purchase history restored: ' + response.status.name),
-                  duration: new Duration(seconds: 5),
-                );
-                // Find the Scaffold in the Widget tree and use it to show a SnackBar
-                Scaffold.of(context).showSnackBar(snackBar);
+                _getPastPurchases();
               }, onError: (error) {
                 // errors caught outside the framework
                 print("Error found $error");

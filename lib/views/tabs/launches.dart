@@ -14,7 +14,7 @@ class LaunchesTabPage extends StatefulWidget {
 
 class _LaunchesTabPageState extends State<LaunchesTabPage>
     with SingleTickerProviderStateMixin {
-  String myTitle = "Space Launch Schedule";
+  String myTitle = "Launches";
   bool searchActive = false;
   bool searchViewActive = false;
   String searchQuery;
