@@ -16,7 +16,7 @@ dependencies:
   url_launcher: '^3.0.1'
   in_app_purchase: ^0.2.1+4
   uri: "^0.11.1"
-  cached_network_image: "^1.1.1"
+  cached_network_image: ^2.0.0-rc
   rxdart: ^0.22.0
   sqflite: ^1.1.0
   flutter_staggered_grid_view: "^0.3.0"

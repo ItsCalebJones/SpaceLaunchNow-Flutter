@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 final ThemeData kIOSTheme = new ThemeData(
   primaryColorBrightness: Brightness.light,
+  brightness: Brightness.light,
   primarySwatch: Colors.red,
   primaryColor: Colors.grey[200],
   accentColor: Colors.red,
@@ -23,6 +24,7 @@ final ThemeData kIOSThemeDark = new ThemeData(
 
 final ThemeData kIOSThemeBar = new ThemeData(
     primaryColorBrightness: Brightness.light,
+    brightness: Brightness.light,
     canvasColor: Colors.grey[200],
     primarySwatch: Colors.blue,
     primaryColor: Colors.blue[600],
@@ -47,8 +49,9 @@ final ThemeData kIOSThemeDarkAppBar = kIOSThemeDark;
 
 final ThemeData kDefaultTheme = new ThemeData(
   primaryColorBrightness: Brightness.dark,
+  brightness: Brightness.dark,
   primarySwatch: Colors.blue,
-    primaryColor: Colors.grey[200],
+    primaryColor: Colors.grey[300],
   accentColor: Colors.red[500],
   fontFamily: "AvenirNextCondensed-Regular ",
   textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
@@ -71,6 +74,7 @@ class PlatformAdaptiveAppBar extends AppBar {
     key: key,
     elevation: platform == TargetPlatform.iOS ? 0.0 : 4.0,
     title: new Text('$text', style: kIOSThemeDark.textTheme.title.copyWith(fontFamily: "AvenirNextCondensed-Heavy", fontWeight: FontWeight.bold)),
+    brightness: Brightness.dark,
     actions: actions,
   );
 }

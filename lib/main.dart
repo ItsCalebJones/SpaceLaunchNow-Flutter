@@ -778,8 +778,25 @@ class PagesState extends State<Pages> {
 
   }
 
+  // Gets past purchases
+  Future<void> _getPastPurchases() async {
+    QueryPurchaseDetailsResponse response =
+    await _connection.queryPastPurchases();
+
+    for (PurchaseDetails purchase in response.pastPurchases) {
+      if (Platform.isIOS) {
+        InAppPurchaseConnection.instance.completePurchase(purchase);
+      }
+    }
+    _purchases = response.pastPurchases;
+  }
+
   void checkAd() async {
+    await _getPastPurchases();
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_purchases.length > 0) {
+      prefs.setBool("showAds", false);
+    }
     showAds = prefs.getBool("showAds") ?? true;
     if (showAds && !_loading) {
       Ads.showBannerAd();
