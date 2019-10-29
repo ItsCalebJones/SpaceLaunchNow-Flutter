@@ -128,14 +128,6 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDarkAppBar;
-    } else {
-      return kIOSThemeAppBar;
-    }
-  }
-
   Color getPrimaryColor() {
     if (widget._configuration.nightMode) {
       return Colors.grey[800];

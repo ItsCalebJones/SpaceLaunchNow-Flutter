@@ -36,8 +36,6 @@ void main() {
   runApp(new SpaceLaunchNow());
 }
 
-
-
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
@@ -126,18 +124,20 @@ class PagesState extends State<Pages> {
     super.initState();
     _rateMyApp.init().then((_) {
       if (_rateMyApp.shouldOpenDialog) {
-
         // Or if you prefer to show a star rating bar :
         _rateMyApp.showStarRateDialog(
           context,
           title: 'Space Launch Now',
-          message: 'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
+          message:
+              'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
           onRatingChanged: (stars) {
             return [
               FlatButton(
                 child: Text('OK'),
                 onPressed: () {
-                  print('Thanks for the ' + (stars == null ? '0' : stars.round().toString()) + ' star(s) !');
+                  print('Thanks for the ' +
+                      (stars == null ? '0' : stars.round().toString()) +
+                      ' star(s) !');
                   // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
                   _rateMyApp.doNotOpenAgain = true;
                   _rateMyApp.save().then((v) => Navigator.pop(context));
@@ -400,7 +400,6 @@ class PagesState extends State<Pages> {
             }
           }
         },
-
         onResume: (Map<String, dynamic> message) async {
           print("onResume: $message");
           if (message.containsKey('launch_uuid')) {
@@ -415,8 +414,7 @@ class PagesState extends State<Pages> {
                 newsAndEventsIndex = 0;
               });
               _openBrowser(item['url']);
-            } else if (message['notification_type'] ==
-                    'event_notification' ||
+            } else if (message['notification_type'] == 'event_notification' ||
                 message['notification_type'] == 'event_webcast') {
               setState(() {
                 changeTab(2);
@@ -496,7 +494,7 @@ class PagesState extends State<Pages> {
     }
 
     ProductDetailsResponse productDetailResponse =
-    await _connection.queryProductDetails(_productIds.toSet());
+        await _connection.queryProductDetails(_productIds.toSet());
     if (productDetailResponse.error != null) {
       setState(() {
         _queryProductError = productDetailResponse.error.message;
@@ -526,7 +524,7 @@ class PagesState extends State<Pages> {
     }
 
     final QueryPurchaseDetailsResponse purchaseResponse =
-    await _connection.queryPastPurchases();
+        await _connection.queryPastPurchases();
     if (purchaseResponse.error != null) {
       // handle query past purchase error..
     }
@@ -625,7 +623,9 @@ class PagesState extends State<Pages> {
   }
 
   ThemeData get barTheme {
-    if (_configuration.nightMode) {
+    bool qDarkmodeEnable;
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark){
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -724,7 +724,9 @@ class PagesState extends State<Pages> {
     });
     return MaterialApp(
         title: 'Space Launch Now',
-        theme: theme,
+        theme: kIOSTheme,
+        darkTheme: kIOSThemeDark,
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         routes: <String, WidgetBuilder>{
           '/settings': (BuildContext context) =>
@@ -736,6 +738,7 @@ class PagesState extends State<Pages> {
 //            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: new Theme(
                 data: barTheme,
+
                 // sets the inactive color of the `BottomNavigationBar`
                 child: new BottomNavigationBar(
                   key: stickyKey,
@@ -774,14 +777,12 @@ class PagesState extends State<Pages> {
     );
   }
 
-  initAds() async {
-
-  }
+  initAds() async {}
 
   // Gets past purchases
   Future<void> _getPastPurchases() async {
     QueryPurchaseDetailsResponse response =
-    await _connection.queryPastPurchases();
+        await _connection.queryPastPurchases();
 
     for (PurchaseDetails purchase in response.pastPurchases) {
       if (Platform.isIOS) {
@@ -804,7 +805,6 @@ class PagesState extends State<Pages> {
       Ads.hideBannerAd();
     }
   }
-
 
   _openBrowser(String url) async {
     print("Checking $url");

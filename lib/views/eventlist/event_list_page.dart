@@ -88,9 +88,9 @@ class _EventListPageState extends State<EventListPage> {
 
   ThemeData get appBarTheme {
     if (widget._configuration.nightMode) {
-      return kIOSThemeDarkAppBar;
+      return kIOSThemeDark;
     } else {
-      return kIOSThemeAppBar;
+      return kIOSTheme;
     }
   }
 

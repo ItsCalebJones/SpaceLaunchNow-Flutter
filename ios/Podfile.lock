@@ -107,14 +107,14 @@ DEPENDENCIES:
   - "firebase_admob (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+7/ios`)"
   - "firebase_analytics (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.2.0+1/ios`)"
   - firebase_messaging (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.1.6/ios`)
-  - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios`)
+  - Flutter (from `/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release`)
   - flutter_iap (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios`)
   - "in_app_purchase (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/in_app_purchase-0.2.2+2/ios`)"
   - path_provider (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.4.0/ios`)
   - rate_my_app (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/rate_my_app-0.4.0/ios`)
   - share (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share-0.4.0/ios`)
   - "shared_preferences (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.4+3/ios`)"
-  - "sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.7+1/ios`)"
+  - "sqflite (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+5/ios`)"
   - url_launcher (from `/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios`)
 
 SPEC REPOS:
@@ -141,7 +141,7 @@ EXTERNAL SOURCES:
   firebase_messaging:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-5.1.6/ios"
   Flutter:
-    :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios"
+    :path: "/Users/cjones/Development/flutter/bin/cache/artifacts/engine/ios-release"
   flutter_iap:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_iap-2.0.0-pre1/ios"
   in_app_purchase:
@@ -155,7 +155,7 @@ EXTERNAL SOURCES:
   shared_preferences:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.4+3/ios"
   sqflite:
-    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.7+1/ios"
+    :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+5/ios"
   url_launcher:
     :path: "/Users/cjones/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-3.0.3/ios"
 

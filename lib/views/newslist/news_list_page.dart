@@ -95,9 +95,9 @@ class _NewsListPageState extends State<NewsListPage> {
 
   ThemeData get appBarTheme {
     if (widget._configuration.nightMode) {
-      return kIOSThemeDarkAppBar;
+      return kIOSThemeDark;
     } else {
-      return kIOSThemeAppBar;
+      return kIOSTheme;
     }
   }
 

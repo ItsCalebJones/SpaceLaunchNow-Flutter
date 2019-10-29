@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iap/flutter_iap.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -10,6 +11,8 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:money/money.dart';
+
 
 import 'product_store.dart';
 
@@ -34,7 +37,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productIds = ["2018_founder"];
+  List<String> _productIds = ["2018_founder", "2018_gse", "2018_supporter", "2018_flight_controller"];
 
   final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
   StreamSubscription<List<PurchaseDetails>> _subscription;
@@ -50,6 +53,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   initState() {
     super.initState();
+    init();
     Stream purchaseUpdated =
         InAppPurchaseConnection.instance.purchaseUpdatedStream;
     _subscription = purchaseUpdated.listen((purchaseDetailsList) {
@@ -65,7 +69,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   // Gets past purchases
   Future<void> _getPastPurchases() async {
     QueryPurchaseDetailsResponse response =
-    await _connection.queryPastPurchases();
+        await _connection.queryPastPurchases();
     var purchases = "";
 
     for (PurchaseDetails purchase in response.pastPurchases) {
@@ -81,7 +85,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
         return (prefs.setBool('showAds', false));
       });
       final snackBar = new SnackBar(
-        content: new Text('Purchase history restored - thank you for your support!'),
+        content:
+            new Text('Purchase history restored - thank you for your support!'),
         duration: new Duration(seconds: 5),
       );
       Scaffold.of(context).showSnackBar(snackBar);
@@ -94,7 +99,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
 
     // Find the Scaffold in the Widget tree and use it to show a SnackBar
-
 
     setState(() {
       _purchases = response.pastPurchases;
@@ -222,6 +226,21 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void dispose() {
     _subscription.cancel();
     super.dispose();
+  }
+
+  init() async {
+    List<String> productIds = ["2018_founder"];
+
+    IAPResponse response = await FlutterIap.fetchProducts(productIds);
+    productIds = response.products
+        .map((IAPProduct product) => product.productIdentifier)
+        .toList();
+
+    if (!mounted) return;
+
+    setState(() {
+      _productIds = productIds;
+    });
   }
 
   void _handleNightMode(bool value) {
@@ -605,6 +624,33 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (widget.updater != null) widget.updater(value);
   }
 
+  void _becomeSupporter() {
+    print("Becoming supporter!");
+    FlutterIap.buy(_productIds.first).then((IAPResponse response) {
+      String responseStatus = response.status.name;
+      print(response);
+      print("Response: $responseStatus");
+      if (response.purchases != null) {
+        List<String> purchasedIds = response.purchases
+            .map((IAPPurchase purchase) => purchase.productIdentifier)
+            .toList();
+        if (purchasedIds.length > 0) {
+          sendUpdates(widget.configuration.copyWith(showAds: false));
+          _prefs.then((SharedPreferences prefs) {
+            return (prefs.setBool('showAds', false));
+          });
+        }
+      }
+    }, onError: (error) {
+      // errors caught outside the framework
+      print("Error found $error");
+      sendUpdates(widget.configuration.copyWith(showAds: true));
+      _prefs.then((SharedPreferences prefs) {
+        return (prefs.setBool('showAds', true));
+      });
+    });
+  }
+
   void _showAds(bool value) {
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
@@ -640,14 +686,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
       ),
       new MergeSemantics(
         child: new ListTile(
-          title: const Text('Use Dark Theme'),
+          title: const Text('Use Dark Theme '),
+          subtitle: const Text('Managed via system settings now.'),
+          enabled: false,
           onTap: () {
             _handleNightMode(!widget.configuration.nightMode);
           },
-          trailing: new Switch(
-            value: widget.configuration.nightMode,
-            onChanged: _handleNightMode,
-          ),
         ),
       ),
       new ListTile(
@@ -795,20 +839,25 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   },
                   color: const Color(0xfff96854),
                   textColor: Colors.white,
-                  child:
-                      Row(
-                        children: <Widget>[
-                          new Icon(FontAwesomeIcons.patreon, size: 14,),
-                          new SizedBox(width: 10),
-                          Text("Become a Patron", ),
-                        ],
+                  child: Row(
+                    children: <Widget>[
+                      new Icon(
+                        FontAwesomeIcons.patreon,
+                        size: 14,
                       ),
+                      new SizedBox(width: 10),
+                      Text(
+                        "Become a Patron",
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left:32.0, right: 32.0),
-              child: new Text("Consider supporting the development of "
+              padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+              child: new Text(
+                  "Consider supporting the development of "
                   "Space Launch Now by becoming a patron with exclusive "
                   "member only benefits!",
                   textAlign: TextAlign.center,
@@ -842,8 +891,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
     final ListTile productHeader = ListTile(
         title: new Text('Become a Supporter',
-            style: Theme.of(context).textTheme.headline),
-        subtitle: new Text('Remove ads and support development.'));
+            style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
+        subtitle: new Text('Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
     List<ListTile> productList = <ListTile>[];
 
     if (!_notFoundIds.isEmpty) {
@@ -861,6 +910,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
       }
       return MapEntry<String, PurchaseDetails>(purchase.productID, purchase);
     }));
+
+    _products.removeWhere((item) => item.id == "2018_founder");
+    _products.sort((a, b) => a.price.compareTo(b.price));
 
     productList.addAll(_products.map(
       (ProductDetails productDetails) {
@@ -889,9 +941,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   ));
       },
     ));
-
+    List<Widget> purchaseWidget = [];
     if (_purchases.isNotEmpty) {
       print("Purchases found!");
+      purchaseWidget.add(new Row(
+        children: <Widget>[
+          Container(
+              color: Colors.green,
+              child: new Icon(Icons.check)
+          ),
+          new Text("Previous purchase confirmed - ads disabled!")
+        ],
+      ));
       _showAds(false);
     } else {
       _showAds(true);
@@ -899,8 +960,58 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
 
     return Card(
-        child:
-            Column(children: <Widget>[productHeader, Divider()] + productList));
+        child: Column(
+            children: <Widget>[productHeader, Divider()] +
+                productList +
+                [ Divider(),
+                  new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RaisedButton(
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.red)),
+                              onPressed: () {
+                                _launchURL(
+                                    "https://www.patreon.com/spacelaunchnow");
+                              },
+                              color: const Color(0xfff96854),
+                              textColor: Colors.white,
+                              child: Row(
+                                children: <Widget>[
+                                  new Icon(
+                                    FontAwesomeIcons.patreon,
+                                    size: 14,
+                                  ),
+                                  new SizedBox(width: 10),
+                                  Text(
+                                    "Become a Patron",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 8.0),
+                        child: new Text(
+                            "Consider supporting the development of "
+                            "Space Launch Now by becoming a patron with exclusive "
+                            "member only benefits!",
+                            textAlign: TextAlign.center,
+                            style:
+                                Theme.of(context).textTheme.caption.copyWith()),
+                      ),
+                    ],
+                  ),
+                ]));
   }
 
   Widget buildNotificationFilters(BuildContext context) {
