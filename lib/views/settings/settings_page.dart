@@ -6,12 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iap/flutter_iap.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:money/money.dart';
 
 
 import 'product_store.dart';
@@ -681,20 +679,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     final List<Widget> rows = <Widget>[
       _buildProductList(),
       new ListTile(
-        title: new Text('Appearance', style: theme.textTheme.title),
-        subtitle: new Text('Change appereance settings.'),
-      ),
-      new MergeSemantics(
-        child: new ListTile(
-          title: const Text('Use Dark Theme '),
-          subtitle: const Text('Managed via system settings now.'),
-          enabled: false,
-          onTap: () {
-            _handleNightMode(!widget.configuration.nightMode);
-          },
-        ),
-      ),
-      new ListTile(
         title: new Text('Notification Settings', style: theme.textTheme.title),
         subtitle: new Text('Select what kind of notifications to receive.'),
       ),
@@ -823,48 +807,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
             },
           ),
         ),
-        new Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.red)),
-                  onPressed: () {
-                    _launchURL("https://www.patreon.com/spacelaunchnow");
-                  },
-                  color: const Color(0xfff96854),
-                  textColor: Colors.white,
-                  child: Row(
-                    children: <Widget>[
-                      new Icon(
-                        FontAwesomeIcons.patreon,
-                        size: 14,
-                      ),
-                      new SizedBox(width: 10),
-                      Text(
-                        "Become a Patron",
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-              child: new Text(
-                  "Consider supporting the development of "
-                  "Space Launch Now by becoming a patron with exclusive "
-                  "member only benefits!",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption.copyWith()),
-            ),
-          ],
-        ),
         new SizedBox(height: 50)
       ],
     );
@@ -946,6 +888,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       print("Purchases found!");
       purchaseWidget.add(new Row(
         children: <Widget>[
+          new Divider(),
           Container(
               color: Colors.green,
               child: new Icon(Icons.check)
@@ -962,56 +905,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     return Card(
         child: Column(
             children: <Widget>[productHeader, Divider()] +
-                productList +
-                [ Divider(),
-                  new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            RaisedButton(
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.red)),
-                              onPressed: () {
-                                _launchURL(
-                                    "https://www.patreon.com/spacelaunchnow");
-                              },
-                              color: const Color(0xfff96854),
-                              textColor: Colors.white,
-                              child: Row(
-                                children: <Widget>[
-                                  new Icon(
-                                    FontAwesomeIcons.patreon,
-                                    size: 14,
-                                  ),
-                                  new SizedBox(width: 10),
-                                  Text(
-                                    "Become a Patron",
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 8.0),
-                        child: new Text(
-                            "Consider supporting the development of "
-                            "Space Launch Now by becoming a patron with exclusive "
-                            "member only benefits!",
-                            textAlign: TextAlign.center,
-                            style:
-                                Theme.of(context).textTheme.caption.copyWith()),
-                      ),
-                    ],
-                  ),
-                ]));
+                productList + purchaseWidget));
   }
 
   Widget buildNotificationFilters(BuildContext context) {

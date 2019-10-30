@@ -12,4 +12,5 @@ build/
 spacelaunchnow_flutter.iml
 config.yaml
 api-keys.json
-api-keys.json
+ios/Runner.xcodeproj/project.pbxproj
+ios/Flutter/flutter_export_environment.sh

@@ -1,5 +1,6 @@
 name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
+version: 2.1.13+35
 
 dependencies:
   flutter:
@@ -26,7 +27,6 @@ dependencies:
   material_design_icons_flutter: ^3.2.3695
   flutter_vector_icons: ^0.1.0
   rate_my_app: ^0.4.0
-  money: ^0.2.1
 
   # The following adds the Cupertino Icons Afont to your application.
   # Use with the CupertinoIcons class for iOS style icons.
