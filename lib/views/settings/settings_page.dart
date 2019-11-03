@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iap/flutter_iap.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -228,17 +226,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   init() async {
     List<String> productIds = ["2018_founder"];
-
-    IAPResponse response = await FlutterIap.fetchProducts(productIds);
-    productIds = response.products
-        .map((IAPProduct product) => product.productIdentifier)
-        .toList();
-
     if (!mounted) return;
-
-    setState(() {
-      _productIds = productIds;
-    });
   }
 
   void _handleNightMode(bool value) {
@@ -622,33 +610,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (widget.updater != null) widget.updater(value);
   }
 
-  void _becomeSupporter() {
-    print("Becoming supporter!");
-    FlutterIap.buy(_productIds.first).then((IAPResponse response) {
-      String responseStatus = response.status.name;
-      print(response);
-      print("Response: $responseStatus");
-      if (response.purchases != null) {
-        List<String> purchasedIds = response.purchases
-            .map((IAPPurchase purchase) => purchase.productIdentifier)
-            .toList();
-        if (purchasedIds.length > 0) {
-          sendUpdates(widget.configuration.copyWith(showAds: false));
-          _prefs.then((SharedPreferences prefs) {
-            return (prefs.setBool('showAds', false));
-          });
-        }
-      }
-    }, onError: (error) {
-      // errors caught outside the framework
-      print("Error found $error");
-      sendUpdates(widget.configuration.copyWith(showAds: true));
-      _prefs.then((SharedPreferences prefs) {
-        return (prefs.setBool('showAds', true));
-      });
-    });
-  }
-
   void _showAds(bool value) {
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
@@ -798,12 +759,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             title: new Text('Restore Purchases'),
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
-              FlutterIap.restorePurchases().then((IAPResponse response) {
-                _getPastPurchases();
-              }, onError: (error) {
-                // errors caught outside the framework
-                print("Error found $error");
-              });
+              _getPastPurchases();
             },
           ),
         ),
@@ -874,9 +830,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                     textColor: Colors.white,
                     onPressed: () {
                       PurchaseParam purchaseParam = PurchaseParam(
-                          productDetails: productDetails,
-                          applicationUserName: null,
-                          sandboxTesting: true);
+                          productDetails: productDetails);
                       _connection.buyNonConsumable(
                           purchaseParam: purchaseParam);
                     },
@@ -887,13 +841,25 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (_purchases.isNotEmpty) {
       print("Purchases found!");
       purchaseWidget.add(new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Divider(),
-          Container(
-              color: Colors.green,
-              child: new Icon(Icons.check)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: new BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                  border: new Border.all(
+                    color: Colors.white,
+                    width: 2.5,
+                  ),
+                ),
+                child: new Icon(Icons.check, color: Colors.white)
+            ),
           ),
-          new Text("Previous purchase confirmed - ads disabled!")
+          new Text("Purchase confirmed - ads disabled!")
         ],
       ));
       _showAds(false);
