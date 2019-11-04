@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -31,6 +35,9 @@ RateMyApp _rateMyApp = RateMyApp(
 );
 
 void main() {
+  // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
+  debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new SpaceLaunchNow());
@@ -69,8 +76,6 @@ class PagesState extends State<Pages> {
   TabController controller;
 
   List<String> _productIds = ["2018_founder"];
-
-  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
   StreamSubscription<List<PurchaseDetails>> _subscription;
   List<String> _notFoundIds = [];
   List<ProductDetails> _products = [];
@@ -466,19 +471,23 @@ class PagesState extends State<Pages> {
           subscribeVAN: subscribeVAN));
     });
     initAds();
-    Stream purchaseUpdated =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
+    if (Platform.isIOS || Platform.isWindows) {
+
+      Stream purchaseUpdated =
+          InAppPurchaseConnection.instance.purchaseUpdatedStream;
+      _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+        _listenToPurchaseUpdated(purchaseDetailsList);
+      }, onDone: () {
+        _subscription.cancel();
+      }, onError: (error) {
+        // handle error here.
+      });
+    }
     initStoreInfo();
   }
 
   Future<void> initStoreInfo() async {
+    final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
     final bool isAvailable = await _connection.isAvailable();
     if (!isAvailable) {
       setState(() {
@@ -781,6 +790,7 @@ class PagesState extends State<Pages> {
 
   // Gets past purchases
   Future<void> _getPastPurchases() async {
+    final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
     QueryPurchaseDetailsResponse response =
         await _connection.queryPastPurchases();
 
@@ -793,16 +803,18 @@ class PagesState extends State<Pages> {
   }
 
   void checkAd() async {
-    await _getPastPurchases();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_purchases.length > 0) {
-      prefs.setBool("showAds", false);
-    }
-    showAds = prefs.getBool("showAds") ?? true;
-    if (showAds && !_loading) {
-      Ads.showBannerAd();
-    } else if (!showAds) {
-      Ads.hideBannerAd();
+    if (Platform.isIOS || Platform.isWindows) {
+      await _getPastPurchases();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (_purchases.length > 0) {
+        prefs.setBool("showAds", false);
+      }
+      showAds = prefs.getBool("showAds") ?? true;
+      if (showAds && !_loading) {
+        Ads.showBannerAd();
+      } else if (!showAds) {
+        Ads.hideBannerAd();
+      }
     }
   }
 
