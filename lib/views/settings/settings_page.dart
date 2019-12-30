@@ -33,7 +33,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productIds = ["2018_founder", "2018_gse", "2018_supporter", "2018_flight_controller"];
+  List<String> _productIds = ["2020_super_fan", "2020_gse", "2020_flight_controller", "2020_launch_director", "2020_elon"];
 
   final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
   StreamSubscription<List<PurchaseDetails>> _subscription;
