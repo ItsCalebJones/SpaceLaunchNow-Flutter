@@ -72,14 +72,8 @@ class PagesState extends State<Pages> {
 
   final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
   StreamSubscription<List<PurchaseDetails>> _subscription;
-  List<String> _notFoundIds = [];
-  List<ProductDetails> _products = [];
   List<PurchaseDetails> _purchases = [];
-  List<String> _consumables = [];
-  bool _isAvailable = false;
-  bool _purchasePending = false;
   bool _loading = true;
-  String _queryProductError = null;
 
   GlobalKey stickyKey = new GlobalKey();
 
@@ -482,12 +476,7 @@ class PagesState extends State<Pages> {
     final bool isAvailable = await _connection.isAvailable();
     if (!isAvailable) {
       setState(() {
-        _isAvailable = isAvailable;
-        _products = [];
         _purchases = [];
-        _notFoundIds = [];
-        _consumables = [];
-        _purchasePending = false;
         _loading = false;
       });
       return;
@@ -497,13 +486,7 @@ class PagesState extends State<Pages> {
         await _connection.queryProductDetails(_productIds.toSet());
     if (productDetailResponse.error != null) {
       setState(() {
-        _queryProductError = productDetailResponse.error.message;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
         _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
         _loading = false;
       });
       return;
@@ -511,13 +494,7 @@ class PagesState extends State<Pages> {
 
     if (productDetailResponse.productDetails.isEmpty) {
       setState(() {
-        _queryProductError = null;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
         _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
         _loading = false;
       });
       return;
@@ -534,14 +511,8 @@ class PagesState extends State<Pages> {
         verifiedPurchases.add(purchase);
       }
     }
-    List<String> consumables = await ProductStore.load();
     setState(() {
-      _isAvailable = isAvailable;
-      _products = productDetailResponse.productDetails;
       _purchases = verifiedPurchases;
-      _notFoundIds = productDetailResponse.notFoundIDs;
-      _consumables = consumables;
-      _purchasePending = false;
       _loading = false;
     });
   }
@@ -579,19 +550,16 @@ class PagesState extends State<Pages> {
     // IMPORTANT!! Always verify a purchase purchase details before delivering the product.
     setState(() {
       _purchases.add(purchaseDetails);
-      _purchasePending = false;
     });
   }
 
   void handleError(IAPError error) {
     setState(() {
-      _purchasePending = false;
     });
   }
 
   void showPendingUI() {
     setState(() {
-      _purchasePending = true;
     });
   }
 
