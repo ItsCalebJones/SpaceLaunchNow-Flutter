@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,6 +77,7 @@ class _HomeListPageState extends State<HomeListPage> {
     if (launches != null) {
       _launches = launches;
     } else {
+      print("Loading!");
       lockedLoadNext();
     }
   }
@@ -87,9 +89,6 @@ class _HomeListPageState extends State<HomeListPage> {
 
   @override
   void didUpdateWidget(HomeListPage oldWidget) {
-    setState(() {
-      _handleRefresh();
-    });
     super.didUpdateWidget(oldWidget);
   }
 
@@ -312,7 +311,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openBrowser(launch.vidURL);
+              _openVIDUrl(launch.vidURL);
             }, //
           )));
     }
@@ -344,11 +343,17 @@ class _HomeListPageState extends State<HomeListPage> {
         children: eventButtons);
   }
 
-  _openBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  _openVIDUrl(String url) async {
+    if (url.contains("youtube.com") &&
+        Platform.isIOS &&
+        await canLaunch('youtube://$url')) {
+      await launch('youtube://$url', forceSafariVC: false);
     } else {
-      throw 'Could not launch $url';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
     }
   }
 
@@ -359,30 +364,30 @@ class _HomeListPageState extends State<HomeListPage> {
 
     Widget view = new Scaffold(
         body: new CustomScrollView(slivers: <Widget>[
-          new SliverAppBar(
-            elevation: 0.0,
-            expandedHeight: 50,
-            centerTitle: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  setState(() {
-                    _handleRefresh();
-                  });
-                },
-              )
-            ],
-            title: new Text(
-              'Home',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
-            ),
-          ),
-          _buildBody()
-        ]));
+      new SliverAppBar(
+        elevation: 0.0,
+        expandedHeight: 50,
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                _handleRefresh();
+              });
+            },
+          )
+        ],
+        title: new Text(
+          'Home',
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
+        ),
+      ),
+      _buildBody()
+    ]));
     return view;
   }
 
@@ -420,7 +425,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Future<Null> _handleRefresh() async {
-    setState(() { });
+    setState(() {});
     _launches.clear();
     totalCount = 0;
     limit = 5;
@@ -594,16 +599,17 @@ class _HomeListPageState extends State<HomeListPage> {
     } else if (launch.launchServiceProvider.nationURL != null &&
         launch.launchServiceProvider.nationURL.length > 0) {
       return launch.launchServiceProvider.nationURL;
-    } else if (launch.pad != null && launch.pad.mapImage != null &&
+    } else if (launch.pad != null &&
+        launch.pad.mapImage != null &&
         launch.pad.mapImage.length > 0) {
-    return launch.pad.mapImage;
+      return launch.pad.mapImage;
     } else {
       return "";
     }
   }
 
   Widget _getMission(Launch launch) {
-    if (launch.mission != null){
+    if (launch.mission != null) {
       return Padding(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
@@ -619,9 +625,8 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _getMissionDescription(Launch launch) {
-    if (launch.mission != null){
+    if (launch.mission != null) {
       return Container(
-
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
         child: new Text(launch.mission.description,

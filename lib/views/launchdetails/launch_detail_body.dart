@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -183,6 +185,20 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     }
   }
 
+  _openVidURL(String url) async {
+    if (url.contains("youtube.com") &&
+        Platform.isIOS &&
+        await canLaunch('youtube://$url')) {
+      await launch('youtube://$url', forceSafariVC: false);
+    } else {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+  }
+
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
@@ -214,7 +230,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                _launchURL(mLaunch.vidURL);
+                _openVidURL(mLaunch.vidURL);
               },
               child: new Text('Watch'),
             ),
