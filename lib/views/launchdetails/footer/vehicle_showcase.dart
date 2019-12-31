@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
@@ -682,6 +681,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         child: new Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: new CupertinoButton(
+            color: Theme.of(context).accentColor,
               child: Text("Previous Flight"),
               onPressed: () {
                 _navigateToLaunchDetails(launchId: booster.previousFlightUUID);

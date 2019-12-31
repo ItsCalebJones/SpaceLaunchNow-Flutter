@@ -280,26 +280,27 @@ class _HomeListPageState extends State<HomeListPage> {
 
     if (launch != null) {
       eventButtons.add(
-        new CupertinoButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: new Icon(
-                  Icons.explore,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 4.0),
+          child: new CupertinoButton(
+            color: Theme.of(context).accentColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                new Icon(
+                    Icons.explore,
+                  ),
+                new Text(
+                  'Explore',
+                  style: TextStyle(),
                 ),
-              ),
-              new Text(
-                'Explore',
-                style: TextStyle(),
-              ),
-            ],
+              ],
+            ),
+            onPressed: () {
+              _navigateToLaunchDetails(launch: launch, launchId: launch.id);
+            }, //
           ),
-          onPressed: () {
-            _navigateToLaunchDetails(launch: launch, launchId: launch.id);
-          }, //
         ),
       );
     }
@@ -311,7 +312,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openVIDUrl(launch.vidURL);
+              _openUrl(launch.vidURL);
             }, //
           )));
     }
@@ -343,11 +344,13 @@ class _HomeListPageState extends State<HomeListPage> {
         children: eventButtons);
   }
 
-  _openVIDUrl(String url) async {
-    if (url.contains("youtube.com") &&
-        Platform.isIOS &&
-        await canLaunch('youtube://$url')) {
-      await launch('youtube://$url', forceSafariVC: false);
+  _openUrl(String url) async {
+    Uri _url = Uri.tryParse(url);
+    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
+      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
+      if (await canLaunch('youtube://$_finalUrl')) {
+        await launch('youtube://$_finalUrl', forceSafariVC: false);
+      }
     } else {
       if (await canLaunch(url)) {
         await launch(url);

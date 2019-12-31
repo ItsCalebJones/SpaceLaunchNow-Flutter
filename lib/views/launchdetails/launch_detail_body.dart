@@ -177,19 +177,15 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     }
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
-  _openVidURL(String url) async {
-    if (url.contains("youtube.com") &&
-        Platform.isIOS &&
-        await canLaunch('youtube://$url')) {
-      await launch('youtube://$url', forceSafariVC: false);
+
+  _openUrl(String url) async {
+    Uri _url = Uri.tryParse(url);
+    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
+      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
+      if (await canLaunch('youtube://$_finalUrl')) {
+        await launch('youtube://$_finalUrl', forceSafariVC: false);
+      }
     } else {
       if (await canLaunch(url)) {
         await launch(url);
@@ -230,7 +226,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                _openVidURL(mLaunch.vidURL);
+                _openUrl(mLaunch.vidURL);
               },
               child: new Text('Watch'),
             ),
@@ -247,7 +243,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                _launchURL(mLaunch.slug);
+                share(mLaunch.slug);
               },
               child: new Text(
                 'Share',
@@ -357,24 +353,45 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
         ),
       );
-      for (News news in widget.news) {
-        widgets.add(Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Container(
-              child: new ListTile(
-                onTap: () => _launchURL(news.url),
-                leading: new CircleAvatar(
-                  backgroundImage:
-                      new CachedNetworkImageProvider(news.featureImage),
-                ),
-                title: new Text(news.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subhead
-                        .copyWith(fontSize: 15.0)),
-                subtitle: new Text(news.newsSiteLong),)
-
-            )));
+      List<News> _news = [];
+      if (widget.news.length >= 6) {
+        _news = widget.news.sublist(0, 5);
+      } else {
+        _news = widget.news;
+      }
+      for (News news in _news) {
+        widgets.add(
+            Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                    child: new ListTile(
+                      onTap: () => _openUrl(news.url + "#related-news"),
+                      leading: new CircleAvatar(
+                        backgroundImage:
+                        new CachedNetworkImageProvider(news.featureImage),
+                      ),
+                      title: new Text(news.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subhead
+                              .copyWith(fontSize: 15.0)),
+                      subtitle: new Text(news.newsSiteLong),
+                    )
+                )
+            )
+        );
+      }
+      if (widget.news.length >= 6) {
+        widgets.add(
+          Center(
+            child: new CupertinoButton(
+              color: Theme.of(context).accentColor,
+                child: Text("Read More"),
+                onPressed: () {
+                  _openUrl(mLaunch.slug);
+                }),
+          ),
+        );
       }
       return Padding(
         padding: const EdgeInsets.all(8.0),

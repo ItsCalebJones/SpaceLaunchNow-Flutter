@@ -819,12 +819,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       }
     }
 
-
-    _products.sort((a, b) {
-      return a.price.compareTo(b.price);
-    });
-
-    productList.addAll(_products.map(
+    productList.addAll(_storefrontProducts.map(
       (ProductDetails productDetails) {
         PurchaseDetails previousPurchase = purchases[productDetails.id];
         return ListTile(

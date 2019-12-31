@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -310,10 +311,18 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   _openBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    Uri _url = Uri.tryParse(url);
+    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
+      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
+      if (await canLaunch('youtube://$_finalUrl')) {
+        await launch('youtube://$_finalUrl', forceSafariVC: false);
+      }
     } else {
-      throw 'Could not launch $url';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
     }
   }
 }
