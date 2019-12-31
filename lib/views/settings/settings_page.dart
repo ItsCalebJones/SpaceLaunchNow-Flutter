@@ -526,7 +526,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
-  //TODO Careful here
   void _handlePLES(bool value) {
     if (value) {
       _firebaseMessaging.subscribeToTopic("ples");
@@ -809,8 +808,21 @@ class NotificationFilterPageState extends State<SettingsPage> {
       return MapEntry<String, PurchaseDetails>(purchase.productID, purchase);
     }));
 
-    _products.removeWhere((item) => item.id == "2018_founder");
-    _products.sort((a, b) => a.price.compareTo(b.price));
+    List<ProductDetails> _storefrontProducts = [];
+
+    for (String productId in _productIds){
+      for (ProductDetails productDetail in _products){
+        if (productDetail.id == productId){
+          _storefrontProducts.add(productDetail);
+          break;
+        }
+      }
+    }
+
+
+    _products.sort((a, b) {
+      return a.price.compareTo(b.price);
+    });
 
     productList.addAll(_products.map(
       (ProductDetails productDetails) {
