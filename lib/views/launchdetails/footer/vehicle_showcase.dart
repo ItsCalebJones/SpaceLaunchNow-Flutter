@@ -578,8 +578,28 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         "Landing",
         style: theme.textTheme.title.copyWith(fontWeight: FontWeight.bold),
       ));
-      if (booster.landing.success != null && booster.landing.success) {
-        widgets.add(new Row(
+      if (booster.landing.success == null) {
+        widgets.add(
+          new Row(
+            children: <Widget>[
+              new Icon(
+                Icons.thumbs_up_down,
+              ),
+              new Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: new Text(
+                  "...",
+                  maxLines: 1,
+                  style: theme.textTheme.subtitle,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ],
+          ),
+        );
+      } else if (booster.landing.success) {
+        widgets.add(
+          new Row(
           children: <Widget>[
             new Icon(
               Icons.check_circle,
@@ -595,7 +615,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             ),
           ],
         ),);
-      } else {
+      } else if (!booster.landing.success) {
         widgets.add(
           new Row(
             children: <Widget>[
