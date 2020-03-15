@@ -148,7 +148,7 @@ class MissionShowcase extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
             child: new InkWell(
               onTap: () {
-                launch("https://gdbarrett.com");
+                launch("https://www.patreon.com/geoffbarrett/");
               },
               child: new Center(
                 child: new Image.network(_launch.infographic),
