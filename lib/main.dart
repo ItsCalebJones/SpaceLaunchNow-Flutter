@@ -205,8 +205,10 @@ class PagesState extends State<Pages> {
 
       if (allowOneHourNotifications) {
         _firebaseMessaging.subscribeToTopic("oneHour");
+        _firebaseMessaging.subscribeToTopic("webcastLive");
       } else {
         _firebaseMessaging.unsubscribeFromTopic("oneHour");
+        _firebaseMessaging.unsubscribeFromTopic("webcastLive");
       }
 
       if (allowTwentyFourHourNotifications) {
