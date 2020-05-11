@@ -8,8 +8,7 @@ class Landing {
   final LandingLocation location;
   final LandingType type;
 
-  Landing(
-      {this.description, this.attempt, this.success, this.location, this.type});
+  Landing({this.description, this.attempt, this.success, this.location, this.type});
 
   factory Landing.fromJson(Map<String, dynamic> json) {
     return Landing(

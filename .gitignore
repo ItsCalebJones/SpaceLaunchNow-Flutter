@@ -14,3 +14,5 @@ config.yaml
 api-keys.json
 ios/Runner/GoogleService-Info.plist
 ios/Flutter/flutter_export_environment.sh
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h

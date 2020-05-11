@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
+import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,10 +40,9 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildAvatar(ThemeData theme) {
-
     var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
     if (_launch.rocket.configuration.image != null &&
-        _launch.rocket.configuration.image.length > 0){
+        _launch.rocket.configuration.image.length > 0) {
       url = _launch.rocket.configuration.image;
     } else if (_launch.rocket.configuration.manufacturer.imageURL != null &&
         _launch.rocket.configuration.manufacturer.imageURL.length > 0) {
@@ -60,15 +61,12 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 padding: const EdgeInsets.all(2.0),
                 // borde width
                 decoration: new BoxDecoration(
-                  color: Theme
-                      .of(context)
-                      .highlightColor, // border color
+                  color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage:
-                  new NetworkImage(url),
+                  backgroundImage: new NetworkImage(url),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -141,35 +139,34 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     }
 
     var minStage = "";
-    if (_launch.rocket.configuration.minStage != null){
+    if (_launch.rocket.configuration.minStage != null) {
       minStage = _launch.rocket.configuration.minStage.toString();
     }
 
     var maxStage = "";
-    if (_launch.rocket.configuration.maxStage != null){
+    if (_launch.rocket.configuration.maxStage != null) {
       maxStage = _launch.rocket.configuration.maxStage.toString();
     }
 
     var length = "";
-    if (_launch.rocket.configuration.length != null){
+    if (_launch.rocket.configuration.length != null) {
       length = _launch.rocket.configuration.length.toString() + "m";
     }
 
     var launchMass = "";
-    if (_launch.rocket.configuration.launchMass != null){
+    if (_launch.rocket.configuration.launchMass != null) {
       launchMass = _launch.rocket.configuration.launchMass.toString() + " T";
     }
 
     var diameter = "";
-    if (_launch.rocket.configuration.diameter != null){
+    if (_launch.rocket.configuration.diameter != null) {
       diameter = _launch.rocket.configuration.diameter.toString() + "m";
     }
 
     var thrust = "";
-    if (_launch.rocket.configuration.thrust != null){
+    if (_launch.rocket.configuration.thrust != null) {
       thrust = _launch.rocket.configuration.thrust.toString() + " kn";
     }
-
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -180,7 +177,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           new Text(
             "$vehicle Stats",
             style:
-            theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+                theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,7 +199,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.successfulLaunches
-                              .toString() ??
+                                  .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -223,7 +220,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.failedLaunches
-                              .toString() ??
+                                  .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -242,7 +239,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text( minStage,
+                        child: new Text(
+                          minStage,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -260,7 +258,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(length,
+                        child: new Text(
+                          length,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -324,8 +323,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration
-                              .consecutiveSuccessfulLaunches
-                              .toString() ??
+                                  .consecutiveSuccessfulLaunches
+                                  .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -346,7 +345,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
                           _launch.rocket.configuration.pendingLaunches
-                              .toString() ??
+                                  .toString() ??
                               "",
                           maxLines: 1,
                           style: theme.textTheme.subhead,
@@ -384,7 +383,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(diameter,
+                        child: new Text(
+                          diameter,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -402,7 +402,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(thrust,
+                        child: new Text(
+                          thrust,
                           maxLines: 1,
                           style: theme.textTheme.subhead,
                           overflow: TextOverflow.fade,
@@ -443,7 +444,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
     if (_launch.rocket.configuration.infoUrl != null) {
       materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.desktop),
+        icon: Icon(FontAwesomeIcons.desktop),
         onPressed: () {
           _launchURL(_launch.rocket.configuration.infoUrl);
         },
@@ -453,7 +454,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
     if (_launch.rocket.configuration.wikiUrl != null) {
       materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.wikipediaW),
+        icon: Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
           _launchURL(_launch.rocket.configuration.wikiUrl);
         },
@@ -473,7 +474,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   Widget _buildDescription(ThemeData theme) {
     return new Padding(
       padding:
-      const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+          const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
       child: new Text(
         _launch.rocket.configuration.description ?? "",
         style: theme.textTheme.body1,
@@ -509,8 +510,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           child: new Text(
             "Launch Vehicle",
             textAlign: TextAlign.left,
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
@@ -520,6 +520,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         _buildDescription(theme),
         _buildStats(theme),
         _buildLauncher(theme),
+        _buildSpacecraft(theme),
       ],
     );
   }
@@ -528,13 +529,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     List<Widget> widgets = new List<Widget>();
     if (_launch.rocket.firstStages.length > 0) {
       var booster;
-      if (_launch.rocket.firstStages.length > 1){
+      if (_launch.rocket.firstStages.length > 1) {
         booster = "Boosters";
       } else {
         booster = "Booster";
       }
       widgets.add(Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: Text(
           booster,
           style: theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
@@ -542,20 +543,20 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       ));
       for (var booster in _launch.rocket.firstStages) {
         widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildBoosterAvatar(theme, booster),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: new Text(booster.launcher.details),
+              ),
               new Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _buildLanding(theme, booster)),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: new Text(booster.launcher.details),
-              ),
               _checkPrevious(booster),
             ],
           ),
@@ -586,9 +587,9 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 Icons.thumbs_up_down,
               ),
               new Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 16.0),
                 child: new Text(
-                  "...",
+                  "Pending",
                   maxLines: 1,
                   style: theme.textTheme.subtitle,
                   overflow: TextOverflow.fade,
@@ -600,21 +601,22 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       } else if (booster.landing.success) {
         widgets.add(
           new Row(
-          children: <Widget>[
-            new Icon(
-              Icons.check_circle,
-            ),
-            new Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                "Successful Landing",
-                maxLines: 1,
-                style: theme.textTheme.subtitle,
-                overflow: TextOverflow.fade,
+            children: <Widget>[
+              new Icon(
+                Icons.check_circle,
               ),
-            ),
-          ],
-        ),);
+              new Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: new Text(
+                  "Successful Landing",
+                  maxLines: 1,
+                  style: theme.textTheme.subtitle,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ],
+          ),
+        );
       } else if (!booster.landing.success) {
         widgets.add(
           new Row(
@@ -693,6 +695,85 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     return widgets;
   }
 
+  _buildSpacecraft(ThemeData theme) {
+    List<Widget> widgets = new List<Widget>();
+    if (_launch.rocket.spacecraftStage != null) {
+      widgets.add(Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildSpacecraftAvatar(theme, _launch.rocket.spacecraftStage),
+            new Row(
+              children: <Widget>[
+                new Text(
+                  "Destination:",
+                  style: theme.textTheme.subtitle
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    _launch.rocket.spacecraftStage.destination,
+                    maxLines: 1,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ],
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: new Text(
+                  _launch.rocket.spacecraftStage.spacecraft.description),
+            ),
+            new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildCrew(theme, _launch.rocket.spacecraftStage),
+            )
+          ],
+        ),
+      ));
+    }
+    return new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
+  }
+
+  _buildCrew(ThemeData theme, SpacecraftStage spacecraftStage) {
+    List<Widget> widgets = new List<Widget>();
+    if (spacecraftStage.launchCrew != null &&
+        spacecraftStage.launchCrew.length > 0) {
+      for (var crew in spacecraftStage.launchCrew) {
+        widgets.add(Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildCrewAvatar(theme, crew),
+              new Padding(
+                padding:
+                const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+                child: new Text(
+                  crew.astronaut.bio,
+                  style: theme.textTheme.body1,
+                  textAlign: TextAlign.start,
+                ),
+              )
+            ],
+          ),
+        ));
+      }
+    }
+    return widgets;
+  }
+
   _checkPrevious(FirstStage booster) {
     if (booster.previousFlightUUID != null &&
         _launch.id != booster.previousFlightUUID) {
@@ -701,7 +782,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         child: new Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: new CupertinoButton(
-            color: Theme.of(context).accentColor,
+              color: Theme.of(context).accentColor,
               child: Text("Previous Flight"),
               onPressed: () {
                 _navigateToLaunchDetails(launchId: booster.previousFlightUUID);
@@ -734,15 +815,12 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 padding: const EdgeInsets.all(2.0),
                 // borde width
                 decoration: new BoxDecoration(
-                  color: Theme
-                      .of(context)
-                      .highlightColor, // border color
+                  color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage:
-                  new NetworkImage(booster.launcher.image),
+                  backgroundImage: new NetworkImage(booster.launcher.image),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -817,7 +895,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 new Row(
                   children: <Widget>[
                     new Text(
-                      "Turnaround Time:",
+                      "Turnaround:",
                       style: theme.textTheme.subtitle
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
@@ -925,5 +1003,214 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               ],
             ),
           ]);
+  }
+
+  _buildCrewAvatar(ThemeData theme, Crew crew) {
+    var title = crew.astronaut.name;
+    var subtitle = crew.role;
+    var nationality = crew.astronaut.nationality;
+
+    if (crew.astronaut.profileImage != null) {
+      return Row(
+        children: <Widget>[
+          new Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+              child: new Container(
+                width: 125.0,
+                height: 125.0,
+                padding: const EdgeInsets.all(2.0),
+                // borde width
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).highlightColor, // border color
+                  shape: BoxShape.circle,
+                ),
+                child: new CircleAvatar(
+                  foregroundColor: Colors.white,
+                  backgroundImage:
+                      new NetworkImage(crew.astronaut.profileImage),
+                  radius: 50.0,
+                  backgroundColor: Colors.white,
+                ),
+              )),
+          Flexible(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: theme.textTheme.headline
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    nationality,
+                    maxLines: 2,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    subtitle,
+                    maxLines: 2,
+                    style: theme.textTheme.caption,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+                _buildCrewActionButtons(theme, crew)
+              ],
+            ),
+          )
+        ],
+      );
+    } else
+      return new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: theme.textTheme.headline
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                nationality,
+                maxLines: 2,
+                style: theme.textTheme.caption,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+            new Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: new Text(
+                subtitle,
+                maxLines: 2,
+                style: theme.textTheme.caption,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ]);
+  }
+
+  _buildSpacecraftAvatar(ThemeData theme, SpacecraftStage spacecraftStage) {
+    var title = spacecraftStage.spacecraft.name;
+
+    var status = spacecraftStage.spacecraft.status;
+
+    if (spacecraftStage.spacecraft.image != null) {
+      return Row(
+        children: <Widget>[
+          new Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+              child: new Container(
+                width: 125.0,
+                height: 125.0,
+                padding: const EdgeInsets.all(2.0),
+                // borde width
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).highlightColor, // border color
+                  shape: BoxShape.circle,
+                ),
+                child: new CircleAvatar(
+                  foregroundColor: Colors.white,
+                  backgroundImage:
+                      new NetworkImage(spacecraftStage.spacecraft.image),
+                  radius: 50.0,
+                  backgroundColor: Colors.white,
+                ),
+              )),
+          Flexible(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: theme.textTheme.headline
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(
+                      "Status:",
+                      style: theme.textTheme.subtitle
+                          .copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: new Text(
+                        status,
+                        maxLines: 1,
+                        style: theme.textTheme.caption,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      );
+    } else
+      return new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: theme.textTheme.headline
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ]);
+  }
+
+  Widget _buildCrewActionButtons(ThemeData theme, Crew crew) {
+    List<Widget> materialButtons = [];
+
+    if (crew.astronaut.wikiUrl != null) {
+      materialButtons.add(new IconButton(
+        icon: Icon(FontAwesomeIcons.wikipediaW),
+        onPressed: () {
+          _launchURL(crew.astronaut.wikiUrl);
+        },
+        tooltip: "Wiki",
+      ));
+    }
+
+    if (crew.astronaut.instagramUrl != null) {
+      materialButtons.add(new IconButton(
+        icon: Icon(FontAwesomeIcons.instagram),
+        onPressed: () {
+          _launchURL(crew.astronaut.wikiUrl);
+        },
+        tooltip: "Wiki",
+      ));
+    }
+
+    if (crew.astronaut.twitterUrl != null) {
+      materialButtons.add(new IconButton(
+        icon: Icon(FontAwesomeIcons.twitter),
+        onPressed: () {
+          _launchURL(crew.astronaut.twitterUrl);
+        },
+        tooltip: "Twitter",
+      ));
+    }
+    return new Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: materialButtons,
+      ),
+    );
   }
 }
