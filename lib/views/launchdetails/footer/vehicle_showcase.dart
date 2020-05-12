@@ -530,12 +530,12 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     if (_launch.rocket.firstStages.length > 0) {
       var booster;
       if (_launch.rocket.firstStages.length > 1) {
-        booster = "Boosters";
+        booster = "First Stage Boosters";
       } else {
-        booster = "Booster";
+        booster = "First Stage Booster";
       }
       widgets.add(Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(
           booster,
           style: theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
@@ -543,7 +543,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       ));
       for (var booster in _launch.rocket.firstStages) {
         widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          padding: const EdgeInsets.only(left: 8, right: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -698,6 +698,19 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   _buildSpacecraft(ThemeData theme) {
     List<Widget> widgets = new List<Widget>();
     if (_launch.rocket.spacecraftStage != null) {
+      widgets.add(
+        new Padding(
+          padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
+          child: new Text(
+            "Spacecraft",
+            textAlign: TextAlign.left,
+            style: Theme.of(context)
+                .textTheme
+                .headline
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+          ),
+        ),
+      );
       widgets.add(Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
         child: Column(
@@ -751,7 +764,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         spacecraftStage.launchCrew.length > 0) {
       for (var crew in spacecraftStage.launchCrew) {
         widgets.add(Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          padding: const EdgeInsets.only(left: 0.0, right: 0.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -759,7 +772,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               _buildCrewAvatar(theme, crew),
               new Padding(
                 padding:
-                const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+                const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 0.0, right: 0.0),
                 child: new Text(
                   crew.astronaut.bio,
                   style: theme.textTheme.body1,
@@ -808,7 +821,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         children: <Widget>[
           new Padding(
               padding: const EdgeInsets.only(
-                  left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+                  left: 0.0, right: 4.0, top: 8.0, bottom: 4.0),
               child: new Container(
                 width: 125.0,
                 height: 125.0,
