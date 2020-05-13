@@ -1203,7 +1203,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.instagram),
         onPressed: () {
-          _launchURL(crew.astronaut.wikiUrl);
+          _launchURL(crew.astronaut.instagramUrl);
         },
         tooltip: "Wiki",
       ));
