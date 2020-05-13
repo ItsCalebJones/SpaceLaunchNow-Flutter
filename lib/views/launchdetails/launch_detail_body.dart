@@ -154,7 +154,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               children: <Widget>[
                 new Icon(
                   Icons.flight_land,
-                  color: Colors.white,
                 ),
                 new Expanded(
                   child: new Padding(
