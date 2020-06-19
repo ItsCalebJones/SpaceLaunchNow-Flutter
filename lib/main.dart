@@ -751,15 +751,17 @@ class PagesState extends State<Pages> {
 
   // Gets past purchases
   Future<void> _getPastPurchases() async {
-    QueryPurchaseDetailsResponse response =
-        await _connection.queryPastPurchases();
+    if (await _connection.isAvailable()){
+      QueryPurchaseDetailsResponse response =
+      await _connection.queryPastPurchases();
 
-    for (PurchaseDetails purchase in response.pastPurchases) {
-      if (Platform.isIOS) {
-        InAppPurchaseConnection.instance.completePurchase(purchase);
+      for (PurchaseDetails purchase in response.pastPurchases) {
+        if (Platform.isIOS) {
+          InAppPurchaseConnection.instance.completePurchase(purchase);
+        }
       }
+      _purchases = response.pastPurchases;
     }
-    _purchases = response.pastPurchases;
   }
 
   void checkAd() async {
