@@ -797,7 +797,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           title: Text('[${_notFoundIds.join(", ")}] not found',
               style: TextStyle(color: ThemeData.light().errorColor)),
           subtitle: Text(
-              'This app needs special configuration to run. Please see example/README.md for instructions.')));
+              'Error loading in-app-purchases.')));
     }
 
     Map<String, PurchaseDetails> purchases =
