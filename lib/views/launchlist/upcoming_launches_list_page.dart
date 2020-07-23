@@ -11,7 +11,6 @@ import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:material_search/material_search.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class UpcomingLaunchListPage extends StatefulWidget {

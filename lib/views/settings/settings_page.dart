@@ -192,7 +192,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
             deliverProduct(purchaseDetails);
           } else {
             _handleInvalidPurchase(purchaseDetails);
+            return;
           }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await InAppPurchaseConnection.instance
+              .completePurchase(purchaseDetails);
         }
       }
     });
@@ -794,10 +799,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     if (!_notFoundIds.isEmpty) {
       productList.add(ListTile(
-          title: Text('[${_notFoundIds.join(", ")}] not found',
-              style: TextStyle(color: ThemeData.light().errorColor)),
-          subtitle: Text(
-              'Error loading in-app-purchases.')));
+          title: Text('Error loading in-app-purchases.',
+              style: TextStyle(fontWeight: FontWeight.bold)
+          )
+      ));
     }
 
     Map<String, PurchaseDetails> purchases =
@@ -838,8 +843,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                     onPressed: () {
                       PurchaseParam purchaseParam = PurchaseParam(
                           productDetails: productDetails);
-                      _connection.buyNonConsumable(
-                          purchaseParam: purchaseParam);
+                      _connection.buyNonConsumable(purchaseParam: purchaseParam);
                     },
                   ));
       },

@@ -33,6 +33,7 @@ RateMyApp _rateMyApp = RateMyApp(
 void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  InAppPurchaseConnection.enablePendingPurchases();
   runApp(new SpaceLaunchNow());
 }
 

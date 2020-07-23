@@ -17,3 +17,5 @@ ios/Flutter/flutter_export_environment.sh
 windows/flutter/generated_plugin_registrant.cc
 windows/flutter/generated_plugin_registrant.h
 .gradle/
+.flutter-plugins-dependencies
+ios/Flutter/flutter_export_environment.sh
