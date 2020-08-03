@@ -202,6 +202,13 @@ packages:
       url: "git://github.com/sh4869/oauth.dart.git"
     source: git
     version: "0.4.0"
+  package_info:
+    dependency: "direct main"
+    description:
+      name: package_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   path:
     dependency: transitive
     description:

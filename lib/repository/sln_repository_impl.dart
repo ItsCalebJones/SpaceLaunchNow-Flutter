@@ -9,10 +9,14 @@ import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 
+import 'http_client.dart';
+
 class SLNRepositoryImpl implements SLNRepository {
 
   static const BASE_URL = "https://spacelaunchnow.me/api/3.4.0";
   static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v1";
+
+  final client = ClientWithUserAgent(http.Client());
 
 
   Future<List<Launch>> fetch([String lsp]){
@@ -20,7 +24,7 @@ class SLNRepositoryImpl implements SLNRepository {
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
-    return http.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -38,7 +42,7 @@ class SLNRepositoryImpl implements SLNRepository {
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
-    return http.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -63,7 +67,7 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
     }
     print(_kLaunchesUrl);
-    return http.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(_kLaunchesUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
@@ -91,7 +95,7 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
     }
     print(_kLaunchesUrl);
-    return http.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(_kLaunchesUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
@@ -122,7 +126,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kLaunchesUrl);
-    return http.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(_kLaunchesUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
@@ -147,7 +151,7 @@ class SLNRepositoryImpl implements SLNRepository {
       _kEventsUrl = _kEventsUrl + '&offset=' + offset;
     }
 
-    return http.get(_kEventsUrl).then((http.Response response) {
+    return client.get(_kEventsUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
@@ -168,7 +172,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kEventsUrl);
-    return http.get(_kEventsUrl).then((http.Response response) {
+    return client.get(_kEventsUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 
@@ -189,7 +193,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kEventsUrl);
-    return http.get(_kEventsUrl).then((http.Response response) {
+    return client.get(_kEventsUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
 

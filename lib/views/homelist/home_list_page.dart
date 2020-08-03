@@ -136,10 +136,15 @@ class _HomeListPageState extends State<HomeListPage> {
 
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
     var formatter = new DateFormat("EEEE, MMMM d, yyyy");
+    var title = "";
 
-    var title = launch.launchServiceProvider.name +
-        " | " +
-        launch.rocket.configuration.name;
+    if (launch.launchServiceProvider != null && launch.rocket.configuration.name != null) {
+      title = launch.launchServiceProvider.name +
+          " | " +
+          launch.rocket.configuration.name;
+    } else {
+      title = launch.name;
+    }
 
     var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
     if (launch.launchServiceProvider.nationURL != null &&
