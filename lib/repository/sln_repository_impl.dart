@@ -8,12 +8,13 @@ import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
 import 'http_client.dart';
 
 class SLNRepositoryImpl implements SLNRepository {
 
-  static const BASE_URL = "https://spacelaunchnow.me/api/3.4.0";
+  static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.0.0";
   static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v1";
 
   final client = ClientWithUserAgent(http.Client());
@@ -24,6 +25,7 @@ class SLNRepositoryImpl implements SLNRepository {
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
+    print(_kLaunchesUrl);
     return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
@@ -42,6 +44,7 @@ class SLNRepositoryImpl implements SLNRepository {
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
+    print(_kLaunchesUrl);
     return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
@@ -145,12 +148,13 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<Events> fetchNextEvent({ String limit, String offset}) {
-    String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=detailed&limit=' + limit;
+    String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=list&limit=' + limit;
 
     if (offset != null){
       _kEventsUrl = _kEventsUrl + '&offset=' + offset;
     }
 
+    print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
       final jsonBody = json.decode(response.body);
       final statusCode = response.statusCode;
@@ -202,6 +206,22 @@ class SLNRepositoryImpl implements SLNRepository {
       }
 
       return NewsResponse.fromJson(jsonBody);
+    });
+  }
+
+  @override
+  Future<Starship> fetchStarshipDashboard() {
+    String _kUrl = BASE_URL + '/dashboard/starship/?mode=list';
+    print(_kUrl);
+    return client.get(_kUrl).then((http.Response response) {
+      final jsonBody = json.decode(response.body);
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return Starship.fromJson(jsonBody);
     });
   }
 }

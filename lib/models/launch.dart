@@ -5,6 +5,7 @@ import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
+import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 
 import 'agency.dart';
 
@@ -23,7 +24,7 @@ class Launch {
   final Agency launchServiceProvider;
   final Pad pad;
   final Mission mission;
-  final String vidURL;
+  final List<VidURL> vidURLs;
 
   const Launch(
       {this.id,
@@ -36,7 +37,7 @@ class Launch {
       this.rocket,
       this.pad,
       this.mission,
-      this.vidURL,
+      this.vidURLs,
       this.launchServiceProvider,
       this.image,
       this.infographic,
@@ -58,10 +59,7 @@ class Launch {
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
-    String vidURL;
-    if (json['vidURLs'].length > 0) {
-      vidURL = json['vidURLs'][0];
-    }
+    print(json);
     var mission;
     if (json['mission'] != null) {
       mission = new Mission.fromJson(json['mission']);
@@ -82,7 +80,7 @@ class Launch {
       rocket: new Rocket.fromJson(json['rocket']),
       pad: new Pad.fromJson(json['pad']),
       mission: mission,
-      vidURL: vidURL,
+      vidURLs: new List<VidURL>.from(json['vidURLs'].map((vidURL) => new VidURL.fromJson(vidURL))),
     );
   }
 }

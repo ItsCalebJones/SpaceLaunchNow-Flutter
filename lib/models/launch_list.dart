@@ -53,7 +53,7 @@ class LaunchList {
   factory LaunchList.fromJson(Map<String, dynamic> json) {
     var image = json['image'];
     if (image == null) {
-      image = "https://spacelaunchnow.me/static/img/placeholder.jpg";
+      image = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     }
 
     return new LaunchList(

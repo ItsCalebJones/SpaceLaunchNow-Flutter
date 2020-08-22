@@ -217,7 +217,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
 //      ));
 //    }
 
-    if (mLaunch.vidURL != null) {
+    if (mLaunch.vidURLs != null && mLaunch.vidURLs.length > 0) {
       materialButtons.add(new Row(
         children: <Widget>[
           new Icon(Icons.live_tv),
@@ -225,7 +225,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                _openUrl(mLaunch.vidURL);
+                _openUrl(mLaunch.vidURLs.first.url);
               },
               child: new Text('Watch'),
             ),
@@ -242,7 +242,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                share(mLaunch.slug);
+                share("https://spacelaunchnow.me/launch/" + mLaunch.slug);
               },
               child: new Text(
                 'Share',
@@ -387,7 +387,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               color: Theme.of(context).accentColor,
                 child: Text("Read More"),
                 onPressed: () {
-                  _openUrl(mLaunch.slug);
+                  _openUrl("https://spacelaunchnow.me/launch/" + mLaunch.slug);
                 }),
           ),
         );

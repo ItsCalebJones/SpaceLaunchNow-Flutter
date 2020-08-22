@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
@@ -14,7 +15,9 @@ import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
+import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:rate_my_app/rate_my_app.dart';
@@ -31,6 +34,7 @@ RateMyApp _rateMyApp = RateMyApp(
 );
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   InAppPurchaseConnection.enablePendingPurchases();
@@ -83,6 +87,7 @@ class PagesState extends State<Pages> {
   FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
   int newsAndEventsIndex = 0;
+  int starshipIndex = 0;
   AppConfiguration _configuration = new AppConfiguration(
     showAds: true,
     nightMode: false,
@@ -668,6 +673,11 @@ class PagesState extends State<Pages> {
         break;
 
       case 3:
+        checkAd();
+        return new StarshipDashboardPage(_configuration, starshipIndex);
+        break;
+
+      case 4:
         if (Ads.isBannerShowing()) {
           Ads.hideBannerAd();
         }
@@ -727,10 +737,13 @@ class PagesState extends State<Pages> {
                         title: new Text("Home")),
                     new BottomNavigationBarItem(
                         title: new Text('Launches'),
-                        icon: new Icon(MaterialCommunityIcons.rocket)),
+                        icon: new Icon(MaterialCommunityIcons.clipboard)),
                     new BottomNavigationBarItem(
                         title: new Text('News'),
                         icon: new Icon(MaterialCommunityIcons.calendar)),
+                    new BottomNavigationBarItem(
+                        title: new Text('Starship'),
+                        icon: new Icon(FontAwesomeIcons.spaceShuttle)),
                     new BottomNavigationBarItem(
                         title: new Text('Settings'),
                         icon: new Icon(MaterialCommunityIcons.settings)),

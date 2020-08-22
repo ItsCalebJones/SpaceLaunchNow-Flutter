@@ -12,7 +12,7 @@ class MissionShowcase extends StatelessWidget {
   Widget _buildOrbit(TextTheme textTheme) {
     var orbit = "Unknown Orbit";
     if (_launch.mission.orbit != null) {
-      orbit = _launch.mission.orbit;
+      orbit = _launch.mission.orbit.name;
     }
     return new Row(
       children: <Widget>[

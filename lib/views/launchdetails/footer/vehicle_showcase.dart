@@ -40,7 +40,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildAvatar(ThemeData theme) {
-    var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
+    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     if (_launch.rocket.configuration.image != null &&
         _launch.rocket.configuration.image.length > 0) {
       url = _launch.rocket.configuration.image;

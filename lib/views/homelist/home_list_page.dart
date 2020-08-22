@@ -138,7 +138,8 @@ class _HomeListPageState extends State<HomeListPage> {
     var formatter = new DateFormat("EEEE, MMMM d, yyyy");
     var title = "";
 
-    if (launch.launchServiceProvider != null && launch.rocket.configuration.name != null) {
+    if (launch.launchServiceProvider != null &&
+        launch.rocket.configuration.name != null) {
       title = launch.launchServiceProvider.name +
           " | " +
           launch.rocket.configuration.name;
@@ -146,7 +147,7 @@ class _HomeListPageState extends State<HomeListPage> {
       title = launch.name;
     }
 
-    var url = "https://spacelaunchnow.me/static/img/placeholder.jpg";
+    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     if (launch.launchServiceProvider.nationURL != null &&
         launch.launchServiceProvider.nationURL.length > 0) {
       url = launch.launchServiceProvider.nationURL;
@@ -293,8 +294,8 @@ class _HomeListPageState extends State<HomeListPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 new Icon(
-                    Icons.explore,
-                  ),
+                  Icons.explore,
+                ),
                 new Text(
                   'Explore',
                   style: TextStyle(),
@@ -309,14 +310,14 @@ class _HomeListPageState extends State<HomeListPage> {
       );
     }
 
-    if (launch.vidURL != null) {
+    if (launch.vidURLs != null && launch.vidURLs.length > 0) {
       iconButtons.add(new Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
           child: new IconButton(
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openUrl(launch.vidURL);
+              _openUrl(launch.vidURLs.first.url);
             }, //
           )));
     }
@@ -328,7 +329,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
-              share(launch.slug);
+              share("https://spacelaunchnow.me/launch/" + launch.slug);
             }, //
           )));
     }

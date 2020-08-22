@@ -12,10 +12,12 @@ class Event {
   final String videoUrl;
   final String featureImage;
   final DateTime date;
+  final DateTime net;
   final Iterable<LaunchList> launches;
 
   Event({this.id, this.name, this.description, this.type, this.location,
-    this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches});
+    this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches,
+    this.net});
 
   static List<Event> allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
@@ -39,6 +41,7 @@ class Event {
         videoUrl: json['video_url'],
         featureImage: json['feature_image'],
         date: DateTime.parse(json['date']),
+        net: DateTime.parse(json['date']),
         launches: new List<LaunchList>.from(json['launches'].map((launch) => new LaunchList.fromJson(launch)))
     );
   }

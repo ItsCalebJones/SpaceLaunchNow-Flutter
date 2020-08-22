@@ -5,6 +5,7 @@ import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news_response.dart';
+import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
 abstract class SLNRepository {
   Future<List<Launch>> fetch([String lsp]);
@@ -22,6 +23,8 @@ abstract class SLNRepository {
   Future<NewsResponse> fetchNews({int page});
 
   Future<NewsResponse> fetchNewsByLaunch({String id});
+
+  Future<Starship> fetchStarshipDashboard();
 
 }
 
