@@ -38,7 +38,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   void initState() {
     super.initState();
     Starship starship =
-    PageStorage.of(context).readState(context, identifier: 'starship');
+        PageStorage.of(context).readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -110,7 +110,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     if (_starship != null && _starship.liveStream.length > 0) {
       YoutubePlayerController _controller = YoutubePlayerController(
         initialVideoId:
-        YoutubePlayer.convertUrlToId(_starship.liveStream.first.url),
+            YoutubePlayer.convertUrlToId(_starship.liveStream.first.url),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: true,
@@ -185,20 +185,15 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                       new Text(
                         _starship.liveStream.first.title,
                         textAlign: TextAlign.left,
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
                             .headline5
-                            .copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
                       new Text(
                         _starship.liveStream.first.description,
                         textAlign: TextAlign.left,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .caption,
+                        style: Theme.of(context).textTheme.caption,
                       )
                     ],
                   ),
@@ -234,29 +229,30 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(
-            top: 4, left: 24, right: 24, bottom: 4.0),
+        padding:
+            const EdgeInsets.only(top: 4, left: 24, right: 24, bottom: 4.0),
         child: Divider(),
       ),
       new Container(
         child: Padding(
           padding:
-          const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
+              const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
           child: new Text(
             "Up Next",
             textAlign: TextAlign.left,
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
-                .headline3
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                .subtitle1
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 48),
           ),
         ),
       ),
       _addUpNext(dataUpcoming),
       _addRoadClosure(),
       _addNotice(),
-      new SizedBox(height: 50,)
+      new SizedBox(
+        height: 50,
+      )
     ];
     return rows;
   }
@@ -289,14 +285,11 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       }
     } else {
       return Padding(
-        padding: const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
+        padding:
+            const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
         child: new Text("No upcoming events.",
             style:
-            Theme
-                .of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15.0)),
+                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
       );
     }
   }
@@ -313,17 +306,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
         title: new Text(launch.name,
             style:
-            Theme
-                .of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15.0)),
+                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
         subtitle: new Text(launch.location),
         trailing: new Text(formatter.format(launch.net),
-            style: Theme
-                .of(context)
-                .textTheme
-                .caption),
+            style: Theme.of(context).textTheme.caption),
       ),
     );
   }
@@ -338,17 +324,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
         title: new Text(event.name,
             style:
-            Theme
-                .of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15.0)),
+                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
         subtitle: new Text(event.location),
         trailing: new Text(formatter.format(event.net),
-            style: Theme
-                .of(context)
-                .textTheme
-                .caption),
+            style: Theme.of(context).textTheme.caption),
       ),
     );
   }
@@ -374,13 +353,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     widgets.add(
       Padding(
         padding:
-        const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
+            const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
         child: new Text("Road Closures",
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
-                .headline3
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.white)),
+                .subtitle1
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 48))
       ),
     );
 
@@ -388,16 +366,15 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       for (RoadClosure item in _starship.roadClosures) {
         widgets.add(_buildRoadClosureTile(item));
       }
-    }
-    else {
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(
-              top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
-          child: new Text("No road closures.", style: Theme
-              .of(context)
-              .textTheme
-              .subtitle1,),
-        ));
+    } else {
+      widgets.add(Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
+        child: new Text(
+          "No road closures.",
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+      ));
     }
 
     return new Column(
@@ -406,110 +383,113 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         children: widgets);
   }
 
-    Widget _buildRoadClosureTile(RoadClosure roadClosure) {
+  Widget _buildRoadClosureTile(RoadClosure roadClosure) {
     var date_formatter = new DateFormat("EEEE, MMMM d, yyyy");
     var time_formatter = new DateFormat("h:mm a");
 
     return new Padding(
-    padding: const EdgeInsets.only(
-    top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
-    child: new Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-    new Text(
-    roadClosure.title,
-    style: Theme.of(context)
-        .textTheme
-        .headline6
-        .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-    ),
-    new Text("Status: " + roadClosure.status.name),
-    new Text(date_formatter.format(roadClosure.windowStart)),
-    new Text(time_formatter.format(roadClosure.windowStart) +
-    " - " +
-    time_formatter.format(roadClosure.windowEnd)),
-    new Divider(),
-    ],
-    ));
-    }
+        padding: const EdgeInsets.only(
+            top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Text(
+              roadClosure.title,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            new Text("Status: " + roadClosure.status.name),
+            new Text(date_formatter.format(roadClosure.windowStart)),
+            new Text(time_formatter.format(roadClosure.windowStart) +
+                " - " +
+                time_formatter.format(roadClosure.windowEnd)),
+            new Divider(),
+          ],
+        ));
+  }
 
-    Widget _addNotice() {
+  Widget _addNotice() {
     var widgets = new List<Widget>();
     widgets.add(
-    Padding(
-    padding:
-    const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
-    child: new Text("Notices",
-    style: Theme.of(context)
-        .textTheme
-        .headline3
-        .copyWith(fontWeight: FontWeight.bold, color: Colors.white)),
-    ),
+      Padding(
+        padding:
+            const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
+        child: new Text("Notices",
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 48),),
+      ),
     );
     if (_starship.notices.length > 0) {
-    for (Notice item in _starship.notices) {
-    widgets.add(_buildNoticeTile(item));
-    }
+      for (Notice item in _starship.notices) {
+        widgets.add(_buildNoticeTile(item));
+      }
     } else {
-    widgets.add(Padding(
-    padding: const EdgeInsets.only(
-    top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
-    child: new Text("No notices available.", style: Theme.of(context).textTheme.subtitle1,),
-    ));
+      widgets.add(Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
+        child: new Text(
+          "No notices available.",
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+      ));
     }
 
     return new Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: widgets);
-    }
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: widgets);
+  }
 
-    Widget _buildNoticeTile(Notice notice) {
+  Widget _buildNoticeTile(Notice notice) {
     var date_formatter = new DateFormat("EEEE, MMMM d, yyyy");
     var time_formatter = new DateFormat("h:mm a");
 
     return new Padding(
-    padding: const EdgeInsets.only(
-    top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
-    child: new Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-    new Text(
-    notice.type.name,
-    style: Theme.of(context)
-        .textTheme
-        .headline6
-        .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-    ),
-    new Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: <Widget>[
-    Expanded(
-    child: new Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-    new Text(date_formatter.format(notice.date)),
-    new Text(time_formatter.format(notice.date)),
-    ],
-    ),
-    ),
-    Align(
-    alignment: Alignment.centerRight,
-    child: IconButton(
-    icon: Icon(Icons.open_in_browser),
-    onPressed: () {
-    _openUrl(notice.url);
-    },
-    ),
-    )
-    ],
-    ),
-    new Divider(),
-    ],
-    ));
-    }
+        padding: const EdgeInsets.only(
+            top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Text(
+              notice.type.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            new Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Text(date_formatter.format(notice.date)),
+                      new Text(time_formatter.format(notice.date)),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(Icons.open_in_browser),
+                    onPressed: () {
+                      _openUrl(notice.url);
+                    },
+                  ),
+                )
+              ],
+            ),
+            new Divider(),
+          ],
+        ));
   }
+}
