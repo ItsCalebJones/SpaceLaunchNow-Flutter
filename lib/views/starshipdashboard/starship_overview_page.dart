@@ -18,6 +18,8 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import 'custom_play_pause.dart';
+
 class StarshipOverviewPage extends StatefulWidget {
   StarshipOverviewPage(this._configuration);
 
@@ -113,14 +115,14 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             YoutubePlayer.convertUrlToId(_starship.liveStream.first.url),
         flags: const YoutubePlayerFlags(
           autoPlay: true,
-          mute: true,
         ),
       );
       widget = new YoutubePlayer(
         key: ObjectKey(_controller),
         controller: _controller,
+        showVideoProgressIndicator: false,
         bottomActions: <Widget>[
-          PlayPauseButton(),
+          CustomPlayPauseButton()
         ],
       );
     } else {
