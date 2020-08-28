@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:http/http.dart' as http;
 
 class Event {
   final int id;
@@ -19,8 +20,8 @@ class Event {
     this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches,
     this.net});
 
-  static List<Event> allFromResponse(String response) {
-    var decodedJson = json.decode(response).cast<String, dynamic>();
+  static List<Event> allFromResponse(http.Response response) {
+    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()

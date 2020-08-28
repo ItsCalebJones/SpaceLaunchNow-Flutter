@@ -26,6 +26,9 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
     print(_kLaunchesUrl);
+    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+      print(bodyStr);
+    });
     return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
@@ -34,7 +37,7 @@ class SLNRepositoryImpl implements SLNRepository {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return Launch.allFromResponse(jsonBody);
+      return Launch.allFromResponse(response);
     });
   }
 
@@ -45,6 +48,9 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
     print(_kLaunchesUrl);
+    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+      print(bodyStr);
+    });
     return client.get(_kLaunchesUrl).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
@@ -53,7 +59,7 @@ class SLNRepositoryImpl implements SLNRepository {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return Launch.allFromResponse(jsonBody);
+      return Launch.allFromResponse(response);
     });
   }
 
@@ -71,7 +77,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
     print(_kLaunchesUrl);
     return client.get(_kLaunchesUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -98,8 +104,11 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
     }
     print(_kLaunchesUrl);
+    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+      print(bodyStr);
+    });
     return client.get(_kLaunchesUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -129,8 +138,9 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kLaunchesUrl);
+
     return client.get(_kLaunchesUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -156,7 +166,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -177,7 +187,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -198,7 +208,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
@@ -214,7 +224,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kUrl = BASE_URL + '/dashboard/starship/?mode=list';
     print(_kUrl);
     return client.get(_kUrl).then((http.Response response) {
-      final jsonBody = json.decode(response.body);
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {

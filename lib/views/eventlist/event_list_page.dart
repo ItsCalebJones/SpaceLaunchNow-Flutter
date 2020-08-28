@@ -110,19 +110,32 @@ class _EventListPageState extends State<EventListPage> {
             children: <Widget>[
               CachedNetworkImage(
                 imageUrl: event.featureImage,
-                placeholder: (context, url) => DecoratedBox(
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/placeholder.png'),
+                      fit: BoxFit.cover,
                       // ...
                     ),
                     // ...
                   ),
                 ),
-                errorWidget: (context, url, error) => DecoratedBox(
+                errorWidget: (context, url, error) => Container(
+                  height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/placeholder.png'),
+                      fit: BoxFit.cover,
                       // ...
                     ),
                     // ...

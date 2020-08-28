@@ -94,7 +94,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         await http.get('https://spacelaunchnow.me/api/ll/2.0.0/launch/' + id.toString() + '/?mode=detailed');
 
     setState(() {
-      launch = Launch.fromResponse(response.body);
+      launch = Launch.fromResponse(response);
       if (launch != null) {
         _loadNews(launch.id);
       }
@@ -107,7 +107,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     http.Response response =
         await http.get('https://spacelaunchnow.me/api/ll/2.0.0/launch/upcoming/?limit=1&mode=detailed');
 
-    _nextLaunches = Launch.allFromResponse(response.body);
+    _nextLaunches = Launch.allFromResponse(response);
     PageStorage
         .of(context)
         .writeState(context, _nextLaunches.first, identifier: 'next_launch');

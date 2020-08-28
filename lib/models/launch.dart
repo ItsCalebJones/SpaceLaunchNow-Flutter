@@ -8,6 +8,7 @@ import 'package:spacelaunchnow_flutter/models/status.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 
 import 'agency.dart';
+import 'package:http/http.dart' as http;
 
 class Launch {
   final String id;
@@ -43,8 +44,8 @@ class Launch {
       this.infographic,
       this.slug});
 
-  static List<Launch> allFromResponse(String response) {
-    var decodedJson = json.decode(response).cast<String, dynamic>();
+  static List<Launch> allFromResponse(http.Response response) {
+    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()
@@ -53,8 +54,8 @@ class Launch {
         .cast<Launch>();
   }
 
-  static Launch fromResponse(String response) {
-    var decodedJson = json.decode(response).cast<String, dynamic>();
+  static Launch fromResponse(http.Response response) {
+    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
     return Launch.fromJson(decodedJson);
   }
 
