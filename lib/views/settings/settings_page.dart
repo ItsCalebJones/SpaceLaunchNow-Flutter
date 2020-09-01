@@ -895,7 +895,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         children: <Widget>[
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('Follow All'),
+              title: const Text('Follow All Launches'),
               onTap: () {
                 _handleAll(!widget.configuration.subscribeALL);
               },
@@ -908,6 +908,17 @@ class NotificationFilterPageState extends State<SettingsPage> {
           new ListTile(
             title: new Text('Agencies', style: theme.textTheme.title),
             subtitle: new Text('Select your favorite launch agencies.'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left:8.0, right: 8.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new Text('NOTE: You will only receive notifications for launches matching both agency and location.'
+                    ' Example - if you have Florida and SpaceX selected you will only receive notifications for SpaceX launches in Florida.',
+                    style: Theme.of(context).textTheme.caption),
+              ),
+            ),
           ),
           new Divider(),
           new MergeSemantics(
