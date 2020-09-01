@@ -1,5 +1,6 @@
+import 'package:dart_twitter_api/twitter_api.dart';
+
 import 'abstract_collector.dart';
-import 'package:twitter/twitter.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:yaml/yaml.dart';
@@ -39,16 +40,32 @@ class TwitterCollector implements AbstractCollector {
   }
 
   Future gather() async {
-    Map keymap = {
-      "consumerKey": this._consumerKey,
-      "consumerSecret": this._consumerSecret,
-      "accessToken": this._accessToken,
-      "accessSecret": this._accessTokenSecret,
+
+    // Creating the twitterApi Object with the secret and public keys
+    // These keys are generated from the twitter developer page
+    // Dont share the keys with anyone
+    final twitterApi = TwitterApi(
+      client: TwitterClient(
+        consumerKey: this._consumerKey,
+        consumerSecret: this._consumerSecret,
+        token: this._accessToken,
+        secret: this._accessTokenSecret,
+      ),
+    );
+
+//    var response = await twitterApi.timelineService.homeTimeline();
+
+    var queryParameters = {
+      'slug': 'space-launch-news',
+      'owner_screen_name': 'SpaceLaunchNow',
+      'tweet_mode': 'extended'
     };
+    var response = await twitterApi.client.get(
+        Uri.https('api.twitter.com', this._query, queryParameters)
+    );
 
-    Twitter twitter = new Twitter.fromMap(keymap);
-    var response = await twitter.request("GET", this._query);
-
+    print(response);
+    // Convert the string response into something more useable
     return json.decode(response.body);
   }
 }

@@ -1,15 +1,16 @@
+import 'package:dart_twitter_api/api/tweets/data/tweet.dart';
 import 'package:flutter/material.dart';
+import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_collector.dart';
 import 'dart:async';
 
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_renderer.dart';
 
 class TwitterFeedWidget extends StatefulWidget {
-  TwitterFeedWidget(
-      {this.query:
-          'lists/statuses.json?slug=space-launch-news&owner_screen_name=SpaceLaunchNow&tweet_mode=extended&count=100'});
+  TwitterFeedWidget(this._configuration);
 
-  final String query;
+  final String query = '1.1/lists/statuses.json';
+  final AppConfiguration _configuration;
 
   @override
   _TwitterFeedWidgetState createState() => _TwitterFeedWidgetState();
@@ -59,7 +60,7 @@ class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
     } else {
       return Center(
         child: RefreshIndicator(
-            child: TwitterRenderer().render(tweets),
+            child: TwitterRenderer(widget._configuration).render(tweets),
             onRefresh: () => _gatherTweets()),
       );
     }

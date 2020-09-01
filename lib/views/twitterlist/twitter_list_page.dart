@@ -7,6 +7,7 @@ class TwitterFeedPage extends StatefulWidget {
   TwitterFeedPage(this._configuration);
 
   final AppConfiguration _configuration;
+
   @override
   _TwitterFeedPageState createState() => _TwitterFeedPageState();
 }
@@ -16,7 +17,7 @@ class _TwitterFeedPageState extends State<TwitterFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: TwitterFeedWidget(),
+        child: new TwitterFeedWidget(widget._configuration),
       ),
     );
   }

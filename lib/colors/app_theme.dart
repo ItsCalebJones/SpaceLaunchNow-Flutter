@@ -8,8 +8,7 @@ final ThemeData kIOSTheme = new ThemeData(
   primarySwatch: Colors.red,
   primaryColor: Colors.grey[200],
   accentColor: Colors.red,
-  fontFamily: "AvenirNextCondensed-Regular ",
-  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
+  textTheme: new Typography.material2018(platform: TargetPlatform.iOS).black
 );
 
 final ThemeData kIOSThemeDark = new ThemeData(
@@ -18,8 +17,7 @@ final ThemeData kIOSThemeDark = new ThemeData(
     primarySwatch: Colors.blue,
     primaryColor: Colors.grey[800],
     accentColor: Colors.red,
-    fontFamily: "AvenirNextCondensed-Regular ",
-    textTheme: new Typography(platform: TargetPlatform.iOS).white.apply(fontFamily: "AvenirNextCondensed-Regular ")
+    textTheme: new Typography.material2018(platform: TargetPlatform.iOS).white
 );
 
 final ThemeData kIOSThemeBar = new ThemeData(
@@ -28,8 +26,7 @@ final ThemeData kIOSThemeBar = new ThemeData(
     canvasColor: Colors.grey[200],
     primarySwatch: Colors.blue,
     primaryColor: Colors.blue[600],
-    fontFamily: "AvenirNextCondensed-Regular ",
-    textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
+    textTheme: new Typography.material2018(platform: TargetPlatform.iOS).black
 );
 
 final ThemeData kIOSThemeDarkBar = new ThemeData(
@@ -39,8 +36,7 @@ final ThemeData kIOSThemeDarkBar = new ThemeData(
     primarySwatch: Colors.blue,
     primaryColor: Colors.grey[800],
     accentColor: Colors.red,
-    fontFamily: "AvenirNextCondensed-Regular ",
-    textTheme: new Typography(platform: TargetPlatform.iOS).white.apply(fontFamily: "AvenirNextCondensed-Regular ")
+    textTheme: new Typography.material2018(platform: TargetPlatform.iOS).white
 );
 
 final ThemeData kIOSThemeAppBar = kIOSThemeBar.copyWith(primaryColor: Colors.grey[400]);
@@ -53,8 +49,7 @@ final ThemeData kDefaultTheme = new ThemeData(
   primarySwatch: Colors.blue,
     primaryColor: Colors.grey[300],
   accentColor: Colors.red[500],
-  fontFamily: "AvenirNextCondensed-Regular ",
-  textTheme: new Typography(platform: TargetPlatform.iOS).black.apply(fontFamily: "AvenirNextCondensed-Regular ")
+  textTheme: new Typography.material2018(platform: TargetPlatform.iOS).black
 
 );
 
@@ -73,7 +68,7 @@ class PlatformAdaptiveAppBar extends AppBar {
     backgroundColor: color,
     key: key,
     elevation: platform == TargetPlatform.iOS ? 0.0 : 4.0,
-    title: new Text('$text', style: kIOSThemeDark.textTheme.title.copyWith(fontFamily: "AvenirNextCondensed-Heavy", fontWeight: FontWeight.bold)),
+    title: new Text('$text', style: kIOSThemeDark.textTheme.title.copyWith(fontWeight: FontWeight.bold)),
     brightness: Brightness.dark,
     actions: actions,
   );
