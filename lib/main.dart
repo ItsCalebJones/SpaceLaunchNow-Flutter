@@ -779,7 +779,7 @@ class PagesState extends State<Pages> {
   }
 
   void checkAd() async {
-    await _getPastPurchases();
+//    await _getPastPurchases();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (_purchases.length > 0) {
       prefs.setBool("showAds", false);
