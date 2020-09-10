@@ -1,6 +1,6 @@
 name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
-version: 2.3.0+7
+version: 2.3.1+1
 
 dependencies:
   flutter:
@@ -14,7 +14,7 @@ dependencies:
   firebase_messaging: '^5.0.2'
   firebase_analytics: '^1.0.0'
   url_launcher: '5.5.0'
-  in_app_purchase: ^0.3.4+1
+  in_app_purchase: ^0.2.1+4
   uri: "^0.11.1"
   cached_network_image: 2.1.0+1
   sqflite: ^1.1.0

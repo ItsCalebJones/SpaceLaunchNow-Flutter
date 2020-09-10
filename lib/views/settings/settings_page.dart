@@ -194,10 +194,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
             _handleInvalidPurchase(purchaseDetails);
           }
         }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchaseConnection.instance
-              .completePurchase(purchaseDetails);
-        }
       }
     });
   }

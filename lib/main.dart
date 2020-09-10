@@ -37,7 +37,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  InAppPurchaseConnection.enablePendingPurchases();
   runApp(new SpaceLaunchNow());
 }
 
