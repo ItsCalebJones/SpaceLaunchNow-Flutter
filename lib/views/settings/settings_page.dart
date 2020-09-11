@@ -67,10 +67,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
     QueryPurchaseDetailsResponse response =
         await _connection.queryPastPurchases();
     var purchases = "";
-
+    print("getting previous purchases");
     for (PurchaseDetails purchase in response.pastPurchases) {
+      print(purchase.productID);
+      print(purchase.status);
       purchases = purchases + " " + purchase.productID;
       if (Platform.isIOS) {
+        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.error)
         InAppPurchaseConnection.instance.completePurchase(purchase);
       }
     }
@@ -149,7 +152,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     final QueryPurchaseDetailsResponse purchaseResponse =
         await _connection.queryPastPurchases();
     if (purchaseResponse.error != null) {
-      // handle query past purchase error..
+      print(purchaseResponse.error.message);
     }
     final List<PurchaseDetails> verifiedPurchases = [];
     for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
@@ -177,6 +180,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
     // handle invalid purchase here if  _verifyPurchase` failed.
+    print(purchaseDetails);
   }
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
@@ -207,6 +211,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void handleError(IAPError error) {
+    print("Some Error received.");
+    print(error.message);
+    print(error.code);
+    print(error.source);
+    print(error.details);
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(SnackBar(content: new Text(error.details.toString()),));
     setState(() {
       _purchasePending = false;
     });
