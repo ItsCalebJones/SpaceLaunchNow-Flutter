@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -19,7 +20,6 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 
 import 'views/homelist/home_list_page.dart';
@@ -72,11 +72,17 @@ class PagesState extends State<Pages> {
   bool showAds = true;
   TabController controller;
 
-  List<String> _productIds = ["2018_founder"];
+  final List<String> _productLists = [
+    '2020_super_fan',
+    '2020_gse',
+    '2020_launch_director',
+    '2020_flight_controller',
+    '2020_elon'
+  ];
+  List<IAPItem> _items = [];
+  List<PurchasedItem> _purchases = [];
+  bool _purchaseRestored = false;
 
-  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
-  StreamSubscription<List<PurchaseDetails>> _subscription;
-  List<PurchaseDetails> _purchases = [];
   bool _loading = true;
 
   GlobalKey stickyKey = new GlobalKey();
@@ -467,103 +473,20 @@ class PagesState extends State<Pages> {
           subscribeVAN: subscribeVAN));
     });
     initAds();
-    Stream purchaseUpdated =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
-    initStoreInfo();
+    asyncInitState();
   }
 
-  Future<void> initStoreInfo() async {
-    final bool isAvailable = await _connection.isAvailable();
-    if (!isAvailable) {
-      setState(() {
-        _purchases = [];
-        _loading = false;
-      });
-      return;
+  void asyncInitState() async {
+    await FlutterInappPurchase.instance.initConnection;
+    // refresh items for android
+    try {
+      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      print('consumeAllItems: $msg');
+    } catch (err) {
+      print('consumeAllItems error: $err');
     }
-
-    ProductDetailsResponse productDetailResponse =
-        await _connection.queryProductDetails(_productIds.toSet());
-    if (productDetailResponse.error != null) {
-      setState(() {
-        _purchases = [];
-        _loading = false;
-      });
-      return;
-    }
-
-    if (productDetailResponse.productDetails.isEmpty) {
-      setState(() {
-        _purchases = [];
-        _loading = false;
-      });
-      return;
-    }
-
-    final QueryPurchaseDetailsResponse purchaseResponse =
-        await _connection.queryPastPurchases();
-    if (purchaseResponse.error != null) {
-      // handle query past purchase error..
-    }
-    final List<PurchaseDetails> verifiedPurchases = [];
-    for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
-      if (await _verifyPurchase(purchase)) {
-        verifiedPurchases.add(purchase);
-      }
-    }
-    setState(() {
-      _purchases = verifiedPurchases;
-      _loading = false;
-    });
   }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-    return Future<bool>.value(true);
-  }
-
-  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
-    // handle invalid purchase here if  _verifyPurchase` failed.
-  }
-
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        showPendingUI();
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          handleError(purchaseDetails.error);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
-          bool valid = await _verifyPurchase(purchaseDetails);
-          if (valid) {
-            deliverProduct(purchaseDetails);
-          } else {
-            _handleInvalidPurchase(purchaseDetails);
-          }
-        }
-      }
-    });
-  }
-
-  void deliverProduct(PurchaseDetails purchaseDetails) async {
-    // IMPORTANT!! Always verify a purchase purchase details before delivering the product.
-    setState(() {
-      _purchases.add(purchaseDetails);
-    });
-  }
-
-  void handleError(IAPError error) {
-    setState(() {
-    });
-  }
 
   void showPendingUI() {
     setState(() {
@@ -577,14 +500,41 @@ class PagesState extends State<Pages> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     Ads.dispose();
-    _subscription.cancel();
     super.dispose();
+    await FlutterInappPurchase.instance.endConnection;
   }
 
   void hideAd() {
     Ads.hideBannerAd();
+  }
+
+  Future _getProduct() async {
+    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    for (var item in items) {
+      print('${item.toString()}');
+      this._items.add(item);
+    }
+
+    setState(() {
+      this._items = items;
+      this._purchases = [];
+    });
+  }
+
+  Future _getPurchaseHistory() async {
+    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    for (var item in items) {
+      print('${item.toString()}');
+      this._purchases.add(item);
+    }
+
+    setState(() {
+      this._purchaseRestored = true;
+      this._items = [];
+      this._purchases = items;
+    });
   }
 
   ThemeData get theme {
@@ -762,23 +712,11 @@ class PagesState extends State<Pages> {
 
   initAds() async {}
 
-  // Gets past purchases
-  Future<void> _getPastPurchases() async {
-    if (await _connection.isAvailable()){
-      QueryPurchaseDetailsResponse response =
-      await _connection.queryPastPurchases();
-
-      for (PurchaseDetails purchase in response.pastPurchases) {
-        if (Platform.isIOS) {
-          InAppPurchaseConnection.instance.completePurchase(purchase);
-        }
-      }
-      _purchases = response.pastPurchases;
-    }
-  }
 
   void checkAd() async {
-//    await _getPastPurchases();
+    if(!_purchaseRestored) {
+      await _getPurchaseHistory();
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (_purchases.length > 0) {
       prefs.setBool("showAds", false);

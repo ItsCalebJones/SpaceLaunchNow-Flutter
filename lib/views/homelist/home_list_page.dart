@@ -148,12 +148,14 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    if (launch.launchServiceProvider.nationURL != null &&
-        launch.launchServiceProvider.nationURL.length > 0) {
-      url = launch.launchServiceProvider.nationURL;
-    } else if (launch.launchServiceProvider.imageURL != null &&
-        launch.launchServiceProvider.imageURL.length > 0) {
-      url = launch.launchServiceProvider.imageURL;
+    if (launch.launchServiceProvider != null){
+      if (launch.launchServiceProvider.nationURL != null &&
+          launch.launchServiceProvider.nationURL.length > 0) {
+        url = launch.launchServiceProvider.nationURL;
+      } else if (launch.launchServiceProvider.imageURL != null &&
+          launch.launchServiceProvider.imageURL.length > 0) {
+        url = launch.launchServiceProvider.imageURL;
+      }
     } else if (launch.pad.location.mapImage != null &&
         launch.pad.location.mapImage.length > 0) {
       url = launch.pad.location.mapImage;
