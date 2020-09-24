@@ -34,7 +34,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productLists = ["2020_super_fan", "2020_gse", "2020_flight_controller", "2020_launch_director", "2020_elon"];
+  List<String> _productLists = [
+    "2020_super_fan",
+    "2020_gse",
+    "2020_flight_controller",
+    "2020_launch_director",
+    "2020_elon"
+  ];
 
 
   List<String> _notFoundIds = [];
@@ -42,6 +48,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
   List<PurchasedItem> _purchases = [];
   bool _isAvailable = false;
   bool _loading = true;
+
+  StreamSubscription _purchaseUpdatedSubscription;
+  StreamSubscription _purchaseErrorSubscription;
+  StreamSubscription _conectionSubscription;
 
   @override
   initState() {
@@ -51,7 +61,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   // Gets past purchases
-  Future _getPurchaseHistory() async {
+  Future _getPurchaseHistory({bool initial = true}) async {
     List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
     for (var item in items) {
       print('${item.toString()}');
@@ -59,9 +69,29 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
 
     setState(() {
-      this._items = [];
       this._purchases = items;
     });
+
+    if (!initial){
+      if (_purchases.length > 0) {
+        sendUpdates(widget.configuration.copyWith(showAds: false));
+        _prefs.then((SharedPreferences prefs) {
+          return (prefs.setBool('showAds', false));
+        });
+        final snackBar = new SnackBar(
+          content:
+          new Text('Purchase history restored - thank you for your support!'),
+          duration: new Duration(seconds: 5),
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
+      } else {
+        final snackBar = new SnackBar(
+          content: new Text('Purchase history restored - no purchases found.'),
+          duration: new Duration(seconds: 5),
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
+      }
+    }
   }
 
   void asyncInitState() async {
@@ -73,6 +103,24 @@ class NotificationFilterPageState extends State<SettingsPage> {
     } catch (err) {
       print('consumeAllItems error: $err');
     }
+
+    _conectionSubscription = FlutterInappPurchase.connectionUpdated.listen((connected) {
+      print('connected: $connected');
+    });
+
+    _purchaseUpdatedSubscription = FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+      _getPurchaseHistory(initial: true);
+    });
+
+    _purchaseErrorSubscription = FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+      if (!purchaseError.message.contains("Cancelled")){
+        var message = purchaseError.message;
+        final scaffold = Scaffold.of(context);
+        scaffold.showSnackBar(SnackBar(content: new Text('Error: $message'),));
+      }
+    });
   }
 
   @override
@@ -82,8 +130,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   init() async {
-    List<String> productIds = ["2018_founder"];
-    if (!mounted) return;
+    await _getPurchaseHistory(initial: true);
+    await _getProduct();
+    setState(() {
+      this._loading = false;
+    });
   }
 
   Future _getProduct() async {
@@ -92,15 +143,17 @@ class NotificationFilterPageState extends State<SettingsPage> {
       print('${item.toString()}');
       this._items.add(item);
     }
+    this._items.sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
     setState(() {
-      this._items = items;
-      this._purchases = [];
+      this._items = this._items;
     });
   }
 
   void _requestPurchase(IAPItem item) {
     FlutterInappPurchase.instance.requestPurchase(item.productId);
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(SnackBar(content: new Text('Sending purchase request to iTunes.'),));
   }
 
   void _handleNightMode(bool value) {
@@ -632,7 +685,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             title: new Text('Restore Purchases'),
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
-              _getPurchaseHistory();
+              _getPurchaseHistory(initial: false);
             },
           ),
         ),
@@ -657,9 +710,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
               title: Text('Loading In-App Products...'))));
     }
 
-    if (!_isAvailable) {
-      return Card();
-    }
     final ListTile productHeader = ListTile(
         title: new Text('Become a Supporter',
             style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
@@ -673,7 +723,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
           )
       ));
     }
-
+    print("Printing items");
+    print(_items);
     productList.addAll(_items.map(
       (IAPItem product) {
         bool isNotFound = this
@@ -681,6 +732,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             .where((element) => element.productId == product.productId)
             .toList()
             .isEmpty;
+      print(product);
         return ListTile(
             title: Text(
               product.title,
@@ -688,10 +740,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
             subtitle: Text(
               product.description,
             ),
-            trailing: isNotFound
+            trailing: !isNotFound
                 ? Icon(Icons.check)
                 : FlatButton(
-                    child: Text(product.price),
+                    child: Text(product.localizedPrice),
                     color: Colors.green[800],
                     textColor: Colors.white,
                     onPressed: () {
