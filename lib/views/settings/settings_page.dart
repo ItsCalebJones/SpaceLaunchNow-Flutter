@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:flutter_inapp_purchase/modules.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 
 
 import 'product_store.dart';
@@ -33,211 +34,126 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productIds = ["2020_super_fan", "2020_gse", "2020_flight_controller", "2020_launch_director", "2020_elon"];
+  List<String> _productLists = [
+    "2020_super_fan",
+    "2020_gse",
+    "2020_flight_controller",
+    "2020_launch_director",
+    "2020_elon"
+  ];
 
-  final InAppPurchaseConnection _connection = InAppPurchaseConnection.instance;
-  StreamSubscription<List<PurchaseDetails>> _subscription;
+
   List<String> _notFoundIds = [];
-  List<ProductDetails> _products = [];
-  List<PurchaseDetails> _purchases = [];
-  List<String> _consumables = [];
+  List<IAPItem> _items = [];
+  List<PurchasedItem> _purchases = [];
   bool _isAvailable = false;
-  bool _purchasePending = false;
   bool _loading = true;
-  String _queryProductError = null;
+
+  StreamSubscription _purchaseUpdatedSubscription;
+  StreamSubscription _purchaseErrorSubscription;
+  StreamSubscription _conectionSubscription;
 
   @override
   initState() {
     super.initState();
+    asyncInitState();
     init();
-    Stream purchaseUpdated =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
-    initStoreInfo();
   }
 
   // Gets past purchases
-  Future<void> _getPastPurchases() async {
-    QueryPurchaseDetailsResponse response =
-        await _connection.queryPastPurchases();
-    var purchases = "";
-    print("getting previous purchases");
-    for (PurchaseDetails purchase in response.pastPurchases) {
-      print(purchase.productID);
-      print(purchase.status);
-      purchases = purchases + " " + purchase.productID;
-      if (Platform.isIOS) {
-        if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.error)
-        InAppPurchaseConnection.instance.completePurchase(purchase);
-      }
+  Future _getPurchaseHistory({bool initial = true}) async {
+    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    for (var item in items) {
+      print('${item.toString()}');
+      this._purchases.add(item);
     }
-
-    if (_purchases.length > 0) {
-      sendUpdates(widget.configuration.copyWith(showAds: false));
-      _prefs.then((SharedPreferences prefs) {
-        return (prefs.setBool('showAds', false));
-      });
-      final snackBar = new SnackBar(
-        content:
-            new Text('Purchase history restored - thank you for your support!'),
-        duration: new Duration(seconds: 5),
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
-    } else {
-      final snackBar = new SnackBar(
-        content: new Text('Purchase history restored - no purchases found.'),
-        duration: new Duration(seconds: 5),
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
-    }
-
-    // Find the Scaffold in the Widget tree and use it to show a SnackBar
 
     setState(() {
-      _purchases = response.pastPurchases;
+      this._purchases = items;
     });
-  }
 
-  Future<void> initStoreInfo() async {
-    final bool isAvailable = await _connection.isAvailable();
-    if (!isAvailable) {
-      setState(() {
-        _isAvailable = isAvailable;
-        _products = [];
-        _purchases = [];
-        _notFoundIds = [];
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
-      });
-      return;
-    }
-
-    ProductDetailsResponse productDetailResponse =
-        await _connection.queryProductDetails(_productIds.toSet());
-    if (productDetailResponse.error != null) {
-      setState(() {
-        _queryProductError = productDetailResponse.error.message;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
-        _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
-      });
-      return;
-    }
-
-    if (productDetailResponse.productDetails.isEmpty) {
-      setState(() {
-        _queryProductError = null;
-        _isAvailable = isAvailable;
-        _products = productDetailResponse.productDetails;
-        _purchases = [];
-        _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = [];
-        _purchasePending = false;
-        _loading = false;
-      });
-      return;
-    }
-
-    final QueryPurchaseDetailsResponse purchaseResponse =
-        await _connection.queryPastPurchases();
-    if (purchaseResponse.error != null) {
-      print(purchaseResponse.error.message);
-    }
-    final List<PurchaseDetails> verifiedPurchases = [];
-    for (PurchaseDetails purchase in purchaseResponse.pastPurchases) {
-      if (await _verifyPurchase(purchase)) {
-        verifiedPurchases.add(purchase);
-      }
-    }
-    List<String> consumables = await ProductStore.load();
-    setState(() {
-      _isAvailable = isAvailable;
-      _products = productDetailResponse.productDetails;
-      _purchases = verifiedPurchases;
-      _notFoundIds = productDetailResponse.notFoundIDs;
-      _consumables = consumables;
-      _purchasePending = false;
-      _loading = false;
-    });
-  }
-
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-    return Future<bool>.value(true);
-  }
-
-  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
-    // handle invalid purchase here if  _verifyPurchase` failed.
-    print(purchaseDetails);
-  }
-
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        showPendingUI();
+    if (!initial){
+      if (_purchases.length > 0) {
+        sendUpdates(widget.configuration.copyWith(showAds: false));
+        _prefs.then((SharedPreferences prefs) {
+          return (prefs.setBool('showAds', false));
+        });
+        final snackBar = new SnackBar(
+          content:
+          new Text('Purchase history restored - thank you for your support!'),
+          duration: new Duration(seconds: 5),
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
       } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          handleError(purchaseDetails.error);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
-          bool valid = await _verifyPurchase(purchaseDetails);
-          if (valid) {
-            deliverProduct(purchaseDetails);
-          } else {
-            _handleInvalidPurchase(purchaseDetails);
-          }
-        }
+        final snackBar = new SnackBar(
+          content: new Text('Purchase history restored - no purchases found.'),
+          duration: new Duration(seconds: 5),
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
       }
-    });
+    }
   }
 
-  void deliverProduct(PurchaseDetails purchaseDetails) async {
-    // IMPORTANT!! Always verify a purchase purchase details before delivering the product.
-    setState(() {
-      _purchases.add(purchaseDetails);
-      _purchasePending = false;
-    });
-  }
+  void asyncInitState() async {
+    await FlutterInappPurchase.instance.initConnection;
+    // refresh items for android
+    try {
+      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      print('consumeAllItems: $msg');
+    } catch (err) {
+      print('consumeAllItems error: $err');
+    }
 
-  void handleError(IAPError error) {
-    print("Some Error received.");
-    print(error.message);
-    print(error.code);
-    print(error.source);
-    print(error.details);
-    final scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(SnackBar(content: new Text(error.details.toString()),));
-    setState(() {
-      _purchasePending = false;
+    _conectionSubscription = FlutterInappPurchase.connectionUpdated.listen((connected) {
+      print('connected: $connected');
     });
-  }
 
-  void showPendingUI() {
-    setState(() {
-      _purchasePending = true;
+    _purchaseUpdatedSubscription = FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+      _getPurchaseHistory(initial: true);
+    });
+
+    _purchaseErrorSubscription = FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+      if (!purchaseError.message.contains("Cancelled")){
+        var message = purchaseError.message;
+        final scaffold = Scaffold.of(context);
+        scaffold.showSnackBar(SnackBar(content: new Text('Error: $message'),));
+      }
     });
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
+  void dispose() async {
     super.dispose();
+    await FlutterInappPurchase.instance.endConnection;
   }
 
   init() async {
-    List<String> productIds = ["2018_founder"];
-    if (!mounted) return;
+    await _getPurchaseHistory(initial: true);
+    await _getProduct();
+    setState(() {
+      this._loading = false;
+    });
+  }
+
+  Future _getProduct() async {
+    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    for (var item in items) {
+      print('${item.toString()}');
+      this._items.add(item);
+    }
+    this._items.sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
+
+    setState(() {
+      this._items = this._items;
+    });
+  }
+
+  void _requestPurchase(IAPItem item) {
+    FlutterInappPurchase.instance.requestPurchase(item.productId);
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(SnackBar(content: new Text('Sending purchase request to iTunes.'),));
   }
 
   void _handleNightMode(bool value) {
@@ -769,7 +685,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             title: new Text('Restore Purchases'),
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
-              _getPastPurchases();
+              _getPurchaseHistory(initial: false);
             },
           ),
         ),
@@ -794,9 +710,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
               title: Text('Loading In-App Products...'))));
     }
 
-    if (!_isAvailable) {
-      return Card();
-    }
     final ListTile productHeader = ListTile(
         title: new Text('Become a Supporter',
             style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
@@ -810,46 +723,31 @@ class NotificationFilterPageState extends State<SettingsPage> {
           )
       ));
     }
-
-    Map<String, PurchaseDetails> purchases =
-        Map.fromEntries(_purchases.map((PurchaseDetails purchase) {
-      if (Platform.isIOS) {
-        InAppPurchaseConnection.instance.completePurchase(purchase);
-      }
-      return MapEntry<String, PurchaseDetails>(purchase.productID, purchase);
-    }));
-
-    List<ProductDetails> _storefrontProducts = [];
-
-    for (String productId in _productIds){
-      for (ProductDetails productDetail in _products){
-        if (productDetail.id == productId){
-          _storefrontProducts.add(productDetail);
-          break;
-        }
-      }
-    }
-
-    productList.addAll(_storefrontProducts.map(
-      (ProductDetails productDetails) {
-        PurchaseDetails previousPurchase = purchases[productDetails.id];
+    print("Printing items");
+    print(_items);
+    productList.addAll(_items.map(
+      (IAPItem product) {
+        bool isNotFound = this
+            ._purchases
+            .where((element) => element.productId == product.productId)
+            .toList()
+            .isEmpty;
+      print(product);
         return ListTile(
             title: Text(
-              productDetails.title,
+              product.title,
             ),
             subtitle: Text(
-              productDetails.description,
+              product.description,
             ),
-            trailing: previousPurchase != null
+            trailing: !isNotFound
                 ? Icon(Icons.check)
                 : FlatButton(
-                    child: Text(productDetails.price),
+                    child: Text(product.localizedPrice),
                     color: Colors.green[800],
                     textColor: Colors.white,
                     onPressed: () {
-                      PurchaseParam purchaseParam = PurchaseParam(
-                          productDetails: productDetails);
-                      _connection.buyNonConsumable(purchaseParam: purchaseParam);
+                      this._requestPurchase(product);
                     },
                   ));
       },
