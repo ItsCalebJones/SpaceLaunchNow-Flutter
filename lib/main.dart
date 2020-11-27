@@ -534,6 +534,7 @@ class PagesState extends State<Pages> {
       this._purchaseRestored = true;
       this._items = [];
       this._purchases = items;
+      this._loading = false;
     });
   }
 
