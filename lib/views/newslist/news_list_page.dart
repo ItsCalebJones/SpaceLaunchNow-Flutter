@@ -26,12 +26,8 @@ class NewsListPage extends StatefulWidget {
 
 class _NewsListPageState extends State<NewsListPage> {
   List<News> _news = [];
-  int totalPages = 0;
-  int page = 0;
-  int limit = 30;
+  int limit = 20;
   bool loading = false;
-  bool hasNextPage = false;
-  bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
 
   @override
@@ -41,9 +37,8 @@ class _NewsListPageState extends State<NewsListPage> {
         PageStorage.of(context).readState(context, identifier: 'news');
     if (news != null) {
       _news = news;
-      usingCached = true;
     } else {
-      lockedLoadNext();
+      _handleRefresh();
     }
   }
 
@@ -52,20 +47,15 @@ class _NewsListPageState extends State<NewsListPage> {
     super.dispose();
   }
 
-  void onLoadResponseComplete(NewsResponse response, [bool reload = false]) {
-    loading = false;
-    totalPages = response.totalPages;
-    page = response.page;
+  void onLoadResponseComplete(List<News> response, [bool reload = false]) {
     limit = 30;
-    loading = false;
-    hasNextPage = response.hasNextPage;
-    usingCached = false;
-
     if (reload) {
       _news.clear();
     }
     setState(() {
-      _news.addAll(response.news);
+      if (response != null) {
+        _news.addAll(response);
+      }
       PageStorage.of(context).writeState(context, _news, identifier: 'news');
     });
   }
@@ -104,10 +94,6 @@ class _NewsListPageState extends State<NewsListPage> {
   Widget _buildEventTile(BuildContext context, int index) {
     var news = _news[index];
     var formatter = new DateFormat('MMM yyyy');
-
-    if (index > _news.length - 10 && !usingCached) {
-      notifyThreshold();
-    }
 
     return new Card(
       semanticContainer: true,
@@ -235,40 +221,13 @@ class _NewsListPageState extends State<NewsListPage> {
     return content;
   }
 
-  void notifyThreshold() {
-    lockedLoadNext();
-  }
-
-  void lockedLoadNext() {
-    if (loading == false) {
-      loadNext(force: true);
-    }
-  }
-
-  void loadNext({bool force}) {
-    loading = true;
-    if ((hasNextPage && !usingCached) || force) {
-      page += 1;
-      _repository
-          .fetchNews(page: page)
-          .then((response) => onLoadResponseComplete(response))
-          .catchError((onError) {
-        print(onError);
-        onLoadContactsError();
-      });
-    }
-  }
 
   Future<Null> _handleRefresh() async {
     _news.clear();
-    totalPages = 0;
-    page = 1;
     limit = 30;
     loading = false;
-    hasNextPage = false;
-    usingCached = false;
-    NewsResponse response =
-        await _repository.fetchNews(page: page).catchError((onError) {
+    List<News> response =
+        await _repository.fetchNews().catchError((onError) {
       onLoadContactsError();
     });
     onLoadResponseComplete(response);

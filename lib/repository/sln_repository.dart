@@ -4,7 +4,7 @@ import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
-import 'package:spacelaunchnow_flutter/models/news_response.dart';
+import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
 abstract class SLNRepository {
@@ -20,9 +20,9 @@ abstract class SLNRepository {
 
   Future<Events> fetchNextEvent({String limit, String offset});
 
-  Future<NewsResponse> fetchNews({int page});
+  Future<List<News>> fetchNews();
 
-  Future<NewsResponse> fetchNewsByLaunch({String id});
+  Future<List<News>> fetchNewsByLaunch({String id});
 
   Future<Starship> fetchStarshipDashboard();
 

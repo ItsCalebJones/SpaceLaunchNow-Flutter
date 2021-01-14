@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launches_list.dart';
-import 'package:spacelaunchnow_flutter/models/news_response.dart';
+import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
@@ -15,7 +14,7 @@ import 'http_client.dart';
 class SLNRepositoryImpl implements SLNRepository {
 
   static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.0.0";
-  static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v1";
+  static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v2";
 
   final client = ClientWithUserAgent(http.Client());
 
@@ -178,33 +177,31 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<NewsResponse> fetchNews({int page}) {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles?limit=30';
-
-    if (page != null){
-      _kEventsUrl = _kEventsUrl + '&page=' + page.toString();
-    }
+  Future<List<News>> fetchNews() {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=30';
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
+      print(statusCode);
+
       if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return NewsResponse.fromJson(jsonBody);
+      return jsonBody
+          .cast<Map<String, dynamic>>()
+          .map((obj) => News.fromJson(obj))
+          .toList()
+          .cast<News>();
     });
   }
 
   @override
-  Future<NewsResponse> fetchNewsByLaunch({String id}) {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles?limit=30';
-
-    if (id != null){
-      _kEventsUrl = _kEventsUrl + '&launches=' + id;
-    }
+  Future<List<News>> fetchNewsByLaunch({String id}) {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/' + id +'/?_limit=30';
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {
@@ -215,7 +212,11 @@ class SLNRepositoryImpl implements SLNRepository {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return NewsResponse.fromJson(jsonBody);
+      return jsonBody
+          .cast<Map<String, dynamic>>()
+          .map((obj) => News.fromJson(obj))
+          .toList()
+          .cast<News>();
     });
   }
 

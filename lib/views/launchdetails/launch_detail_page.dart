@@ -192,18 +192,20 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   void _loadNews(String id) async {
-    NewsResponse response =
+    List<News> response =
         await _repository.fetchNewsByLaunch(id: id).catchError((onError) {
     });
     onLoadResponseComplete(response);
   }
 
-  void onLoadResponseComplete(NewsResponse response, [bool reload = false]) {
+  void onLoadResponseComplete(List<News> response, [bool reload = false]) {
     if (reload) {
       _news.clear();
     }
     setState(() {
-      _news.addAll(response.news);
+      if (response != null) {
+        _news.addAll(response);
+      }
     });
   }
 }

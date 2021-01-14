@@ -12,8 +12,9 @@ class News {
 
   static List<News> allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
+    print(decodedJson);
 
-    return decodedJson['results']
+    return decodedJson
         .cast<Map<String, dynamic>>()
         .map((obj) => News.fromJson(obj))
         .toList()
@@ -23,10 +24,10 @@ class News {
   factory News.fromJson(Map<String, dynamic> json) {
     return new News(
         title: json['title'],
-        newsSiteLong: json['news_site_long'],
+        newsSiteLong: json['newsSite'],
         url: json['url'],
-        featureImage: json['featured_image'],
-        datePublished: DateTime.fromMicrosecondsSinceEpoch(json['date_published'] * 1000)
+        featureImage: json['imageUrl'],
+        datePublished:  DateTime.parse(json['publishedAt'])
     );
   }
 }
