@@ -673,15 +673,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
         ),
         new MergeSemantics(
           child: new ListTile(
-            title: new Text('On the Web'),
-            subtitle: new Text('Use Space Launch Now on the web!'),
-            onTap: () {
-              _launchURL("https://spacelaunchnow.me/");
-            },
-          ),
-        ),
-        new MergeSemantics(
-          child: new ListTile(
             title: new Text('Restore Purchases'),
             subtitle: new Text('Click here to restore in app purchases.'),
             onTap: () async {
