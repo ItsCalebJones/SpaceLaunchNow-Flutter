@@ -73,11 +73,11 @@ class PagesState extends State<Pages> {
   TabController controller;
 
   final List<String> _productLists = [
-    '2020_super_fan',
-    '2020_gse',
-    '2020_launch_director',
-    '2020_flight_controller',
-    '2020_elon'
+    '2021_super_fan',
+    '2021_gse',
+    '2021_launch_director',
+    '2021_flight_controller',
+    '2021_elon'
   ];
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];

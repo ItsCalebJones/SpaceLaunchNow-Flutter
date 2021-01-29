@@ -10,7 +10,6 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 import 'product_store.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -35,13 +34,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
   NotificationFilterPageState(this._firebaseMessaging);
 
   List<String> _productLists = [
-    "2020_super_fan",
-    "2020_gse",
-    "2020_flight_controller",
-    "2020_launch_director",
-    "2020_elon"
+    "2021_super_fan",
+    "2021_gse",
+    "2021_flight_controller",
+    "2021_launch_director",
+    "2021_elon"
   ];
-
 
   List<String> _notFoundIds = [];
   List<IAPItem> _items = [];
@@ -62,7 +60,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
-    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    List<PurchasedItem> items =
+        await FlutterInappPurchase.instance.getPurchaseHistory();
     for (var item in items) {
       print('${item.toString()}');
       this._purchases.add(item);
@@ -72,15 +71,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
       this._purchases = items;
     });
 
-    if (!initial){
+    if (!initial) {
       if (_purchases.length > 0) {
         sendUpdates(widget.configuration.copyWith(showAds: false));
         _prefs.then((SharedPreferences prefs) {
           return (prefs.setBool('showAds', false));
         });
         final snackBar = new SnackBar(
-          content:
-          new Text('Purchase history restored - thank you for your support!'),
+          content: new Text(
+              'Purchase history restored - thank you for your support!'),
           duration: new Duration(seconds: 5),
         );
         Scaffold.of(context).showSnackBar(snackBar);
@@ -104,21 +103,26 @@ class NotificationFilterPageState extends State<SettingsPage> {
       print('consumeAllItems error: $err');
     }
 
-    _conectionSubscription = FlutterInappPurchase.connectionUpdated.listen((connected) {
+    _conectionSubscription =
+        FlutterInappPurchase.connectionUpdated.listen((connected) {
       print('connected: $connected');
     });
 
-    _purchaseUpdatedSubscription = FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
       print('purchase-updated: $productItem');
       _getPurchaseHistory(initial: true);
     });
 
-    _purchaseErrorSubscription = FlutterInappPurchase.purchaseError.listen((purchaseError) {
+    _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
       print('purchase-error: $purchaseError');
-      if (!purchaseError.message.contains("Cancelled")){
+      if (!purchaseError.message.contains("Cancelled")) {
         var message = purchaseError.message;
         final scaffold = Scaffold.of(context);
-        scaffold.showSnackBar(SnackBar(content: new Text('Error: $message'),));
+        scaffold.showSnackBar(SnackBar(
+          content: new Text('Error: $message'),
+        ));
       }
     });
   }
@@ -138,12 +142,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   Future _getProduct() async {
-    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts(_productLists);
     for (var item in items) {
       print('${item.toString()}');
       this._items.add(item);
     }
-    this._items.sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
+    this
+        ._items
+        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
     setState(() {
       this._items = this._items;
@@ -153,7 +160,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
   void _requestPurchase(IAPItem item) {
     FlutterInappPurchase.instance.requestPurchase(item.productId);
     final scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(SnackBar(content: new Text('Sending purchase request to iTunes.'),));
+    scaffold.showSnackBar(SnackBar(
+      content: new Text('Sending purchase request to iTunes.'),
+    ));
   }
 
   void _handleNightMode(bool value) {
@@ -703,16 +712,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     final ListTile productHeader = ListTile(
         title: new Text('Become a Supporter',
-            style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
-        subtitle: new Text('Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
+            style: Theme.of(context)
+                .textTheme
+                .headline
+                .copyWith(fontWeight: FontWeight.bold)),
+        subtitle: new Text(
+            'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
     List<ListTile> productList = <ListTile>[];
 
     if (!_notFoundIds.isEmpty) {
       productList.add(ListTile(
           title: Text('Error loading in-app-purchases.',
-              style: TextStyle(fontWeight: FontWeight.bold)
-          )
-      ));
+              style: TextStyle(fontWeight: FontWeight.bold))));
     }
     print("Printing items");
     print(_items);
@@ -723,7 +734,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             .where((element) => element.productId == product.productId)
             .toList()
             .isEmpty;
-      print(product);
+        print(product);
         return ListTile(
             title: Text(
               product.title,
@@ -762,8 +773,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                     width: 2.5,
                   ),
                 ),
-                child: new Icon(Icons.check, color: Colors.white)
-            ),
+                child: new Icon(Icons.check, color: Colors.white)),
           ),
           new Text("Purchase confirmed - ads disabled!")
         ],
@@ -777,7 +787,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
     return Card(
         child: Column(
             children: <Widget>[productHeader, Divider()] +
-                productList + purchaseWidget));
+                productList +
+                purchaseWidget));
   }
 
   Widget buildNotificationFilters(BuildContext context) {
@@ -806,11 +817,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
             subtitle: new Text('Select your favorite launch agencies.'),
           ),
           Padding(
-            padding: const EdgeInsets.only(left:8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: new Text('NOTE: You will only receive notifications for launches matching both agency and location.'
+                child: new Text(
+                    'NOTE: You will only receive notifications for launches matching both agency and location.'
                     ' Example - if you have Florida and SpaceX selected you will only receive notifications for SpaceX launches in Florida.',
                     style: Theme.of(context).textTheme.caption),
               ),
