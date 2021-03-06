@@ -13,7 +13,7 @@ import 'http_client.dart';
 
 class SLNRepositoryImpl implements SLNRepository {
 
-  static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.0.0";
+  static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.2.0";
   static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v2";
 
   final client = ClientWithUserAgent(http.Client());

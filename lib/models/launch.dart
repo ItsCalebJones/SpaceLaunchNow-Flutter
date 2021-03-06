@@ -5,6 +5,7 @@ import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
+import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 
 import 'agency.dart';
@@ -21,6 +22,7 @@ class Launch {
   final DateTime net;
   final int probability;
   final Status status;
+  final List<Update> updates;
   final Rocket rocket;
   final Agency launchServiceProvider;
   final Pad pad;
@@ -39,6 +41,7 @@ class Launch {
       this.pad,
       this.mission,
       this.vidURLs,
+      this.updates,
       this.launchServiceProvider,
       this.image,
       this.infographic,
@@ -82,6 +85,7 @@ class Launch {
       pad: new Pad.fromJson(json['pad']),
       mission: mission,
       vidURLs: new List<VidURL>.from(json['vidURLs'].map((vidURL) => new VidURL.fromJson(vidURL))),
+      updates: new List<Update>.from(json['updates'].map((update) => new Update.fromJson(update))),
     );
   }
 }

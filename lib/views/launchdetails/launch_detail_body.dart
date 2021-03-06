@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
@@ -325,6 +326,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         new MissionShowcase(mLaunch),
+        _buildUpdates(),
         _buildNews(),
         new VehicleShowcase(mLaunch, widget._configuration),
         new AgenciesShowcase(mLaunch),
@@ -364,7 +366,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                 padding: const EdgeInsets.all(4.0),
                 child: Container(
                     child: new ListTile(
-                      onTap: () => _openUrl(news.url + "#related-news"),
+                      onTap: () => _openUrl(news.url),
                       leading: new CircleAvatar(
                         backgroundImage:
                         new CachedNetworkImageProvider(news.featureImage),
@@ -387,7 +389,73 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               color: Theme.of(context).accentColor,
                 child: Text("Read More"),
                 onPressed: () {
-                  _openUrl("https://spacelaunchnow.me/launch/" + mLaunch.slug);
+                  _openUrl("https://spacelaunchnow.me/launch/" + mLaunch.slug+ "#related-news");
+                }),
+          ),
+        );
+      }
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgets,
+        ),
+      );
+    } else {
+      return new SizedBox(height: 0);
+    }
+  }
+
+  Widget _buildUpdates() {
+    var formatter = new DateFormat.MMMEd().add_jm();
+    if (mLaunch.updates.isNotEmpty) {
+      List<Widget> widgets = new List<Widget>();
+      widgets.add(
+        new Text(
+          "Status Updates",
+          textAlign: TextAlign.left,
+          style: Theme.of(context)
+              .textTheme
+              .headline
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
+        ),
+      );
+      List<Update> _updates = [];
+      if (mLaunch.updates.length >= 6) {
+        _updates = mLaunch.updates.sublist(0, 5);
+      } else {
+        _updates =  mLaunch.updates;
+      }
+      for (Update update in _updates) {
+        widgets.add(
+            Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                    child: new ListTile(
+                      leading: new CircleAvatar(
+                        backgroundImage:
+                        new CachedNetworkImageProvider(update.profileImage),
+                      ),
+                      title: new Text(update.createdBy + " - " + formatter.format(update.createdOn),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subhead
+                              .copyWith(fontSize: 15.0)),
+                      subtitle: new Text(update.comment),
+                    )
+                )
+            )
+        );
+      }
+      if (widget.news.length >= 6) {
+        widgets.add(
+          Center(
+            child: new CupertinoButton(
+                color: Theme.of(context).accentColor,
+                child: Text("Read More"),
+                onPressed: () {
+                  _openUrl("https://spacelaunchnow.me/launch/" + mLaunch.slug + "#updates");
                 }),
           ),
         );

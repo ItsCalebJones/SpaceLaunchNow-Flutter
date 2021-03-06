@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -12,6 +13,7 @@ import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event.dart';
 import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -121,9 +123,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         key: ObjectKey(_controller),
         controller: _controller,
         showVideoProgressIndicator: false,
-        bottomActions: <Widget>[
-          CustomPlayPauseButton()
-        ],
+        bottomActions: <Widget>[CustomPlayPauseButton()],
       );
     } else {
       widget = Container();
@@ -176,31 +176,29 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       new Container(
         child: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Text(
-                        _starship.liveStream.first.title,
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      new Text(
-                        _starship.liveStream.first.description,
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.caption,
-                      )
-                    ],
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new Text(
+                      _starship.liveStream.first.title,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    new Text(
+                      _starship.liveStream.first.description,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.caption,
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
@@ -245,11 +243,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             style: Theme.of(context)
                 .textTheme
                 .subtitle1
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 48),
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
           ),
         ),
       ),
       _addUpNext(dataUpcoming),
+      _addUpdates(_starship.updates),
       _addRoadClosure(),
       _addNotice(),
       new SizedBox(
@@ -276,7 +275,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   }
 
   _addUpNext(List dataUpcoming) {
-    if (dataUpcoming.first != null) {
+    if (dataUpcoming != null && dataUpcoming.length > 0) {
       var next = dataUpcoming.first;
       if (next is Event) {
         return _buildEventListTile(next);
@@ -293,6 +292,76 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             style:
                 Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
       );
+    }
+  }
+
+  Widget _addUpdates(List<Update> updates) {
+    var formatter = new DateFormat.MMMEd().add_jm();
+    if (updates.isNotEmpty) {
+      List<Widget> widgets = new List<Widget>();
+
+      widgets.add(
+        new Container(
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 16, left: 24, right: 8.0, bottom: 8.0),
+            child: new Text(
+              "Updates",
+              textAlign: TextAlign.left,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
+            ),
+          ),
+        ),
+      );
+      List<Update> _updates = [];
+      if (updates.length >= 6) {
+        _updates = updates.sublist(0, 5);
+      } else {
+        _updates = updates;
+      }
+      for (Update update in _updates) {
+        widgets.add(Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+                child: new ListTile(
+              leading: new CircleAvatar(
+                backgroundImage:
+                    new CachedNetworkImageProvider(update.profileImage),
+              ),
+              title: new Text(
+                  update.createdBy + " - " + formatter.format(update.createdOn),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subhead
+                      .copyWith(fontSize: 15.0)),
+              subtitle: new Text(update.comment),
+            ))));
+      }
+      if (updates.length >= 6) {
+        widgets.add(
+          Center(
+            child: new CupertinoButton(
+                color: Theme.of(context).accentColor,
+                child: Text("Read More"),
+                onPressed: () {
+                  _openUrl("https://spacelaunchnow.me/starship");
+                }),
+          ),
+        );
+      }
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgets,
+        ),
+      );
+    } else {
+      return new SizedBox(height: 0);
     }
   }
 
@@ -354,14 +423,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     var widgets = new List<Widget>();
     widgets.add(
       Padding(
-        padding:
-            const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
-        child: new Text("Road Closures",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 48))
-      ),
+          padding:
+              const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
+          child: new Text("Road Closures",
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 42))),
     );
 
     if (_starship.roadClosures.length > 0) {
@@ -419,11 +487,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       Padding(
         padding:
             const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
-        child: new Text("Notices",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 48),),
+        child: new Text(
+          "Notices",
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
+        ),
       ),
     );
     if (_starship.notices.length > 0) {

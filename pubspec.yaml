@@ -1,6 +1,6 @@
 name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
-version: 2.3.5+6
+version: 2.4.0+1
 
 dependencies:
   flutter:
