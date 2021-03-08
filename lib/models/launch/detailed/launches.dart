@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 
 class Launches {
   final List<Launch> launches;

@@ -1,4 +1,4 @@
-import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 
 class LaunchesList {
   final List<LaunchList> launches;

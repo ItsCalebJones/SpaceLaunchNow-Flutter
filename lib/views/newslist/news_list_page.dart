@@ -6,12 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
-import 'package:spacelaunchnow_flutter/models/event.dart';
-import 'package:spacelaunchnow_flutter/models/events.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
-import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 

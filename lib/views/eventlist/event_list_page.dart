@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
-import 'package:spacelaunchnow_flutter/models/event.dart';
-import 'package:spacelaunchnow_flutter/models/events.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
+import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +26,7 @@ class EventListPage extends StatefulWidget {
 }
 
 class _EventListPageState extends State<EventListPage> {
-  List<Event> _events = [];
+  List<EventList> _events = [];
   int nextOffset = 0;
   int totalCount = 0;
   int offset = 0;
@@ -36,7 +38,7 @@ class _EventListPageState extends State<EventListPage> {
   @override
   void initState() {
     super.initState();
-    List<Event> events =
+    List<EventList> events =
     PageStorage.of(context).readState(context, identifier: 'events');
     if (events != null) {
       _events = events;
@@ -151,7 +153,7 @@ class _EventListPageState extends State<EventListPage> {
                       .of(context)
                       .textTheme
                       .subtitle),
-              new Text("Type: " + event.type,
+              new Text("Type: " + event.type.name,
                   style: Theme
                       .of(context)
                       .textTheme
@@ -266,11 +268,11 @@ class _EventListPageState extends State<EventListPage> {
     return null;
   }
 
-  Widget _buildEventButtons(Event event) {
+  Widget _buildEventButtons(EventList event) {
     List<Widget> eventButtons = [];
     List<Widget> iconButtons = [];
 
-    if (event.newsUrl != null) {
+    if (event.id != null) {
       eventButtons.add(
         new CupertinoButton(
           child: Row(
@@ -290,7 +292,7 @@ class _EventListPageState extends State<EventListPage> {
             ],
           ),
           onPressed: () {
-            _openBrowser(event.newsUrl);
+            _navigateToEventDetails(event: event, eventId: event.id);
           }, //
         ),
       );
@@ -337,5 +339,19 @@ class _EventListPageState extends State<EventListPage> {
         throw 'Could not launch $url';
       }
     }
+  }
+
+  void _navigateToEventDetails(
+      {EventList event, Object avatarTag, int eventId}) {
+    Ads.hideBannerAd();
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (c) {
+          return new EventDetailPage(widget._configuration,
+            eventList: event,
+            eventId: eventId,);
+        },
+      ),
+    );
   }
 }

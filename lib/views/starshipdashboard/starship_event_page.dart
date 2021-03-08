@@ -10,9 +10,11 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/notice.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
-import 'package:spacelaunchnow_flutter/models/event.dart';
-import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/ads.dart';
+import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -216,7 +218,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   }
 
   _buildTile(Object item) {
-      if (item is Event) {
+      if (item is EventList) {
         return _buildEventListTile(item);
       } else if (item is LaunchList) {
         return _buildLaunchListTile(item);
@@ -245,11 +247,13 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
     );
   }
 
-  Widget _buildEventListTile(Event event) {
+  Widget _buildEventListTile(EventList event) {
     var formatter = new DateFormat.yMd();
     return new Padding(
       padding: const EdgeInsets.all(8),
       child: new ListTile(
+        onTap: () =>
+            _navigateToEventDetails(event: null, eventId: event.id),
         leading: new CircleAvatar(
           backgroundImage: new CachedNetworkImageProvider(event.featureImage),
         ),
@@ -274,6 +278,19 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
             avatarTag: avatarTag,
             launchId: launchId,
           );
+        },
+      ),
+    );
+  }
+
+  void _navigateToEventDetails(
+      {EventList event, Object avatarTag, int eventId}) {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (c) {
+          return new EventDetailPage(widget._configuration,
+            eventList: event,
+            eventId: eventId,);
         },
       ),
     );

@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:spacelaunchnow_flutter/models/events.dart';
-import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/models/launches.dart';
-import 'package:spacelaunchnow_flutter/models/launches_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
+import 'package:spacelaunchnow_flutter/models/event/events.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
@@ -177,6 +178,23 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
+  Future<Event> fetchEventById(int id) {
+    String _kEventsUrl = BASE_URL + '/event/$id';
+
+    print(_kEventsUrl);
+    return client.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return Event.fromResponse(response);
+    });
+  }
+
+  @override
   Future<List<News>> fetchNews() {
     String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=30';
 
@@ -201,7 +219,28 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNewsByLaunch({String id}) {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/' + id +'/?_limit=30';
+    String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/$id/?_limit=30';
+
+    print(_kEventsUrl);
+    return client.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return jsonBody
+          .cast<Map<String, dynamic>>()
+          .map((obj) => News.fromJson(obj))
+          .toList()
+          .cast<News>();
+    });
+  }
+
+  @override
+  Future<List<News>> fetchNewsByEvent({int id}) {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles/event/$id/?_limit=30';
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {

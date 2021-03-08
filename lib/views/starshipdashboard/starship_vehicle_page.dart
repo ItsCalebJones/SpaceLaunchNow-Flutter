@@ -3,21 +3,13 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
-import 'package:spacelaunchnow_flutter/models/dashboard/notice.dart';
-import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
-import 'package:spacelaunchnow_flutter/models/event.dart';
-import 'package:spacelaunchnow_flutter/models/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class StarshipVehiclePage extends StatefulWidget {
   StarshipVehiclePage(this._configuration);

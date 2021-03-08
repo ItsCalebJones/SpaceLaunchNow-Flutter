@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/event.dart';
+import 'event_list.dart';
+
 
 class Events {
-  final List<Event> events;
+  final List<EventList> events;
   final int nextOffset;
   final int count;
 
@@ -18,7 +19,7 @@ class Events {
     }
 
     return new Events(
-        events: new List<Event>.from(json['results'].map((event) => new Event.fromJson(event))),
+        events: new List<EventList>.from(json['results'].map((event) => new EventList.fromJson(event))),
         nextOffset: offset,
         count: json['count']
     );

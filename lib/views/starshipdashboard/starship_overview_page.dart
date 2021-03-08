@@ -11,12 +11,13 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/notice.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
-import 'package:spacelaunchnow_flutter/models/event.dart';
-import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -248,7 +249,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
       ),
       _addUpNext(dataUpcoming),
-      _addUpdates(_starship.updates),
+      buildUpdates(_starship.updates, context, "https://spacelaunchnow.me/starship#updates"),
       _addRoadClosure(),
       _addNotice(),
       new SizedBox(
@@ -277,7 +278,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   _addUpNext(List dataUpcoming) {
     if (dataUpcoming != null && dataUpcoming.length > 0) {
       var next = dataUpcoming.first;
-      if (next is Event) {
+      if (next is EventList) {
         return _buildEventListTile(next);
       } else if (next is LaunchList) {
         return _buildLaunchListTile(next);
@@ -292,76 +293,6 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             style:
                 Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
       );
-    }
-  }
-
-  Widget _addUpdates(List<Update> updates) {
-    var formatter = new DateFormat.MMMEd().add_jm();
-    if (updates.isNotEmpty) {
-      List<Widget> widgets = new List<Widget>();
-
-      widgets.add(
-        new Container(
-          child: Padding(
-            padding: const EdgeInsets.only(
-                top: 16, left: 24, right: 8.0, bottom: 8.0),
-            child: new Text(
-              "Updates",
-              textAlign: TextAlign.left,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
-            ),
-          ),
-        ),
-      );
-      List<Update> _updates = [];
-      if (updates.length >= 6) {
-        _updates = updates.sublist(0, 5);
-      } else {
-        _updates = updates;
-      }
-      for (Update update in _updates) {
-        widgets.add(Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Container(
-                child: new ListTile(
-              leading: new CircleAvatar(
-                backgroundImage:
-                    new CachedNetworkImageProvider(update.profileImage),
-              ),
-              title: new Text(
-                  update.createdBy + " - " + formatter.format(update.createdOn),
-                  style: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .copyWith(fontSize: 15.0)),
-              subtitle: new Text(update.comment),
-            ))));
-      }
-      if (updates.length >= 6) {
-        widgets.add(
-          Center(
-            child: new CupertinoButton(
-                color: Theme.of(context).accentColor,
-                child: Text("Read More"),
-                onPressed: () {
-                  _openUrl("https://spacelaunchnow.me/starship");
-                }),
-          ),
-        );
-      }
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: new Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widgets,
-        ),
-      );
-    } else {
-      return new SizedBox(height: 0);
     }
   }
 
@@ -385,7 +316,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     );
   }
 
-  Widget _buildEventListTile(Event event) {
+  Widget _buildEventListTile(EventList event) {
     var formatter = new DateFormat.yMd();
     return new Padding(
       padding: const EdgeInsets.all(8),

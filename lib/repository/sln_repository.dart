@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:spacelaunchnow_flutter/models/events.dart';
-import 'package:spacelaunchnow_flutter/models/launch.dart';
-import 'package:spacelaunchnow_flutter/models/launches.dart';
-import 'package:spacelaunchnow_flutter/models/launches_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
+import 'package:spacelaunchnow_flutter/models/event/events.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
@@ -20,9 +21,13 @@ abstract class SLNRepository {
 
   Future<Events> fetchNextEvent({String limit, String offset});
 
+  Future<Event> fetchEventById(int id);
+
   Future<List<News>> fetchNews();
 
   Future<List<News>> fetchNewsByLaunch({String id});
+
+  Future<List<News>> fetchNewsByEvent({int id});
 
   Future<Starship> fetchStarshipDashboard();
 

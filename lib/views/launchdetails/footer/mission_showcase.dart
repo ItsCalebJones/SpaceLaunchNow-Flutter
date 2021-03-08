@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/models/launch.dart';
+import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MissionShowcase extends StatelessWidget {

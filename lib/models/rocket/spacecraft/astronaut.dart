@@ -1,7 +1,7 @@
 import 'package:spacelaunchnow_flutter/models/rocket/landing.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 
-import '../../launch.dart';
+import '../../launch/detailed/launch.dart';
 
 class Astronaut {
   final int id;

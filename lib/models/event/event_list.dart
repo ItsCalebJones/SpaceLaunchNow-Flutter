@@ -1,14 +1,16 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/update.dart';
 
-class Event {
+import 'event_type.dart';
+
+class EventList {
   final int id;
   final String name;
   final String description;
-  final String type;
+  final EventType type;
   final String location;
   final String newsUrl;
   final String videoUrl;
@@ -18,21 +20,21 @@ class Event {
   final DateTime net;
   final Iterable<LaunchList> launches;
 
-  Event({this.id, this.name, this.description, this.type, this.location,
+  EventList({this.id, this.name, this.description, this.type, this.location,
     this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches,
     this.net, this.updates,});
 
-  static List<Event> allFromResponse(http.Response response) {
+  static List<EventList> allFromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()
-        .map((obj) => Event.fromJson(obj))
+        .map((obj) => EventList.fromJson(obj))
         .toList()
-        .cast<Event>();
+        .cast<EventList>();
   }
 
-  factory Event.fromJson(Map<String, dynamic> json) {
+  factory EventList.fromJson(Map<String, dynamic> json) {
     print (json);
     var _updates;
 
@@ -40,10 +42,10 @@ class Event {
       _updates = new List<Update>.from(json['updates'].map((update) => new Update.fromJson(update)));
     }
 
-    return new Event(
+    return new EventList(
         id: json['id'],
         name: json['name'],
-        type: json['type']['name'],
+        type: new EventType.fromJson(json['type']),
         description: json['description'],
         location: json['location'],
         newsUrl: json['news_url'],

@@ -1,37 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:spacelaunchnow_flutter/colors/app_colors.dart';
-import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
+import 'package:share/share.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/diagonally_cut_colored_image.dart';
 
-class LaunchDetailHeader extends StatelessWidget {
+class EventDetailHeader extends StatelessWidget {
 
-  LaunchDetailHeader(
-    this.launch,  {
-    @required this.loadLaunch,
-    this.avatarTag,
+  EventDetailHeader(
+    this.event,  {
     @required this.backEnabled,
   });
 
-  final ValueChanged<String> loadLaunch;
-  final Launch launch;
-  final Object avatarTag;
+  final Event event;
   final bool backEnabled;
 
   void _handleTap() {
-    loadLaunch(launch.id);
+  }
+
+  void _handleShare() {
+    var id = event.id;
+    share("https://spacelaunchnow.me/event/$id");
   }
 
   Widget _buildDiagonalImageBackground(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
 
-    var backgroundUrl = "";
-    if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0){
-      backgroundUrl = launch.rocket.configuration.image;
-    } else if (launch.pad != null){
-      backgroundUrl = launch.pad.location.mapImage;
-    }
+    var backgroundUrl = event.featureImage;
 
     return new DiagonallyCutColoredImage(
       image: backgroundUrl,
@@ -40,34 +34,12 @@ class LaunchDetailHeader extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context) {
-    var avataruUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
-    if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0){
-      avataruUrl = launch.rocket.configuration.image;
-    } else if (launch.pad != null){
-      avataruUrl = launch.pad.mapImage;
+    var avatarUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+
+    if (avatarUrl != null) {
+      avatarUrl = event.featureImage;
     }
 
-    if (avatarTag != null) {
-      return new Hero(
-        tag: avatarTag,
-        child: new Container(
-          width: 200.0,
-          height: 200.0,
-          padding: const EdgeInsets.all(2.0), // borde width
-          decoration: new BoxDecoration(
-          color: Theme.of(context).highlightColor, // border color
-          shape: BoxShape.circle,
-          ),
-          child: new CircleAvatar(
-            foregroundColor: Colors.white,
-            backgroundImage: new NetworkImage(avataruUrl),
-            radius: 100.0,
-            backgroundColor: Colors.white,
-          ),
-        ),
-      );
-    } else {
       return new Container(
         width: 200.0,
         height: 200.0,
@@ -78,13 +50,12 @@ class LaunchDetailHeader extends StatelessWidget {
         ),
         child: new CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(avataruUrl),
+          backgroundImage: new NetworkImage(avatarUrl),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),
       );
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +80,10 @@ class LaunchDetailHeader extends StatelessWidget {
             top: 24.0,
             right: 4.0,
             child: new IconButton(
-                icon: const Icon(Icons.refresh),
+                icon: const Icon(Icons.share),
                 tooltip: 'Refresh',
                 onPressed: () {
-                  _handleTap();
+                  _handleShare();
                 }),
           ),
         ],

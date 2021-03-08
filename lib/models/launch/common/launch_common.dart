@@ -1,17 +1,15 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/location.dart';
+import 'package:spacelaunchnow_flutter/models/agency_mini.dart';
+import 'package:spacelaunchnow_flutter/models/launch/common/rocket_common.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
-import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
-import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 
-import 'agency.dart';
 import 'package:http/http.dart' as http;
 
-class Launch {
+class LaunchCommon {
   final String id;
   final String name;
   final String infographic;
@@ -22,14 +20,12 @@ class Launch {
   final DateTime net;
   final int probability;
   final Status status;
-  final List<Update> updates;
-  final Rocket rocket;
-  final Agency launchServiceProvider;
+  final RocketCommon rocket;
+  final AgencyMini launchServiceProvider;
   final Pad pad;
   final Mission mission;
-  final List<VidURL> vidURLs;
 
-  const Launch(
+  const LaunchCommon(
       {this.id,
       this.name,
       this.status,
@@ -40,36 +36,34 @@ class Launch {
       this.rocket,
       this.pad,
       this.mission,
-      this.vidURLs,
-      this.updates,
       this.launchServiceProvider,
       this.image,
       this.infographic,
       this.slug});
 
-  static List<Launch> allFromResponse(http.Response response) {
+  static List<LaunchCommon> allFromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()
-        .map((obj) => Launch.fromJson(obj))
+        .map((obj) => LaunchCommon.fromJson(obj))
         .toList()
-        .cast<Launch>();
+        .cast<LaunchCommon>();
   }
 
-  static Launch fromResponse(http.Response response) {
+  static LaunchCommon fromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
-    return Launch.fromJson(decodedJson);
+    return LaunchCommon.fromJson(decodedJson);
   }
 
-  factory Launch.fromJson(Map<String, dynamic> json) {
+  factory LaunchCommon.fromJson(Map<String, dynamic> json) {
     print(json);
     var mission;
     if (json['mission'] != null) {
       mission = new Mission.fromJson(json['mission']);
     }
 
-    return new Launch(
+    return new LaunchCommon(
       id: json['id'],
       name: json['name'],
       infographic: json['infographic'],
@@ -80,12 +74,10 @@ class Launch {
       windowEnd: DateTime.parse(json['window_end']),
       net: DateTime.parse(json['net']),
       probability: json['probability'],
-      launchServiceProvider: new Agency.fromJson(json['launch_service_provider']),
-      rocket: new Rocket.fromJson(json['rocket']),
+      launchServiceProvider: new AgencyMini.fromJson(json['launch_service_provider']),
+      rocket: new RocketCommon.fromJson(json['rocket']),
       pad: new Pad.fromJson(json['pad']),
       mission: mission,
-      vidURLs: new List<VidURL>.from(json['vidURLs'].map((vidURL) => new VidURL.fromJson(vidURL))),
-      updates: new List<Update>.from(json['updates'].map((update) => new Update.fromJson(update))),
     );
   }
 }
