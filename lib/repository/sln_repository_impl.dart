@@ -178,6 +178,27 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
+  Future<Events> fetchPreviousEvent({ String limit, String offset}) {
+    String _kEventsUrl = BASE_URL + '/event/previous/?mode=list&limit=' + limit;
+
+    if (offset != null){
+      _kEventsUrl = _kEventsUrl + '&offset=' + offset;
+    }
+
+    print(_kEventsUrl);
+    return client.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
+      final statusCode = response.statusCode;
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return Events.fromJson(jsonBody);
+    });
+  }
+
+  @override
   Future<Event> fetchEventById(int id) {
     String _kEventsUrl = BASE_URL + '/event/$id';
 

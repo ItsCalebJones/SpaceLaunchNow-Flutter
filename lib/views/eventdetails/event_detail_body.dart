@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
+import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -199,7 +201,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   Widget _buildDescription() {
     List<Widget> widgets = [];
 
-    if (mEvent.videoUrl != null) {
+    if (mEvent.videoUrl != null && YoutubePlayer.convertUrlToId(mEvent.videoUrl) != null) {
       YoutubePlayerController _controller = YoutubePlayerController(
         initialVideoId:
         YoutubePlayer.convertUrlToId(mEvent.videoUrl),
@@ -252,6 +254,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
     } else {
       widgets.add(Container());
     }
+
     widgets.add(
         new Padding(
             padding: const EdgeInsets.all(8.0),
@@ -270,8 +273,101 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         )
     );
 
+    if (mEvent.newsUrl != null) {
+      widgets.add(new Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom:24, top:16, left:8, right:8),
+              child: CupertinoButton(
+                color: Colors.blue,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: new Icon(
+                        FontAwesomeIcons.desktop,
+                      ),
+                    ),
+                    new Text(
+                      'Related Information',
+                      style: TextStyle(),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  _openUrl(mEvent.newsUrl);
+                }, //
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+
+
+    if (mEvent.launches != null && mEvent.launches.length > 0) {
+      var launch = mEvent.launches.first;
+      var formatter = new DateFormat.yMd();
+
+      widgets.add(new Padding(
+        padding: const EdgeInsets.only(top: 4.0, bottom: 4.0,),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left:8.0, right: 8.0),
+                child: new Text(
+                    "Related Launch",
+                    style: Theme.of(context).textTheme.headline
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
+              ),
+            ),
+            new ListTile(
+              onTap: () =>
+                  _navigateToLaunchDetails(avatarTag: 0, launchId: launch.id),
+              leading: new Hero(
+                tag: 0,
+                child: new CircleAvatar(
+                  backgroundImage: new CachedNetworkImageProvider(launch.image),
+                ),
+              ),
+              title: new Text(launch.name, style: Theme
+                  .of(context)
+                  .textTheme
+                  .subhead
+                  .copyWith(fontSize: 15.0)),
+              subtitle: new Text(launch.pad.location.name),
+              trailing: new Text(formatter.format(launch.net), style: Theme
+                  .of(context)
+                  .textTheme
+                  .caption),
+            ),
+          ],
+        ),
+      ));
+    }
+
+
     return new Column(children: widgets);
   }
+
+    void _navigateToLaunchDetails({Object avatarTag, String launchId}) {
+      Ads.hideBannerAd();
+      Navigator.of(context).push(
+        new MaterialPageRoute(
+          builder: (c) {
+            return new LaunchDetailPage(widget._configuration, launch: null,
+              avatarTag: avatarTag,
+              launchId: launchId,);
+          },
+        ),
+      );
+    }
+
 
 }
 

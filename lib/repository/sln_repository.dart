@@ -21,6 +21,8 @@ abstract class SLNRepository {
 
   Future<Events> fetchNextEvent({String limit, String offset});
 
+  Future<Events> fetchPreviousEvent({String limit, String offset});
+
   Future<Event> fetchEventById(int id);
 
   Future<List<News>> fetchNews();

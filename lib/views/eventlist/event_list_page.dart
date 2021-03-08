@@ -26,25 +26,30 @@ class EventListPage extends StatefulWidget {
 }
 
 class _EventListPageState extends State<EventListPage> {
-  List<EventList> _events = [];
-  int nextOffset = 0;
-  int totalCount = 0;
-  int offset = 0;
-  int limit = 10;
+  List<EventList> _upcomingEvents = [];
+  List<EventList> _previousEvents = [];
+
+  int limit = 20;
   bool loading = false;
-  bool searchActive = false;
+  List<bool> isSelected = [true, false];
+
   SLNRepository _repository = new Injector().slnRepository;
 
   @override
   void initState() {
     super.initState();
-    List<EventList> events =
-    PageStorage.of(context).readState(context, identifier: 'events');
-    if (events != null) {
-      _events = events;
+    List<EventList> upcomingEvents = PageStorage.of(context)
+        .readState(context, identifier: 'upcoming_events');
+    List<EventList> previousEvents = PageStorage.of(context)
+        .readState(context, identifier: 'previous_events');
+
+    if (upcomingEvents != null && previousEvents != null) {
+      _upcomingEvents = upcomingEvents;
+      _previousEvents = previousEvents;
     } else {
       lockedLoadNext();
     }
+    isSelected = [true, false];
   }
 
   @override
@@ -52,41 +57,75 @@ class _EventListPageState extends State<EventListPage> {
     super.dispose();
   }
 
-  void onLoadEventsComplete(Events events, [bool reload = false]) {
-    loading = false;
-    nextOffset = events.nextOffset;
-    totalCount = events.count;
-    print(
-        "Next: " + nextOffset.toString() + " Total: " + totalCount.toString());
-    if (reload) {
-      _events.clear();
+  void lockedLoadNext() {
+    if (loading == false) {
+      loadEvents();
     }
-    setState(() {
-      _events.addAll(events.events);
-      PageStorage.of(context)
-          .writeState(context, _events, identifier: 'events');
+  }
+
+  void loadEvents() {
+    loading = true;
+    _repository
+        .fetchNextEvent(limit: limit.toString(), offset: "0")
+        .then((events) => onLoadUpcomingEventsComplete(events))
+        .catchError((onError) {
+      print(onError);
+      onLoadEventsError();
+    });
+    _repository
+        .fetchPreviousEvent(limit: limit.toString(), offset: "0")
+        .then((events) => onLoadPreviousEventsComplete(events))
+        .catchError((onError) {
+      print(onError);
+      onLoadEventsError();
     });
   }
 
-  void onLoadContactsError([bool search]) {
-    print("Error occured");
+  Future<Null> _handleRefresh() async {
+    lockedLoadNext();
+  }
+
+  void onLoadUpcomingEventsComplete(Events events, [bool reload = false]) {
     loading = false;
-    if (search == true) {
-      setState(() {
-        _events.clear();
-      });
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        duration: new Duration(seconds: 10),
-        content: new Text('Unable to load events.'),
-        action: new SnackBarAction(
-          label: 'Refresh',
-          onPressed: () {
-            // Some code to undo the change!
-            _handleRefresh();
-          },
-        ),
-      ));
+
+    if (reload) {
+      _upcomingEvents.clear();
     }
+
+    setState(() {
+      _upcomingEvents.addAll(events.events);
+      PageStorage.of(context)
+          .writeState(context, _upcomingEvents, identifier: 'upcoming_events');
+    });
+  }
+
+  void onLoadPreviousEventsComplete(Events events, [bool reload = false]) {
+    loading = false;
+
+    if (reload) {
+      _previousEvents.clear();
+    }
+
+    setState(() {
+      _previousEvents.addAll(events.events);
+      PageStorage.of(context)
+          .writeState(context, _previousEvents, identifier: 'previous_events');
+    });
+  }
+
+  void onLoadEventsError() {
+    loading = false;
+    Scaffold.of(context).showSnackBar(new SnackBar(
+      duration: new Duration(seconds: 10),
+      content: new Text('Unable to load events.'),
+      action: new SnackBarAction(
+        label: 'Refresh',
+        onPressed: () {
+          // Some code to undo the change!
+          _handleRefresh();
+        },
+      ),
+    ));
   }
 
   ThemeData get appBarTheme {
@@ -95,95 +134,6 @@ class _EventListPageState extends State<EventListPage> {
     } else {
       return kIOSTheme;
     }
-  }
-
-  Widget _buildEventTile(BuildContext context, int index) {
-    var event = _events[index];
-    var formatter = new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy");
-
-    return new Padding(
-      padding:
-      const EdgeInsets.only(top: 0.0, bottom: 4.0, left: 8.0, right: 8.0),
-      child: Card(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              CachedNetworkImage(
-                imageUrl: event.featureImage,
-                imageBuilder: (context, imageProvider) => Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover
-                    ),
-                  ),
-                ),
-                placeholder: (context, url) => Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/placeholder.png'),
-                      fit: BoxFit.cover,
-                      // ...
-                    ),
-                    // ...
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/placeholder.png'),
-                      fit: BoxFit.cover,
-                      // ...
-                    ),
-                    // ...
-                  ),
-                )
-              ),
-              new Text(event.name, textAlign: TextAlign.center, style: Theme
-                  .of(context)
-                  .textTheme
-                  .title),
-              new Text(event.location,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .subtitle),
-              new Text("Type: " + event.type.name,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .caption),
-              new Text(formatter.format(event.date.toLocal()),
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .caption),
-              Container(
-                padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(event.description,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .body1,
-                    maxLines: 5,
-                    textAlign: TextAlign.left),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
-                  child: _buildEventButtons(event),
-                ),
-              )
-            ],
-          )),
-    );
   }
 
   void _navigateToLaunchDetails(
@@ -202,70 +152,88 @@ class _EventListPageState extends State<EventListPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Widget content;
 
-    if (_events.isEmpty && loading) {
-      content = new Center(
-        child: new CircularProgressIndicator(),
-      );
-    } else if (_events.isEmpty) {
-      content = new Center(
-        child: new Text("No Events Loaded"),
-      );
+  List<Widget> _buildList() {
+    var data = [];
+    List<Widget> content = new List<Widget>();
+
+
+    if (isSelected[0]) {
+      for (Object item in _upcomingEvents){
+        content.add(_buildEventListTile(item));
+      }
     } else {
-      ListView listView = new ListView.builder(
-        itemCount: _events.length,
-        itemBuilder: _buildEventTile,
-      );
-
-      content =
-      new RefreshIndicator(onRefresh: _handleRefresh, child: listView);
+      for (Object item in _previousEvents){
+        content.add(_buildEventListTile(item));
+      }
     }
-
+    print(data);
     return content;
   }
 
-  void notifyThreshold() {
-    lockedLoadNext();
-  }
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> content = new List<Widget>();
 
-  void lockedLoadNext() {
-    if (loading == false) {
-      loadNext();
+    if (_upcomingEvents.isEmpty && _previousEvents.isEmpty && loading) {
+      content.add(new SizedBox(height: 200));
+      content.add(new Center(
+        child: new CircularProgressIndicator(),
+      ));
+    } else if (_upcomingEvents.isEmpty && _previousEvents.isEmpty) {
+      content.add(new SizedBox(height: 200));
+      content.add(Center(
+        child: new Text("Unable to Load Dashboard"),
+      ));
+    } else {
+      content.addAll(_buildList());
     }
-  }
 
-  void loadNext() {
-    loading = true;
-    if (totalCount == 0 || nextOffset != null) {
-      _repository
-          .fetchNextEvent(
-          limit: limit.toString(), offset: nextOffset.toString())
-          .then((events) => onLoadEventsComplete(events))
-          .catchError((onError) {
-        print(onError);
-        onLoadContactsError();
-      });
-    }
-  }
 
-  Future<Null> _handleRefresh() async {
-    _events.clear();
-    loading == false;
-    totalCount = 0;
-    limit = 10;
-    nextOffset = 0;
-    searchActive = false;
-    loading = true;
-    Events responseEvents = await _repository
-        .fetchNextEvent(limit: limit.toString(), offset: nextOffset.toString())
-        .catchError((onError) {
-      onLoadContactsError();
-    });
-    onLoadEventsComplete(responseEvents);
-    return null;
+      return new Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ToggleButtons(
+                borderRadius: BorderRadius.circular(8.0),
+                textStyle: Theme.of(context).textTheme.subtitle1,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Upcoming"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Previous"),
+                  ),
+                ],
+                onPressed: (int index) {
+                  setState(() {
+                    for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+                      if (buttonIndex == index) {
+                        isSelected[buttonIndex] = true;
+                      } else {
+                        isSelected[buttonIndex] = false;
+                      }
+                    }
+                  });
+                },
+                isSelected: isSelected,
+              ),
+            ),
+          ),
+          Expanded(
+            child: new ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: content,
+            ),
+          ),
+        ],
+      );
   }
 
   Widget _buildEventButtons(EventList event) {
@@ -300,7 +268,8 @@ class _EventListPageState extends State<EventListPage> {
 
     if (event.videoUrl != null) {
       iconButtons.add(new Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
+          padding: const EdgeInsets.only(
+              top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
           child: new IconButton(
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Event',
@@ -325,6 +294,31 @@ class _EventListPageState extends State<EventListPage> {
         children: eventButtons);
   }
 
+  Widget _buildEventListTile(EventList event) {
+    var formatter = new DateFormat.yMd();
+    var location = "";
+
+    if (event.location != null){
+      location = event.location;
+    }
+
+    return new Padding(
+      padding: const EdgeInsets.all(8),
+      child: new ListTile(
+        onTap: () => _navigateToEventDetails(event: null, eventId: event.id),
+        leading: new CircleAvatar(
+          backgroundImage: new CachedNetworkImageProvider(event.featureImage),
+        ),
+        title: new Text(event.name,
+            style:
+                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
+        subtitle: new Text(location),
+        trailing: new Text(formatter.format(event.net),
+            style: Theme.of(context).textTheme.caption),
+      ),
+    );
+  }
+
   _openBrowser(String url) async {
     Uri _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
@@ -347,9 +341,11 @@ class _EventListPageState extends State<EventListPage> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
-          return new EventDetailPage(widget._configuration,
+          return new EventDetailPage(
+            widget._configuration,
             eventList: event,
-            eventId: eventId,);
+            eventId: eventId,
+          );
         },
       ),
     );
