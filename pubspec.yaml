@@ -1,6 +1,6 @@
 name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
-version: 2.4.0+3
+version: 2.4.0+4
 
 dependencies:
   flutter:
@@ -72,18 +72,11 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  # example:\
+  fonts:
+    - family: CustomSLN
+      fonts:
+        - asset:  fonts/CustomSLN.ttf
+
   # For details regarding fonts from package dependencies, 
   # see https://flutter.io/custom-fonts/#from-packages

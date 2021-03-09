@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/util/ads.dart';
+import 'package:spacelaunchnow_flutter/util/app_icons.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
@@ -683,17 +684,17 @@ class PagesState extends State<Pages> {
                   },
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
-                        icon: new Icon(MaterialCommunityIcons.home),
+                        icon: new Icon(FontAwesomeIcons.home),
                         title: new Text("Home")),
                     new BottomNavigationBarItem(
                         title: new Text('Launches'),
-                        icon: new Icon(MaterialCommunityIcons.clipboard)),
+                        icon: new Icon(MaterialCommunityIcons.clipboard_text)),
                     new BottomNavigationBarItem(
                         title: new Text('News'),
-                        icon: new Icon(MaterialCommunityIcons.calendar)),
+                        icon: new Icon(FontAwesomeIcons.newspaper)),
                     new BottomNavigationBarItem(
                         title: new Text('Starship'),
-                        icon: new Icon(FontAwesomeIcons.spaceShuttle)),
+                        icon: Icon(CustomSLN.starship)),
                     new BottomNavigationBarItem(
                         title: new Text('Settings'),
                         icon: new Icon(MaterialCommunityIcons.settings)),
