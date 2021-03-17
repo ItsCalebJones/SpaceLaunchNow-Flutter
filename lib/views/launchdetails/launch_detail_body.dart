@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
@@ -243,7 +242,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                share("https://spacelaunchnow.me/launch/" + mLaunch.slug);
+                Share.share("https://spacelaunchnow.me/launch/" + mLaunch.slug);
               },
               child: new Text(
                 'Share',
@@ -277,11 +276,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   }
 
   Widget _buildSpace() {
-    if (Ads.isBannerShowing()) {
-      return new SizedBox(height: 50);
-    } else {
-      return new SizedBox(height: 0);
-    }
+    return new SizedBox(height: 50);
   }
 
   Widget _buildContentCard(BuildContext context) {

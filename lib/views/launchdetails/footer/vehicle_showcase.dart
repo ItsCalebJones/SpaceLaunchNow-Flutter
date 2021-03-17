@@ -6,7 +6,6 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -484,7 +483,6 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   void _navigateToLaunchDetails({String launchId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

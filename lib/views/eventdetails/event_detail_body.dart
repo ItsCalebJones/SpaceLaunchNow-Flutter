@@ -5,13 +5,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -127,7 +129,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new CupertinoButton(
               onPressed: () {
-                share(eventUrl);
+                Share.share(eventUrl);
               },
               child: new Text(
                 'Share Event',
@@ -188,6 +190,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         ),
         _buildDescription(),
         buildUpdates(mEvent.updates, context, "https://spacelaunchnow.me/event/$id"),
+        Center(child: ListAdWidget(AdSize.largeBanner)),
         _buildSpace(),
       ],
     );
@@ -267,7 +270,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                       style: Theme.of(context).textTheme.headline
                           .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
                 ),
-                new Text(mEvent.description)
+                new Text(mEvent.description),
               ],
             ),
         )
@@ -356,7 +359,6 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   }
 
     void _navigateToLaunchDetails({Object avatarTag, String launchId}) {
-      Ads.hideBannerAd();
       Navigator.of(context).push(
         new MaterialPageRoute(
           builder: (c) {
@@ -367,7 +369,6 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         ),
       );
     }
-
 
 }
 

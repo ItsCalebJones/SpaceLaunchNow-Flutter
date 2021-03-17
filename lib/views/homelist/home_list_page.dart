@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,9 +13,10 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -57,7 +59,6 @@ class _HomeListPageState extends State<HomeListPage> {
   bool subscribeBlueOrigin;
   bool subscribeNorthrop;
   SLNRepository _repository = new Injector().slnRepository;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -77,6 +78,7 @@ class _HomeListPageState extends State<HomeListPage> {
       lockedLoadNext();
     }
   }
+
 
   @override
   void dispose() {
@@ -144,8 +146,9 @@ class _HomeListPageState extends State<HomeListPage> {
       title = launch.name;
     }
 
-    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    if (launch.launchServiceProvider != null){
+    var url =
+        "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+    if (launch.launchServiceProvider != null) {
       if (launch.launchServiceProvider.nationURL != null &&
           launch.launchServiceProvider.nationURL.length > 0) {
         url = launch.launchServiceProvider.nationURL;
@@ -260,7 +263,6 @@ class _HomeListPageState extends State<HomeListPage> {
 
   void _navigateToLaunchDetails(
       {Launch launch, Object avatarTag, String launchId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -328,7 +330,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
-              share("https://spacelaunchnow.me/launch/" + launch.slug);
+              Share.share("https://spacelaunchnow.me/launch/" + launch.slug);
             }, //
           )));
     }
@@ -369,12 +371,11 @@ class _HomeListPageState extends State<HomeListPage> {
     List<Widget> content = new List<Widget>();
     print("Upcoming build!");
 
+
     Widget view = new Scaffold(
-        body: new CustomScrollView(slivers: <Widget>[
-      new SliverAppBar(
-        elevation: 0.0,
-        expandedHeight: 50,
-        centerTitle: false,
+      body: _buildBody(),
+      appBar: AppBar(
+        elevation: 0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
@@ -393,8 +394,7 @@ class _HomeListPageState extends State<HomeListPage> {
               .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
         ),
       ),
-      _buildBody()
-    ]));
+    );
     return view;
   }
 
@@ -648,6 +648,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildBody() {
+
     List<Widget> content = new List<Widget>();
     if (_launches.isEmpty || loading) {
       content.add(new SizedBox(height: 200));
@@ -660,11 +661,42 @@ class _HomeListPageState extends State<HomeListPage> {
         child: new Text("No Launches Loaded"),
       ));
     } else {
-      for (var item in _launches) {
-        content.add(_buildLaunchTile(context, item));
-      }
+      _launches.asMap().forEach(
+          (index, item) => {content.addAll(_map_launch_to_tile(index, item))});
+
       content.add(new SizedBox(height: 50));
     }
-    return new SliverList(delegate: new SliverChildListDelegate(content));
+    return Stack(
+        children:  <Widget>[
+          new ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: _launches.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildLaunchTile(context, _launches[index]);
+            }),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ListAdWidget(AdSize.banner),
+          ),
+        ]
+    );
+  }
+
+
+  Iterable<Widget> _map_launch_to_tile(int index, Launch item) {
+    List<Widget> content = new List<Widget>();
+    index += 1;
+
+    // if (index == 2) {
+    //   content.add(_bannerAd);
+    // }
+
+    content.add(_buildLaunchTile(context, item));
+
+    // if (index != 0 && index % 3 == 0) {
+    //   content.add(_bannerAd);
+    // }
+
+    return content;
   }
 }

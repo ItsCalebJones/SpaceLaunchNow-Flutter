@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -13,6 +14,7 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StarshipEventPage extends StatefulWidget {
@@ -30,6 +32,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
   List<bool> isSelected = [true, false];
+  SLNAd ad = SLNAd(AdSize.largeBanner);
 
   @override
   void initState() {
@@ -43,6 +46,11 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       lockedLoadNext();
     }
     isSelected = [true, false];
+    ad.create().then((result) {
+      setState(() {
+        print(ad.isReady);
+      });
+    });
   }
 
   @override
@@ -146,10 +154,18 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
           ),
         ),
         Expanded(
-          child: new ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: content,
+          child: Stack(
+            children: <Widget>[
+                new ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: content,
+              ),
+              Align(
+              alignment: Alignment.bottomCenter,
+              child: AdWidgetBuilder(ad),
+              ),
+            ]
           ),
         ),
       ],

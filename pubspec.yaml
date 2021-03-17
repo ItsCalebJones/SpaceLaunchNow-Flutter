@@ -1,44 +1,49 @@
 name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
-version: 2.4.0+4
+version: 2.4.1
+
+environment:
+  sdk: '>=2.10.0 <3.0.0'
+
 
 dependencies:
   flutter:
     sdk: flutter
   intl: "^0.16.1"
-  share: "^0.4.0"
-  shared_preferences: "^0.5.4+3"
+  share: ^0.6.5+4
 
   # https://pub.dartlang.org/packages/firebase_admob#-installing-tab-]
-  firebase_admob: ^0.9.0+7
-  firebase_messaging: '^5.0.2'
-  firebase_analytics: '^1.0.0'
-  url_launcher: '5.5.0'
+  google_mobile_ads: ^0.11.0+3
+  firebase_messaging: ^9.0.0
+  firebase_analytics: ^7.1.1
+  url_launcher: ^6.0.2
 
   # IAP
   in_app_purchase: ^0.3.4+7
-  flutter_inapp_purchase: ^2.2.0
+  flutter_inapp_purchase: ^4.0.2
 
-  uri: "^0.11.1"
-  cached_network_image: 2.1.0+1
-  sqflite: ^1.1.0
-  flutter_staggered_grid_view: "^0.3.0"
-  tweet_ui: 2.1.0
+  uri: ^1.0.0
+  cached_network_image: ^2.5.1
+  sqflite: ^2.0.0+2
+  flutter_staggered_grid_view: "^0.3.4"
+  tweet_ui:
+    path: ../tweet_ui
   dart_twitter_api: ^0.3.4
   font_awesome_flutter: ^8.5.0
-  material_design_icons_flutter: ^3.2.3695
-  flutter_vector_icons: ^0.1.0
-  rate_my_app: ^0.4.0
-  yaml: ^2.2.1
-  package_info: ^0.4.1
+  material_design_icons_flutter: ^4.0.5955
+  flutter_vector_icons: ^1.0.0
+  rate_my_app: ^1.0.0+2
+  yaml: ^3.1.0
+  package_info: ^2.0.0
   youtube_player_flutter: ^7.0.0+7
-  rxdart: ^0.24.1
+  rxdart: ^0.25.0
   google_fonts: ^1.1.0
-  video_player: ^0.10.12+2
+  video_player: ^1.0.1
+  quiver: ^3.0.0
 
   # The following adds the Cupertino Icons Afont to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.0
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,6 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -337,7 +336,6 @@ class _EventListPageState extends State<EventListPage> {
 
   void _navigateToEventDetails(
       {EventList event, Object avatarTag, int eventId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -217,7 +217,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNews() {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=30';
+    String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=50';
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {

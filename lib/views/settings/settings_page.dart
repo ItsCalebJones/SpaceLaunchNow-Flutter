@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_inapp_purchase/modules.dart';
@@ -17,7 +18,7 @@ class SettingsPage extends StatefulWidget {
 
   SettingsPage(this.configuration, this.updater);
 
-  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
 
@@ -169,6 +170,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
     sendUpdates(widget.configuration.copyWith(nightMode: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('nightMode', value));
+    });
+  }
+
+  void _handleDebugSupporter(bool value) {
+    print("Debug supporters: $value");
+    sendUpdates(widget.configuration.copyWith(showAds: value));
+    _prefs.then((SharedPreferences prefs) {
+      return (prefs.setBool('showAds', value));
     });
   }
 
@@ -574,6 +583,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     final List<Widget> rows = <Widget>[
       _buildProductList(),
+      _buildDebug(),
       new ListTile(
         title: new Text('Notification Settings', style: theme.textTheme.title),
         subtitle: new Text('Select what kind of notifications to receive.'),
@@ -755,33 +765,35 @@ class NotificationFilterPageState extends State<SettingsPage> {
       },
     ));
     List<Widget> purchaseWidget = [];
-    if (_purchases.isNotEmpty) {
-      print("Purchases found!");
-      purchaseWidget.add(new Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-                decoration: new BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                  border: new Border.all(
-                    color: Colors.white,
-                    width: 2.5,
+    if (kReleaseMode) {
+      if (_purchases.isNotEmpty) {
+        print("Purchases found!");
+        purchaseWidget.add(new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: new BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                    border: new Border.all(
+                      color: Colors.white,
+                      width: 2.5,
+                    ),
                   ),
-                ),
-                child: new Icon(Icons.check, color: Colors.white)),
-          ),
-          new Text("Purchase confirmed - ads disabled!")
-        ],
-      ));
-      _showAds(false);
-    } else {
-      _showAds(true);
-      print("Purchases not found!");
+                  child: new Icon(Icons.check, color: Colors.white)),
+            ),
+            new Text("Purchase confirmed - ads disabled!")
+          ],
+        ));
+        _showAds(false);
+      } else {
+        _showAds(true);
+        print("Purchases not found!");
+      }
     }
 
     return Card(
@@ -1036,5 +1048,25 @@ class NotificationFilterPageState extends State<SettingsPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildDebug() {
+    if (!kReleaseMode) {
+      return new MergeSemantics(
+        child: new ListTile(
+          title: const Text('DEBUG - Show Ads?'),
+          onTap: () {
+            _handleDebugSupporter(
+                !widget.configuration.showAds);
+          },
+          trailing: new Switch(
+            value: widget.configuration.showAds,
+            onChanged: _handleDebugSupporter,
+          ),
+        ),
+      );
+    } else {
+      return new Container();
+    }
   }
 }

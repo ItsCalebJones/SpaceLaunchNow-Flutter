@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -13,10 +14,11 @@ import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
-import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -51,6 +53,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       lockedLoadNext();
     }
   }
+
 
   @override
   void dispose() {
@@ -249,9 +252,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
       ),
       _addUpNext(dataUpcoming),
-      buildUpdates(_starship.updates, context, "https://spacelaunchnow.me/starship#updates"),
+      buildUpdates(_starship.updates,
+          context,
+          "https://spacelaunchnow.me/starship#updates"),
       _addRoadClosure(),
       _addNotice(),
+      ListAdWidget(AdSize.largeBanner),
       new SizedBox(
         height: 50,
       )

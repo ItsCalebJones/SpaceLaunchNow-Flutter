@@ -19,7 +19,7 @@ class EventDetailHeader extends StatelessWidget {
 
   void _handleShare() {
     var id = event.id;
-    share("https://spacelaunchnow.me/event/$id");
+    Share.share("https://spacelaunchnow.me/event/$id");
   }
 
   Widget _buildDiagonalImageBackground(BuildContext context) {

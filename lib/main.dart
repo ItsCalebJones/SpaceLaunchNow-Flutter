@@ -8,23 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/app_icons.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
-import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:rate_my_app/rate_my_app.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'views/homelist/home_list_page.dart';
-import 'views/settings/product_store.dart';
 
 RateMyApp _rateMyApp = RateMyApp(
   preferencesPrefix: 'rateMyApp_',
@@ -34,15 +33,37 @@ RateMyApp _rateMyApp = RateMyApp(
   remindLaunches: 10,
 );
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+
+}
+
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await Firebase.initializeApp();
+  MobileAds.instance.initialize();
+
+  /// Update the iOS foreground notification presentation options to allow
+  /// heads up notifications.
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: false,
+  );
+
   runApp(new SpaceLaunchNow());
 }
 
 class SpaceLaunchNow extends StatelessWidget {
-  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   static bool get isInDebugMode {
     bool inDebugMode = false;
@@ -128,41 +149,40 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
-    _rateMyApp.init().then((_) {
-      if (_rateMyApp.shouldOpenDialog) {
-        // Or if you prefer to show a star rating bar :
-        _rateMyApp.showStarRateDialog(
-          context,
-          title: 'Space Launch Now',
-          message:
-              'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
-          onRatingChanged: (stars) {
-            return [
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () {
-                  print('Thanks for the ' +
-                      (stars == null ? '0' : stars.round().toString()) +
-                      ' star(s) !');
-                  // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
-                  _rateMyApp.doNotOpenAgain = true;
-                  _rateMyApp.save().then((v) => Navigator.pop(context));
-                },
-              ),
-            ];
-          },
-          ignoreIOS: false,
-          dialogStyle: DialogStyle(
-            titleAlign: TextAlign.center,
-            messageAlign: TextAlign.center,
-            messagePadding: EdgeInsets.only(bottom: 20),
-          ),
-          starRatingOptions: StarRatingOptions(),
-        );
-      }
-    });
 
-    Ads.init('ca-app-pub-9824528399164059/8172962746');
+    // _rateMyApp.init().then((_) {
+    //   if (_rateMyApp.shouldOpenDialog) {
+    //     // Or if you prefer to show a star rating bar :
+    //     _rateMyApp.showStarRateDialog(
+    //       context,
+    //       title: 'Space Launch Now',
+    //       message:
+    //           'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
+    //       onRatingChanged: (stars) {
+    //         return [
+    //           FlatButton(
+    //             child: Text('OK'),
+    //             onPressed: () {
+    //               print('Thanks for the ' +
+    //                   (stars == null ? '0' : stars.round().toString()) +
+    //                   ' star(s) !');
+    //               // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
+    //               _rateMyApp.doNotOpenAgain = true;
+    //               _rateMyApp.save().then((v) => Navigator.pop(context));
+    //             },
+    //           ),
+    //         ];
+    //       },
+    //       ignoreIOS: false,
+    //       dialogStyle: DialogStyle(
+    //         titleAlign: TextAlign.center,
+    //         messageAlign: TextAlign.center,
+    //         messagePadding: EdgeInsets.only(bottom: 20),
+    //       ),
+    //       starRatingOptions: StarRatingOptions(),
+    //     );
+    //   }
+    // });
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
@@ -365,86 +385,6 @@ class PagesState extends State<Pages> {
         _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
       }
 
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          if (message.containsKey('launch_uuid')) {
-            _showLaunchDialog(message);
-          }
-
-          if (message['data'].containsKey('notification_type')) {
-            if (message['data']['notification_type'] == 'featured_news') {
-              changeTab(2);
-              newsAndEventsIndex = 0;
-              _openBrowser(message['data']['item']['url']);
-            } else if (message['data']['notification_type'] ==
-                    'event_notification' ||
-                message['data']['notification_type'] == 'event_webcast') {
-              changeTab(2);
-              newsAndEventsIndex = 1;
-            }
-          }
-        },
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-          if (message.containsKey('launch_uuid')) {
-            _navigateToLaunchDetails(message['launch_uuid']);
-          }
-
-          if (message.containsKey('notification_type')) {
-            if (message['notification_type'] == 'featured_news') {
-              final item = json.decode(message['data']['item']);
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 0;
-              });
-              _openBrowser(item['url']);
-            } else if (message['notification_type'] == 'event_notification' ||
-                message['notification_type'] == 'event_webcast') {
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 1;
-              });
-            }
-          }
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-          if (message.containsKey('launch_uuid')) {
-            _navigateToLaunchDetails(message['launch_uuid']);
-          }
-
-          if (message.containsKey('notification_type')) {
-            if (message['notification_type'] == 'featured_news') {
-              final item = json.decode(message['item']);
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 0;
-              });
-              _openBrowser(item['url']);
-            } else if (message['notification_type'] == 'event_notification' ||
-                message['notification_type'] == 'event_webcast') {
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 1;
-              });
-            }
-          } else {
-            print("Didn't find anything.");
-          }
-        },
-      );
-      _firebaseMessaging.requestNotificationPermissions(
-          const IosNotificationSettings(sound: true, badge: true, alert: true));
-      _firebaseMessaging.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
-      _firebaseMessaging.getToken().then((String token) {
-        assert(token != null);
-        print("Push Messaging token: $token");
-      });
-
       configurationUpdater(_configuration.copyWith(
           showAds: showAds,
           nightMode: nightMode,
@@ -473,8 +413,81 @@ class PagesState extends State<Pages> {
           subscribeKSC: subscribeKSC,
           subscribeVAN: subscribeVAN));
     });
-    initAds();
+
+
+    startBackground();
+    requestiOSPermissions();
+
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      print("Push Messaging token: $token");
+    });
+
     asyncInitState();
+    checkAd();
+  }
+
+  void startBackground() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage?.data['launch_uuid'] != null) {
+      _navigateToLaunchDetails(initialMessage.data['launch_uuid']);
+
+      if (initialMessage.data.containsKey('notification_type')) {
+        if (initialMessage.data['notification_type'] == 'featured_news') {
+          changeTab(2);
+          newsAndEventsIndex = 0;
+          _openBrowser(initialMessage.data['item']['url']);
+        } else if (initialMessage.data['notification_type'] ==
+            'event_notification' ||
+            initialMessage.data['notification_type'] == 'event_webcast') {
+          changeTab(2);
+          newsAndEventsIndex = 1;
+        }
+      }
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data['type'] == 'chat') {
+        _navigateToLaunchDetails(initialMessage.data['launch_uuid']);
+
+        if (initialMessage.data.containsKey('notification_type')) {
+          if (initialMessage.data['notification_type'] == 'featured_news') {
+            changeTab(2);
+            newsAndEventsIndex = 0;
+            _openBrowser(initialMessage.data['item']['url']);
+          } else if (initialMessage.data['notification_type'] ==
+              'event_notification' ||
+              initialMessage.data['notification_type'] == 'event_webcast') {
+            changeTab(2);
+            newsAndEventsIndex = 1;
+          }
+        }
+      }
+    });
+  }
+
+  void requestiOSPermissions() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   void asyncInitState() async {
@@ -502,13 +515,11 @@ class PagesState extends State<Pages> {
 
   @override
   void dispose() async {
-    Ads.dispose();
     super.dispose();
     await FlutterInappPurchase.instance.endConnection;
   }
 
   void hideAd() {
-    Ads.hideBannerAd();
   }
 
   Future _getProduct() async {
@@ -606,32 +617,25 @@ class PagesState extends State<Pages> {
   // Create all the pages once and return same instance when required
   PageStorageBucket pageStorageBucket = PageStorageBucket();
 
-  Widget pageChooser() {
+  Widget  pageChooser() {
     switch (this.pageIndex) {
       case 0:
-        checkAd();
         return new HomeListPage(_configuration);
         break;
 
       case 1:
-        checkAd();
         return new LaunchesTabPage(_configuration);
         break;
 
       case 2:
-        checkAd();
         return new NewsAndEventsPage(_configuration, newsAndEventsIndex);
         break;
 
       case 3:
-        checkAd();
         return new StarshipDashboardPage(_configuration, starshipIndex);
         break;
 
       case 4:
-        if (Ads.isBannerShowing()) {
-          Ads.hideBannerAd();
-        }
         return new SettingsPage(_configuration, configurationUpdater);
 
       default:
@@ -697,7 +701,7 @@ class PagesState extends State<Pages> {
                         icon: Icon(CustomSLN.starship)),
                     new BottomNavigationBarItem(
                         title: new Text('Settings'),
-                        icon: new Icon(MaterialCommunityIcons.settings)),
+                        icon: new Icon(MaterialIcons.settings)),
                   ],
                 ))));
   }
@@ -712,23 +716,23 @@ class PagesState extends State<Pages> {
     );
   }
 
-  initAds() async {}
-
 
   void checkAd() async {
     if(!_purchaseRestored) {
       await _getPurchaseHistory();
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_purchases.length > 0) {
-      prefs.setBool("showAds", false);
+    if(kReleaseMode) {
+      print("\n\n\n\nRelease mode!\n\n\n\n\n\n\n");
+      if (_purchases.length > 0) {
+        prefs.setBool("showAds", false);
+      }
+    } else{
+      print("\n\n\n\nIDK mode!\n\n\n\n\n\n\n");
     }
+
     showAds = prefs.getBool("showAds") ?? true;
-    if (showAds && !_loading) {
-      Ads.showBannerAd();
-    } else if (!showAds) {
-      Ads.hideBannerAd();
-    }
+    print("Show ads: $showAds");
   }
 
   _openBrowser(String url) async {

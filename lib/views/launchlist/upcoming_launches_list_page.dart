@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class UpcomingLaunchListPage extends StatefulWidget {
   UpcomingLaunchListPage(this._configuration, this.searchQuery, this.searchActive);
@@ -32,6 +32,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   int limit = 30;
   bool loading = false;
   SLNRepository _repository = new Injector().slnRepository;
+  ListAdWidget _bannerAdWidget;
 
 
   @override
@@ -60,6 +61,8 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     } else {
       lockedLoadNext();
     }
+
+    _bannerAdWidget = ListAdWidget(AdSize.largeBanner);
   }
 
   @override
@@ -169,7 +172,6 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
 
   void _navigateToLaunchDetails(
       {LaunchList launch, Object avatarTag, String launchId}) {
-    Ads.hideBannerAd();
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -195,8 +197,12 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         child: new Text("No Launches Loaded"),
       );
     } else {
-      ListView listView = new ListView.builder(
+      ListView listView = new ListView.separated(
         itemCount: _launches.length,
+        separatorBuilder: (context, index) {
+          return Container(
+              child: (index != 0 && index % 15 == 0) ? _bannerAdWidget : Container());
+        },
         itemBuilder: _buildLaunchListTile,
       );
 
@@ -205,6 +211,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
           child: listView
       );
     }
+
 
     return content;
   }
