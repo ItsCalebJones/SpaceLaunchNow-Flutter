@@ -619,9 +619,11 @@ packages:
   tweet_ui:
     dependency: "direct main"
     description:
-      path: "../tweet_ui"
-      relative: true
-    source: path
+      path: "."
+      ref: dev
+      resolved-ref: ac142281db62d7b0450fbd6506f9b21388c19495
+      url: "git://github.com/itscalebjones/tweet_ui.git"
+    source: git
     version: "2.4.2"
   typed_data:
     dependency: transitive
