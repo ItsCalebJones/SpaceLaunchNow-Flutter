@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class LaunchesTabPage extends StatefulWidget {
   LaunchesTabPage(this._configuration);
@@ -36,11 +38,19 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
         length: 2,
         child: Scaffold(
           appBar: _appBar(),
-          body: TabBarView(
-            children: [
-              new UpcomingLaunchListPage(widget._configuration, searchQuery, searchActive),
-              new PreviousLaunchListPage(widget._configuration, searchQuery, searchActive),
-            ],
+          body: Stack(
+              children:  <Widget>[
+                TabBarView(
+                  children: [
+                    new UpcomingLaunchListPage(widget._configuration, searchQuery, searchActive),
+                    new PreviousLaunchListPage(widget._configuration, searchQuery, searchActive),
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ListAdWidget(AdSize.banner),
+              ),
+            ]
           ),
         ),
     );

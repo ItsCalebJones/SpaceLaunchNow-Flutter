@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
 
@@ -7,6 +8,7 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_event_pa
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_vehicle_page.dart';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_list_page.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class StarshipDashboardPage extends StatefulWidget {
   StarshipDashboardPage(this._configuration, this.index);
@@ -63,13 +65,21 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
                   .headline
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),),
           ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              new StarshipOverviewPage(widget._configuration),
-              new StarshipEventPage(widget._configuration),
-              new StarshipVehiclePage(widget._configuration),
-            ],
+          body: Stack(
+            children: <Widget>[
+              TabBarView(
+                controller: _tabController,
+                children: [
+                  new StarshipOverviewPage(widget._configuration),
+                  new StarshipEventPage(widget._configuration),
+                  new StarshipVehiclePage(widget._configuration),
+                ],
+            ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ListAdWidget(AdSize.banner),
+              ),
+          ]
           ),
         ));
   }

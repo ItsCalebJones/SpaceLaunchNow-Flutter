@@ -68,7 +68,7 @@ class EventDetailHeader extends StatelessWidget {
           _buildDiagonalImageBackground(context),
           new Align(
             alignment: FractionalOffset.bottomCenter,
-            heightFactor: 1.35,
+            heightFactor: 1.5,
             child: _buildAvatar(context),
           ),
           new Positioned(

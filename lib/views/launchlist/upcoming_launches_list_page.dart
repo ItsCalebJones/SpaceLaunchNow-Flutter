@@ -197,12 +197,8 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         child: new Text("No Launches Loaded"),
       );
     } else {
-      ListView listView = new ListView.separated(
+      ListView listView = new ListView.builder(
         itemCount: _launches.length,
-        separatorBuilder: (context, index) {
-          return Container(
-              child: (index != 0 && index % 15 == 0) ? _bannerAdWidget : Container());
-        },
         itemBuilder: _buildLaunchListTile,
       );
 

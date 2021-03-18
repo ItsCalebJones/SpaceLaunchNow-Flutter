@@ -150,39 +150,39 @@ class PagesState extends State<Pages> {
   void initState() {
     super.initState();
 
-    // _rateMyApp.init().then((_) {
-    //   if (_rateMyApp.shouldOpenDialog) {
-    //     // Or if you prefer to show a star rating bar :
-    //     _rateMyApp.showStarRateDialog(
-    //       context,
-    //       title: 'Space Launch Now',
-    //       message:
-    //           'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
-    //       onRatingChanged: (stars) {
-    //         return [
-    //           FlatButton(
-    //             child: Text('OK'),
-    //             onPressed: () {
-    //               print('Thanks for the ' +
-    //                   (stars == null ? '0' : stars.round().toString()) +
-    //                   ' star(s) !');
-    //               // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
-    //               _rateMyApp.doNotOpenAgain = true;
-    //               _rateMyApp.save().then((v) => Navigator.pop(context));
-    //             },
-    //           ),
-    //         ];
-    //       },
-    //       ignoreIOS: false,
-    //       dialogStyle: DialogStyle(
-    //         titleAlign: TextAlign.center,
-    //         messageAlign: TextAlign.center,
-    //         messagePadding: EdgeInsets.only(bottom: 20),
-    //       ),
-    //       starRatingOptions: StarRatingOptions(),
-    //     );
-    //   }
-    // });
+     _rateMyApp.init().then((_) {
+       if (_rateMyApp.shouldOpenDialog) {
+         // Or if you prefer to show a star rating bar :
+         _rateMyApp.showRateDialog(
+           context,
+           title: 'Rate this app', // The dialog title.
+           message: 'If you like this app, please take a little bit of your time to review it !\nIt really helps us and it shouldn\'t take you more than one minute.', // The dialog message.
+           rateButton: 'RATE', // The dialog "rate" button text.
+           noButton: 'NO THANKS', // The dialog "no" button text.
+           laterButton: 'MAYBE LATER', // The dialog "later" button text.
+           listener: (button) { // The button click listener (useful if you want to cancel the click event).
+             switch(button) {
+               case RateMyAppDialogButton.rate:
+                 print('Clicked on "Rate".');
+                 break;
+               case RateMyAppDialogButton.later:
+                 print('Clicked on "Later".');
+                 break;
+               case RateMyAppDialogButton.no:
+                 print('Clicked on "No".');
+                 break;
+             }
+
+             return true; // Return false if you want to cancel the click event.
+           },
+           ignoreNativeDialog: false, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
+           dialogStyle: DialogStyle(), // Custom dialog styles.
+           onDismissed: () => _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+           // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
+           // actionsBuilder: (context) => [], // This one allows you to use your own buttons.
+         );
+       }
+     });
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;

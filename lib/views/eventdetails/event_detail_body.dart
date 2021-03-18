@@ -190,7 +190,6 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         ),
         _buildDescription(),
         buildUpdates(mEvent.updates, context, "https://spacelaunchnow.me/event/$id"),
-        Center(child: ListAdWidget(AdSize.largeBanner)),
         _buildSpace(),
       ],
     );
