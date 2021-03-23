@@ -19,6 +19,7 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -58,9 +59,9 @@ Future<void> main() async {
     badge: true,
     sound: false,
   );
-
   runApp(new SpaceLaunchNow());
 }
+
 
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -152,15 +153,14 @@ class PagesState extends State<Pages> {
 
      _rateMyApp.init().then((_) {
        if (_rateMyApp.shouldOpenDialog) {
-         // Or if you prefer to show a star rating bar :
          _rateMyApp.showRateDialog(
            context,
-           title: 'Rate this app', // The dialog title.
-           message: 'If you like this app, please take a little bit of your time to review it !\nIt really helps us and it shouldn\'t take you more than one minute.', // The dialog message.
-           rateButton: 'RATE', // The dialog "rate" button text.
-           noButton: 'NO THANKS', // The dialog "no" button text.
-           laterButton: 'MAYBE LATER', // The dialog "later" button text.
-           listener: (button) { // The button click listener (useful if you want to cancel the click event).
+           title: 'Rate this app',
+           message: 'If you like this app, please take a little bit of your time to review it !\nIt really helps us and it shouldn\'t take you more than one minute.',
+           rateButton: 'RATE',
+           noButton: 'NO THANKS',
+           laterButton: 'MAYBE LATER',
+           listener: (button) {
              switch(button) {
                case RateMyAppDialogButton.rate:
                  print('Clicked on "Rate".');
@@ -173,16 +173,73 @@ class PagesState extends State<Pages> {
                  break;
              }
 
-             return true; // Return false if you want to cancel the click event.
+             return true;
            },
-           ignoreNativeDialog: false, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
-           dialogStyle: DialogStyle(), // Custom dialog styles.
-           onDismissed: () => _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
-           // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
-           // actionsBuilder: (context) => [], // This one allows you to use your own buttons.
+           ignoreNativeDialog: false,
+           dialogStyle: DialogStyle(),
+           onDismissed: () => _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed),
          );
        }
      });
+
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+          if(message != null){
+            print("Received a new message!");
+            if (message.data['launch_uuid'] != null) {
+              _navigateToLaunchDetails(message.data['launch_uuid']);
+            }
+
+            if (message.data.containsKey('notification_type')) {
+              if (message.data['notification_type'] == 'featured_news') {
+                changeTab(2);
+                newsAndEventsIndex = 0;
+                _openBrowser(message.data['item']['url']);
+              } else if (message.data['notification_type'] == 'event_notification'
+                  || message.data['notification_type'] == 'event_webcast') {
+                changeTab(2);
+                newsAndEventsIndex = 1;
+              }
+            }
+          }
+        }
+    );
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message != null) {
+        if (message.notification != null) {
+          showDialog(context: context,
+              builder: (BuildContext context) {
+                return CustomDialogBox(
+                  title: message?.notification?.title,
+                  descriptions: message?.notification?.body,
+                  text: "Okay",
+                );
+              }
+          );
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      if (message.data['launch_uuid'] != null) {
+        _navigateToLaunchDetails(message.data['launch_uuid']);
+      }
+
+      if (message.data.containsKey('notification_type')) {
+        if (message.data['notification_type'] == 'featured_news') {
+          changeTab(2);
+          newsAndEventsIndex = 0;
+          _openBrowser(message.data['item']['url']);
+        } else if (message.data['notification_type'] == 'event_notification'
+            || message.data['notification_type'] == 'event_webcast') {
+          changeTab(2);
+          newsAndEventsIndex = 1;
+        }
+      }
+    });
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
@@ -218,14 +275,16 @@ class PagesState extends State<Pages> {
 
       _firebaseMessaging.unsubscribeFromTopic("flutter_production");
       _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
 
       if (SpaceLaunchNow.isInDebugMode) {
-        _firebaseMessaging.subscribeToTopic("flutter_debug_v2");
+        _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
         _firebaseMessaging.subscribeToTopic("custom");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
       } else {
-        _firebaseMessaging.subscribeToTopic("flutter_production_v2");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
+        _firebaseMessaging.subscribeToTopic("flutter_production_v3");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
         _firebaseMessaging.subscribeToTopic("custom");
       }
 
@@ -423,6 +482,7 @@ class PagesState extends State<Pages> {
       print("Push Messaging token: $token");
     });
 
+
     asyncInitState();
     checkAd();
   }
@@ -451,6 +511,7 @@ class PagesState extends State<Pages> {
         }
       }
     }
+
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener

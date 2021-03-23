@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
@@ -15,6 +17,7 @@ import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:quiver/iterables.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NewsListPage extends StatefulWidget {
   NewsListPage(this._configuration);
@@ -31,6 +34,7 @@ class _NewsListPageState extends State<NewsListPage> {
   int limit = 50;
   bool loading = false;
   bool showAds = false;
+  int filterIndex = 0;
   SLNRepository _repository = new Injector().slnRepository;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -44,9 +48,8 @@ class _NewsListPageState extends State<NewsListPage> {
     } else {
       _handleRefresh();
     }
-    _prefs.then((SharedPreferences prefs) => {
-      showAds = prefs.getBool("showAds") ?? true
-    });
+    _prefs.then((SharedPreferences prefs) =>
+        {showAds = prefs.getBool("showAds") ?? true});
   }
 
   @override
@@ -78,7 +81,7 @@ class _NewsListPageState extends State<NewsListPage> {
       });
       Scaffold.of(context).showSnackBar(new SnackBar(
         duration: new Duration(seconds: 10),
-        content: new Text('Unable to load launches matching search.'),
+        content: new Text('Unable to load news.'),
         action: new SnackBarAction(
           label: 'Refresh',
           onPressed: () {
@@ -98,131 +101,9 @@ class _NewsListPageState extends State<NewsListPage> {
     }
   }
 
-  Widget _buildEventTile(BuildContext context, int index) {
-    var news = _news[index];
-    var formatter = new DateFormat('MMM yyyy');
-      return new Card(
-        semanticContainer: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: new InkWell(
-          borderRadius: BorderRadius.circular(4),
-          onTap: () => _openBrowser(news),
-          child: new Stack(
-            children: <Widget>[
-              new Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl: news.featureImage,
-                  placeholder: (context, url) =>
-                      Image.asset(
-                        "assets/placeholder.png",
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
-              ),
-              new Positioned.fill(
-                child: new Stack(children: <Widget>[
-                  new Positioned.fill(
-                    child: new LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      var diff = constraints.maxHeight - 60;
-                      return Padding(
-                        padding: EdgeInsets.only(top: diff),
-                        child: new Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.65),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                  new Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          new Text(
-                            news.title,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(0.5, 0.5),
-                                  blurRadius: 5.0,
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.5, 0.5),
-                                  blurRadius: 10.0,
-                                  color: Color.fromARGB(79, 0, 0, 255),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          new Text(news.newsSiteLong,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                shadows: <Shadow>[
-                                  Shadow(
-                                    offset: Offset(0.5, 0.5),
-                                    blurRadius: 5.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                  Shadow(
-                                    offset: Offset(1.0, 1.0),
-                                    blurRadius: 8.0,
-                                    color: Color.fromARGB(79, 0, 0, 255),
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
-                    ),
-                  ),
-                ]),
-              ),
-            ],
-          ),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        elevation: 2,
-        margin: EdgeInsets.all(2),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget content;
-
-    List<StaggeredTile> tiles = [
-      new StaggeredTile.count(4, 4),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 4),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(2, 4),
-      new StaggeredTile.count(2, 2),
-      new StaggeredTile.count(4, 2),
-    ];
-
 
     if (_news.isEmpty && loading) {
       content = new Center(
@@ -233,71 +114,21 @@ class _NewsListPageState extends State<NewsListPage> {
         child: new Text("No Events Loaded"),
       );
     } else {
-      var tileCount = 0;
-      for (int i = 0; i < _news.length; i++) {
-        var item = ListItem();
-        if (showAds) {
-          if (tileCount != 13) {
-            item.type = "News";
-            item.news = _news[i];
-            item.tileSize = tiles[tileCount];
-            tileCount += 1;
-          } else if (tileCount == 6) {
-            item.type = "GoogleAd";
-            item.tileSize = tiles[tileCount];
-            tileCount += 1;
-          } else if (tileCount == 13) {
-            item.type = "GoogleAd";
-            item.tileSize = tiles[tileCount];
-            tileCount = 0;
-          }
-
-          _list.add(item);
-        } else {
-          if (tileCount != 13) {
-            item.type = "News";
-            item.news = _news[i];
-            item.tileSize = tiles[tileCount];
-            tileCount += 1;
-          } else if (tileCount == 13) {
-            item.type = "News";
-            item.news = _news[i];
-            item.tileSize = tiles[tileCount];
-            tileCount = 0;
-          }
-
-          _list.add(item);
-        }
-      }
-
-      StaggeredGridView gridView = new StaggeredGridView.countBuilder(
-        crossAxisCount: 4,
-        itemCount: _list.length,
-        itemBuilder: (context, index) {
-          return _buildNewsTile(context, index, _list);
-        },
-        staggeredTileBuilder: (int index) {
-          var item = _list[index];
-          print(item.tileSize.toString());
-          return item.tileSize;
-        },
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
+      content = Scaffold(
+        body: new ListView(
+          shrinkWrap: true,
+          children: _buildNewsList(),
+        ),
       );
-
-      content = new RefreshIndicator(onRefresh: _handleRefresh,
-          child: gridView);
     }
     return content;
   }
-
 
   Future<Null> _handleRefresh() async {
     _news.clear();
     limit = 30;
     loading = false;
-    List<News> response =
-        await _repository.fetchNews().catchError((onError) {
+    List<News> response = await _repository.fetchNews().catchError((onError) {
       onLoadContactsError();
     });
     onLoadResponseComplete(response);
@@ -313,113 +144,259 @@ class _NewsListPageState extends State<NewsListPage> {
     }
   }
 
-  Widget _buildNewsTile(BuildContext context, int index, List<ListItem> pair) {
-    var item = pair[index];
-
-    if (item.type == "News") {
-      var news = item.news;
-      return new Card(
-        semanticContainer: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: new InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: () => _openBrowser(news),
-          child: new Stack(
-            children: <Widget>[
-              new Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl: news.featureImage,
-                  placeholder: (context, url) =>
-                      Image.asset(
-                        "assets/placeholder.png",
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
+  Widget _buildBriefing() {
+    return new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        new Padding(
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 16.0, top: 16.0, bottom: 0.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              new Text(
+                "Spaceflight Briefing",
+                textAlign: TextAlign.left,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
-              new Positioned.fill(
-                child: new Stack(children: <Widget>[
-                  new Positioned.fill(
-                    child: new LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      var diff = constraints.maxHeight - 65;
-                      return Padding(
-                        padding: EdgeInsets.only(top: diff),
-                        child: new Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.55),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                  new Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          new Text(
-                            news.title,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(0.5, 0.5),
-                                  blurRadius: 3.0,
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.5, 0.5),
-                                  blurRadius: 10.0,
-                                  color: Color.fromARGB(79, 0, 0, 255),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          new Text(news.newsSiteLong,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                shadows: <Shadow>[
-                                  Shadow(
-                                    offset: Offset(0.5, 0.5),
-                                    blurRadius: 5.0,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                  Shadow(
-                                    offset: Offset(1.0, 1.0),
-                                    blurRadius: 8.0,
-                                    color: Color.fromARGB(79, 0, 0, 255),
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center),
-                        ],
-                      ),
+              new Text("Top 5 stories right now...",
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildNewsList() {
+    List<Widget> content = new List<Widget>();
+    content.add(_buildBriefing());
+    if (_news.length >= 5) {
+      content.addAll(_buildBriefList(_news.sublist(0, 5)));
+    }
+
+    if (showAds) {
+      content.add(ListAdWidget(AdSize.smallSquare));
+    }
+
+    List<String> filters = ["All", "SpaceNews", "NASA", "NASA Spaceflight",
+      "Teslarati", "Spaceflight Now", "Arstechnica"];
+    content.add(
+      SizedBox(
+        height: 120,
+        child: Padding(
+          padding: const EdgeInsets.only(top:8,bottom:0,left:0,right:0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: filters.length,
+            itemBuilder: (BuildContext context, int index) {
+              var string = filters[index];
+              return Container(
+                margin: const EdgeInsets.only(left: 6.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(top:0,bottom:0,left:4,right:4),
+                  child: GestureDetector(
+                    onTap: () => setFilter(index),
+                    child: Chip(
+                        label: new Text(string,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                .copyWith(fontSize: 20, color: (filterIndex == index) ? Colors.white : Colors.white60)),
+                        backgroundColor: (filterIndex == index) ? Colors.blue : Colors.grey[700],
                     ),
                   ),
-                ]),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    List<News> theRest = _news.sublist(6, _news.length);
+    if (filterIndex == 0) {
+      content.addAll(_buildList(theRest));
+    } else {
+      theRest = theRest.where((i) => i.newsSiteLong.toLowerCase() == filters[filterIndex].toLowerCase()).toList();
+      if (theRest.length > 0) {
+        content.addAll(_buildList(theRest));
+      } else {
+        content.add(Container(
+          height: 200,
+          child: new Center(
+            child: new Text("No Events Loaded"),
+          ),
+        ));
+      }
+    }
+
+    return content;
+  }
+
+  List<Widget> _buildList(List<News> sublist) {
+    var data = [];
+    List<Widget> content = new List<Widget>();
+
+    for (News item in sublist) {
+      content.add(_buildNewsCard(item));
+    }
+    print(data);
+    return content;
+  }
+
+  List<Widget> _buildBriefList(List<News> sublist) {
+    List<Widget> content = new List<Widget>();
+
+    sublist.asMap().forEach((key, value) {
+      content.add(Divider());
+      content.add(_buildMiniItem(key + 1, value));
+    });
+    return content;
+  }
+
+  Widget _buildNewsCard(News item) {
+    Widget widget;
+
+    widget = Padding(
+      padding: const EdgeInsets.only(top:0, bottom:8, left:8, right:8),
+      child: GestureDetector(
+        onTap: () => _openBrowser(item),
+        child: new Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: FadeInImage(
+                  placeholder: new AssetImage('assets/placeholder.png'),
+                  image: new CachedNetworkImageProvider(item.featureImage),
+                  fit: BoxFit.cover,
+                  height: 175.0,
+                  alignment: Alignment.center,
+                  fadeInDuration: new Duration(milliseconds: 75),
+                  fadeInCurve: Curves.easeIn,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
+                child: new Text(item.title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontWeight: FontWeight.bold)),
+              ),
+              Container(
+                padding: const EdgeInsets.only(
+                    top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
+                child: new Text(item.summary,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.body1,
+                    textAlign: TextAlign.left),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 4.0, bottom: 0, left: 16.0, right: 16.0),
+                child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          new Text(item.newsSiteLong),
+                          new Text(" • "),
+                          new Text(timeago.format(item.datePublished))
+                        ],
+                      ),
+                      new IconButton(
+                        icon: Icon(Icons.share),
+                        tooltip: 'Share',
+                        onPressed: () {
+                          Share.share(item.url);
+                        }, //
+                      )
+                    ]),
               ),
             ],
           ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+
+    return widget;
+  }
+
+  Widget _buildMiniItem(int index, News item) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 7, // 60%
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    children: [
+                      new Text(index.toString() + ". "),
+                      new Text(item.newsSiteLong),
+                      new Text(" • "),
+                      new Text(timeago.format(item.datePublished))
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
+                    child: new Text(item.title,
+                        style: Theme.of(context).textTheme.title.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 3, // 20%
+              child: new Container(
+                width: MediaQuery.of(context).size.width,
+                child: FadeInImage(
+                  placeholder: new AssetImage('assets/placeholder.png'),
+                  image: new CachedNetworkImageProvider(item.featureImage),
+                  fit: BoxFit.cover,
+                  height: 80.0,
+                  alignment: Alignment.center,
+                  fadeInDuration: new Duration(milliseconds: 50),
+                  fadeInCurve: Curves.easeIn,
+                ),
+              ),
+            ),
+          ],
         ),
-        elevation: 2,
-        margin: EdgeInsets.all(4),
-      );
-    } else {
-      return ListAdWidget(AdSize.mediumRectangle);
-    }
+      ),
+    );
+  }
+
+  setFilter(int index) {
+    setState(() {
+      filterIndex = index;
+    });
   }
 }
 

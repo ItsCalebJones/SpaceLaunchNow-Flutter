@@ -18,7 +18,6 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -252,6 +251,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
       ),
       _addUpNext(dataUpcoming),
+      ListAdWidget(AdSize.banner),
       buildUpdates(_starship.updates,
           context,
           "https://spacelaunchnow.me/starship#updates"),

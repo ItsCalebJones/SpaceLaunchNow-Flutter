@@ -65,9 +65,7 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
                   .headline
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),),
           ),
-          body: Stack(
-            children: <Widget>[
-              TabBarView(
+          body: TabBarView(
                 controller: _tabController,
                 children: [
                   new StarshipOverviewPage(widget._configuration),
@@ -75,12 +73,7 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
                   new StarshipVehiclePage(widget._configuration),
                 ],
             ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: ListAdWidget(AdSize.banner),
-              ),
-          ]
-          ),
-        ));
+        )
+    );
   }
 }

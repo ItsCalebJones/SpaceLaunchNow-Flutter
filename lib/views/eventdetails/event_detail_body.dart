@@ -13,7 +13,6 @@ import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.da
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';

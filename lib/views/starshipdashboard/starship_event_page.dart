@@ -14,7 +14,7 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StarshipEventPage extends StatefulWidget {
@@ -32,7 +32,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
   List<bool> isSelected = [true, false];
-  SLNAd ad = SLNAd(AdSize.largeBanner);
 
   @override
   void initState() {
@@ -46,11 +45,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       lockedLoadNext();
     }
     isSelected = [true, false];
-    ad.create().then((result) {
-      setState(() {
-        print(ad.isReady);
-      });
-    });
   }
 
   @override
@@ -163,7 +157,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
               ),
               Align(
               alignment: Alignment.bottomCenter,
-              child: AdWidgetBuilder(ad),
+              child: ListAdWidget(AdSize.banner),
               ),
             ]
           ),

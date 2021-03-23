@@ -16,7 +16,6 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/ads/sln_ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -78,7 +77,6 @@ class _HomeListPageState extends State<HomeListPage> {
       lockedLoadNext();
     }
   }
-
 
   @override
   void dispose() {
@@ -332,7 +330,9 @@ class _HomeListPageState extends State<HomeListPage> {
             onPressed: () {
               Share.share("https://spacelaunchnow.me/launch/" + launch.slug);
             }, //
-          )));
+          )
+      )
+      );
     }
 
     eventButtons.add(Padding(
@@ -370,7 +370,6 @@ class _HomeListPageState extends State<HomeListPage> {
   Widget build(BuildContext context) {
     List<Widget> content = new List<Widget>();
     print("Upcoming build!");
-
 
     Widget view = new Scaffold(
       body: _buildBody(),
@@ -648,7 +647,6 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildBody() {
-
     List<Widget> content = new List<Widget>();
     if (_launches.isEmpty || loading) {
       content.add(new SizedBox(height: 200));
@@ -666,22 +664,19 @@ class _HomeListPageState extends State<HomeListPage> {
 
       content.add(new SizedBox(height: 50));
     }
-    return Stack(
-        children:  <Widget>[
-          new ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: _launches.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildLaunchTile(context, _launches[index]);
-            }),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ListAdWidget(AdSize.banner),
-          ),
-        ]
-    );
+    return Stack(children: <Widget>[
+      new ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: _launches.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _buildLaunchTile(context, _launches[index]);
+          }),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: ListAdWidget(AdSize.banner),
+      ),
+    ]);
   }
-
 
   Iterable<Widget> _map_launch_to_tile(int index, Launch item) {
     List<Widget> content = new List<Widget>();

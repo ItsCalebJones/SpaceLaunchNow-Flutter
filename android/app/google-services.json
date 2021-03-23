@@ -25,34 +25,31 @@
         {
           "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
           "client_type": 3
-        },
-        {
-          "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtjprrS9M2kOk9ycPUP4J7eqfaVbG4t7k"
+          "current_key": "AIzaSyCfIVEUqV4IHI3hfQstqPWPyu9_qrlEkvE"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "610310574961-d4oni38bvluk39u0hi949su5vtpf3dqu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.calebjons.spacelaunchnowflutter"
+              }
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-9824528399164059~9700152528"
     },
     {
       "client_info": {
@@ -73,95 +70,75 @@
         {
           "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
           "client_type": 3
-        },
-        {
-          "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtjprrS9M2kOk9ycPUP4J7eqfaVbG4t7k"
+          "current_key": "AIzaSyCfIVEUqV4IHI3hfQstqPWPyu9_qrlEkvE"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "610310574961-d4oni38bvluk39u0hi949su5vtpf3dqu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.calebjons.spacelaunchnowflutter"
+              }
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:610310574961:android:c389187830a75dee",
+        "mobilesdk_app_id": "1:610310574961:android:54352d16da73e71dfedcd0",
         "android_client_info": {
-          "package_name": "me.calebjones.spacelaunchnow.test"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "610310574961-52or82fnmqohinpab58n6epn4rvri2bt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "me.calebjones.spacelaunchnow.test",
-            "certificate_hash": "a386387782488cac62b3b1545fcaa90ed95cdb02"
-          }
-        },
-        {
-          "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBtjprrS9M2kOk9ycPUP4J7eqfaVbG4t7k"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:610310574961:android:5fce022e30404e2d",
-        "android_client_info": {
-          "package_name": "me.spacelaunchnow.spacelaunchnowflutter"
+          "package_name": "me.calebjones.spacelaunchnowflutter"
         }
       },
       "oauth_client": [
         {
           "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
           "client_type": 3
-        },
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfIVEUqV4IHI3hfQstqPWPyu9_qrlEkvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "610310574961-d4oni38bvluk39u0hi949su5vtpf3dqu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.calebjons.spacelaunchnowflutter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610310574961:android:90935f14e289595ffedcd0",
+        "android_client_info": {
+          "package_name": "me.spacelaunchnow.spacelaunchnow_flutter"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
           "client_type": 3
@@ -169,19 +146,24 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtjprrS9M2kOk9ycPUP4J7eqfaVbG4t7k"
+          "current_key": "AIzaSyCfIVEUqV4IHI3hfQstqPWPyu9_qrlEkvE"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "610310574961-9dtmhqvci0tr6i2108e73q13r7lre2ni.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "610310574961-d4oni38bvluk39u0hi949su5vtpf3dqu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.calebjons.spacelaunchnowflutter"
+              }
+            }
+          ]
         }
       }
     }

@@ -27,6 +27,8 @@ abstract class SLNRepository {
 
   Future<List<News>> fetchNews();
 
+  Future<List<News>> fetchNewsBySite(String name);
+
   Future<List<News>> fetchNewsByLaunch({String id});
 
   Future<List<News>> fetchNewsByEvent({int id});

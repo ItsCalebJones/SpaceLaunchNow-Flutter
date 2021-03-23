@@ -17,7 +17,8 @@ class SLNRepositoryImpl implements SLNRepository {
   static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.2.0";
   static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v2";
 
-  final client = ClientWithUserAgent(http.Client());
+  final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
+  final newsClient = ClientWithUserAgent(http.Client());
 
 
   Future<List<Launch>> fetch([String lsp]){
@@ -218,6 +219,29 @@ class SLNRepositoryImpl implements SLNRepository {
   @override
   Future<List<News>> fetchNews() {
     String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=50';
+
+    print(_kEventsUrl);
+    return client.get(_kEventsUrl).then((http.Response response) {
+      final jsonBody = json.decode(utf8.decode(response.bodyBytes));
+      final statusCode = response.statusCode;
+
+      print(statusCode);
+
+      if(statusCode < 200 || statusCode >= 300 || jsonBody == null) {
+        throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
+      }
+
+      return jsonBody
+          .cast<Map<String, dynamic>>()
+          .map((obj) => News.fromJson(obj))
+          .toList()
+          .cast<News>();
+    });
+  }
+
+  @override
+  Future<List<News>> fetchNewsBySite(String name) {
+    String _kEventsUrl = NEWS_BASE_URL + '/articles?newsSite.name_contains=$name';
 
     print(_kEventsUrl);
     return client.get(_kEventsUrl).then((http.Response response) {

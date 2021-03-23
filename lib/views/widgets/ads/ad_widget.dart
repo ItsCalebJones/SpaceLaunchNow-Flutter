@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +13,7 @@ class ListAdWidget extends StatefulWidget {
   _ListAdWidgetState createState() => _ListAdWidgetState();
 }
 
-class _ListAdWidgetState extends State<ListAdWidget> {
+class _ListAdWidgetState extends State<ListAdWidget> with AutomaticKeepAliveClientMixin {
   BannerAd _bannerAd;
   bool _isReady = false;
   bool _showAds = false;
@@ -32,7 +34,9 @@ class _ListAdWidgetState extends State<ListAdWidget> {
   createAd() {
     _bannerAd = BannerAd(
       size: widget.size,
-      adUnitId: BannerAd.testAdUnitId,
+      adUnitId: Platform.isAndroid
+          ?  BannerAd.testAdUnitId
+          : "ca-app-pub-9824528399164059/8172962746",
       request: AdRequest(),
       listener: AdListener(
         onAdLoaded: (ad) {
@@ -81,8 +85,16 @@ class _ListAdWidgetState extends State<ListAdWidget> {
           child: AdWidget(ad: _bannerAd),
         ),
       );
+    } else if (!_isReady && _showAds) {
+      return Container(
+        width: widget.size.width.toDouble(),
+        height: widget.size.height.toDouble(),
+      );
     } else {
       return Container();
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

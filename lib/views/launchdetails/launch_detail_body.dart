@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
@@ -12,6 +13,7 @@ import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showc
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/mission_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
@@ -35,6 +37,12 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   );
 
   final Launch mLaunch;
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Widget _buildLocationInfo(TextTheme textTheme) {
     return new Row(
@@ -320,10 +328,12 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: _buildLandingInfo(textTheme),
         ),
         _buildActionButtons(theme),
+        Center(child: ListAdWidget(AdSize.banner)),
         new MissionShowcase(mLaunch),
         buildUpdates(mLaunch.updates, context, "https://spacelaunchnow.me/launch/" + mLaunch.slug + "#updates"),
         _buildNews(),
         new VehicleShowcase(mLaunch, widget._configuration),
+        Center(child: ListAdWidget(AdSize.smallSquare)),
         new AgenciesShowcase(mLaunch),
         new LocationShowcaseWidget(mLaunch),
         _buildSpace(),
