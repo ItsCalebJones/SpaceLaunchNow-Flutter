@@ -243,6 +243,7 @@ class PagesState extends State<Pages> {
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
+      bool appInitialized = prefs.getBool("appInitialized") ?? true;
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
@@ -273,175 +274,178 @@ class PagesState extends State<Pages> {
       bool subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
       bool subscribeFG = prefs.getBool("subscribeFG") ?? true;
 
-      _firebaseMessaging.unsubscribeFromTopic("flutter_production");
-      _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
-      _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
-      _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
+      if(!appInitialized) {
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
 
-      if (SpaceLaunchNow.isInDebugMode) {
-        _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
-        _firebaseMessaging.subscribeToTopic("custom");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
-      } else {
-        _firebaseMessaging.subscribeToTopic("flutter_production_v3");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
-        _firebaseMessaging.subscribeToTopic("custom");
-      }
+        if (SpaceLaunchNow.isInDebugMode) {
+          _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
+          _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
+          _firebaseMessaging.subscribeToTopic("custom");
+        } else {
+          _firebaseMessaging.subscribeToTopic("flutter_production_v3");
+          _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
+          _firebaseMessaging.subscribeToTopic("custom");
+        }
 
-      if (allowTenMinuteNotifications) {
-        _firebaseMessaging.subscribeToTopic("tenMinutes");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
-      }
+        if (allowTenMinuteNotifications) {
+          _firebaseMessaging.subscribeToTopic("tenMinutes");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+        }
 
-      if (allowOneHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("oneHour");
-        _firebaseMessaging.subscribeToTopic("webcastLive");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("oneHour");
-        _firebaseMessaging.unsubscribeFromTopic("webcastLive");
-      }
+        if (allowOneHourNotifications) {
+          _firebaseMessaging.subscribeToTopic("oneHour");
+          _firebaseMessaging.subscribeToTopic("webcastLive");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("oneHour");
+          _firebaseMessaging.unsubscribeFromTopic("webcastLive");
+        }
 
-      if (allowTwentyFourHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("twentyFourHour");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
-      }
+        if (allowTwentyFourHourNotifications) {
+          _firebaseMessaging.subscribeToTopic("twentyFourHour");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+        }
 
-      if (subscribeNewsAndEvents) {
-        _firebaseMessaging.subscribeToTopic("featured_news");
-        _firebaseMessaging.subscribeToTopic("events");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("featured_news");
-        _firebaseMessaging.unsubscribeFromTopic("events");
-      }
+        if (subscribeNewsAndEvents) {
+          _firebaseMessaging.subscribeToTopic("featured_news");
+          _firebaseMessaging.subscribeToTopic("events");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("featured_news");
+          _firebaseMessaging.unsubscribeFromTopic("events");
+        }
 
-      if (allowStatusChanged) {
-        _firebaseMessaging.subscribeToTopic("netstampChanged");
-        _firebaseMessaging.subscribeToTopic("success");
-        _firebaseMessaging.subscribeToTopic("failure");
-        _firebaseMessaging.subscribeToTopic("partial_failure");
-        _firebaseMessaging.subscribeToTopic("inFlight");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
-        _firebaseMessaging.unsubscribeFromTopic("success");
-        _firebaseMessaging.unsubscribeFromTopic("failure");
-        _firebaseMessaging.unsubscribeFromTopic("partial_failure");
-        _firebaseMessaging.unsubscribeFromTopic("inFlight");
-      }
+        if (allowStatusChanged) {
+          _firebaseMessaging.subscribeToTopic("netstampChanged");
+          _firebaseMessaging.subscribeToTopic("success");
+          _firebaseMessaging.subscribeToTopic("failure");
+          _firebaseMessaging.subscribeToTopic("partial_failure");
+          _firebaseMessaging.subscribeToTopic("inFlight");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+          _firebaseMessaging.unsubscribeFromTopic("success");
+          _firebaseMessaging.unsubscribeFromTopic("failure");
+          _firebaseMessaging.unsubscribeFromTopic("partial_failure");
+          _firebaseMessaging.unsubscribeFromTopic("inFlight");
+        }
 
-      if (subscribeALL) {
-        _firebaseMessaging.subscribeToTopic("all");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("all");
-      }
+        if (subscribeALL) {
+          _firebaseMessaging.subscribeToTopic("all");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("all");
+        }
 
-      if (subscribeNASA) {
-        _firebaseMessaging.subscribeToTopic("nasa");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("nasa");
-      }
+        if (subscribeNASA) {
+          _firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
 
-      if (subscribeArianespace) {
-        _firebaseMessaging.subscribeToTopic("arianespace");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("arianespace");
-      }
+        if (subscribeArianespace) {
+          _firebaseMessaging.subscribeToTopic("arianespace");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("arianespace");
+        }
 
-      if (subscribeSpaceX) {
-        _firebaseMessaging.subscribeToTopic("spacex");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("spacex");
-      }
+        if (subscribeSpaceX) {
+          _firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("spacex");
+        }
 
-      if (subscribeBlueOrigin) {
-        _firebaseMessaging.subscribeToTopic("blueOrigin");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
-      }
+        if (subscribeBlueOrigin) {
+          _firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
 
-      if (subscribeRocketLab) {
-        _firebaseMessaging.subscribeToTopic("rocketLab");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("rocketLab");
-      }
+        if (subscribeRocketLab) {
+          _firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("rocketLab");
+        }
 
-      if (subscribeNorthrop) {
-        _firebaseMessaging.subscribeToTopic("northrop");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("northrop");
-      }
+        if (subscribeNorthrop) {
+          _firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
 
-      if (subscribeKSC) {
-        _firebaseMessaging.subscribeToTopic("ksc");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ksc");
-      }
+        if (subscribeKSC) {
+          _firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ksc");
+        }
 
-      if (subscribeCAPE) {
-        _firebaseMessaging.subscribeToTopic("cape");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("cape");
-      }
+        if (subscribeCAPE) {
+          _firebaseMessaging.subscribeToTopic("cape");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("cape");
+        }
 
-      if (subscribePLES) {
-        _firebaseMessaging.subscribeToTopic("ples");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ples");
-      }
+        if (subscribePLES) {
+          _firebaseMessaging.subscribeToTopic("ples");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ples");
+        }
 
-      if (subscribeVAN) {
-        _firebaseMessaging.subscribeToTopic("van");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("van");
-      }
+        if (subscribeVAN) {
+          _firebaseMessaging.subscribeToTopic("van");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("van");
+        }
 
-      if (subscribeRoscosmos) {
-        _firebaseMessaging.subscribeToTopic("roscosmos");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("roscosmos");
-      }
+        if (subscribeRoscosmos) {
+          _firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+        }
 
-      if (subscribeULA) {
-        _firebaseMessaging.subscribeToTopic("ula");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ula");
-      }
+        if (subscribeULA) {
+          _firebaseMessaging.subscribeToTopic("ula");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ula");
+        }
 
-      if (subscribeWallops) {
-        _firebaseMessaging.subscribeToTopic("wallops");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("wallops");
-      }
+        if (subscribeWallops) {
+          _firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
 
-      if (subscribeNZ) {
-        _firebaseMessaging.subscribeToTopic("newZealand");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("newZealand");
-      }
+        if (subscribeNZ) {
+          _firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("newZealand");
+        }
 
-      if (subscribeJapan) {
-        _firebaseMessaging.subscribeToTopic("japan");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("japan");
-      }
+        if (subscribeJapan) {
+          _firebaseMessaging.subscribeToTopic("japan");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("japan");
+        }
 
-      if (subscribeRussia) {
-        _firebaseMessaging.subscribeToTopic("russia");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("japan");
-      }
+        if (subscribeRussia) {
+          _firebaseMessaging.subscribeToTopic("russia");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("japan");
+        }
 
-      if (subscribeChina) {
-        _firebaseMessaging.subscribeToTopic("china");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("china");
-      }
+        if (subscribeChina) {
+          _firebaseMessaging.subscribeToTopic("china");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("china");
+        }
 
-      if (subscribeFG) {
-        _firebaseMessaging.subscribeToTopic("frenchGuiana");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        if (subscribeFG) {
+          _firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
+        prefs.setBool("appInitialized", true);
       }
 
       configurationUpdater(_configuration.copyWith(
