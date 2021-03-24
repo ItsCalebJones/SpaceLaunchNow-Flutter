@@ -333,7 +333,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         buildUpdates(mLaunch.updates, context, "https://spacelaunchnow.me/launch/" + mLaunch.slug + "#updates"),
         _buildNews(),
         new VehicleShowcase(mLaunch, widget._configuration),
-        Center(child: ListAdWidget(AdSize.smallSquare)),
+        Center(child: ListAdWidget(AdSize.mediumRectangle)),
         new AgenciesShowcase(mLaunch),
         new LocationShowcaseWidget(mLaunch),
         _buildSpace(),

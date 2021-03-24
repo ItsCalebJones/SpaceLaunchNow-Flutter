@@ -13,7 +13,7 @@ dependencies:
   share: ^0.6.5+4
 
   # https://pub.dartlang.org/packages/firebase_admob#-installing-tab-]
-  google_mobile_ads: ^0.11.0+3
+  google_mobile_ads: ^0.11.0+4
   firebase_core: ^1.0.1
   firebase_messaging: ^9.0.0
   firebase_analytics: ^7.1.1

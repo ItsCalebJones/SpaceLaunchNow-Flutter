@@ -37,6 +37,7 @@ class _NewsListPageState extends State<NewsListPage> {
   int filterIndex = 0;
   SLNRepository _repository = new Injector().slnRepository;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  var _squareAd;
 
   @override
   void initState() {
@@ -48,6 +49,7 @@ class _NewsListPageState extends State<NewsListPage> {
     } else {
       _handleRefresh();
     }
+    _squareAd = ListAdWidget(AdSize.mediumRectangle);
     _prefs.then((SharedPreferences prefs) =>
         {showAds = prefs.getBool("showAds") ?? true});
   }
@@ -185,7 +187,7 @@ class _NewsListPageState extends State<NewsListPage> {
     }
 
     if (showAds) {
-      content.add(ListAdWidget(AdSize.smallSquare));
+      content.add(_squareAd);
     }
 
     List<String> filters = ["All", "SpaceNews", "NASA", "NASA Spaceflight",
