@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/countdown_helper.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 
 class ElapsedTime {
   final int hundreds;
@@ -103,7 +102,7 @@ class CountdownState extends State<Countdown> {
     Duration duration = new Duration(
         seconds: launch.net.difference(new DateTime.now()).inSeconds);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
-    String status = Utils.getStatus(launch.status.id);
+    String status = launch.status.name;
     Color color;
     var days = prettyDuration.days;
     var hours = prettyDuration.hours;
@@ -149,6 +148,12 @@ class CountdownState extends State<Countdown> {
       hours = "00";
       minutes = "00";
       seconds = "00";
+    } else if (launch.status.id == 8) {
+      color = Colors.purple[600];
+      days = "--";
+      hours = "--";
+      minutes = "--";
+      seconds = "--";
     }
     return new Container(
       padding:
@@ -165,12 +170,39 @@ class CountdownState extends State<Countdown> {
                 ),
               ),
               Center(
-                child: new Chip(
-                  label: new Text(
-                    status,
-                    style: theme.textTheme.title.copyWith(color: Colors.white),
+                child: GestureDetector(
+                  onTap: () {
+                    // set up the button
+                    Widget okButton = FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                      },
+                    );
+
+                    // set up the AlertDialog
+                    AlertDialog alert = AlertDialog(
+                      title: Text(launch.status.name),
+                      content: Text(launch.status.description),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
+                  },
+                  child: new Chip(
+                    label: new Text(
+                      status,
+                      style: theme.textTheme.title.copyWith(color: Colors.white),
+                    ),
+                    backgroundColor: color,
                   ),
-                  backgroundColor: color,
                 ),
               ),
             ],

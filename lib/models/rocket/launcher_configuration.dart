@@ -56,6 +56,8 @@ class LauncherConfiguration {
       image =
           "";
     }
+    print(json);
+
     return LauncherConfiguration(
       id: json['id'],
       image: image,

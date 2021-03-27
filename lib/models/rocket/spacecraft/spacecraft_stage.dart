@@ -13,6 +13,7 @@ class SpacecraftStage {
   this.onboardCrew, this.spacecraft});
 
   factory SpacecraftStage.fromJson(Map<String, dynamic> json) {
+    print(json);
     return SpacecraftStage(
       id: json['id'],
       destination: json['destination'],
