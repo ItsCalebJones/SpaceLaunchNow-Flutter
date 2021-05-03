@@ -2,6 +2,9 @@ name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
 version: 2.4.1+2
 
+environment:
+  sdk: '>=2.10.0 <3.0.0'
+
 dependencies:
   flutter:
     sdk: flutter
@@ -31,7 +34,10 @@ dependencies:
   rate_my_app: ^0.4.0
   yaml: ^2.2.1
   package_info: ^0.4.1
-  youtube_player_flutter: ^7.0.0+7
+  youtube_player_flutter:
+    git:
+      url: git@github.com:ItsCalebJones/youtube_player_flutter.git
+      ref: patched_inapp_webview
   rxdart: ^0.24.1
   google_fonts: ^1.1.0
   video_player: ^0.10.12+2
