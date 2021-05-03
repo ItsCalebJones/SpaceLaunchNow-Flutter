@@ -33,7 +33,7 @@ dependencies:
   package_info: ^0.4.1
   youtube_player_flutter:
     git:
-      url: git@github.com:ItsCalebJones/youtube_player_flutter.git
+      url: https://github.com/ItsCalebJones/youtube_player_flutter.git
       ref: patched_inapp_webview
       path: packages/youtube_player_flutter
   rxdart: ^0.24.1
