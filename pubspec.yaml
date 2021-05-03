@@ -31,7 +31,10 @@ dependencies:
   rate_my_app: ^0.4.0
   yaml: ^2.2.1
   package_info: ^0.4.1
-  youtube_player_flutter: ^7.0.0+7
+  youtube_player_flutter:
+    git:
+      url: https://github.com/ItsCalebJones/youtube_player_flutter.git
+      ref: bug/use_patched_webview
   rxdart: ^0.24.1
   google_fonts: ^1.1.0
   video_player: ^0.10.12+2
