@@ -903,7 +903,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           ),
           new MergeSemantics(
             child: new ListTile(
-              title: const Text('Northrop Gruman'),
+              title: const Text('Northrop Grumman'),
               onTap: () {
                 _handleNorthrop(!widget.configuration.subscribeNorthrop);
               },

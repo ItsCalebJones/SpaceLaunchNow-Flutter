@@ -62,6 +62,11 @@ PODS:
     - Flutter
   - flutter_inappwebview (0.0.1):
     - Flutter
+    - flutter_inappwebview/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -101,6 +106,7 @@ PODS:
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
+  - OrderedSet (5.0.0)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -156,6 +162,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
+    - OrderedSet
     - PromisesObjC
     - Protobuf
 
@@ -204,9 +211,9 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: ac5a82fcd21f804dbfc8f318eff9e1d7a9916e49
   FirebaseMessaging: fc1f98b4592f8f2ea538169b1c317c6e76f81300
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_inapp_purchase: 5c6a1ac3f11b11d0c8c0321c0c41c1f05805e4c8
-  flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189
+  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   Google-Mobile-Ads-SDK: a71d6bc14f9cf1f66d686dbdf9ad2091de04059c
   GoogleAppMeasurement: 966e88df9d19c15715137bb2ddaf52373f111436
@@ -214,6 +221,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   in_app_purchase: 3e2155afa9d03d4fa32d9e62d567885080ce97d6
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151

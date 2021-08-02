@@ -142,10 +142,12 @@ packages:
   flutter_inappwebview:
     dependency: transitive
     description:
-      name: flutter_inappwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0+4"
+      path: "."
+      ref: fix_options_parsing
+      resolved-ref: d16e0efb519d7f8ee7f4da07076a748f2641aa0a
+      url: "https://github.com/ItsCalebJones/flutter_inappwebview.git"
+    source: git
+    version: "3.4.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -549,10 +551,12 @@ packages:
   youtube_player_flutter:
     dependency: "direct main"
     description:
-      name: youtube_player_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.0.0+7"
+      path: "."
+      ref: "bug/use_patched_webview"
+      resolved-ref: "40f93b240461059931c5c3cd5922c13f29d07937"
+      url: "https://github.com/ItsCalebJones/youtube_player_flutter.git"
+    source: git
+    version: "7.0.0+2"
 sdks:
   dart: ">=2.9.0-14.0.dev <3.0.0"
   flutter: ">=1.17.0 <2.0.0"
