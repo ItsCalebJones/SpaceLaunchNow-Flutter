@@ -28,7 +28,6 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   material_design_icons_flutter: ^3.2.3695
   flutter_vector_icons: ^0.1.0
-  rate_my_app: ^0.4.0
   yaml: ^2.2.1
   package_info: ^0.4.1
   youtube_player_flutter:

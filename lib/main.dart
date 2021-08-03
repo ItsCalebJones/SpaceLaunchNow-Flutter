@@ -21,18 +21,9 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:rate_my_app/rate_my_app.dart';
 
 import 'views/homelist/home_list_page.dart';
 import 'views/settings/product_store.dart';
-
-RateMyApp _rateMyApp = RateMyApp(
-  preferencesPrefix: 'rateMyApp_',
-  minDays: 3,
-  minLaunches: 3,
-  remindDays: 5,
-  remindLaunches: 10,
-);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -128,39 +119,6 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
-    _rateMyApp.init().then((_) {
-      if (_rateMyApp.shouldOpenDialog) {
-        // Or if you prefer to show a star rating bar :
-        _rateMyApp.showStarRateDialog(
-          context,
-          title: 'Space Launch Now',
-          message:
-              'Have you enjoyed this app? Then take a little bit of your time to leave a rating:',
-          onRatingChanged: (stars) {
-            return [
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () {
-                  print('Thanks for the ' +
-                      (stars == null ? '0' : stars.round().toString()) +
-                      ' star(s) !');
-                  // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
-                  _rateMyApp.doNotOpenAgain = true;
-                  _rateMyApp.save().then((v) => Navigator.pop(context));
-                },
-              ),
-            ];
-          },
-          ignoreIOS: false,
-          dialogStyle: DialogStyle(
-            titleAlign: TextAlign.center,
-            messageAlign: TextAlign.center,
-            messagePadding: EdgeInsets.only(bottom: 20),
-          ),
-          starRatingOptions: StarRatingOptions(),
-        );
-      }
-    });
 
     Ads.init('ca-app-pub-9824528399164059/8172962746');
 
