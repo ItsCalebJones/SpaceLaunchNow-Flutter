@@ -159,11 +159,11 @@ class CountdownState extends State<Countdown> {
       minutes = "00";
       seconds = "00";
     } else if (launch.status.id == 8) {
-      color = Colors.lightGreen[500];
-      days = "00";
-      hours = "00";
-      minutes = "00";
-      seconds = "00";
+      color = Colors.purple[600];
+      days = "--";
+      hours = "--";
+      minutes = "--";
+      seconds = "--";
     }
     return new Container(
       padding:
@@ -180,12 +180,39 @@ class CountdownState extends State<Countdown> {
                 ),
               ),
               Center(
-                child: new Chip(
-                  label: new Text(
-                    status,
-                    style: theme.textTheme.headline6.copyWith(color: Colors.white),
+                child: GestureDetector(
+                  onTap: () {
+                    // set up the button
+                    Widget okButton = FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                      },
+                    );
+
+                    // set up the AlertDialog
+                    AlertDialog alert = AlertDialog(
+                      title: Text(launch.status.name),
+                      content: Text(launch.status.description),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
+                  },
+                  child: new Chip(
+                    label: new Text(
+                      status,
+                      style: theme.textTheme.title.copyWith(color: Colors.white),
+                    ),
+                    backgroundColor: color,
                   ),
-                  backgroundColor: color,
                 ),
               ),
             ],

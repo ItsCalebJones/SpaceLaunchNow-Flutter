@@ -59,6 +59,8 @@ class Agency {
 
       var nationURL = json['nation_url'];
 
+      print(json);
+
       return new Agency(
         id: json['id'],
         name: json['name'],

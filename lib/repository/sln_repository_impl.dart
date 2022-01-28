@@ -152,7 +152,6 @@ class SLNRepositoryImpl implements SLNRepository {
 
       print("Returning!");
       print(jsonBody);
-      Launches launches = Launches.fromJson(jsonBody);
       return Launches.fromJson(jsonBody);
     });
   }

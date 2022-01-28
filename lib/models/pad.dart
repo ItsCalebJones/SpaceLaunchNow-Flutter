@@ -15,6 +15,7 @@ class Pad {
     this.latitude, this.longitude, this.location, this.mapImage});
 
   factory Pad.fromJson(Map<String, dynamic> json) {
+    print(json);
     return new Pad(
       id: json['id'],
       name: json['name'],

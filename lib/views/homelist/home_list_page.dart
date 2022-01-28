@@ -98,6 +98,7 @@ class _HomeListPageState extends State<HomeListPage> {
     if (reload) {
       _launches.clear();
     }
+
     setState(() {
       _launches.addAll(launches.launches);
       PageStorage.of(context)

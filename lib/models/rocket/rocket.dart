@@ -22,6 +22,8 @@ class Rocket {
       spacecraftStage = new SpacecraftStage.fromJson(json['spacecraft_stage']);
     }
 
+    print("Parsing Rocket...");
+
     return Rocket(
         id: json['id'],
         configuration: new LauncherConfiguration.fromJson(json['configuration']),

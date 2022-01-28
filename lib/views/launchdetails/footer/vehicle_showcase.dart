@@ -1016,7 +1016,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
   _buildCrewAvatar(ThemeData theme, Crew crew) {
     var title = crew.astronaut.name;
-    var subtitle = crew.role;
+    var subtitle = crew.role.role;
     var nationality = crew.astronaut.nationality;
 
     if (crew.astronaut.profileImage != null) {
