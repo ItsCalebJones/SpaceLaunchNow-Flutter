@@ -94,6 +94,9 @@ workflows:
       app_store_connect:
         apple_id: ca.jones9119@gmail.com
         password: Encrypted(Z0FBQUFBQmg5QlpicWgxTlNNOFZfSzkyX0J6YTBlTm5qNF9wSUVfQnZLUy1oQlF1UTd2b2NvT0xpNWtZc19UUGRRUU9CV2dFM1NYSFRWbUxLcUJZd3ZlaVY2ejJObWJnRnAyb1M3aVktNkJvX1NnM3BBemplXzQ9)
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         beta_groups:
           - Friends
