@@ -13,7 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../launch_detail_page.dart';
 
 class VehicleShowcase extends StatefulWidget {
-  final Launch _launch;
+  final Launch? _launch;
   final AppConfiguration _configuration;
 
   VehicleShowcase(this._launch, this._configuration);
@@ -25,7 +25,7 @@ class VehicleShowcase extends StatefulWidget {
 class VehicleShowcaseState extends State<VehicleShowcase> {
   VehicleShowcaseState(this._launch);
 
-  final Launch _launch;
+  final Launch? _launch;
 
   @override
   void initState() {}
@@ -39,16 +39,16 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildAvatar(ThemeData theme) {
-    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    if (_launch.rocket.configuration.image != null &&
-        _launch.rocket.configuration.image.length > 0) {
-      url = _launch.rocket.configuration.image;
-    } else if (_launch.rocket.configuration.manufacturer.imageURL != null &&
-        _launch.rocket.configuration.manufacturer.imageURL.length > 0) {
-      url = _launch.rocket.configuration.manufacturer.imageURL;
+    String? url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+    if (_launch!.rocket!.configuration!.image != null &&
+        _launch!.rocket!.configuration!.image!.length > 0) {
+      url = _launch!.rocket!.configuration!.image;
+    } else if (_launch!.rocket!.configuration!.manufacturer!.imageURL != null &&
+        _launch!.rocket!.configuration!.manufacturer!.imageURL!.length > 0) {
+      url = _launch!.rocket!.configuration!.manufacturer!.imageURL;
     }
 
-    if (_launch.rocket.configuration.image != null) {
+    if (_launch!.rocket!.configuration!.image != null) {
       return Row(
         children: <Widget>[
           new Padding(
@@ -65,7 +65,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage: new NetworkImage(url),
+                  backgroundImage: new NetworkImage(url!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -78,7 +78,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: new Text(
-                    _launch.rocket.configuration.manufacturer.name ?? "",
+                    _launch!.rocket!.configuration!.manufacturer!.name ?? "",
                     style: theme.textTheme.subtitle1,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -99,14 +99,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                _launch.rocket.configuration.fullName ?? "",
+                _launch!.rocket!.configuration!.fullName ?? "",
                 style: theme.textTheme.headline5,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
-                _launch.rocket.configuration.manufacturer.name ?? "",
+                _launch!.rocket!.configuration!.manufacturer!.name ?? "",
                 style: theme.textTheme.subtitle1,
                 textAlign: TextAlign.center,
               ),
@@ -115,49 +115,49 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildStats(ThemeData theme) {
-    var vehicle = _launch.rocket.configuration.fullName ?? "Vehicle";
+    var vehicle = _launch!.rocket!.configuration!.fullName ?? "Vehicle";
     var leo = "";
-    if (_launch.rocket.configuration.leoCapacity != null) {
-      leo = _launch.rocket.configuration.leoCapacity.toString() + "kg";
+    if (_launch!.rocket!.configuration!.leoCapacity != null) {
+      leo = _launch!.rocket!.configuration!.leoCapacity.toString() + "kg";
     } else {
       leo = "N/A";
     }
 
     var gto = "";
-    if (_launch.rocket.configuration.geoCapacity != null) {
-      gto = _launch.rocket.configuration.geoCapacity.toString() + "kg";
+    if (_launch!.rocket!.configuration!.geoCapacity != null) {
+      gto = _launch!.rocket!.configuration!.geoCapacity.toString() + "kg";
     } else {
       gto = "N/A";
     }
 
     var minStage = "";
-    if (_launch.rocket.configuration.minStage != null) {
-      minStage = _launch.rocket.configuration.minStage.toString();
+    if (_launch!.rocket!.configuration!.minStage != null) {
+      minStage = _launch!.rocket!.configuration!.minStage.toString();
     }
 
     var maxStage = "";
-    if (_launch.rocket.configuration.maxStage != null) {
-      maxStage = _launch.rocket.configuration.maxStage.toString();
+    if (_launch!.rocket!.configuration!.maxStage != null) {
+      maxStage = _launch!.rocket!.configuration!.maxStage.toString();
     }
 
     var length = "";
-    if (_launch.rocket.configuration.length != null) {
-      length = _launch.rocket.configuration.length.toString() + "m";
+    if (_launch!.rocket!.configuration!.length != null) {
+      length = _launch!.rocket!.configuration!.length.toString() + "m";
     }
 
     var launchMass = "";
-    if (_launch.rocket.configuration.launchMass != null) {
-      launchMass = _launch.rocket.configuration.launchMass.toString() + " T";
+    if (_launch!.rocket!.configuration!.launchMass != null) {
+      launchMass = _launch!.rocket!.configuration!.launchMass.toString() + " T";
     }
 
     var diameter = "";
-    if (_launch.rocket.configuration.diameter != null) {
-      diameter = _launch.rocket.configuration.diameter.toString() + "m";
+    if (_launch!.rocket!.configuration!.diameter != null) {
+      diameter = _launch!.rocket!.configuration!.diameter.toString() + "m";
     }
 
     var thrust = "";
-    if (_launch.rocket.configuration.thrust != null) {
-      thrust = _launch.rocket.configuration.thrust.toString() + " kn";
+    if (_launch!.rocket!.configuration!.thrust != null) {
+      thrust = _launch!.rocket!.configuration!.thrust.toString() + " kn";
     }
 
     return Padding(
@@ -169,7 +169,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           new Text(
             "$vehicle Stats",
             style:
-                theme.textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
+                theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,14 +183,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Successful:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration.successfulLaunches
+                          _launch!.rocket!.configuration!.successfulLaunches
                                   .toString() ??
                               "",
                           maxLines: 1,
@@ -204,14 +204,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Failed:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration.failedLaunches
+                          _launch!.rocket!.configuration!.failedLaunches
                                   .toString() ??
                               "",
                           maxLines: 1,
@@ -225,7 +225,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Min Stage:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -244,7 +244,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Length:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -263,7 +263,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Mass:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -282,7 +282,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "LEO:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -307,14 +307,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Consecutive:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration
+                          _launch!.rocket!.configuration!
                                   .consecutiveSuccessfulLaunches
                                   .toString() ??
                               "",
@@ -329,14 +329,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Pending:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       new Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: new Text(
-                          _launch.rocket.configuration.pendingLaunches
+                          _launch!.rocket!.configuration!.pendingLaunches
                                   .toString() ??
                               "",
                           maxLines: 1,
@@ -350,7 +350,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Max Stage:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -369,7 +369,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Diameter:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -388,7 +388,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Thrust:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -407,7 +407,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "GEO:",
-                        style: theme.textTheme.subtitle1
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -434,21 +434,21 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
-    if (_launch.rocket.configuration.infoUrl != null) {
+    if (_launch!.rocket!.configuration!.infoUrl != null) {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          _launchURL(_launch.rocket.configuration.infoUrl);
+          _launchURL(_launch!.rocket!.configuration!.infoUrl!);
         },
         tooltip: "Website",
       ));
     }
 
-    if (_launch.rocket.configuration.wikiUrl != null) {
+    if (_launch!.rocket!.configuration!.wikiUrl != null) {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(_launch.rocket.configuration.wikiUrl);
+          _launchURL(_launch!.rocket!.configuration!.wikiUrl!);
         },
         tooltip: "Website",
       ));
@@ -468,14 +468,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       padding:
           const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
       child: new Text(
-        _launch.rocket.configuration.description ?? "",
+        _launch!.rocket!.configuration!.description ?? "",
         style: theme.textTheme.bodyText1,
         textAlign: TextAlign.start,
       ),
     );
   }
 
-  void _navigateToLaunchDetails({String launchId}) {
+  void _navigateToLaunchDetails({String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -503,14 +503,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline4
+                .headline4!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
           child: new Text(
-            _launch.rocket.configuration.fullName ?? "",
+            _launch!.rocket!.configuration!.fullName ?? "",
             style: theme.textTheme.headline6,
           ),
         ),
@@ -525,9 +525,9 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
   _buildLauncher(ThemeData theme) {
     List<Widget> widgets = new List<Widget>();
-    if (_launch.rocket.firstStages.length > 0) {
+    if (_launch!.rocket!.firstStages!.length > 0) {
       var booster;
-      if (_launch.rocket.firstStages.length > 1) {
+      if (_launch!.rocket!.firstStages!.length > 1) {
         booster = "First Stage Boosters";
       } else {
         booster = "First Stage Booster";
@@ -536,10 +536,10 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           booster,
-          style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
         ),
       ));
-      for (var booster in _launch.rocket.firstStages) {
+      for (var booster in _launch!.rocket!.firstStages!) {
         widgets.add(Padding(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Column(
@@ -549,7 +549,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               _buildBoosterAvatar(theme, booster),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: new Text(booster.launcher.details),
+                child: new Text(booster.launcher!.details!),
               ),
               new Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -571,13 +571,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   _buildLanding(ThemeData theme, FirstStage booster) {
     List<Widget> widgets = new List<Widget>();
     if (booster.landing != null &&
-        booster.landing.attempt != null &&
-        booster.landing.attempt) {
+        booster.landing!.attempt != null &&
+        booster.landing!.attempt!) {
       widgets.add(Text(
         "Landing",
-        style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+        style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
       ));
-      if (booster.landing.success == null) {
+      if (booster.landing!.success == null) {
         widgets.add(
           new Row(
             children: <Widget>[
@@ -596,7 +596,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             ],
           ),
         );
-      } else if (booster.landing.success) {
+      } else if (booster.landing!.success!) {
         widgets.add(
           new Row(
             children: <Widget>[
@@ -615,7 +615,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             ],
           ),
         );
-      } else if (!booster.landing.success) {
+      } else if (!booster.landing!.success!) {
         widgets.add(
           new Row(
             children: <Widget>[
@@ -635,7 +635,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           ),
         );
       }
-      if (!booster.landing.attempt) {
+      if (!booster.landing!.attempt!) {
         widgets.add(new Row(
           children: <Widget>[
             new Icon(
@@ -653,7 +653,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           ],
         ));
       }
-      if (booster.landing.type != null) {
+      if (booster.landing!.type != null) {
         widgets.add(new Row(
           children: <Widget>[
             new Icon(
@@ -662,7 +662,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                booster.landing.type.name ?? "",
+                booster.landing!.type!.name ?? "",
                 maxLines: 1,
                 style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
@@ -671,7 +671,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           ],
         ));
       }
-      if (booster.landing.location != null) {
+      if (booster.landing!.location != null) {
         widgets.add(new Row(
           children: <Widget>[
             new Icon(
@@ -680,7 +680,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                booster.landing.location.name ?? "",
+                booster.landing!.location!.name ?? "",
                 maxLines: 1,
                 style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
@@ -695,7 +695,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
   _buildSpacecraft(ThemeData theme) {
     List<Widget> widgets = new List<Widget>();
-    if (_launch.rocket.spacecraftStage != null) {
+    if (_launch!.rocket!.spacecraftStage != null) {
       widgets.add(
         new Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
@@ -704,7 +704,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline4
+                .headline4!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
@@ -715,19 +715,19 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildSpacecraftAvatar(theme, _launch.rocket.spacecraftStage),
+            _buildSpacecraftAvatar(theme, _launch!.rocket!.spacecraftStage!),
             new Row(
               children: <Widget>[
                 new Text(
                   "Destination:",
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: new Text(
-                    _launch.rocket.spacecraftStage.destination,
+                    _launch!.rocket!.spacecraftStage!.destination!,
                     maxLines: 1,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -738,12 +738,12 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             new Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: new Text(
-                  _launch.rocket.spacecraftStage.spacecraft.description),
+                  _launch!.rocket!.spacecraftStage!.spacecraft!.description!),
             ),
             new Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _buildCrew(theme, _launch.rocket.spacecraftStage),
+              children: _buildCrew(theme, _launch!.rocket!.spacecraftStage!),
             )
           ],
         ),
@@ -759,8 +759,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   _buildCrew(ThemeData theme, SpacecraftStage spacecraftStage) {
     List<Widget> widgets = new List<Widget>();
     if (spacecraftStage.launchCrew != null &&
-        spacecraftStage.launchCrew.length > 0) {
-      for (var crew in spacecraftStage.launchCrew) {
+        spacecraftStage.launchCrew!.length > 0) {
+      for (var crew in spacecraftStage.launchCrew!) {
         widgets.add(Padding(
           padding: const EdgeInsets.only(left: 0.0, right: 0.0),
           child: Column(
@@ -772,7 +772,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 padding:
                 const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 0.0, right: 0.0),
                 child: new Text(
-                  crew.astronaut.bio,
+                  crew.astronaut!.bio!,
                   style: theme.textTheme.bodyText1,
                   textAlign: TextAlign.start,
                 ),
@@ -787,7 +787,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
   _checkPrevious(FirstStage booster) {
     if (booster.previousFlightUUID != null &&
-        _launch.id != booster.previousFlightUUID) {
+        _launch!.id != booster.previousFlightUUID) {
       return Align(
         alignment: Alignment.center,
         child: new Padding(
@@ -806,15 +806,15 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildBoosterAvatar(ThemeData theme, FirstStage booster) {
-    var title = booster.launcher.serialNumber;
-    var status = booster.launcher.status.substring(0, 1).toUpperCase() +
-        booster.launcher.status.substring(1).toLowerCase();
+    var title = booster.launcher!.serialNumber;
+    var status = booster.launcher!.status!.substring(0, 1).toUpperCase() +
+        booster.launcher!.status!.substring(1).toLowerCase();
     var turnaroundTime = "N/A";
-    if (booster.turnAround != null && booster.turnAround > 0) {
+    if (booster.turnAround != null && booster.turnAround! > 0) {
       turnaroundTime = booster.turnAround.toString() + " Days";
     }
 
-    if (booster.launcher.image != null) {
+    if (booster.launcher!.image != null) {
       return Row(
         children: <Widget>[
           new Padding(
@@ -831,7 +831,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage: new NetworkImage(booster.launcher.image),
+                  backgroundImage: new NetworkImage(booster.launcher!.image!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -842,21 +842,21 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
+                  title!,
+                  style: theme.textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Row(
                   children: <Widget>[
                     new Text(
                       "Type:",
-                      style: theme.textTheme.subtitle1
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
                     new Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: new Text(
-                        booster.type,
+                        booster.type!,
                         maxLines: 1,
                         style: theme.textTheme.caption,
                         overflow: TextOverflow.fade,
@@ -868,7 +868,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Status:",
-                      style: theme.textTheme.subtitle1
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -887,7 +887,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Flight:",
-                      style: theme.textTheme.subtitle1
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -906,7 +906,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Turnaround:",
-                      style: theme.textTheme.subtitle1
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -932,21 +932,21 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+              title!,
+              style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
             ),
             new Row(
               children: <Widget>[
                 new Text(
                   "Type:",
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: new Text(
-                    booster.type,
+                    booster.type!,
                     maxLines: 1,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -958,7 +958,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Status:",
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -977,7 +977,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Flight:",
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -996,7 +996,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Turnaround Time:",
-                  style: theme.textTheme.subtitle1
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -1015,11 +1015,11 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildCrewAvatar(ThemeData theme, Crew crew) {
-    var title = crew.astronaut.name;
-    var subtitle = crew.role.role;
-    var nationality = crew.astronaut.nationality;
+    var title = crew.astronaut!.name;
+    var subtitle = crew.role!.role;
+    var nationality = crew.astronaut!.nationality;
 
-    if (crew.astronaut.profileImage != null) {
+    if (crew.astronaut!.profileImage != null) {
       return Row(
         children: <Widget>[
           new Padding(
@@ -1037,7 +1037,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundImage:
-                      new NetworkImage(crew.astronaut.profileImage),
+                      new NetworkImage(crew.astronaut!.profileImage!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -1048,13 +1048,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+                  title!,
+                  style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: new Text(
-                    nationality,
+                    nationality!,
                     maxLines: 2,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -1063,7 +1063,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 new Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: new Text(
-                    subtitle,
+                    subtitle!,
                     maxLines: 2,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -1081,13 +1081,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+              title!,
+              style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                nationality,
+                nationality!,
                 maxLines: 2,
                 style: theme.textTheme.caption,
                 overflow: TextOverflow.fade,
@@ -1096,7 +1096,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                subtitle,
+                subtitle!,
                 maxLines: 2,
                 style: theme.textTheme.caption,
                 overflow: TextOverflow.fade,
@@ -1106,11 +1106,11 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildSpacecraftAvatar(ThemeData theme, SpacecraftStage spacecraftStage) {
-    var title = spacecraftStage.spacecraft.name;
+    var title = spacecraftStage.spacecraft!.name;
 
-    var status = spacecraftStage.spacecraft.status;
+    var status = spacecraftStage.spacecraft!.status;
 
-    if (spacecraftStage.spacecraft.image != null) {
+    if (spacecraftStage.spacecraft!.image != null) {
       return Row(
         children: <Widget>[
           new Padding(
@@ -1128,7 +1128,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundImage:
-                      new NetworkImage(spacecraftStage.spacecraft.image),
+                      new NetworkImage(spacecraftStage.spacecraft!.image!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
@@ -1139,21 +1139,21 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
+                  title!,
+                  style: theme.textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Row(
                   children: <Widget>[
                     new Text(
                       "Status:",
-                      style: theme.textTheme.subtitle1
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
                     new Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: new Text(
-                        status,
+                        status!,
                         maxLines: 1,
                         style: theme.textTheme.caption,
                         overflow: TextOverflow.fade,
@@ -1172,8 +1172,8 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+              title!,
+              style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
             ),
           ]);
   }
@@ -1181,31 +1181,31 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   Widget _buildCrewActionButtons(ThemeData theme, Crew crew) {
     List<Widget> materialButtons = [];
 
-    if (crew.astronaut.wikiUrl != null) {
+    if (crew.astronaut!.wikiUrl != null) {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(crew.astronaut.wikiUrl);
+          _launchURL(crew.astronaut!.wikiUrl!);
         },
         tooltip: "Wiki",
       ));
     }
 
-    if (crew.astronaut.instagramUrl != null) {
+    if (crew.astronaut!.instagramUrl != null) {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.instagram),
         onPressed: () {
-          _launchURL(crew.astronaut.instagramUrl);
+          _launchURL(crew.astronaut!.instagramUrl!);
         },
         tooltip: "Wiki",
       ));
     }
 
-    if (crew.astronaut.twitterUrl != null) {
+    if (crew.astronaut!.twitterUrl != null) {
       materialButtons.add(new IconButton(
         icon: Icon(FontAwesomeIcons.twitter),
         onPressed: () {
-          _launchURL(crew.astronaut.twitterUrl);
+          _launchURL(crew.astronaut!.twitterUrl!);
         },
         tooltip: "Twitter",
       ));

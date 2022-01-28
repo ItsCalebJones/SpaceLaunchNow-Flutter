@@ -23,8 +23,8 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   String myTitle = "Launches";
   bool searchActive = false;
   bool searchViewActive = false;
-  String searchQuery;
-  BannerAd _anchoredAdaptiveAd;
+  String? searchQuery;
+  BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
   bool _showAds = false;
 
@@ -36,7 +36,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   @override
   void dispose() {
     super.dispose();
-    _anchoredAdaptiveAd.dispose();
+    _anchoredAdaptiveAd!.dispose();
   }
 
   @override
@@ -63,9 +63,9 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
               ),
               if (_anchoredAdaptiveAd != null && _isLoaded)
                 Container(
-                  width: _anchoredAdaptiveAd.size.width.toDouble(),
-                  height: _anchoredAdaptiveAd.size.height.toDouble(),
-                  child: AdWidget(ad: _anchoredAdaptiveAd),
+                  width: _anchoredAdaptiveAd!.size.width.toDouble(),
+                  height: _anchoredAdaptiveAd!.size.height.toDouble(),
+                  child: AdWidget(ad: _anchoredAdaptiveAd!),
                 )
             ]
           ),
@@ -83,7 +83,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   }
 
   Future<void> _loadAd() async {
-    bool _showAds;
+    late bool _showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) => {
       _showAds = prefs.getBool("showAds") ?? true
     });
@@ -93,7 +93,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
     }
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final AnchoredAdaptiveBannerAdSize size =
+    final AnchoredAdaptiveBannerAdSize? size =
     await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
         MediaQuery.of(context).size.width.truncate());
 
@@ -125,7 +125,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
         },
       ),
     );
-    return _anchoredAdaptiveAd.load();
+    return _anchoredAdaptiveAd!.load();
   }
 
   PreferredSizeWidget _appBar() {
@@ -179,7 +179,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
         title: Text(myTitle,
           style: Theme.of(context)
               .textTheme
-              .headline1
+              .headline1!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 30,
               color: barTheme.focusColor))
       );

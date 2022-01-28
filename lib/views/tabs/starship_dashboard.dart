@@ -23,18 +23,18 @@ class StarshipDashboardPage extends StatefulWidget {
 
 class _StarshipDashboardPageState extends State<StarshipDashboardPage> with SingleTickerProviderStateMixin {
 
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 3);
-    _tabController.animateTo(widget.index);
+    _tabController!.animateTo(widget.index);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -73,7 +73,7 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
             title: Text('Starship',
               style: Theme.of(context)
                   .textTheme
-                  .headline1
+                  .headline1!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor),),
           ),
           body: TabBarView(

@@ -12,22 +12,22 @@ import '../../agency.dart';
 import 'package:http/http.dart' as http;
 
 class Launch {
-  final String id;
-  final String name;
-  final String infographic;
-  final String image;
-  final String slug;
-  final DateTime windowStart;
-  final DateTime windowEnd;
-  final DateTime net;
-  final int probability;
-  final Status status;
-  final List<Update> updates;
-  final Rocket rocket;
-  final Agency launchServiceProvider;
-  final Pad pad;
-  final Mission mission;
-  final List<VidURL> vidURLs;
+  final String? id;
+  final String? name;
+  final String? infographic;
+  final String? image;
+  final String? slug;
+  final DateTime? windowStart;
+  final DateTime? windowEnd;
+  final DateTime? net;
+  final int? probability;
+  final Status? status;
+  final List<Update>? updates;
+  final Rocket? rocket;
+  final Agency? launchServiceProvider;
+  final Pad? pad;
+  final Mission? mission;
+  final List<VidURL>? vidURLs;
 
   const Launch(
       {this.id,
@@ -47,7 +47,7 @@ class Launch {
       this.infographic,
       this.slug});
 
-  static List<Launch> allFromResponse(http.Response response) {
+  static List<Launch>? allFromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']

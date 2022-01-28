@@ -7,13 +7,13 @@ import 'road_closure.dart';
 import 'notice.dart';
 
 class Starship {
-  final LaunchEventList upcoming;
-  final LaunchEventList previous;
-  final List<LiveStream> liveStream;
-  final List<RoadClosure> roadClosures;
-  final List<Update> updates;
-  final List<Notice> notices;
-  final List<Launcher> launchers;
+  final LaunchEventList? upcoming;
+  final LaunchEventList? previous;
+  final List<LiveStream>? liveStream;
+  final List<RoadClosure>? roadClosures;
+  final List<Update>? updates;
+  final List<Notice>? notices;
+  final List<Launcher>? launchers;
 
   Starship(
       {

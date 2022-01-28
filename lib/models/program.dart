@@ -1,13 +1,13 @@
 import 'agency_mini.dart';
 
 class Program {
-  final int id;
-  final String name;
-  final String description;
-  final String infoUrl;
-  final String wikiUrl;
-  final String imageUrl;
-  final List<AgencyMini> agencies;
+  final int? id;
+  final String? name;
+  final String? description;
+  final String? infoUrl;
+  final String? wikiUrl;
+  final String? imageUrl;
+  final List<AgencyMini>? agencies;
 
   Program({this.id, this.name, this.description, this.infoUrl, this.wikiUrl,
     this.imageUrl, this.agencies});

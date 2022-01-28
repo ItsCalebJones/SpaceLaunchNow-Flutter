@@ -96,7 +96,7 @@ class Pages extends StatefulWidget {
 
 class PagesState extends State<Pages> {
   bool showAds = true;
-  TabController controller;
+  TabController? controller;
 
   final List<String> _productLists = [
     '2022_super_fan',
@@ -189,7 +189,7 @@ class PagesState extends State<Pages> {
 
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {
+        .then((RemoteMessage? message) {
           if(message != null){
             print("Received a new message!");
             if (message.data['launch_uuid'] != null) {
@@ -486,7 +486,7 @@ class PagesState extends State<Pages> {
     startBackground();
     requestiOSPermissions();
 
-    _firebaseMessaging.getToken().then((String token) {
+    _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
       print("Push Messaging token: $token");
     });
@@ -499,13 +499,13 @@ class PagesState extends State<Pages> {
   void startBackground() async {
     // Get any messages which caused the application to open from
     // a terminated state.
-    RemoteMessage initialMessage =
+    RemoteMessage? initialMessage =
     await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
     if (initialMessage?.data['launch_uuid'] != null) {
-      _navigateToLaunchDetails(initialMessage.data['launch_uuid']);
+      _navigateToLaunchDetails(initialMessage!.data['launch_uuid']);
 
       if (initialMessage.data.containsKey('notification_type')) {
         if (initialMessage.data['notification_type'] == 'featured_news') {
@@ -526,7 +526,7 @@ class PagesState extends State<Pages> {
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data['type'] == 'chat') {
-        _navigateToLaunchDetails(initialMessage.data['launch_uuid']);
+        _navigateToLaunchDetails(initialMessage!.data['launch_uuid']);
 
         if (initialMessage.data.containsKey('notification_type')) {
           if (initialMessage.data['notification_type'] == 'featured_news') {
@@ -562,11 +562,11 @@ class PagesState extends State<Pages> {
 
   void asyncInitState() async {
 
-    String answer = await FlutterInappPurchase.instance.initConnection;
+    String? answer = await FlutterInappPurchase.instance.initConnection;
     print(answer);
     // refresh items for android
     try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      String? msg = await (FlutterInappPurchase.instance.consumeAllItems as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
       print('consumeAllItems error: $err');
@@ -608,7 +608,7 @@ class PagesState extends State<Pages> {
   }
 
   Future _getPurchaseHistory() async {
-    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    List<PurchasedItem> items = await (FlutterInappPurchase.instance.getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
     for (var item in items) {
       print('${item.toString()}');
       this._purchases.add(item);
@@ -668,11 +668,11 @@ class PagesState extends State<Pages> {
   }
 
   void _showLaunchDialog(Map<String, dynamic> message) {
-    final String launchId = message['launch_uuid'];
+    final String? launchId = message['launch_uuid'];
     showDialog<bool>(
       context: context,
       builder: (_) => _buildDialog(context, message),
-    ).then((bool shouldNavigate) {
+    ).then((bool? shouldNavigate) {
       if (shouldNavigate == true) {
         _navigateToLaunchDetails(launchId);
       }
@@ -777,7 +777,7 @@ class PagesState extends State<Pages> {
                 ))));
   }
 
-  void _navigateToLaunchDetails(String launchId) {
+  void _navigateToLaunchDetails(String? launchId) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -791,7 +791,7 @@ class PagesState extends State<Pages> {
   void checkAd() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if(!_purchaseRestored && !prefs.getBool("initialRestoreAttempted") ?? false) {
+    if(!_purchaseRestored && !prefs.getBool("initialRestoreAttempted")! ?? false) {
       await _getPurchaseHistory();
       prefs.setBool("initialRestoreAttempted", true);
     }

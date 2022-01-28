@@ -35,30 +35,30 @@ class _HomeListPageState extends State<HomeListPage> {
   int offset = 0;
   int limit = 5;
   bool loading = false;
-  String lsps;
-  String locations;
-  bool subscribeALL;
-  bool subscribeSpaceX;
-  bool subscribeRussia;
-  bool subscribeWallops;
-  bool subscribeNZ;
-  bool subscribeJapan;
-  bool subscribeFG;
-  bool subscribeCAPE;
-  bool subscribePLES;
-  bool subscribeISRO;
-  bool subscribeKSC;
-  bool subscribeVAN;
-  bool subscribeChina;
-  bool subscribeNASA;
-  bool subscribeArianespace;
-  bool subscribeULA;
-  bool subscribeRoscosmos;
-  bool subscribeRocketLab;
-  bool subscribeBlueOrigin;
-  bool subscribeNorthrop;
+  String? lsps;
+  String? locations;
+  late bool subscribeALL;
+  late bool subscribeSpaceX;
+  late bool subscribeRussia;
+  late bool subscribeWallops;
+  late bool subscribeNZ;
+  late bool subscribeJapan;
+  late bool subscribeFG;
+  late bool subscribeCAPE;
+  bool? subscribePLES;
+  late bool subscribeISRO;
+  bool? subscribeKSC;
+  late bool subscribeVAN;
+  late bool subscribeChina;
+  late bool subscribeNASA;
+  late bool subscribeArianespace;
+  late bool subscribeULA;
+  late bool subscribeRoscosmos;
+  late bool subscribeRocketLab;
+  late bool subscribeBlueOrigin;
+  late bool subscribeNorthrop;
   SLNRepository _repository = new Injector().slnRepository;
-  BannerAd _anchoredAdaptiveAd;
+  BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
 
   @override
@@ -66,8 +66,8 @@ class _HomeListPageState extends State<HomeListPage> {
     super.initState();
     print("Initing state of Upcoming!");
 
-    List<Launch> launches =
-        PageStorage.of(context).readState(context, identifier: 'homeLaunches');
+    List<Launch>? launches =
+        PageStorage.of(context)!.readState(context, identifier: 'homeLaunches');
     if (launches != null) {
       _launches = launches;
     }
@@ -83,7 +83,7 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void dispose() {
     super.dispose();
-    _anchoredAdaptiveAd.dispose();
+    _anchoredAdaptiveAd!.dispose();
   }
 
   @override
@@ -100,13 +100,13 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     setState(() {
-      _launches.addAll(launches.launches);
-      PageStorage.of(context)
+      _launches.addAll(launches.launches!);
+      PageStorage.of(context)!
           .writeState(context, _launches, identifier: 'homeLaunches');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("Error occured");
     loading = false;
     if (search == true) {
@@ -127,7 +127,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Color getPrimaryColor() {
+  Color? getPrimaryColor() {
     if (widget._configuration.nightMode) {
       return Colors.grey[800];
     } else {
@@ -137,30 +137,30 @@ class _HomeListPageState extends State<HomeListPage> {
 
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
     var formatter = new DateFormat("EEEE, MMMM d, yyyy");
-    var title = "";
+    String? title = "";
 
     if (launch.launchServiceProvider != null &&
-        launch.rocket.configuration.name != null) {
-      title = launch.launchServiceProvider.name +
+        launch.rocket!.configuration!.name != null) {
+      title = launch.launchServiceProvider!.name! +
           " | " +
-          launch.rocket.configuration.name;
+          launch.rocket!.configuration!.name!;
     } else {
       title = launch.name;
     }
 
-    var url =
+    String? url =
         "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     if (launch.launchServiceProvider != null) {
-      if (launch.launchServiceProvider.nationURL != null &&
-          launch.launchServiceProvider.nationURL.length > 0) {
-        url = launch.launchServiceProvider.nationURL;
-      } else if (launch.launchServiceProvider.imageURL != null &&
-          launch.launchServiceProvider.imageURL.length > 0) {
-        url = launch.launchServiceProvider.imageURL;
+      if (launch.launchServiceProvider!.nationURL != null &&
+          launch.launchServiceProvider!.nationURL!.length > 0) {
+        url = launch.launchServiceProvider!.nationURL;
+      } else if (launch.launchServiceProvider!.imageURL != null &&
+          launch.launchServiceProvider!.imageURL!.length > 0) {
+        url = launch.launchServiceProvider!.imageURL;
       }
-    } else if (launch.pad.location.mapImage != null &&
-        launch.pad.location.mapImage.length > 0) {
-      url = launch.pad.location.mapImage;
+    } else if (launch.pad!.location!.mapImage != null &&
+        launch.pad!.location!.mapImage!.length > 0) {
+      url = launch.pad!.location!.mapImage;
     }
 
     return new Padding(
@@ -191,7 +191,7 @@ class _HomeListPageState extends State<HomeListPage> {
                           ),
                           child: new CircleAvatar(
                             foregroundColor: Colors.white,
-                            backgroundImage: new NetworkImage(url),
+                            backgroundImage: new NetworkImage(url!),
                             radius: 50.0,
                             backgroundColor: Colors.white,
                           ),
@@ -205,17 +205,17 @@ class _HomeListPageState extends State<HomeListPage> {
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 8.0),
                             child: new Text(
-                              title,
+                              title!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.headline3.copyWith(
+                              style: Theme.of(context).textTheme.headline3!.copyWith(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(launch.pad.location.name,
+                            child: new Text(launch.pad!.location!.name!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText2),
@@ -224,7 +224,7 @@ class _HomeListPageState extends State<HomeListPage> {
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: new Text(
-                                formatter.format(launch.net.toLocal()),
+                                formatter.format(launch.net!.toLocal()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText2),
@@ -240,7 +240,7 @@ class _HomeListPageState extends State<HomeListPage> {
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
                   image:
-                      new CachedNetworkImageProvider(_getLaunchImage(launch)),
+                      new CachedNetworkImageProvider(_getLaunchImage(launch)!),
                   fit: BoxFit.cover,
                   height: 175.0,
                   alignment: Alignment.center,
@@ -264,7 +264,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {Launch launch, Object avatarTag, String launchId}) {
+      {Launch? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -313,14 +313,14 @@ class _HomeListPageState extends State<HomeListPage> {
       );
     }
 
-    if (launch.vidURLs != null && launch.vidURLs.length > 0) {
+    if (launch.vidURLs != null && launch.vidURLs!.length > 0) {
       iconButtons.add(new Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
           child: new IconButton(
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openUrl(launch.vidURLs.first.url);
+              _openUrl(launch.vidURLs!.first.url!);
             }, //
           )));
     }
@@ -332,7 +332,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
-              Share.share("https://spacelaunchnow.me/launch/" + launch.slug);
+              Share.share("https://spacelaunchnow.me/launch/" + launch.slug!);
             }, //
           )
       )
@@ -355,7 +355,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   _openUrl(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -407,7 +407,7 @@ class _HomeListPageState extends State<HomeListPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .headline1
+              .headline1!
               .copyWith(fontWeight: FontWeight.bold,
                                     fontSize: 34, color: barTheme.focusColor),
         ),
@@ -420,7 +420,7 @@ class _HomeListPageState extends State<HomeListPage> {
     if (s == null) {
       return false;
     }
-    return double.parse(s, (e) => null) != null;
+    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void lockedLoadNext() {
@@ -610,24 +610,24 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  String _getLaunchImage(Launch launch) {
+  String? _getLaunchImage(Launch launch) {
     if (launch.image != null) {
       return launch.image;
     } else if (launch.infographic != null) {
       return launch.infographic;
-    } else if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0) {
-      return launch.rocket.configuration.image;
-    } else if (launch.launchServiceProvider.imageURL != null &&
-        launch.launchServiceProvider.imageURL.length > 0) {
-      return launch.launchServiceProvider.imageURL;
-    } else if (launch.launchServiceProvider.nationURL != null &&
-        launch.launchServiceProvider.nationURL.length > 0) {
-      return launch.launchServiceProvider.nationURL;
+    } else if (launch.rocket!.configuration!.image != null &&
+        launch.rocket!.configuration!.image!.length > 0) {
+      return launch.rocket!.configuration!.image;
+    } else if (launch.launchServiceProvider!.imageURL != null &&
+        launch.launchServiceProvider!.imageURL!.length > 0) {
+      return launch.launchServiceProvider!.imageURL;
+    } else if (launch.launchServiceProvider!.nationURL != null &&
+        launch.launchServiceProvider!.nationURL!.length > 0) {
+      return launch.launchServiceProvider!.nationURL;
     } else if (launch.pad != null &&
-        launch.pad.mapImage != null &&
-        launch.pad.mapImage.length > 0) {
-      return launch.pad.mapImage;
+        launch.pad!.mapImage != null &&
+        launch.pad!.mapImage!.length > 0) {
+      return launch.pad!.mapImage;
     } else {
       return "";
     }
@@ -638,10 +638,10 @@ class _HomeListPageState extends State<HomeListPage> {
       return Padding(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission.name,
+        child: new Text(launch.mission!.name!,
             style: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline5!
                 .copyWith(fontWeight: FontWeight.bold)),
       );
     } else {
@@ -654,7 +654,7 @@ class _HomeListPageState extends State<HomeListPage> {
       return Container(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission.description,
+        child: new Text(launch.mission!.description!,
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText2,
@@ -672,7 +672,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Future<void> _loadAd() async {
-    bool _showAds;
+    late bool _showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) => {
         _showAds = prefs.getBool("showAds") ?? true
     });
@@ -682,7 +682,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final AnchoredAdaptiveBannerAdSize size =
+    final AnchoredAdaptiveBannerAdSize? size =
     await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
         MediaQuery.of(context).size.width.truncate());
 
@@ -713,7 +713,7 @@ class _HomeListPageState extends State<HomeListPage> {
         },
       ),
     );
-    return _anchoredAdaptiveAd.load();
+    return _anchoredAdaptiveAd!.load();
   }
 
   Widget _buildBody() {
@@ -749,9 +749,9 @@ class _HomeListPageState extends State<HomeListPage> {
             ),
             if (_anchoredAdaptiveAd != null && _isLoaded)
               Container(
-                width: _anchoredAdaptiveAd.size.width.toDouble(),
-                height: _anchoredAdaptiveAd.size.height.toDouble(),
-                child: AdWidget(ad: _anchoredAdaptiveAd)),
+                width: _anchoredAdaptiveAd!.size.width.toDouble(),
+                height: _anchoredAdaptiveAd!.size.height.toDouble(),
+                child: AdWidget(ad: _anchoredAdaptiveAd!)),
             // Align(
             //   alignment: Alignment.bottomCenter,
             //   child: ListAdWidget(AdSize.banner),

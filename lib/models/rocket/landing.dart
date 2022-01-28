@@ -2,11 +2,11 @@ import 'package:spacelaunchnow_flutter/models/landing/landing_location.dart';
 import 'package:spacelaunchnow_flutter/models/landing/landing_type.dart';
 
 class Landing {
-  final String description;
-  final bool attempt;
-  final bool success;
-  final LandingLocation location;
-  final LandingType type;
+  final String? description;
+  final bool? attempt;
+  final bool? success;
+  final LandingLocation? location;
+  final LandingType? type;
 
   Landing({this.description, this.attempt, this.success, this.location, this.type});
 

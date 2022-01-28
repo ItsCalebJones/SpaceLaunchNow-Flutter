@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomDialogBox extends StatefulWidget {
-  final String title, descriptions, text, imgUrl;
+  final String? title, descriptions, text, imgUrl;
 
-  const CustomDialogBox({Key key, this.title, this.descriptions, this.text, this.imgUrl}) : super(key: key);
+  const CustomDialogBox({Key? key, this.title, this.descriptions, this.text, this.imgUrl}) : super(key: key);
 
   @override
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
@@ -26,7 +26,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     );
   }
   contentBox(context){
-    var imgUrl = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/ic_launcher.png";
+    String? imgUrl = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/ic_launcher.png";
     if (widget.imgUrl != null){
       imgUrl = widget.imgUrl;
     }
@@ -53,9 +53,9 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(widget.title,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+              Text(widget.title!,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
               SizedBox(height: 15,),
-              Text(widget.descriptions,style: TextStyle(fontSize: 12),textAlign: TextAlign.center,),
+              Text(widget.descriptions!,style: TextStyle(fontSize: 12),textAlign: TextAlign.center,),
               SizedBox(height: 22,),
               Align(
                 alignment: Alignment.bottomRight,

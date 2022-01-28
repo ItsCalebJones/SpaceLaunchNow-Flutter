@@ -21,7 +21,7 @@ class StarshipVehiclePage extends StatefulWidget {
 }
 
 class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
-  Starship _starship;
+  Starship? _starship;
   bool loading = false;
   bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
@@ -30,8 +30,8 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   @override
   void initState() {
     super.initState();
-    Starship starship =
-        PageStorage.of(context).readState(context, identifier: 'starship');
+    Starship? starship =
+        PageStorage.of(context)!.readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -52,12 +52,12 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)
+      PageStorage.of(context)!
           .writeState(context, _starship, identifier: 'starship');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("An error occured!");
     setState(() {
       loading = false;
@@ -119,9 +119,9 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
     }
   }
 
-  void loadNext({bool force}) {
+  void loadNext({bool? force}) {
     loading = true;
-    if ((!usingCached) || force) {
+    if ((!usingCached) || force!) {
       _repository
           .fetchStarshipDashboard()
           .then((response) => onLoadResponseComplete(response))
@@ -135,8 +135,8 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   List<Widget> _buildList() {
     List<Widget> content = new List<Widget>();
 
-    for (Object item in _starship.launchers){
-      content.add(_buildVehicleTile(item));
+    for (Object item in _starship!.launchers!){
+      content.add(_buildVehicleTile(item as Launcher));
     }
     return content;
   }
@@ -144,7 +144,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
 
   Widget _buildVehicleTile(Launcher item) {
     var formatter = new DateFormat.yMd();
-    String img_url;
+    String? img_url;
     if (item.image != null){
       img_url = item.image;
     } else {
@@ -154,13 +154,13 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
       padding: const EdgeInsets.all(8),
       child: new ListTile(
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(img_url),
+          backgroundImage: new CachedNetworkImageProvider(img_url!),
         ),
-        title: new Text(item.launcherConfiguration.name + " | " + item.serialNumber,
+        title: new Text(item.launcherConfiguration!.name! + " | " + item.serialNumber!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(item.details),
-        trailing: new Text('${item.status[0].toUpperCase()}${item.status.substring(1)}',
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(item.details!),
+        trailing: new Text('${item.status![0].toUpperCase()}${item.status!.substring(1)}',
             style: Theme.of(context).textTheme.caption),
       ),
     );

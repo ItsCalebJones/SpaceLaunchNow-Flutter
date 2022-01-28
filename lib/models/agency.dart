@@ -1,24 +1,24 @@
 class Agency {
-  final int id;
-  final String name;
-  final String abbrev;
-  final String countryCode;
-  final String description;
-  final String administrator;
-  final String foundingYear;
-  final int successfulLaunches;
-  final int failedLaunches;
-  final int pendingLaunches;
-  final int consecutiveSuccessfulLandings;
-  final int successfulLandings;
-  final int failedLandings;
-  final int attemptedLandings;
-  final String type;
-  final String logoURL;
-  final String imageURL;
-  final String nationURL;
-  final String infoURL;
-  final String wikiURL;
+  final int? id;
+  final String? name;
+  final String? abbrev;
+  final String? countryCode;
+  final String? description;
+  final String? administrator;
+  final String? foundingYear;
+  final int? successfulLaunches;
+  final int? failedLaunches;
+  final int? pendingLaunches;
+  final int? consecutiveSuccessfulLandings;
+  final int? successfulLandings;
+  final int? failedLandings;
+  final int? attemptedLandings;
+  final String? type;
+  final String? logoURL;
+  final String? imageURL;
+  final String? nationURL;
+  final String? infoURL;
+  final String? wikiURL;
 
 //  final List<String> infoURLs;
 
@@ -44,7 +44,7 @@ class Agency {
       this.infoURL,
       this.wikiURL});
 
-  factory Agency.fromJson(Map<String, dynamic> json) {
+  factory Agency.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
 
       var logoURL = json['logo_url'];

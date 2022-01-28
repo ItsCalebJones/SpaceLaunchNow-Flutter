@@ -20,10 +20,10 @@ Duration days(int days) => new Duration(days: days);
 class PrettyDuration {
 
   final Duration duration;
-  String days;
-  String hours;
-  String minutes;
-  String seconds;
+  String? days;
+  String? hours;
+  String? minutes;
+  String? seconds;
 
   PrettyDuration(this.duration) {
     if (duration.inDays > 0) {

@@ -8,22 +8,22 @@ import 'package:url_launcher/url_launcher.dart';
 class AgenciesShowcase extends StatelessWidget {
   AgenciesShowcase(this.mLaunch);
 
-  final Launch mLaunch;
+  final Launch? mLaunch;
 
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
 
-    Agency lsp = mLaunch.launchServiceProvider;
-    String lspName = "Unknown";
-    String lspAdmin = "Unknown Administrator";
+    Agency? lsp = mLaunch!.launchServiceProvider;
+    String? lspName = "Unknown";
+    String? lspAdmin = "Unknown Administrator";
     String lspfounded = "Founded: Unknown";
-    String lspDescription = "";
+    String? lspDescription = "";
 
     if (lsp != null) {
-      String lspFoundedYear = lsp.foundingYear;
+      String? lspFoundedYear = lsp.foundingYear;
       if (lspFoundedYear != null) {
-        lspfounded = "Founded: " + lsp.foundingYear;
+        lspfounded = "Founded: " + lsp.foundingYear!;
       }
 
       if (lsp.name != null) {
@@ -37,7 +37,7 @@ class AgenciesShowcase extends StatelessWidget {
       }
     }
 
-    Widget _buildStats(TextTheme theme) {
+    Widget? _buildStats(TextTheme theme) {
       if (lsp != null &&
           lsp.successfulLaunches != null &&
           lsp.failedLaunches != null &&
@@ -50,7 +50,7 @@ class AgenciesShowcase extends StatelessWidget {
             children: <Widget>[
               new Text(
                 "$lspName Stats",
-                style: textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
+                style: textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
               ),
               new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +64,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           new Text(
                             "Successful:",
-                            style: textTheme.subtitle1
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -83,7 +83,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           new Text(
                             "Pending:",
-                            style: textTheme.subtitle1
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -102,7 +102,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           new Text(
                             "Failed:",
-                            style: textTheme.subtitle1
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
@@ -134,10 +134,10 @@ class AgenciesShowcase extends StatelessWidget {
 
     Widget _buildAvatar() {
 
-        var url = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
-        if (lsp.nationURL != null && lsp.nationURL.length > 0){
+        String? url = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+        if (lsp!.nationURL != null && lsp.nationURL!.length > 0){
           url = lsp.nationURL;
-        } else if (lsp.imageURL != null && lsp.imageURL.length > 0){
+        } else if (lsp.imageURL != null && lsp.imageURL!.length > 0){
           url = lsp.imageURL;
         }
 
@@ -157,7 +157,7 @@ class AgenciesShowcase extends StatelessWidget {
                   ),
                   child: new CircleAvatar(
                     foregroundColor: Colors.white,
-                    backgroundImage: new NetworkImage(url),
+                    backgroundImage: new NetworkImage(url!),
                     radius: 50.0,
                     backgroundColor: Colors.white,
                   ),
@@ -170,8 +170,8 @@ class AgenciesShowcase extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      lspAdmin,
-                      style: textTheme.subtitle1.copyWith(),
+                      lspAdmin!,
+                      style: textTheme.subtitle1!.copyWith(),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -179,7 +179,7 @@ class AgenciesShowcase extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       lspfounded,
-                      style: textTheme.subtitle1.copyWith(),
+                      style: textTheme.subtitle1!.copyWith(),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -197,7 +197,7 @@ class AgenciesShowcase extends StatelessWidget {
       } else {
         lspWidgets.add(new Text(
           "Unknown",
-          style: textTheme.subtitle1.copyWith(),
+          style: textTheme.subtitle1!.copyWith(),
           textAlign: TextAlign.left,
         ));
       }
@@ -213,14 +213,14 @@ class AgenciesShowcase extends StatelessWidget {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline4
+                  .headline4!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              lspName,
+              lspName!,
               style: textTheme.headline6,
             ),
           ),
@@ -232,13 +232,13 @@ class AgenciesShowcase extends StatelessWidget {
             padding: const EdgeInsets.only(
                 top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
             child: new Text(
-              lspDescription,
-              style: textTheme.bodyText1.copyWith(),
+              lspDescription!,
+              style: textTheme.bodyText1!.copyWith(),
               textAlign: TextAlign.start,
             ),
           ),
           new Column(children: lspWidgets),
-          _buildStats(textTheme),
+          _buildStats(textTheme)!,
         ],
       );
     }
@@ -252,21 +252,21 @@ class AgenciesShowcase extends StatelessWidget {
   }
 
   List<Widget> _buildLandingWidgets(TextTheme textTheme) {
-    if (mLaunch.launchServiceProvider != null &&
-        mLaunch.launchServiceProvider.attemptedLandings > 0) {
+    if (mLaunch!.launchServiceProvider != null &&
+        mLaunch!.launchServiceProvider!.attemptedLandings! > 0) {
       List<Widget> widgets = new List<Widget>();
       widgets.add(
         new Row(
           children: <Widget>[
             new Text(
               "Attempted Landing:",
-              style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                mLaunch.launchServiceProvider.attemptedLandings.toString() ??
+                mLaunch!.launchServiceProvider!.attemptedLandings.toString() ??
                     "",
                 maxLines: 1,
                 style: textTheme.subtitle1,
@@ -281,13 +281,13 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             new Text(
               "Successful Landing:",
-              style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                mLaunch.launchServiceProvider.successfulLandings.toString() ??
+                mLaunch!.launchServiceProvider!.successfulLandings.toString() ??
                     "",
                 maxLines: 1,
                 style: textTheme.subtitle1,
@@ -302,13 +302,13 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             new Text(
               "Consecutive Landing:",
-              style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                mLaunch.launchServiceProvider.consecutiveSuccessfulLandings
+                mLaunch!.launchServiceProvider!.consecutiveSuccessfulLandings
                         .toString() ??
                     "",
                 maxLines: 1,
@@ -324,13 +324,13 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             new Text(
               "Failed Landing:",
-              style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
-                mLaunch.launchServiceProvider.failedLandings.toString() ?? "",
+                mLaunch!.launchServiceProvider!.failedLandings.toString() ?? "",
                 maxLines: 1,
                 style: textTheme.subtitle1,
                 overflow: TextOverflow.fade,
@@ -350,21 +350,21 @@ class AgenciesShowcase extends StatelessWidget {
   Widget _buildActionButtons() {
     List<Widget> materialButtons = [];
 
-    if (mLaunch.launchServiceProvider.infoURL != null) {
+    if (mLaunch!.launchServiceProvider!.infoURL != null) {
       materialButtons.add(new IconButton(
         icon:Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          launch(mLaunch.launchServiceProvider.infoURL);
+          launch(mLaunch!.launchServiceProvider!.infoURL!);
         },
         tooltip: "Website",
       ));
     }
 
-    if (mLaunch.launchServiceProvider.wikiURL != null) {
+    if (mLaunch!.launchServiceProvider!.wikiURL != null) {
       materialButtons.add(new IconButton(
         icon:Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          launch(mLaunch.launchServiceProvider.wikiURL);
+          launch(mLaunch!.launchServiceProvider!.wikiURL!);
         },
         tooltip: "Wikipedia",
       ));

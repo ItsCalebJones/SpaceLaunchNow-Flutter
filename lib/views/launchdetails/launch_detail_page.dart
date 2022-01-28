@@ -13,9 +13,9 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 
 class ElapsedTime {
-  final int hundreds;
-  final int seconds;
-  final int minutes;
+  final int? hundreds;
+  final int? seconds;
+  final int? minutes;
 
   ElapsedTime({
     this.hundreds,
@@ -36,9 +36,9 @@ class LaunchDetailPage extends StatefulWidget {
       {this.launch, this.launchId, this.avatarTag});
 
   final AppConfiguration _configuration;
-  final Launch launch;
-  final String launchId;
-  final Object avatarTag;
+  final Launch? launch;
+  final String? launchId;
+  final Object? avatarTag;
 
   @override
   _LaunchDetailsPageState createState() => new _LaunchDetailsPageState();
@@ -47,11 +47,11 @@ class LaunchDetailPage extends StatefulWidget {
 class _LaunchDetailsPageState extends State<LaunchDetailPage>
     with TickerProviderStateMixin {
   List<News> _news = [];
-  AnimationController _controller;
-  List<Launch> _launches = [];
-  Launch launch;
-  bool backEnabled;
-  Timer timer;
+  late AnimationController _controller;
+  List<Launch>? _launches = [];
+  Launch? launch;
+  bool? backEnabled;
+  Timer? timer;
   final int timerMillisecondsRefreshRate = 100;
   final Stopwatch stopwatch = new Stopwatch();
   SLNRepository _repository = new Injector().slnRepository;
@@ -67,8 +67,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _loadLaunch(widget.launchId);
       backEnabled = true;
     } else {
-      Launch mLaunch =
-          PageStorage.of(context).readState(context, identifier: 'next_launch');
+      Launch? mLaunch =
+          PageStorage.of(context)!.readState(context, identifier: 'next_launch');
       if (mLaunch != null) {
         launch = mLaunch;
         setController();
@@ -78,14 +78,14 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       backEnabled = false;
     }
     if (launch != null) {
-      _loadNews(launch.id);
+      _loadNews(launch!.id);
     }
     timer = new Timer.periodic(new Duration(milliseconds: timerMillisecondsRefreshRate), callback);
   }
 
   void callback(Timer timer) {}
 
-  Future<void> _loadLaunch(String id) async {
+  Future<void> _loadLaunch(String? id) async {
     setState(() {
       _launches = null;
       launch = null;
@@ -96,25 +96,25 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     setState(() {
       launch = Launch.fromResponse(response);
       if (launch != null) {
-        _loadNews(launch.id);
+        _loadNews(launch!.id);
       }
       setController();
     });
   }
 
   Future<void> _loadNextLaunch() async {
-    List<Launch> _nextLaunches;
+    List<Launch>? _nextLaunches;
     http.Response response =
         await http.get(Uri.parse('https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
 
     _nextLaunches = Launch.allFromResponse(response);
     PageStorage
-        .of(context)
-        .writeState(context, _nextLaunches.first, identifier: 'next_launch');
+        .of(context)!
+        .writeState(context, _nextLaunches!.first, identifier: 'next_launch');
     setState(() {
       _launches = _nextLaunches;
-      launch = _nextLaunches.first;
-      _loadNews(launch.id);
+      launch = _nextLaunches!.first;
+      _loadNews(launch!.id);
       setController();
     });
   }
@@ -130,9 +130,9 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     Widget content;
     List<Color> colors = [];
     if (!widget._configuration.nightMode) {
-      colors.addAll([Colors.blue[700], Colors.blueGrey[400]]);
+      colors.addAll([Colors.blue[700]!, Colors.blueGrey[400]!]);
     } else {
-      colors.addAll([Colors.grey[800], Colors.blueGrey[700]]);
+      colors.addAll([Colors.grey[800]!, Colors.blueGrey[700]!]);
     }
     var linearGradient = new BoxDecoration(
       gradient: new LinearGradient(
@@ -181,7 +181,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   void setController() {
-    var until = launch.net.difference(new DateTime.now());
+    var until = launch!.net!.difference(new DateTime.now());
     if (until.inSeconds > 0) {
       _controller = new AnimationController(
         vsync: this,
@@ -191,7 +191,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     }
   }
 
-  void _loadNews(String id) async {
+  void _loadNews(String? id) async {
     List<News> response =
         await _repository.fetchNewsByLaunch(id: id).catchError((onError) {
     });

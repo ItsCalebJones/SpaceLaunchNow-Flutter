@@ -27,7 +27,7 @@ class StarshipEventPage extends StatefulWidget {
 }
 
 class _StarshipEventPageState extends State<StarshipEventPage> {
-  Starship _starship;
+  Starship? _starship;
   bool loading = false;
   bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
@@ -36,8 +36,8 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   @override
   void initState() {
     super.initState();
-    Starship starship =
-        PageStorage.of(context).readState(context, identifier: 'starship');
+    Starship? starship =
+        PageStorage.of(context)!.readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -58,12 +58,12 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)
+      PageStorage.of(context)!
           .writeState(context, _starship, identifier: 'starship');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("An error occured!");
     setState(() {
       loading = false;
@@ -172,9 +172,9 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
     }
   }
 
-  void loadNext({bool force}) {
+  void loadNext({bool? force}) {
     loading = true;
-    if ((!usingCached) || force) {
+    if ((!usingCached) || force!) {
       _repository
           .fetchStarshipDashboard()
           .then((response) => onLoadResponseComplete(response))
@@ -191,23 +191,23 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 
 
     if (isSelected[0]) {
-      dataUpcoming.addAll(_starship.upcoming.events);
-      dataUpcoming.addAll(_starship.upcoming.launches);
+      dataUpcoming.addAll(_starship!.upcoming!.events!);
+      dataUpcoming.addAll(_starship!.upcoming!.launches!);
       dataUpcoming.sort((a, b) => a.net.compareTo(b.net));
     } else {
-      dataUpcoming.addAll(_starship.previous.events);
-      dataUpcoming.addAll(_starship.previous.launches);
+      dataUpcoming.addAll(_starship!.previous!.events!);
+      dataUpcoming.addAll(_starship!.previous!.launches!);
       dataUpcoming.sort((a, b) => b.net.compareTo(a.net));
     }
     print(dataUpcoming);
-    for (Object item in dataUpcoming){
+    for (Object item in dataUpcoming as Iterable<Object>){
       content.add(_buildTile(item));
     }
     return content;
   }
 
   _openUrl(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -240,13 +240,13 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
         onTap: () =>
             _navigateToLaunchDetails(launch: null, launchId: launch.id),
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(launch.image),
+          backgroundImage: new CachedNetworkImageProvider(launch.image!),
         ),
-        title: new Text(launch.name,
+        title: new Text(launch.name!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location),
-        trailing: new Text(formatter.format(launch.net),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(launch.location!),
+        trailing: new Text(formatter.format(launch.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
@@ -260,20 +260,20 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
         onTap: () =>
             _navigateToEventDetails(event: null, eventId: event.id),
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(event.featureImage),
+          backgroundImage: new CachedNetworkImageProvider(event.featureImage!),
         ),
-        title: new Text(event.name,
+        title: new Text(event.name!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(event.location),
-        trailing: new Text(formatter.format(event.net),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(event.location!),
+        trailing: new Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   void _navigateToLaunchDetails(
-      {LaunchList launch, Object avatarTag, String launchId}) {
+      {LaunchList? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -289,7 +289,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   }
 
   void _navigateToEventDetails(
-      {EventList event, Object avatarTag, int eventId}) {
+      {EventList? event, Object? avatarTag, int? eventId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -49,9 +49,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
   bool _isAvailable = false;
   bool _loading = true;
 
-  StreamSubscription _purchaseUpdatedSubscription;
-  StreamSubscription _purchaseErrorSubscription;
-  StreamSubscription _conectionSubscription;
+  StreamSubscription? _purchaseUpdatedSubscription;
+  StreamSubscription? _purchaseErrorSubscription;
+  StreamSubscription? _conectionSubscription;
 
   @override
   initState() {
@@ -74,7 +74,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Future _getPurchaseHistory({bool initial = true}) async {
     print("I AM THERE");
     List<PurchasedItem> items =
-        await FlutterInappPurchase.instance.getPurchaseHistory();
+        await (FlutterInappPurchase.instance.getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
     for (var item in items) {
       print('${item.toString()}');
       this._purchases.add(item);
@@ -110,7 +110,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     await FlutterInappPurchase.instance.initConnection;
     // refresh items for android
     try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      String? msg = await (FlutterInappPurchase.instance.consumeAllItems as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
       print('consumeAllItems error: $err');
@@ -132,7 +132,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     _purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
       print('purchase-error: $purchaseError');
-      if (!purchaseError.message.contains("Cancelled")) {
+      if (!purchaseError!.message!.contains("Cancelled")) {
         var message = purchaseError.message;
         final scaffold = Scaffold.of(context);
         scaffold.showSnackBar(SnackBar(
@@ -166,7 +166,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     }
     this
         ._items
-        .sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
+        .sort((a, b) => double.parse(a.price!).compareTo(double.parse(b.price!)));
 
     setState(() {
       this._items = this._items;
@@ -174,7 +174,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _requestPurchase(IAPItem item) {
-    FlutterInappPurchase.instance.requestPurchase(item.productId);
+    FlutterInappPurchase.instance.requestPurchase(item.productId!);
     final scaffold = Scaffold.of(context);
     scaffold.showSnackBar(SnackBar(
       content: new Text('Sending purchase request to iTunes.'),
@@ -586,7 +586,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           "Settings",
           style: Theme.of(context)
               .textTheme
-              .headline1
+              .headline1!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor,),
         ),
       ),
@@ -740,7 +740,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         title: new Text('Become a Supporter',
             style: Theme.of(context)
                 .textTheme
-                .headline3
+                .headline3!
                 .copyWith(fontWeight: FontWeight.bold)),
         subtitle: new Text(
             'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
@@ -763,15 +763,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
         print(product);
         return ListTile(
             title: Text(
-              product.title,
+              product.title!,
             ),
             subtitle: Text(
-              product.description,
+              product.description!,
             ),
             trailing: !isNotFound
                 ? Icon(Icons.check)
                 : FlatButton(
-                    child: Text(product.localizedPrice),
+                    child: Text(product.localizedPrice!),
                     color: Colors.green[800],
                     textColor: Colors.white,
                     onPressed: () {

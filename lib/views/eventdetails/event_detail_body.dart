@@ -19,7 +19,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 
 class EventDetailBodyWidget extends StatefulWidget {
-  final Event event;
+  final Event? event;
   final AppConfiguration _configuration;
 
   EventDetailBodyWidget(this.event, this._configuration);
@@ -33,7 +33,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
     this.mEvent,
   );
 
-  final Event mEvent;
+  final Event? mEvent;
 
   Widget _buildLocationInfo(TextTheme textTheme) {
     return new Row(
@@ -45,7 +45,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              mEvent.location,
+              mEvent!.location!,
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
@@ -65,7 +65,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
-              mEvent.type.name,
+              mEvent!.type!.name!,
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
@@ -87,7 +87,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: new Text(
               new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
-                  .format(mEvent.net.toLocal()),
+                  .format(mEvent!.net!.toLocal()),
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
@@ -101,7 +101,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
 
 
   _openUrl(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -119,7 +119,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
-    if (mEvent.id != null) {
+    if (mEvent!.id != null) {
       var eventUrl = "https://spacelaunchnow.me/event/$mEvent.id";
       materialButtons.add(new Row(
         children: <Widget>[
@@ -157,7 +157,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   Widget _buildContentCard(BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
-    var id = mEvent.id;
+    var id = mEvent!.id;
 
     return new Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -166,8 +166,8 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         new Padding(
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
-            mEvent.name,
-            style: textTheme.headline1                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+            mEvent!.name!,
+            style: textTheme.headline1!                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             textAlign: TextAlign.start,
           ),
         ),
@@ -187,7 +187,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           child: _buildTimeInfo(textTheme),
         ),
         _buildDescription(),
-        buildUpdates(mEvent.updates, context, "https://spacelaunchnow.me/event/$id"),
+        buildUpdates(mEvent!.updates!, context, "https://spacelaunchnow.me/event/$id"),
         _buildSpace(),
       ],
     );
@@ -201,10 +201,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   Widget _buildDescription() {
     List<Widget> widgets = [];
 
-    if (mEvent.videoUrl != null && YoutubePlayer.convertUrlToId(mEvent.videoUrl) != null) {
+    if (mEvent!.videoUrl != null && YoutubePlayer.convertUrlToId(mEvent!.videoUrl!) != null) {
       YoutubePlayerController _controller = YoutubePlayerController(
         initialVideoId:
-        YoutubePlayer.convertUrlToId(mEvent.videoUrl),
+        YoutubePlayer.convertUrlToId(mEvent!.videoUrl!)!,
         flags: const YoutubePlayerFlags(
           autoPlay: true,
         ),
@@ -244,7 +244,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                   ],
                 ),
                 onPressed: () {
-                  _openUrl(mEvent.videoUrl);
+                  _openUrl(mEvent!.videoUrl!);
                 }, //
               ),
             ),
@@ -264,15 +264,15 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                   alignment: Alignment.centerLeft,
                   child: new Text(
                       "Event Details",
-                      style: Theme.of(context).textTheme.headline1                          .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
+                      style: Theme.of(context).textTheme.headline1!                          .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
                 ),
-                new Text(mEvent.description),
+                new Text(mEvent!.description!),
               ],
             ),
         )
     );
 
-    if (mEvent.newsUrl != null) {
+    if (mEvent!.newsUrl != null) {
       widgets.add(new Container(
         child: Column(
           children: <Widget>[
@@ -297,7 +297,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                   ],
                 ),
                 onPressed: () {
-                  _openUrl(mEvent.newsUrl);
+                  _openUrl(mEvent!.newsUrl!);
                 }, //
               ),
             ),
@@ -307,8 +307,8 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
     }
 
 
-    if (mEvent.launches != null && mEvent.launches.length > 0) {
-      var launch = mEvent.launches.first;
+    if (mEvent!.launches != null && mEvent!.launches!.length > 0) {
+      var launch = mEvent!.launches!.first;
       var formatter = new DateFormat.yMd();
 
       widgets.add(new Padding(
@@ -321,7 +321,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 padding: const EdgeInsets.only(left:8.0, right: 8.0),
                 child: new Text(
                     "Related Launch",
-                    style: Theme.of(context).textTheme.headline1                        .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
+                    style: Theme.of(context).textTheme.headline1!                        .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
               ),
             ),
             new ListTile(
@@ -330,16 +330,16 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
               leading: new Hero(
                 tag: 0,
                 child: new CircleAvatar(
-                  backgroundImage: new CachedNetworkImageProvider(launch.image),
+                  backgroundImage: new CachedNetworkImageProvider(launch.image!),
                 ),
               ),
-              title: new Text(launch.name, style: Theme
+              title: new Text(launch.name!, style: Theme
                   .of(context)
                   .textTheme
-                  .subtitle1
+                  .subtitle1!
                   .copyWith(fontSize: 15.0)),
-              subtitle: new Text(launch.pad.location.name),
-              trailing: new Text(formatter.format(launch.net), style: Theme
+              subtitle: new Text(launch.pad!.location!.name!),
+              trailing: new Text(formatter.format(launch.net!), style: Theme
                   .of(context)
                   .textTheme
                   .caption),
@@ -353,7 +353,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
     return new Column(children: widgets);
   }
 
-    void _navigateToLaunchDetails({Object avatarTag, String launchId}) {
+    void _navigateToLaunchDetails({Object? avatarTag, String? launchId}) {
       Navigator.of(context).push(
         new MaterialPageRoute(
           builder: (c) {

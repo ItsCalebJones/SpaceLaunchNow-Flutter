@@ -18,7 +18,7 @@ class PreviousLaunchListPage extends StatefulWidget {
   PreviousLaunchListPage(this._configuration, this.searchQuery, this.searchActive);
 
   final AppConfiguration _configuration;
-  final String searchQuery;
+  final String? searchQuery;
   final bool searchActive;
 
   @override
@@ -27,23 +27,23 @@ class PreviousLaunchListPage extends StatefulWidget {
 
 class _LaunchListPageState extends State<PreviousLaunchListPage> {
   List<LaunchList> _launches = [];
-  int nextOffset = 0;
-  int totalCount = 0;
+  int? nextOffset = 0;
+  int? totalCount = 0;
   int offset = 0;
   int limit = 30;
   bool loading = false;
   SLNRepository _repository = new Injector().slnRepository;
-  ListAdWidget _bannerAdWidget;
+  ListAdWidget? _bannerAdWidget;
 
   @override
   void initState() {
     super.initState();
-    List<LaunchList> launches = PageStorage.of(context).readState(context, identifier: 'previousLaunches');
+    List<LaunchList>? launches = PageStorage.of(context)!.readState(context, identifier: 'previousLaunches');
     if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context).readState(
+      nextOffset = PageStorage.of(context)!.readState(
           context, identifier: 'previousLaunchesNextOffset');
-      totalCount = PageStorage.of(context).readState(
+      totalCount = PageStorage.of(context)!.readState(
           context, identifier: 'previousLaunchesnextTotalCount');
     }
 
@@ -51,9 +51,9 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       _getLaunchBySearch(widget.searchQuery);
     } else if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context).readState(
+      nextOffset = PageStorage.of(context)!.readState(
           context, identifier: 'previousLaunchesNextOffset');
-      totalCount = PageStorage.of(context).readState(
+      totalCount = PageStorage.of(context)!.readState(
           context, identifier: 'previousLaunchesnextTotalCount');
     } else {
       lockedLoadNext();
@@ -91,16 +91,16 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       _launches.clear();
     }
     setState(() {
-      _launches.addAll(launches.launches);
-      PageStorage.of(context).writeState(context, _launches, identifier: 'previousLaunches');
-      PageStorage.of(context).writeState(
+      _launches.addAll(launches.launches!);
+      PageStorage.of(context)!.writeState(context, _launches, identifier: 'previousLaunches');
+      PageStorage.of(context)!.writeState(
           context, nextOffset, identifier: 'previousLaunchesNextOffset');
-      PageStorage.of(context).writeState(
+      PageStorage.of(context)!.writeState(
           context, totalCount, identifier: 'previousLaunchesnextTotalCount');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("Error occured");
     loading = false;
     if (search == true) {
@@ -146,17 +146,17 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         leading: new Hero(
           tag: index,
           child: new CircleAvatar(
-            backgroundImage: new CachedNetworkImageProvider(launch.image),
+            backgroundImage: new CachedNetworkImageProvider(launch.image!),
           ),
         ),
-        title: new Text(launch.name, style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location),
-        trailing: new Text(formatter.format(launch.net), style: Theme.of(context).textTheme.caption),
+        title: new Text(launch.name!, style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(launch.location!),
+        trailing: new Text(formatter.format(launch.net!), style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
-  void _navigateToLaunchDetails({LaunchList launch, Object avatarTag, String launchId}) {
+  void _navigateToLaunchDetails({LaunchList? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -197,7 +197,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     if(s == null) {
       return false;
     }
-    return double.parse(s, (e) => null) != null;
+    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void notifyThreshold() {
@@ -238,7 +238,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     return null;
   }
 
-  void _getLaunchBySearch(String value) {
+  void _getLaunchBySearch(String? value) {
     _launches.clear();
     loading = true;
     totalCount = 0;

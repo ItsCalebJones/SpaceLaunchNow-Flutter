@@ -1,9 +1,9 @@
 class LauncherConfigurationCommon {
-  final int id;
-  final String name;
-  final String family;
-  final String fullName;
-  final String variant;
+  final int? id;
+  final String? name;
+  final String? family;
+  final String? fullName;
+  final String? variant;
 
 
   LauncherConfigurationCommon(

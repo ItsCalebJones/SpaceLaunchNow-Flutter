@@ -7,24 +7,24 @@ import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'event_type.dart';
 
 class EventList {
-  final int id;
-  final String name;
-  final String description;
-  final EventType type;
-  final String location;
-  final String newsUrl;
-  final String videoUrl;
-  final String featureImage;
-  final List<Update> updates;
-  final DateTime date;
-  final DateTime net;
-  final Iterable<LaunchList> launches;
+  final int? id;
+  final String? name;
+  final String? description;
+  final EventType? type;
+  final String? location;
+  final String? newsUrl;
+  final String? videoUrl;
+  final String? featureImage;
+  final List<Update>? updates;
+  final DateTime? date;
+  final DateTime? net;
+  final Iterable<LaunchList>? launches;
 
   EventList({this.id, this.name, this.description, this.type, this.location,
     this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches,
     this.net, this.updates,});
 
-  static List<EventList> allFromResponse(http.Response response) {
+  static List<EventList>? allFromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']

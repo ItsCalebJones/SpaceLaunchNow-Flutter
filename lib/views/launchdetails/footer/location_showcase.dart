@@ -8,7 +8,7 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationShowcaseWidget extends StatefulWidget {
-  final Launch _launch;
+  final Launch? _launch;
 
   LocationShowcaseWidget(this._launch);
 
@@ -19,16 +19,16 @@ class LocationShowcaseWidget extends StatefulWidget {
 class LocationShowcaseState extends State<LocationShowcaseWidget> {
   LocationShowcaseState(this._launch);
 
-  final Launch _launch;
-  Uri staticMapUri;
+  final Launch? _launch;
+  Uri? staticMapUri;
 
   @override
   void initState() {
-    if (_launch.pad.mapImage != null) {
-      staticMapUri = Uri.parse(_launch.pad.mapImage);
+    if (_launch!.pad!.mapImage != null) {
+      staticMapUri = Uri.parse(_launch!.pad!.mapImage!);
     }
-    if (_launch.pad.location.mapImage != null) {
-      staticMapUri = Uri.parse(_launch.pad.mapImage);
+    if (_launch!.pad!.location!.mapImage != null) {
+      staticMapUri = Uri.parse(_launch!.pad!.mapImage!);
     }
   }
 
@@ -43,21 +43,21 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
-    if (_launch.pad.mapURL != null) {
+    if (_launch!.pad!.mapURL != null) {
       materialButtons.add(new IconButton(
         icon:Icon(FontAwesomeIcons.map),
         onPressed: () {
-          launch(_launch.pad.mapURL);
+          launch(_launch!.pad!.mapURL!);
         },
         tooltip: "Map",
       ));
     }
 
-    if (_launch.pad.wikiURL != null) {
+    if (_launch!.pad!.wikiURL != null) {
       materialButtons.add(new IconButton(
         icon:Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          launch(_launch.pad.wikiURL);
+          launch(_launch!.pad!.wikiURL!);
         },
         tooltip: "Wikipedia",
       ));
@@ -86,13 +86,13 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline4
+                  .headline4!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             )),
         new Padding(
             padding: const EdgeInsets.only(left: 8.0, right:8.0,),
             child: new Text(
-              _launch.pad.name,
+              _launch!.pad!.name!,
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
@@ -101,7 +101,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
         new Padding(
             padding: const EdgeInsets.only(left: 8.0, right:8.0,),
             child: new Text(
-              _launch.pad.location.name,
+              _launch!.pad!.location!.name!,
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
@@ -113,16 +113,16 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
           child: new InkWell(
             child: new Center(
-              child: new Image.network(_launch.pad.location.mapImage),
+              child: new Image.network(_launch!.pad!.location!.mapImage!),
             ),
           ),
         ),
        Align(
          alignment: Alignment.center,
          child: new Text(
-              _launch.pad.location.name,
+              _launch!.pad!.location!.name!,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.caption.copyWith(),
+              style: Theme.of(context).textTheme.caption!.copyWith(),
             ),
        ),
         new Padding(
@@ -130,14 +130,14 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               top: 8.0, bottom: 0.0, left: 8.0, right: 8.0),
           child: new InkWell(
             child: new Center(
-              child: new Image.network(_launch.pad.mapImage),
+              child: new Image.network(_launch!.pad!.mapImage!),
             ),
           ),
         ),
         Align(
           alignment: Alignment.center,
           child: new Text(
-            _launch.pad.name,
+            _launch!.pad!.name!,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.caption,
           ),

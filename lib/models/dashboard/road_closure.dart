@@ -1,11 +1,11 @@
 import 'road_closure_type.dart';
 
 class RoadClosure {
-  final int id;
-  final String title;
-  final RoadClosureType status;
-  final DateTime windowStart;
-  final DateTime windowEnd;
+  final int? id;
+  final String? title;
+  final RoadClosureType? status;
+  final DateTime? windowStart;
+  final DateTime? windowEnd;
 
   RoadClosure({this.id, this.title, this.status, this.windowStart, this.windowEnd});
 

@@ -1,18 +1,18 @@
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 
 class LaunchesList {
-  final List<LaunchList> launches;
-  final int nextOffset;
-  final int count;
+  final List<LaunchList>? launches;
+  final int? nextOffset;
+  final int? count;
 
   LaunchesList({this.launches, this.nextOffset, this.count});
 
   factory LaunchesList.fromJson(Map<String, dynamic> json) {
 
-    int offset;
+    int? offset;
     if (json['next'] != null) {
       Uri offsetUri = Uri.parse(json['next']);
-      offset = int.parse(offsetUri.queryParameters['offset']);
+      offset = int.parse(offsetUri.queryParameters['offset']!);
     }
 
     return new LaunchesList(

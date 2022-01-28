@@ -1,10 +1,10 @@
 class Update {
-  final int id;
-  final String profileImage;
-  final String comment;
-  final String infoUrl;
-  final String createdBy;
-  final DateTime createdOn;
+  final int? id;
+  final String? profileImage;
+  final String? comment;
+  final String? infoUrl;
+  final String? createdBy;
+  final DateTime? createdOn;
 
   Update(
       {

@@ -42,8 +42,8 @@ class _NewsListPageState extends State<NewsListPage> {
   @override
   void initState() {
     super.initState();
-    List<News> news =
-        PageStorage.of(context).readState(context, identifier: 'news');
+    List<News>? news =
+        PageStorage.of(context)!.readState(context, identifier: 'news');
     if (news != null) {
       _news = news;
     } else {
@@ -68,11 +68,11 @@ class _NewsListPageState extends State<NewsListPage> {
       if (response != null) {
         _news.addAll(response);
       }
-      PageStorage.of(context).writeState(context, _news, identifier: 'news');
+      PageStorage.of(context)!.writeState(context, _news, identifier: 'news');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("An error occured!");
     setState(() {
       loading = false;
@@ -119,7 +119,7 @@ class _NewsListPageState extends State<NewsListPage> {
       content = Scaffold(
         body: new ListView(
           shrinkWrap: true,
-          children: _buildNewsList(),
+          children: _buildNewsList() as List<Widget>,
         ),
       );
     }
@@ -139,7 +139,7 @@ class _NewsListPageState extends State<NewsListPage> {
   }
 
   _openBrowser(News news) async {
-    var url = news.url;
+    var url = news.url!;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -163,7 +163,7 @@ class _NewsListPageState extends State<NewsListPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headline4!
                       .copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
@@ -172,8 +172,8 @@ class _NewsListPageState extends State<NewsListPage> {
     );
   }
 
-  List<Widget> _buildNewsList() {
-    List<Widget> content = new List<Widget>();
+  List<Widget?> _buildNewsList() {
+    List<Widget?> content = new List<Widget?>();
     content.add(_buildBriefing());
     if (_news.length >= 5) {
       content.addAll(_buildBriefList(_news.sublist(0, 5)));
@@ -206,7 +206,7 @@ class _NewsListPageState extends State<NewsListPage> {
                         label: new Text(string,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(fontSize: 20, color: (filterIndex == index) ? Colors.white : Colors.white60)),
                         backgroundColor: (filterIndex == index) ? Colors.blue : Colors.grey[700],
                     ),
@@ -223,7 +223,7 @@ class _NewsListPageState extends State<NewsListPage> {
     if (filterIndex == 0) {
       content.addAll(_buildList(theRest));
     } else {
-      theRest = theRest.where((i) => i.newsSiteLong.toLowerCase() == filters[filterIndex].toLowerCase()).toList();
+      theRest = theRest.where((i) => i.newsSiteLong!.toLowerCase() == filters[filterIndex].toLowerCase()).toList();
       if (theRest.length > 0) {
         content.addAll(_buildList(theRest));
       } else {
@@ -277,7 +277,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
-                  image: new CachedNetworkImageProvider(item.featureImage),
+                  image: new CachedNetworkImageProvider(item.featureImage!),
                   fit: BoxFit.cover,
                   height: 175.0,
                   alignment: Alignment.center,
@@ -288,16 +288,16 @@ class _NewsListPageState extends State<NewsListPage> {
               Padding(
                 padding: const EdgeInsets.only(
                     top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(item.title,
+                child: new Text(item.title!,
                     style: Theme.of(context)
                         .textTheme
-                        .headline5
+                        .headline5!
                         .copyWith(fontWeight: FontWeight.bold)),
               ),
               Container(
                 padding: const EdgeInsets.only(
                     top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-                child: new Text(item.summary,
+                child: new Text(item.summary!,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyText1,
@@ -312,16 +312,16 @@ class _NewsListPageState extends State<NewsListPage> {
                       new Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          new Text(item.newsSiteLong),
+                          new Text(item.newsSiteLong!),
                           new Text(" • "),
-                          new Text(timeago.format(item.datePublished))
+                          new Text(timeago.format(item.datePublished!))
                         ],
                       ),
                       new IconButton(
                         icon: Icon(Icons.share),
                         tooltip: 'Share',
                         onPressed: () {
-                          Share.share(item.url);
+                          Share.share(item.url!);
                         }, //
                       )
                     ]),
@@ -352,16 +352,16 @@ class _NewsListPageState extends State<NewsListPage> {
                   Row(
                     children: [
                       new Text(index.toString() + ". "),
-                      new Text(item.newsSiteLong),
+                      new Text(item.newsSiteLong!),
                       new Text(" • "),
-                      new Text(timeago.format(item.datePublished))
+                      new Text(timeago.format(item.datePublished!))
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
-                    child: new Text(item.title,
-                        style: Theme.of(context).textTheme.headline5.copyWith(
+                    child: new Text(item.title!,
+                        style: Theme.of(context).textTheme.headline5!.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ],
@@ -373,7 +373,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
                   placeholder: new AssetImage('assets/placeholder.png'),
-                  image: new CachedNetworkImageProvider(item.featureImage),
+                  image: new CachedNetworkImageProvider(item.featureImage!),
                   fit: BoxFit.cover,
                   height: 80.0,
                   alignment: Alignment.center,
@@ -396,7 +396,7 @@ class _NewsListPageState extends State<NewsListPage> {
 }
 
 class ListItem {
-  String type;
-  News news;
-  StaggeredGridTile tileSize;
+  String? type;
+  News? news;
+  StaggeredGridTile? tileSize;
 }

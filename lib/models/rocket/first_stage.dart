@@ -4,14 +4,14 @@ import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 import '../launch/detailed/launch.dart';
 
 class FirstStage {
-  final String type;
-  final int turnAround;
-  final bool reused;
-  final int flightNumber;
-  final Launcher launcher;
-  final Landing landing;
-  final String previousFlight;
-  final String previousFlightUUID;
+  final String? type;
+  final int? turnAround;
+  final bool? reused;
+  final int? flightNumber;
+  final Launcher? launcher;
+  final Landing? landing;
+  final String? previousFlight;
+  final String? previousFlightUUID;
 
   FirstStage(
       {this.type, this.reused, this.flightNumber, this.launcher, this.landing,

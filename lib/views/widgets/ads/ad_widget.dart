@@ -14,7 +14,7 @@ class ListAdWidget extends StatefulWidget {
 }
 
 class _ListAdWidgetState extends State<ListAdWidget> with AutomaticKeepAliveClientMixin {
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   bool _isReady = false;
   bool _showAds = false;
 
@@ -80,7 +80,7 @@ class _ListAdWidgetState extends State<ListAdWidget> with AutomaticKeepAliveClie
         child: Container(
           width: widget.size.width.toDouble(),
           height: widget.size.height.toDouble(),
-          child: AdWidget(ad: _bannerAd),
+          child: AdWidget(ad: _bannerAd!),
         ),
       );
     } else if (!_isReady && _showAds) {

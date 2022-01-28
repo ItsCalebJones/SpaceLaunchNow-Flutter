@@ -18,7 +18,7 @@ class BannerAdWidget extends StatefulWidget {
 }
 
 class BannerAdState extends State<BannerAdWidget> {
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   final Completer<BannerAd> bannerCompleter = Completer<BannerAd>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _showAds = false;
@@ -63,7 +63,7 @@ class BannerAdState extends State<BannerAdWidget> {
       return FutureBuilder<BannerAd>(
         future: bannerCompleter.future,
         builder: (BuildContext context, AsyncSnapshot<BannerAd> snapshot) {
-          Widget child;
+          Widget? child;
 
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -73,15 +73,15 @@ class BannerAdState extends State<BannerAdWidget> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                child = AdWidget(ad: _bannerAd);
+                child = AdWidget(ad: _bannerAd!);
               } else {
                 child = Text('Error loading $BannerAd');
               }
           }
 
           return Container(
-            width: _bannerAd.size.width.toDouble(),
-            height: _bannerAd.size.height.toDouble(),
+            width: _bannerAd!.size.width.toDouble(),
+            height: _bannerAd!.size.height.toDouble(),
             child: child,
           );
         },

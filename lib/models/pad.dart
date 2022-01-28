@@ -1,15 +1,15 @@
 import 'package:spacelaunchnow_flutter/models/location.dart';
 
 class Pad {
-  final int id;
-  final String name;
-  final String infoURL;
-  final String wikiURL;
-  final String mapURL;
-  final String mapImage;
-  final num latitude;
-  final num longitude;
-  final Location location;
+  final int? id;
+  final String? name;
+  final String? infoURL;
+  final String? wikiURL;
+  final String? mapURL;
+  final String? mapImage;
+  final num? latitude;
+  final num? longitude;
+  final Location? location;
 
   Pad({this.id, this.name, this.infoURL, this.wikiURL, this.mapURL,
     this.latitude, this.longitude, this.location, this.mapImage});

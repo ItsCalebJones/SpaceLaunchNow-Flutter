@@ -34,7 +34,7 @@ class StarshipOverviewPage extends StatefulWidget {
 }
 
 class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
-  Starship _starship;
+  Starship? _starship;
   bool loading = false;
   bool usingCached = false;
   SLNRepository _repository = new Injector().slnRepository;
@@ -43,8 +43,8 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   @override
   void initState() {
     super.initState();
-    Starship starship =
-        PageStorage.of(context).readState(context, identifier: 'starship');
+    Starship? starship =
+        PageStorage.of(context)!.readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -65,12 +65,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)
+      PageStorage.of(context)!
           .writeState(context, _starship, identifier: 'starship');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("An error occured!");
     setState(() {
       loading = false;
@@ -114,10 +114,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     }
 
     Widget widget;
-    if (_starship != null && _starship.liveStream.length > 0) {
+    if (_starship != null && _starship!.liveStream!.length > 0) {
       YoutubePlayerController _controller = YoutubePlayerController(
         initialVideoId:
-            YoutubePlayer.convertUrlToId(_starship.liveStream.first.url),
+            YoutubePlayer.convertUrlToId(_starship!.liveStream!.first.url!)!,
         flags: const YoutubePlayerFlags(
           autoPlay: true,
         ),
@@ -154,9 +154,9 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     }
   }
 
-  void loadNext({bool force}) {
+  void loadNext({bool? force}) {
     loading = true;
-    if ((!usingCached) || force) {
+    if ((!usingCached) || force!) {
       _repository
           .fetchStarshipDashboard()
           .then((response) => onLoadResponseComplete(response))
@@ -170,8 +170,8 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   List<Widget> _buildDashboard() {
     var dataUpcoming = [];
 
-    dataUpcoming.addAll(_starship.upcoming.events);
-    dataUpcoming.addAll(_starship.upcoming.launches);
+    dataUpcoming.addAll(_starship!.upcoming!.events!);
+    dataUpcoming.addAll(_starship!.upcoming!.launches!);
     dataUpcoming.sort((a, b) => a.net.compareTo(b.net));
     print(dataUpcoming);
 
@@ -187,15 +187,15 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     new Text(
-                      _starship.liveStream.first.title,
+                      _starship!.liveStream!.first.title!,
                       textAlign: TextAlign.left,
                       style: Theme.of(context)
                           .textTheme
-                          .headline5
+                          .headline5!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     new Text(
-                      _starship.liveStream.first.description,
+                      _starship!.liveStream!.first.description!,
                       textAlign: TextAlign.left,
                       style: Theme.of(context).textTheme.caption,
                     )
@@ -224,7 +224,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   ],
                 ),
                 onPressed: () {
-                  _openUrl(_starship.liveStream.first.url);
+                  _openUrl(_starship!.liveStream!.first.url!);
                 }, //
               ),
             ),
@@ -245,14 +245,14 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
+                .subtitle1!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
           ),
         ),
       ),
       _addUpNext(dataUpcoming),
       ListAdWidget(AdSize.banner),
-      buildUpdates(_starship.updates,
+      buildUpdates(_starship!.updates!,
           context,
           "https://spacelaunchnow.me/starship#updates"),
       _addRoadClosure(),
@@ -266,7 +266,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   }
 
   _openUrl(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -297,7 +297,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             const EdgeInsets.only(top: 16, left: 24, right: 8.0, bottom: 8.0),
         child: new Text("No upcoming events.",
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
       );
     }
   }
@@ -310,13 +310,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         onTap: () =>
             _navigateToLaunchDetails(launch: null, launchId: launch.id),
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(launch.image),
+          backgroundImage: new CachedNetworkImageProvider(launch.image!),
         ),
-        title: new Text(launch.name,
+        title: new Text(launch.name!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location),
-        trailing: new Text(formatter.format(launch.net),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(launch.location!),
+        trailing: new Text(formatter.format(launch.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
@@ -328,20 +328,20 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       padding: const EdgeInsets.all(8),
       child: new ListTile(
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(event.featureImage),
+          backgroundImage: new CachedNetworkImageProvider(event.featureImage!),
         ),
-        title: new Text(event.name,
+        title: new Text(event.name!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(event.location),
-        trailing: new Text(formatter.format(event.net),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(event.location!),
+        trailing: new Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   void _navigateToLaunchDetails(
-      {LaunchList launch, Object avatarTag, String launchId}) {
+      {LaunchList? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -365,12 +365,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           child: new Text("Road Closures",
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1
+                  .subtitle1!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 42))),
     );
 
-    if (_starship.roadClosures.length > 0) {
-      for (RoadClosure item in _starship.roadClosures) {
+    if (_starship!.roadClosures!.length > 0) {
+      for (RoadClosure item in _starship!.roadClosures!) {
         widgets.add(_buildRoadClosureTile(item));
       }
     } else {
@@ -402,17 +402,17 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             new Text(
-              roadClosure.title,
+              roadClosure.title!,
               style: Theme.of(context)
                   .textTheme
-                  .headline6
+                  .headline6!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            new Text("Status: " + roadClosure.status.name),
-            new Text(date_formatter.format(roadClosure.windowStart)),
-            new Text(time_formatter.format(roadClosure.windowStart) +
+            new Text("Status: " + roadClosure.status!.name!),
+            new Text(date_formatter.format(roadClosure.windowStart!)),
+            new Text(time_formatter.format(roadClosure.windowStart!) +
                 " - " +
-                time_formatter.format(roadClosure.windowEnd)),
+                time_formatter.format(roadClosure.windowEnd!)),
             new Divider(),
           ],
         ));
@@ -428,13 +428,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           "Notices",
           style: Theme.of(context)
               .textTheme
-              .subtitle1
+              .subtitle1!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
         ),
       ),
     );
-    if (_starship.notices.length > 0) {
-      for (Notice item in _starship.notices) {
+    if (_starship!.notices!.length > 0) {
+      for (Notice item in _starship!.notices!) {
         widgets.add(_buildNoticeTile(item));
       }
     } else {
@@ -466,10 +466,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             new Text(
-              notice.type.name,
+              notice.type!.name!,
               style: Theme.of(context)
                   .textTheme
-                  .headline6
+                  .headline6!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             new Row(
@@ -481,8 +481,8 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Text(date_formatter.format(notice.date)),
-                      new Text(time_formatter.format(notice.date)),
+                      new Text(date_formatter.format(notice.date!)),
+                      new Text(time_formatter.format(notice.date!)),
                     ],
                   ),
                 ),
@@ -491,7 +491,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   child: IconButton(
                     icon: Icon(Icons.open_in_browser),
                     onPressed: () {
-                      _openUrl(notice.url);
+                      _openUrl(notice.url!);
                     },
                   ),
                 )
