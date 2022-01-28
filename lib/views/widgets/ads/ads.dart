@@ -34,7 +34,7 @@ class BannerAdState extends State<BannerAdWidget> {
           : "ca-app-pub-9824528399164059/8172962746",
       request: AdRequest(),
       size: widget.size,
-      listener: AdListener(
+      listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$BannerAd loaded.');
           bannerCompleter.complete(ad as BannerAd);
@@ -46,7 +46,6 @@ class BannerAdState extends State<BannerAdWidget> {
         },
         onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-        onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());

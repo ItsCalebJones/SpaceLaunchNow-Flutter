@@ -56,7 +56,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: new Text(
               mLaunch.pad.location.name,
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -91,7 +91,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: new Text(
               Utils.getStatus(mLaunch.status.id),
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -113,7 +113,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
                   .format(mLaunch.net.toLocal()),
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -169,7 +169,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                     child: new Text(
                       landingLocation,
                       maxLines: 2,
-                      style: textTheme.subhead,
+                      style: textTheme.subtitle1,
                       overflow: TextOverflow.fade,
                     ),
                   ),
@@ -301,8 +301,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
             mLaunch.name,
-            style: textTheme.headline
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+            style: textTheme.headline4.copyWith(fontWeight: FontWeight.bold, fontSize: 28),
             textAlign: TextAlign.start,
           ),
         ),
@@ -355,7 +354,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .headline
+              .headline4
               .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
         ),
       );
@@ -379,7 +378,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                       title: new Text(news.title,
                           style: Theme.of(context)
                               .textTheme
-                              .subhead
+                              .subtitle1
                               .copyWith(fontSize: 15.0)),
                       subtitle: new Text(news.newsSiteLong),
                     )

@@ -38,7 +38,7 @@ class _ListAdWidgetState extends State<ListAdWidget> with AutomaticKeepAliveClie
           ?  BannerAd.testAdUnitId
           : "ca-app-pub-9824528399164059/8172962746",
       request: AdRequest(),
-      listener: AdListener(
+      listener: BannerAdListener(
         onAdLoaded: (ad) {
           print('${ad.runtimeType} loaded!');
           setState(() {
@@ -50,8 +50,6 @@ class _ListAdWidgetState extends State<ListAdWidget> with AutomaticKeepAliveClie
           ad.dispose();
           _bannerAd = null;
         },
-        onApplicationExit: (Ad ad) =>
-            print('${ad.runtimeType} onApplicationExit.'),
       ),
     )..load();
   }

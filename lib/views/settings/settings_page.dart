@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_inapp_purchase/modules.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,11 +36,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   NotificationFilterPageState(this._firebaseMessaging);
 
   List<String> _productLists = [
-    "2021_super_fan",
-    "2021_gse",
-    "2021_flight_controller",
-    "2021_launch_director",
-    "2021_elon"
+    "2022_super_fan",
+    "2022_gse",
+    "2022_flight_controller",
+    "2022_launch_director",
+    "2022_elon"
   ];
 
   List<String> _notFoundIds = [];
@@ -59,8 +60,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
     init();
   }
 
+  ThemeData get barTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark){
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
+
+
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
+    print("I AM THERE");
     List<PurchasedItem> items =
         await FlutterInappPurchase.instance.getPurchaseHistory();
     for (var item in items) {
@@ -112,7 +124,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
     _purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) {
       print('purchase-updated: $productItem');
-      _getPurchaseHistory(initial: true);
+      if (productItem != null) {
+        _getPurchaseHistory(initial: true);
+      }
     });
 
     _purchaseErrorSubscription =
@@ -135,6 +149,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   init() async {
+    print("async call");
     await _getPurchaseHistory(initial: true);
     await _getProduct();
     setState(() {
@@ -564,14 +579,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: barTheme.canvasColor,
         centerTitle: false,
         elevation: 0.0,
         title: Text(
           "Settings",
           style: Theme.of(context)
               .textTheme
-              .headline
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 32),
+              .headline1
+              .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor,),
         ),
       ),
       body: buildSettingsPane(context),
@@ -585,7 +601,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _buildProductList(),
       _buildDebug(),
       new ListTile(
-        title: new Text('Notification Settings', style: theme.textTheme.title),
+        title: new Text('Notification Settings', style: theme.textTheme.headline5),
         subtitle: new Text('Select what kind of notifications to receive.'),
       ),
       new MergeSemantics(
@@ -657,7 +673,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           children: rows,
         ),
         new ListTile(
-          title: new Text('Favorites Filters', style: theme.textTheme.title),
+          title: new Text('Favorites Filters', style: theme.textTheme.headline5),
           subtitle: new Text(
               'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
@@ -666,7 +682,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[new Text('About', style: theme.textTheme.title)],
+            children: <Widget>[new Text('About', style: theme.textTheme.headline5)],
           ),
         ),
         new Divider(),
@@ -724,7 +740,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         title: new Text('Become a Supporter',
             style: Theme.of(context)
                 .textTheme
-                .headline
+                .headline3
                 .copyWith(fontWeight: FontWeight.bold)),
         subtitle: new Text(
             'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
@@ -825,7 +841,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             ),
           ),
           new ListTile(
-            title: new Text('Agencies', style: theme.textTheme.title),
+            title: new Text('Agencies', style: theme.textTheme.headline5),
             subtitle: new Text('Select your favorite launch agencies.'),
           ),
           Padding(
@@ -938,7 +954,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             ),
           ),
           new ListTile(
-            title: new Text('Locations', style: theme.textTheme.title),
+            title: new Text('Locations', style: theme.textTheme.headline5),
             subtitle: new Text('Select your favorite launch locations.'),
           ),
           new Divider(),

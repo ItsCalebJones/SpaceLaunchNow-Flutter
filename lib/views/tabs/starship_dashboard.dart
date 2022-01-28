@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
 
@@ -37,12 +38,22 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
     super.dispose();
   }
 
+  ThemeData get barTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark){
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: barTheme.canvasColor,
             elevation: 0.0,
             centerTitle: false,
             bottom: TabBar(
@@ -62,8 +73,8 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
             title: Text('Starship',
               style: Theme.of(context)
                   .textTheme
-                  .headline
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 30),),
+                  .headline1
+                  .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor),),
           ),
           body: TabBarView(
                 controller: _tabController,
