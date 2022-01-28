@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
-import 'package:spacelaunchnow_flutter/views/launchdetails/header/diagonally_cut_colored_image.dart';
 
 class EventDetailHeader extends StatelessWidget {
 
@@ -20,17 +19,6 @@ class EventDetailHeader extends StatelessWidget {
   void _handleShare() {
     var id = event.id;
     Share.share("https://spacelaunchnow.me/event/$id");
-  }
-
-  Widget _buildDiagonalImageBackground(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-
-    var backgroundUrl = event.featureImage;
-
-    return new DiagonallyCutColoredImage(
-      image: backgroundUrl,
-      screenWidth: screenWidth,
-    );
   }
 
   Widget _buildAvatar(BuildContext context) {
@@ -65,7 +53,6 @@ class EventDetailHeader extends StatelessWidget {
     if (backEnabled) {
       return new Stack(
         children: <Widget>[
-          _buildDiagonalImageBackground(context),
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.5,
@@ -91,7 +78,6 @@ class EventDetailHeader extends StatelessWidget {
     } else {
       return new Stack(
         children: <Widget>[
-          _buildDiagonalImageBackground(context),
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,

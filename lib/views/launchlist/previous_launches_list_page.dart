@@ -149,7 +149,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
             backgroundImage: new CachedNetworkImageProvider(launch.image),
           ),
         ),
-        title: new Text(launch.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 15.0)),
+        title: new Text(launch.name, style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
         subtitle: new Text(launch.location),
         trailing: new Text(formatter.format(launch.net), style: Theme.of(context).textTheme.caption),
       ),

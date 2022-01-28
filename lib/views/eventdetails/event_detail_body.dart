@@ -47,7 +47,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             child: new Text(
               mEvent.location,
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -67,7 +67,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             child: new Text(
               mEvent.type.name,
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -89,7 +89,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
               new DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
                   .format(mEvent.net.toLocal()),
               maxLines: 2,
-              style: textTheme.subhead,
+              style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -167,8 +167,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
             mEvent.name,
-            style: textTheme.headline
-                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+            style: textTheme.headline1                .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             textAlign: TextAlign.start,
           ),
         ),
@@ -265,8 +264,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                   alignment: Alignment.centerLeft,
                   child: new Text(
                       "Event Details",
-                      style: Theme.of(context).textTheme.headline
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
+                      style: Theme.of(context).textTheme.headline1                          .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
                 ),
                 new Text(mEvent.description),
               ],
@@ -323,8 +321,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 padding: const EdgeInsets.only(left:8.0, right: 8.0),
                 child: new Text(
                     "Related Launch",
-                    style: Theme.of(context).textTheme.headline
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
+                    style: Theme.of(context).textTheme.headline1                        .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
               ),
             ),
             new ListTile(
@@ -339,7 +336,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
               title: new Text(launch.name, style: Theme
                   .of(context)
                   .textTheme
-                  .subhead
+                  .subtitle1
                   .copyWith(fontSize: 15.0)),
               subtitle: new Text(launch.pad.location.name),
               trailing: new Text(formatter.format(launch.net), style: Theme

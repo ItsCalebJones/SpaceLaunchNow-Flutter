@@ -3,19 +3,19 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,6 +58,8 @@ class _HomeListPageState extends State<HomeListPage> {
   bool subscribeBlueOrigin;
   bool subscribeNorthrop;
   SLNRepository _repository = new Injector().slnRepository;
+  BannerAd _anchoredAdaptiveAd;
+  bool _isLoaded = false;
 
   @override
   void initState() {
@@ -81,6 +83,7 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void dispose() {
     super.dispose();
+    _anchoredAdaptiveAd.dispose();
   }
 
   @override
@@ -204,7 +207,7 @@ class _HomeListPageState extends State<HomeListPage> {
                               title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.title.copyWith(
+                              style: Theme.of(context).textTheme.headline3.copyWith(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
@@ -214,7 +217,7 @@ class _HomeListPageState extends State<HomeListPage> {
                             child: new Text(launch.pad.location.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.body2),
+                                style: Theme.of(context).textTheme.bodyText2),
                           ),
                           Padding(
                             padding:
@@ -223,7 +226,7 @@ class _HomeListPageState extends State<HomeListPage> {
                                 formatter.format(launch.net.toLocal()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.body2),
+                                style: Theme.of(context).textTheme.bodyText2),
                           ),
                         ],
                       ),
@@ -366,18 +369,31 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
+  ThemeData get barTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark){
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> content = new List<Widget>();
     print("Upcoming build!");
 
+
+
     Widget view = new Scaffold(
       body: _buildBody(),
       appBar: AppBar(
+        backgroundColor: barTheme.canvasColor,
+        centerTitle: false,
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(Icons.refresh, color: barTheme.focusColor,),
             onPressed: () {
               setState(() {
                 _handleRefresh();
@@ -387,10 +403,12 @@ class _HomeListPageState extends State<HomeListPage> {
         ],
         title: new Text(
           'Home',
+          textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .headline
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
+              .headline1
+              .copyWith(fontWeight: FontWeight.bold,
+                                    fontSize: 34, color: barTheme.focusColor),
         ),
       ),
     );
@@ -622,7 +640,7 @@ class _HomeListPageState extends State<HomeListPage> {
         child: new Text(launch.mission.name,
             style: Theme.of(context)
                 .textTheme
-                .title
+                .headline5
                 .copyWith(fontWeight: FontWeight.bold)),
       );
     } else {
@@ -638,12 +656,63 @@ class _HomeListPageState extends State<HomeListPage> {
         child: new Text(launch.mission.description,
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.body1,
+            style: Theme.of(context).textTheme.bodyText2,
             textAlign: TextAlign.left),
       );
     } else {
       return new Container();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAd();
+  }
+
+  Future<void> _loadAd() async {
+    bool _showAds;
+    await SharedPreferences.getInstance().then((SharedPreferences prefs) => {
+        _showAds = prefs.getBool("showAds") ?? true
+    });
+
+    if (!_showAds){
+      return;
+    }
+
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final AnchoredAdaptiveBannerAdSize size =
+    await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    _anchoredAdaptiveAd = BannerAd(
+      adUnitId: Platform.isAndroid
+          ?  BannerAd.testAdUnitId
+          : "ca-app-pub-9824528399164059/8172962746",
+      size: size,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$ad loaded: ${ad.responseInfo}');
+          setState(() {
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _anchoredAdaptiveAd = ad as BannerAd;
+            _isLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Anchored adaptive banner failedToLoad: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    return _anchoredAdaptiveAd.load();
   }
 
   Widget _buildBody() {
@@ -662,20 +731,31 @@ class _HomeListPageState extends State<HomeListPage> {
       _launches.asMap().forEach(
           (index, item) => {content.addAll(_map_launch_to_tile(index, item))});
 
-      content.add(new SizedBox(height: 50));
+      content.add(new SizedBox(height: 64));
     }
-    return Stack(children: <Widget>[
-      new ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: _launches.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _buildLaunchTile(context, _launches[index]);
-          }),
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: ListAdWidget(AdSize.banner),
-      ),
-    ]);
+    return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+            ListView.separated(
+                padding: const EdgeInsets.fromLTRB(2, 2, 0, 2),
+                itemCount: _launches.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildLaunchTile(context, _launches[index]);
+                },
+              separatorBuilder: (context, index) {
+                  return Container(height: 5);
+              },
+            ),
+            if (_anchoredAdaptiveAd != null && _isLoaded)
+              Container(
+                width: _anchoredAdaptiveAd.size.width.toDouble(),
+                height: _anchoredAdaptiveAd.size.height.toDouble(),
+                child: AdWidget(ad: _anchoredAdaptiveAd)),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: ListAdWidget(AdSize.banner),
+            // ),
+          ]);
   }
 
   Iterable<Widget> _map_launch_to_tile(int index, Launch item) {

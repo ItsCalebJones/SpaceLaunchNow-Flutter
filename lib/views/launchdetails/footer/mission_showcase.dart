@@ -17,7 +17,7 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         new Text(
           "Orbit:",
-          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         new Padding(
@@ -25,7 +25,7 @@ class MissionShowcase extends StatelessWidget {
           child: new Text(
             orbit,
             maxLines: 2,
-            style: textTheme.body1,
+            style: textTheme.bodyText1,
             overflow: TextOverflow.fade,
           ),
         ),
@@ -38,7 +38,7 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         new Text(
           "Type:",
-          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.start,
         ),
         new Padding(
@@ -46,7 +46,7 @@ class MissionShowcase extends StatelessWidget {
           child: new Text(
             _launch.mission.typeName,
             maxLines: 2,
-            style: textTheme.body1,
+            style: textTheme.bodyText1,
           ),
         ),
       ],
@@ -66,7 +66,7 @@ class MissionShowcase extends StatelessWidget {
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline
+            .headline4
             .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
       ),
     ));
@@ -85,7 +85,7 @@ class MissionShowcase extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0.0),
                 child: new Text(
                   mission.name,
-                  style: textTheme.title,
+                  style: textTheme.headline6,
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -104,7 +104,7 @@ class MissionShowcase extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0.0),
                 child: new Text(
                   "$missionDescription",
-                  style: textTheme.body1.copyWith(),
+                  style: textTheme.bodyText1.copyWith(),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -121,11 +121,11 @@ class MissionShowcase extends StatelessWidget {
           children: <Widget>[
             new Text(
               _launch.name,
-              style: textTheme.title.copyWith(),
+              style: textTheme.headline6.copyWith(),
             ),
             new Text(
               "Type: Unknown",
-              style: textTheme.subtitle.copyWith(),
+              style: textTheme.subtitle1.copyWith(),
             ),
           ],
         ),

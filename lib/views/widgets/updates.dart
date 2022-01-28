@@ -20,7 +20,7 @@ Widget buildUpdates(
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline
+            .headline1
             .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
       ),
     );

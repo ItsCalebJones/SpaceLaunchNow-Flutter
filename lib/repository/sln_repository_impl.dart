@@ -15,7 +15,7 @@ import 'http_client.dart';
 class SLNRepositoryImpl implements SLNRepository {
 
   static const BASE_URL = "https://spacelaunchnow.me/api/ll/2.2.0";
-  static const NEWS_BASE_URL = "https://spaceflightnewsapi.net/api/v2";
+  static const NEWS_BASE_URL = "https://api.spaceflightnewsapi.net/v3";
 
   final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
   final newsClient = ClientWithUserAgent(http.Client());
@@ -27,10 +27,10 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
     print(_kLaunchesUrl);
-    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+    client.get(Uri.parse(_kLaunchesUrl)).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
       print(bodyStr);
     });
-    return client.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -49,10 +49,10 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
     print(_kLaunchesUrl);
-    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+    client.get(Uri.parse(_kLaunchesUrl)).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
       print(bodyStr);
     });
-    return client.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -77,7 +77,7 @@ class SLNRepositoryImpl implements SLNRepository {
       _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
     }
     print(_kLaunchesUrl);
-    return client.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -104,11 +104,11 @@ class SLNRepositoryImpl implements SLNRepository {
     if (search != null) {
       _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
     }
-    print(_kLaunchesUrl);
-    client.get(_kLaunchesUrl).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
+
+    client.get(Uri.parse(_kLaunchesUrl)).then((response) => utf8.decode(response.bodyBytes)).then((bodyStr) {
       print(bodyStr);
     });
-    return client.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -140,7 +140,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
     print(_kLaunchesUrl);
 
-    return client.get(_kLaunchesUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -166,7 +166,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -187,7 +187,7 @@ class SLNRepositoryImpl implements SLNRepository {
     }
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -204,7 +204,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = BASE_URL + '/event/$id';
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -221,7 +221,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=50';
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -244,7 +244,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles?newsSite.name_contains=$name';
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -267,7 +267,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/$id/?_limit=30';
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -288,7 +288,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/event/$id/?_limit=30';
 
     print(_kEventsUrl);
-    return client.get(_kEventsUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -308,7 +308,7 @@ class SLNRepositoryImpl implements SLNRepository {
   Future<Starship> fetchStarshipDashboard() {
     String _kUrl = BASE_URL + '/dashboard/starship/?mode=list';
     print(_kUrl);
-    return client.get(_kUrl).then((http.Response response) {
+    return client.get(Uri.parse(_kUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 

@@ -22,23 +22,6 @@ class LaunchDetailHeader extends StatelessWidget {
     loadLaunch(launch.id);
   }
 
-  Widget _buildDiagonalImageBackground(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-
-    var backgroundUrl = "";
-    if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0){
-      backgroundUrl = launch.rocket.configuration.image;
-    } else if (launch.pad != null){
-      backgroundUrl = launch.pad.location.mapImage;
-    }
-
-    return new DiagonallyCutColoredImage(
-      image: backgroundUrl,
-      screenWidth: screenWidth,
-    );
-  }
-
   Widget _buildAvatar(BuildContext context) {
     var avataruUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
     if (launch.rocket.configuration.image != null &&
@@ -94,7 +77,6 @@ class LaunchDetailHeader extends StatelessWidget {
     if (backEnabled) {
       return new Stack(
         children: <Widget>[
-          _buildDiagonalImageBackground(context),
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
@@ -120,7 +102,6 @@ class LaunchDetailHeader extends StatelessWidget {
     } else {
       return new Stack(
         children: <Widget>[
-          _buildDiagonalImageBackground(context),
           new Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,

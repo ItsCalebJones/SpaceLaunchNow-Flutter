@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/countdown_helper.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
@@ -93,17 +94,25 @@ class CountdownState extends State<Countdown> {
     }
   }
 
+  ThemeData get textTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark){
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
 
   @override
   build(BuildContext context) {
     var theme = Theme.of(context);
-    var textThemeDigits = theme.textTheme.title.copyWith(fontSize: 46.0);
-    var textThemeDivider = theme.textTheme.subhead.copyWith(fontSize: 34.0);
+    var textThemeDigits = theme.textTheme.subtitle1.copyWith(fontSize: 46.0);
+    var textThemeDivider = theme.textTheme.subtitle1.copyWith(fontSize: 34.0);
     var textThemeDescription = theme.textTheme.caption;
     Duration duration = new Duration(
         seconds: launch.net.difference(new DateTime.now()).inSeconds);
     PrettyDuration prettyDuration = new PrettyDuration(duration);
-    String status = Utils.getStatus(launch.status.id);
+    String status = launch.status.name;
     Color color;
     var days = prettyDuration.days;
     var hours = prettyDuration.hours;
@@ -149,6 +158,12 @@ class CountdownState extends State<Countdown> {
       hours = "00";
       minutes = "00";
       seconds = "00";
+    } else if (launch.status.id == 8) {
+      color = Colors.lightGreen[500];
+      days = "00";
+      hours = "00";
+      minutes = "00";
+      seconds = "00";
     }
     return new Container(
       padding:
@@ -168,7 +183,7 @@ class CountdownState extends State<Countdown> {
                 child: new Chip(
                   label: new Text(
                     status,
-                    style: theme.textTheme.title.copyWith(color: Colors.white),
+                    style: theme.textTheme.headline6.copyWith(color: Colors.white),
                   ),
                   backgroundColor: color,
                 ),

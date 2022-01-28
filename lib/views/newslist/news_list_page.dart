@@ -81,18 +81,18 @@ class _NewsListPageState extends State<NewsListPage> {
       setState(() {
         _news.clear();
       });
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        duration: new Duration(seconds: 10),
-        content: new Text('Unable to load news.'),
-        action: new SnackBarAction(
-          label: 'Refresh',
-          onPressed: () {
-            // Some code to undo the change!
-            _handleRefresh();
-          },
-        ),
-      ));
     }
+    Scaffold.of(context).showSnackBar(new SnackBar(
+      duration: new Duration(seconds: 10),
+      content: new Text('Unable to load news.'),
+      action: new SnackBarAction(
+        label: 'Refresh',
+        onPressed: () {
+          // Some code to undo the change!
+          _handleRefresh();
+        },
+      ),
+    ));
   }
 
   ThemeData get appBarTheme {
@@ -131,6 +131,7 @@ class _NewsListPageState extends State<NewsListPage> {
     limit = 30;
     loading = false;
     List<News> response = await _repository.fetchNews().catchError((onError) {
+      print(onError);
       onLoadContactsError();
     });
     onLoadResponseComplete(response);
@@ -158,19 +159,11 @@ class _NewsListPageState extends State<NewsListPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              new Text(
-                "Spaceflight Briefing",
-                textAlign: TextAlign.left,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
-              new Text("Top 5 stories right now...",
+              new Text("Latest News...",
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .caption
+                      .headline4
                       .copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
@@ -213,7 +206,7 @@ class _NewsListPageState extends State<NewsListPage> {
                         label: new Text(string,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline2
+                                .headline5
                                 .copyWith(fontSize: 20, color: (filterIndex == index) ? Colors.white : Colors.white60)),
                         backgroundColor: (filterIndex == index) ? Colors.blue : Colors.grey[700],
                     ),
@@ -298,7 +291,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 child: new Text(item.title,
                     style: Theme.of(context)
                         .textTheme
-                        .title
+                        .headline5
                         .copyWith(fontWeight: FontWeight.bold)),
               ),
               Container(
@@ -307,7 +300,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 child: new Text(item.summary,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.body1,
+                    style: Theme.of(context).textTheme.bodyText1,
                     textAlign: TextAlign.left),
               ),
               Padding(
@@ -368,7 +361,7 @@ class _NewsListPageState extends State<NewsListPage> {
                     padding: const EdgeInsets.only(
                         left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
                     child: new Text(item.title,
-                        style: Theme.of(context).textTheme.title.copyWith(
+                        style: Theme.of(context).textTheme.headline5.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ],
@@ -405,5 +398,5 @@ class _NewsListPageState extends State<NewsListPage> {
 class ListItem {
   String type;
   News news;
-  StaggeredTile tileSize;
+  StaggeredGridTile tileSize;
 }

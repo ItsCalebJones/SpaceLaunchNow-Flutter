@@ -159,7 +159,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         title: new Text(launch.name, style: Theme
             .of(context)
             .textTheme
-            .subhead
+            .subtitle1
             .copyWith(fontSize: 15.0)),
         subtitle: new Text(launch.location),
         trailing: new Text(formatter.format(launch.net), style: Theme

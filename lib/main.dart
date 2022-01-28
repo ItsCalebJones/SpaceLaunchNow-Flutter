@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
 
 RateMyApp _rateMyApp = RateMyApp(
@@ -46,10 +47,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   MobileAds.instance.initialize();
 
   /// Update the iOS foreground notification presentation options to allow
@@ -96,15 +100,17 @@ class PagesState extends State<Pages> {
   TabController controller;
 
   final List<String> _productLists = [
-    '2021_super_fan',
-    '2021_gse',
-    '2021_launch_director',
-    '2021_flight_controller',
-    '2021_elon'
+    '2022_super_fan',
+    '2022_gse',
+    '2022_launch_director',
+    '2022_flight_controller',
+    '2022_elon'
   ];
+
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
   bool _purchaseRestored = false;
+  bool _purchaseRestoredAttempted = false;
 
   bool _loading = true;
 
@@ -556,7 +562,10 @@ class PagesState extends State<Pages> {
   }
 
   void asyncInitState() async {
-    await FlutterInappPurchase.instance.initConnection;
+
+    String answer = await FlutterInappPurchase.instance.initConnection;
+    print("We here");
+    print(answer);
     // refresh items for android
     try {
       String msg = await FlutterInappPurchase.instance.consumeAllItems;
@@ -626,7 +635,6 @@ class PagesState extends State<Pages> {
   }
 
   ThemeData get barTheme {
-    bool qDarkmodeEnable;
     var qdarkMode = MediaQuery.of(context).platformBrightness;
     if (qdarkMode == Brightness.dark){
       return kIOSThemeDarkBar;
@@ -754,18 +762,18 @@ class PagesState extends State<Pages> {
                   items: <BottomNavigationBarItem>[
                     new BottomNavigationBarItem(
                         icon: new Icon(FontAwesomeIcons.home),
-                        title: new Text("Home")),
+                        label: "Home"),
                     new BottomNavigationBarItem(
-                        title: new Text('Launches'),
+                        label: 'Launches',
                         icon: new Icon(MaterialCommunityIcons.clipboard_text)),
                     new BottomNavigationBarItem(
-                        title: new Text('News'),
+                        label: 'News',
                         icon: new Icon(FontAwesomeIcons.newspaper)),
                     new BottomNavigationBarItem(
-                        title: new Text('Starship'),
+                        label: 'Starship',
                         icon: Icon(CustomSLN.starship)),
                     new BottomNavigationBarItem(
-                        title: new Text('Settings'),
+                        label: 'Settings',
                         icon: new Icon(MaterialIcons.settings)),
                   ],
                 ))));
@@ -783,10 +791,13 @@ class PagesState extends State<Pages> {
 
 
   void checkAd() async {
-    if(!_purchaseRestored) {
-      await _getPurchaseHistory();
-    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if(!_purchaseRestored && !prefs.getBool("initialRestoreAttempted") ?? false) {
+      await _getPurchaseHistory();
+      prefs.setBool("initialRestoreAttempted", true);
+    }
+
     if(kReleaseMode) {
       print("\n\n\n\nRelease mode!\n\n\n\n\n\n\n");
       if (_purchases.length > 0) {

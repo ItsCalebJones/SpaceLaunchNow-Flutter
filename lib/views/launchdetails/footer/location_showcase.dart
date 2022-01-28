@@ -86,7 +86,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline
+                  .headline4
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             )),
         new Padding(
@@ -96,7 +96,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .title,
+                  .headline5,
             )),
         new Padding(
             padding: const EdgeInsets.only(left: 8.0, right:8.0,),
@@ -105,7 +105,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle,
+                  .subtitle1,
             )),
         _buildActionButtons(theme),
         new Padding(

@@ -78,17 +78,10 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: new Text(
-                    _launch.rocket.configuration.fullName ?? "",
-                    style: theme.textTheme.title,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: new Text(
                     _launch.rocket.configuration.manufacturer.name ?? "",
-                    style: theme.textTheme.subhead,
+                    style: theme.textTheme.subtitle1,
                     maxLines: 2,
-                    overflow: TextOverflow.fade,
+                    overflow: TextOverflow.ellipsis,
                     softWrap: true,
                   ),
                 ),
@@ -107,14 +100,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               padding: const EdgeInsets.only(left: 8.0),
               child: new Text(
                 _launch.rocket.configuration.fullName ?? "",
-                style: theme.textTheme.title,
+                style: theme.textTheme.headline5,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 _launch.rocket.configuration.manufacturer.name ?? "",
-                style: theme.textTheme.subhead,
+                style: theme.textTheme.subtitle1,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -176,7 +169,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           new Text(
             "$vehicle Stats",
             style:
-                theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+                theme.textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,7 +183,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Successful:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -201,7 +194,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                                   .toString() ??
                               "",
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -211,7 +204,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Failed:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -222,7 +215,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                                   .toString() ??
                               "",
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -232,7 +225,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Min Stage:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -241,7 +234,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           minStage,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -251,7 +244,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Length:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
@@ -260,7 +253,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           length,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -270,7 +263,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Mass:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -279,7 +272,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           launchMass,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -289,7 +282,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "LEO:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -298,7 +291,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           leo,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -314,7 +307,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Consecutive:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -326,7 +319,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                                   .toString() ??
                               "",
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -336,7 +329,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Pending:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -347,7 +340,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                                   .toString() ??
                               "",
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -357,7 +350,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Max Stage:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -366,7 +359,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           maxStage,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -376,7 +369,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Diameter:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -385,7 +378,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           diameter,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -395,7 +388,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "Thrust:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -404,7 +397,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           thrust,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -414,7 +407,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     children: <Widget>[
                       new Text(
                         "GEO:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -423,7 +416,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                         child: new Text(
                           gto,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -476,7 +469,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
       child: new Text(
         _launch.rocket.configuration.description ?? "",
-        style: theme.textTheme.body1,
+        style: theme.textTheme.bodyText1,
         textAlign: TextAlign.start,
       ),
     );
@@ -510,8 +503,15 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline
+                .headline4
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: new Text(
+            _launch.rocket.configuration.fullName ?? "",
+            style: theme.textTheme.headline6,
           ),
         ),
         _buildAvatar(theme),
@@ -536,7 +536,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           booster,
-          style: theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
         ),
       ));
       for (var booster in _launch.rocket.firstStages) {
@@ -575,7 +575,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         booster.landing.attempt) {
       widgets.add(Text(
         "Landing",
-        style: theme.textTheme.title.copyWith(fontWeight: FontWeight.bold),
+        style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
       ));
       if (booster.landing.success == null) {
         widgets.add(
@@ -589,7 +589,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new Text(
                   "Pending",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -608,7 +608,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new Text(
                   "Successful Landing",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -627,7 +627,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 child: new Text(
                   "Failed",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -646,7 +646,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               child: new Text(
                 "No Landing",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -664,7 +664,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               child: new Text(
                 booster.landing.type.name ?? "",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -682,7 +682,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               child: new Text(
                 booster.landing.location.name ?? "",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -704,7 +704,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline
+                .headline4
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
@@ -720,7 +720,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Destination:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -773,7 +773,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 0.0, right: 0.0),
                 child: new Text(
                   crew.astronaut.bio,
-                  style: theme.textTheme.body1,
+                  style: theme.textTheme.bodyText1,
                   textAlign: TextAlign.start,
                 ),
               )
@@ -843,14 +843,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 Text(
                   title,
-                  style: theme.textTheme.headline
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Row(
                   children: <Widget>[
                     new Text(
                       "Type:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -869,7 +868,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Status:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -888,7 +887,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Flight:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -907,7 +906,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   children: <Widget>[
                     new Text(
                       "Turnaround:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -934,14 +933,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           children: <Widget>[
             Text(
               title,
-              style: theme.textTheme.headline
-                  .copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
             ),
             new Row(
               children: <Widget>[
                 new Text(
                   "Type:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -960,7 +958,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Status:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -979,7 +977,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Flight:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -998,7 +996,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 new Text(
                   "Turnaround Time:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
@@ -1051,8 +1049,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 Text(
                   title,
-                  style: theme.textTheme.headline
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Padding(
                   padding: const EdgeInsets.only(left: 8.0),
@@ -1085,8 +1082,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           children: <Widget>[
             Text(
               title,
-              style: theme.textTheme.headline
-                  .copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
             ),
             new Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -1144,14 +1140,13 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               children: <Widget>[
                 Text(
                   title,
-                  style: theme.textTheme.headline
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.bold),
                 ),
                 new Row(
                   children: <Widget>[
                     new Text(
                       "Status:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
@@ -1178,8 +1173,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           children: <Widget>[
             Text(
               title,
-              style: theme.textTheme.headline
-                  .copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
             ),
           ]);
   }
