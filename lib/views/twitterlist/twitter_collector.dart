@@ -7,12 +7,12 @@ import 'package:yaml/yaml.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class TwitterCollector implements AbstractCollector {
-  String _consumerKey;
-  String _consumerSecret;
-  String _accessToken;
-  String _accessTokenSecret;
-  String _filename;
-  String _query;
+  String? _consumerKey;
+  String? _consumerSecret;
+  String? _accessToken;
+  String? _accessTokenSecret;
+  late String _filename;
+  late String _query;
 
   TwitterCollector.fromFile(String configFileName, String query) {
     this._filename = configFileName;
@@ -46,10 +46,10 @@ class TwitterCollector implements AbstractCollector {
     // Dont share the keys with anyone
     final twitterApi = TwitterApi(
       client: TwitterClient(
-        consumerKey: this._consumerKey,
-        consumerSecret: this._consumerSecret,
-        token: this._accessToken,
-        secret: this._accessTokenSecret,
+        consumerKey: this._consumerKey!,
+        consumerSecret: this._consumerSecret!,
+        token: this._accessToken!,
+        secret: this._accessTokenSecret!,
       ),
     );
 

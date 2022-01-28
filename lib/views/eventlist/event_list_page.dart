@@ -37,9 +37,9 @@ class _EventListPageState extends State<EventListPage> {
   @override
   void initState() {
     super.initState();
-    List<EventList> upcomingEvents = PageStorage.of(context)
+    List<EventList>? upcomingEvents = PageStorage.of(context)!
         .readState(context, identifier: 'upcoming_events');
-    List<EventList> previousEvents = PageStorage.of(context)
+    List<EventList>? previousEvents = PageStorage.of(context)!
         .readState(context, identifier: 'previous_events');
 
     if (upcomingEvents != null && previousEvents != null) {
@@ -92,8 +92,8 @@ class _EventListPageState extends State<EventListPage> {
     }
 
     setState(() {
-      _upcomingEvents.addAll(events.events);
-      PageStorage.of(context)
+      _upcomingEvents.addAll(events.events!);
+      PageStorage.of(context)!
           .writeState(context, _upcomingEvents, identifier: 'upcoming_events');
     });
   }
@@ -106,8 +106,8 @@ class _EventListPageState extends State<EventListPage> {
     }
 
     setState(() {
-      _previousEvents.addAll(events.events);
-      PageStorage.of(context)
+      _previousEvents.addAll(events.events!);
+      PageStorage.of(context)!
           .writeState(context, _previousEvents, identifier: 'previous_events');
     });
   }
@@ -136,7 +136,7 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {Events event, Object avatarTag, String launchId}) {
+      {Events? event, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -159,11 +159,11 @@ class _EventListPageState extends State<EventListPage> {
 
     if (isSelected[0]) {
       for (Object item in _upcomingEvents){
-        content.add(_buildEventListTile(item));
+        content.add(_buildEventListTile(item as EventList));
       }
     } else {
       for (Object item in _previousEvents){
-        content.add(_buildEventListTile(item));
+        content.add(_buildEventListTile(item as EventList));
       }
     }
     print(data);
@@ -273,7 +273,7 @@ class _EventListPageState extends State<EventListPage> {
             icon: Icon(Icons.live_tv),
             tooltip: 'Watch Event',
             onPressed: () {
-              _openBrowser(event.videoUrl);
+              _openBrowser(event.videoUrl!);
             }, //
           )));
     }
@@ -295,7 +295,7 @@ class _EventListPageState extends State<EventListPage> {
 
   Widget _buildEventListTile(EventList event) {
     var formatter = new DateFormat.yMd();
-    var location = "";
+    String? location = "";
 
     if (event.location != null){
       location = event.location;
@@ -306,20 +306,20 @@ class _EventListPageState extends State<EventListPage> {
       child: new ListTile(
         onTap: () => _navigateToEventDetails(event: null, eventId: event.id),
         leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(event.featureImage),
+          backgroundImage: new CachedNetworkImageProvider(event.featureImage!),
         ),
-        title: new Text(event.name,
+        title: new Text(event.name!,
             style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(location),
-        trailing: new Text(formatter.format(event.net),
+                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
+        subtitle: new Text(location!),
+        trailing: new Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   _openBrowser(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -335,7 +335,7 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   void _navigateToEventDetails(
-      {EventList event, Object avatarTag, int eventId}) {
+      {EventList? event, Object? avatarTag, int? eventId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -8,32 +8,32 @@ class LaunchDetailHeader extends StatelessWidget {
 
   LaunchDetailHeader(
     this.launch,  {
-    @required this.loadLaunch,
+    required this.loadLaunch,
     this.avatarTag,
-    @required this.backEnabled,
+    required this.backEnabled,
   });
 
-  final ValueChanged<String> loadLaunch;
-  final Launch launch;
-  final Object avatarTag;
-  final bool backEnabled;
+  final ValueChanged<String?> loadLaunch;
+  final Launch? launch;
+  final Object? avatarTag;
+  final bool? backEnabled;
 
   void _handleTap() {
-    loadLaunch(launch.id);
+    loadLaunch(launch!.id);
   }
 
   Widget _buildAvatar(BuildContext context) {
-    var avataruUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
-    if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0){
-      avataruUrl = launch.rocket.configuration.image;
-    } else if (launch.pad != null){
-      avataruUrl = launch.pad.mapImage;
+    String? avataruUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+    if (launch!.rocket!.configuration!.image != null &&
+        launch!.rocket!.configuration!.image!.length > 0){
+      avataruUrl = launch!.rocket!.configuration!.image;
+    } else if (launch!.pad != null){
+      avataruUrl = launch!.pad!.mapImage;
     }
 
     if (avatarTag != null) {
       return new Hero(
-        tag: avatarTag,
+        tag: avatarTag!,
         child: new Container(
           width: 200.0,
           height: 200.0,
@@ -44,7 +44,7 @@ class LaunchDetailHeader extends StatelessWidget {
           ),
           child: new CircleAvatar(
             foregroundColor: Colors.white,
-            backgroundImage: new NetworkImage(avataruUrl),
+            backgroundImage: new NetworkImage(avataruUrl!),
             radius: 100.0,
             backgroundColor: Colors.white,
           ),
@@ -61,7 +61,7 @@ class LaunchDetailHeader extends StatelessWidget {
         ),
         child: new CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(avataruUrl),
+          backgroundImage: new NetworkImage(avataruUrl!),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),
@@ -74,7 +74,7 @@ class LaunchDetailHeader extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
-    if (backEnabled) {
+    if (backEnabled!) {
       return new Stack(
         children: <Widget>[
           new Align(

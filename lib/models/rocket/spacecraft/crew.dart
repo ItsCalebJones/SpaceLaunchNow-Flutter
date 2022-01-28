@@ -3,9 +3,9 @@ import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/role.dart';
 import 'astronaut.dart';
 
 class Crew {
-  final int id;
-  final Role role;
-  final Astronaut astronaut;
+  final int? id;
+  final Role? role;
+  final Astronaut? astronaut;
 
   Crew({this.id, this.role, this.astronaut});
 

@@ -1,7 +1,7 @@
 class Role {
-  final int id;
-  final String role;
-  final int priority;
+  final int? id;
+  final String? role;
+  final int? priority;
 
   Role({this.id, this.role, this.priority});
 

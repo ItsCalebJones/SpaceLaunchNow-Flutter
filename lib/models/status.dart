@@ -1,8 +1,8 @@
 class Status {
-  final int id;
-  final String name;
-  final String abbrev;
-  final String description;
+  final int? id;
+  final String? name;
+  final String? abbrev;
+  final String? description;
 
   Status({this.id, this.name, this.abbrev, this.description});
 

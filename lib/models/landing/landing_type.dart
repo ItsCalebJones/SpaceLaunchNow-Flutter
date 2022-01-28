@@ -1,7 +1,7 @@
 class LandingType {
-  final String name;
-  final String abbrev;
-  final String description;
+  final String? name;
+  final String? abbrev;
+  final String? description;
 
   LandingType({this.name, this.abbrev, this.description});
 

@@ -18,18 +18,18 @@ class NewsAndEventsPage extends StatefulWidget {
 
 class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTickerProviderStateMixin {
 
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 3);
-    _tabController.animateTo(widget.newsAndEventsIndex);
+    _tabController!.animateTo(widget.newsAndEventsIndex);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -68,7 +68,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage> with SingleTicker
             title: Text('News',
               style: Theme.of(context)
                   .textTheme
-                  .headline1
+                  .headline1!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor),),
           ),
           body: TabBarView(

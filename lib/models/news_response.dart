@@ -1,14 +1,14 @@
 import 'package:spacelaunchnow_flutter/models/news.dart';
 
 class NewsResponse {
-  final List<News> news;
-  final int limit;
-  final int totalDocs;
-  final bool hasNextPage;
-  final int page;
-  final int totalPages;
-  final int pagingCounter;
-  final int nextPage;
+  final List<News>? news;
+  final int? limit;
+  final int? totalDocs;
+  final bool? hasNextPage;
+  final int? page;
+  final int? totalPages;
+  final int? pagingCounter;
+  final int? nextPage;
 
   NewsResponse({this.news, this.limit, this.totalDocs, this.hasNextPage, this.page, this.totalPages, this.nextPage,
     this.pagingCounter});

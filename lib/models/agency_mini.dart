@@ -1,7 +1,7 @@
 class AgencyMini {
-  final int id;
-  final String name;
-  final String type;
+  final int? id;
+  final String? name;
+  final String? type;
 
   const AgencyMini(
       {this.id,

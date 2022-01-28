@@ -4,14 +4,14 @@ import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 import '../../launch/detailed/launch.dart';
 
 class Astronaut {
-  final int id;
-  final String name;
-  final String profileImage;
-  final String wikiUrl;
-  final String twitterUrl;
-  final String instagramUrl;
-  final String bio;
-  final String nationality;
+  final int? id;
+  final String? name;
+  final String? profileImage;
+  final String? wikiUrl;
+  final String? twitterUrl;
+  final String? instagramUrl;
+  final String? bio;
+  final String? nationality;
 
   Astronaut({this.id, this.name, this.profileImage, this.wikiUrl,
     this.twitterUrl, this.instagramUrl, this.bio, this.nationality});

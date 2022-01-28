@@ -10,20 +10,20 @@ import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 import 'package:http/http.dart' as http;
 
 class LaunchCommon {
-  final String id;
-  final String name;
-  final String infographic;
-  final String image;
-  final String slug;
-  final DateTime windowStart;
-  final DateTime windowEnd;
-  final DateTime net;
-  final int probability;
-  final Status status;
-  final RocketCommon rocket;
-  final AgencyMini launchServiceProvider;
-  final Pad pad;
-  final Mission mission;
+  final String? id;
+  final String? name;
+  final String? infographic;
+  final String? image;
+  final String? slug;
+  final DateTime? windowStart;
+  final DateTime? windowEnd;
+  final DateTime? net;
+  final int? probability;
+  final Status? status;
+  final RocketCommon? rocket;
+  final AgencyMini? launchServiceProvider;
+  final Pad? pad;
+  final Mission? mission;
 
   const LaunchCommon(
       {this.id,
@@ -41,7 +41,7 @@ class LaunchCommon {
       this.infographic,
       this.slug});
 
-  static List<LaunchCommon> allFromResponse(http.Response response) {
+  static List<LaunchCommon>? allFromResponse(http.Response response) {
     var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']

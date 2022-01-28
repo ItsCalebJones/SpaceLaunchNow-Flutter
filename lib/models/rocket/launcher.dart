@@ -1,14 +1,14 @@
 import 'package:spacelaunchnow_flutter/models/rocket/launcher_configuration.dart';
 
 class Launcher {
-  final int id;
-  final String details;
-  final bool flightProven;
-  final String serialNumber;
-  final String status;
-  final int previousFlights;
-  final String image;
-  final LauncherConfiguration launcherConfiguration;
+  final int? id;
+  final String? details;
+  final bool? flightProven;
+  final String? serialNumber;
+  final String? status;
+  final int? previousFlights;
+  final String? image;
+  final LauncherConfiguration? launcherConfiguration;
 
   Launcher(
       {this.id,

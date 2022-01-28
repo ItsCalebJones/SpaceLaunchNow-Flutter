@@ -16,8 +16,8 @@ class EventDetailPage extends StatefulWidget {
       {this.eventList, this.eventId});
 
   final AppConfiguration _configuration;
-  final EventList eventList;
-  final int eventId;
+  final EventList? eventList;
+  final int? eventId;
 
 
 
@@ -28,12 +28,12 @@ class EventDetailPage extends StatefulWidget {
 class _EventDetailPageState extends State<EventDetailPage> {
 
   bool loading = false;
-  Event event;
+  Event? event;
   SLNRepository _repository = new Injector().slnRepository;
 
   @override
   void initState() {
-    Event _event = PageStorage.of(context).readState(context, identifier: 'event_detail');
+    Event? _event = PageStorage.of(context)!.readState(context, identifier: 'event_detail');
     if (_event != null) {
       event = _event;
     } else {
@@ -51,7 +51,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     loading = true;
     var eventId;
     if (widget.eventList != null){
-      eventId = widget.eventList.id;
+      eventId = widget.eventList!.id;
     } else {
       eventId = widget.eventId;
     }
@@ -69,12 +69,12 @@ class _EventDetailPageState extends State<EventDetailPage> {
 
     setState(() {
       event = _event;
-      PageStorage.of(context).writeState(context, event,
+      PageStorage.of(context)!.writeState(context, event,
           identifier: 'event_detail');
     });
   }
 
-  void onLoadEventError([bool search]) {
+  void onLoadEventError([bool? search]) {
     print("Error occured");
     loading = false;
     if (search == true) {

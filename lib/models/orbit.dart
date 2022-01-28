@@ -1,11 +1,11 @@
 class Orbit {
-  final int id;
-  final String name;
-  final String abbreviation;
+  final int? id;
+  final String? name;
+  final String? abbreviation;
 
   Orbit({this.id, this.name, this.abbreviation});
 
-  factory Orbit.fromJson(Map<String, dynamic> json) {
+  factory Orbit.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       return new Orbit(
         id: json['id'],

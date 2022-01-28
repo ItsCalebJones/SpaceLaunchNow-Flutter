@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 class News {
-  final String title;
-  final String newsSiteLong;
-  final String summary;
-  final String url;
-  final String featureImage;
-  final DateTime datePublished;
+  final String? title;
+  final String? newsSiteLong;
+  final String? summary;
+  final String? url;
+  final String? featureImage;
+  final DateTime? datePublished;
 
   News({this.title, this.newsSiteLong, this.url,
     this.featureImage, this.datePublished, this.summary});
 
-  static List<News> allFromResponse(String response) {
+  static List<News>? allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
     print(decodedJson);
 

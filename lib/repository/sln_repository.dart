@@ -9,29 +9,29 @@ import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
 abstract class SLNRepository {
-  Future<List<Launch>> fetch([String lsp]);
+  Future<List<Launch>> fetch([String? lsp]);
 
-  Future<Launches> fetchUpcomingHome({String lsps, String locations, String limit, String offset});
+  Future<Launches> fetchUpcomingHome({String? lsps, String? locations, String? limit, String? offset});
 
-  Future<LaunchesList> fetchUpcoming({String lsp, String limit, String offset, String search});
+  Future<LaunchesList> fetchUpcoming({String? lsp, String? limit, String? offset, String? search});
 
-  Future<LaunchesList> fetchPrevious({String lsp, String limit, String offset, String search});
+  Future<LaunchesList> fetchPrevious({String? lsp, String? limit, String? offset, String? search});
 
-  Future<List<Launch>> fetchNext([String lsp]);
+  Future<List<Launch>> fetchNext([String? lsp]);
 
-  Future<Events> fetchNextEvent({String limit, String offset});
+  Future<Events> fetchNextEvent({String? limit, String? offset});
 
-  Future<Events> fetchPreviousEvent({String limit, String offset});
+  Future<Events> fetchPreviousEvent({String? limit, String? offset});
 
-  Future<Event> fetchEventById(int id);
+  Future<Event> fetchEventById(int? id);
 
   Future<List<News>> fetchNews();
 
   Future<List<News>> fetchNewsBySite(String name);
 
-  Future<List<News>> fetchNewsByLaunch({String id});
+  Future<List<News>> fetchNewsByLaunch({String? id});
 
-  Future<List<News>> fetchNewsByEvent({int id});
+  Future<List<News>> fetchNewsByEvent({int? id});
 
   Future<Starship> fetchStarshipDashboard();
 

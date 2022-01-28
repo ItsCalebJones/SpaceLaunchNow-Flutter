@@ -4,11 +4,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:spacelaunchnow_flutter/util/Secret.dart';
 
 class SecretLoader {
-  final String secretPath;
+  final String? secretPath;
 
   SecretLoader({this.secretPath});
   Future<Secret> load() {
-    return rootBundle.loadStructuredData<Secret>(this.secretPath,
+    return rootBundle.loadStructuredData<Secret>(this.secretPath!,
             (jsonStr) async {
           final secret = Secret.fromJson(json.decode(jsonStr));
           return secret;

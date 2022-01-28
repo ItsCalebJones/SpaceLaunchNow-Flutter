@@ -2,12 +2,12 @@ import 'crew.dart';
 import 'spacecraft.dart';
 
 class SpacecraftStage {
-  final int id;
-  final String destination;
-  final Iterable<Crew> launchCrew;
-  final Iterable<Crew> onboardCrew;
-  final Iterable<Crew> landingCrew;
-  final Spacecraft spacecraft;
+  final int? id;
+  final String? destination;
+  final Iterable<Crew>? launchCrew;
+  final Iterable<Crew>? onboardCrew;
+  final Iterable<Crew>? landingCrew;
+  final Spacecraft? spacecraft;
 
   SpacecraftStage({this.id, this.destination, this.launchCrew, this.landingCrew,
   this.onboardCrew, this.spacecraft});

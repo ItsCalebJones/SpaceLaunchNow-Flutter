@@ -1,9 +1,9 @@
 class InfoURL {
-  final int priority;
-  final String title;
-  final String description;
-  final String featureImage;
-  final String url;
+  final int? priority;
+  final String? title;
+  final String? description;
+  final String? featureImage;
+  final String? url;
 
   InfoURL(
       {

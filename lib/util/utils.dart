@@ -4,7 +4,7 @@ import 'dart:ui';
 
 class Utils {
 
-  static String getStatus(int status){
+  static String getStatus(int? status){
     String missionStatus = "Unknown";
     switch(status) {
 
@@ -60,7 +60,7 @@ class Utils {
     return missionStatus;
   }
 
-  static String getAppId() {
+  static String? getAppId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544~1458002511';
     } else if (Platform.isAndroid) {
@@ -69,7 +69,7 @@ class Utils {
     return null;
   }
 
-  static String getBannerAdUnitId() {
+  static String? getBannerAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716';
     } else if (Platform.isAndroid) {

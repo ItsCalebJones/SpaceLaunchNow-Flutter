@@ -17,7 +17,7 @@ class UpcomingLaunchListPage extends StatefulWidget {
   UpcomingLaunchListPage(this._configuration, this.searchQuery, this.searchActive);
 
   final AppConfiguration _configuration;
-  final String searchQuery;
+  final String? searchQuery;
   final bool searchActive;
 
   @override
@@ -26,13 +26,13 @@ class UpcomingLaunchListPage extends StatefulWidget {
 
 class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   List<LaunchList> _launches = [];
-  int nextOffset = 0;
-  int totalCount = 0;
+  int? nextOffset = 0;
+  int? totalCount = 0;
   int offset = 0;
   int limit = 30;
   bool loading = false;
   SLNRepository _repository = new Injector().slnRepository;
-  ListAdWidget _bannerAdWidget;
+  ListAdWidget? _bannerAdWidget;
 
 
   @override
@@ -40,13 +40,13 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     super.initState();
     print("Initing state of Upcoming!");
 
-    List<LaunchList> launches = PageStorage.of(context).readState(
+    List<LaunchList>? launches = PageStorage.of(context)!.readState(
         context, identifier: 'upcomingLaunches');
     if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context).readState(
+      nextOffset = PageStorage.of(context)!.readState(
           context, identifier: 'upcomingLaunchesNextOffset');
-      totalCount = PageStorage.of(context).readState(
+      totalCount = PageStorage.of(context)!.readState(
           context, identifier: 'upcomingLaunchesnextTotalCount');
     }
 
@@ -54,9 +54,9 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       _getLaunchBySearch(widget.searchQuery);
     } else if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context).readState(
+      nextOffset = PageStorage.of(context)!.readState(
           context, identifier: 'upcomingLaunchesNextOffset');
-      totalCount = PageStorage.of(context).readState(
+      totalCount = PageStorage.of(context)!.readState(
           context, identifier: 'upcomingLaunchesnextTotalCount');
     } else {
       lockedLoadNext();
@@ -96,18 +96,18 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       _launches.clear();
     }
     setState(() {
-      _launches.addAll(launches.launches);
-      PageStorage.of(context).writeState(
+      _launches.addAll(launches.launches!);
+      PageStorage.of(context)!.writeState(
           context, _launches, identifier: 'upcomingLaunches');
-      PageStorage.of(context).writeState(
+      PageStorage.of(context)!.writeState(
           context, nextOffset, identifier: 'upcomingLaunchesNextOffset');
-      PageStorage.of(context).writeState(
+      PageStorage.of(context)!.writeState(
           context, totalCount, identifier: 'upcomingLaunchesnextTotalCount');
     });
   }
 
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("Error occured");
     loading = false;
     if (search == true) {
@@ -153,16 +153,16 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         leading: new Hero(
           tag: index,
           child: new CircleAvatar(
-            backgroundImage: new CachedNetworkImageProvider(launch.image),
+            backgroundImage: new CachedNetworkImageProvider(launch.image!),
           ),
         ),
-        title: new Text(launch.name, style: Theme
+        title: new Text(launch.name!, style: Theme
             .of(context)
             .textTheme
-            .subtitle1
+            .subtitle1!
             .copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location),
-        trailing: new Text(formatter.format(launch.net), style: Theme
+        subtitle: new Text(launch.location!),
+        trailing: new Text(formatter.format(launch.net!), style: Theme
             .of(context)
             .textTheme
             .caption),
@@ -171,7 +171,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {LaunchList launch, Object avatarTag, String launchId}) {
+      {LaunchList? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -216,7 +216,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     if (s == null) {
       return false;
     }
-    return double.parse(s, (e) => null) != null;
+    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void notifyThreshold() {
@@ -259,7 +259,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     return null;
   }
 
-  void _getLaunchBySearch(String value) {
+  void _getLaunchBySearch(String? value) {
     _launches.clear();
     loading = true;
     totalCount = 0;

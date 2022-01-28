@@ -1,6 +1,6 @@
 class Payload {
-  final int id;
-  final String name;
+  final int? id;
+  final String? name;
 
   Payload({this.id, this.name, });
 

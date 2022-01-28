@@ -20,7 +20,7 @@ Widget buildUpdates(
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline1
+            .headline1!
             .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
       ),
     );
@@ -33,22 +33,22 @@ Widget buildUpdates(
     for (Update update in _updates) {
       var comment = update.comment;
       if (update.infoUrl != null) {
-        comment += "\n\nSource:\n" + update.infoUrl;
+        comment += "\n\nSource:\n" + update.infoUrl!;
       }
       widgets.add(Padding(
           padding: const EdgeInsets.all(4.0),
           child: Container(
               child: new ListTile(
-            onTap: () => _openUrl(update.infoUrl),
+            onTap: () => _openUrl(update.infoUrl!),
             leading: new CircleAvatar(
               backgroundImage:
-                  new CachedNetworkImageProvider(update.profileImage),
+                  new CachedNetworkImageProvider(update.profileImage!),
             ),
             title: new Text(
-                update.createdBy + " - " + formatter.format(update.createdOn),
+                update.createdBy! + " - " + formatter.format(update.createdOn!),
                 style: Theme.of(context).textTheme.subtitle2),
             subtitle:
-                new Text(comment, style: Theme.of(context).textTheme.caption),
+                new Text(comment!, style: Theme.of(context).textTheme.caption),
           ))));
     }
     if (updates.length >= 6) {
@@ -77,7 +77,7 @@ Widget buildUpdates(
 }
 
 _openUrl(String url) async {
-  Uri _url = Uri.tryParse(url);
+  Uri? _url = Uri.tryParse(url);
   if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
     final String _finalUrl = _url.host + _url.path + "?" + _url.query;
     if (await canLaunch('youtube://$_finalUrl')) {

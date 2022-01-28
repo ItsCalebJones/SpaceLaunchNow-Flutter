@@ -13,7 +13,7 @@ class AnchorAdWidget extends StatefulWidget {
 }
 
 class _AnchorAdWidgetState extends State<AnchorAdWidget> with AutomaticKeepAliveClientMixin {
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   bool _isReady = false;
   bool _showAds = false;
 
@@ -78,7 +78,7 @@ class _AnchorAdWidgetState extends State<AnchorAdWidget> with AutomaticKeepAlive
         child: Container(
           width: widget.size.width.toDouble(),
           height: widget.size.height.toDouble(),
-          child: AdWidget(ad: _bannerAd),
+          child: AdWidget(ad: _bannerAd!),
         ),
       );
     } else if (!_isReady && _showAds) {

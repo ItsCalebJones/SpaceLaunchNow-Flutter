@@ -2,8 +2,8 @@ import '../launch/list/launch_list.dart';
 import '../event/event_list.dart';
 
 class LaunchEventList {
-  final List<LaunchList> launches;
-  final List<EventList> events;
+  final List<LaunchList>? launches;
+  final List<EventList>? events;
 
   LaunchEventList({this.launches, this.events});
 

@@ -21,7 +21,7 @@ class SLNRepositoryImpl implements SLNRepository {
   final newsClient = ClientWithUserAgent(http.Client());
 
 
-  Future<List<Launch>> fetch([String lsp]){
+  Future<List<Launch>> fetch([String? lsp]){
     String _kLaunchesUrl = BASE_URL + '/launch/?mode=detailed&limit=20';
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
@@ -38,12 +38,12 @@ class SLNRepositoryImpl implements SLNRepository {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return Launch.allFromResponse(response);
+      return Launch.allFromResponse(response)!;
     });
   }
 
   @override
-  Future<List<Launch>> fetchNext([String lsp]) {
+  Future<List<Launch>> fetchNext([String? lsp]) {
     String _kLaunchesUrl = BASE_URL + '/launch/?mode=detailed&limit=1';
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
@@ -60,13 +60,13 @@ class SLNRepositoryImpl implements SLNRepository {
         throw new FetchDataException("Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      return Launch.allFromResponse(response);
+      return Launch.allFromResponse(response)!;
     });
   }
 
   @override
-  Future<LaunchesList> fetchPrevious({String lsp, String limit, String offset, String search}) {
-    String _kLaunchesUrl = BASE_URL + '/launch/previous/?mode=list&limit=' + limit;
+  Future<LaunchesList> fetchPrevious({String? lsp, String? limit, String? offset, String? search}) {
+    String _kLaunchesUrl = BASE_URL + '/launch/previous/?mode=list&limit=' + limit!;
     if (lsp != null){
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
@@ -91,8 +91,8 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<LaunchesList> fetchUpcoming({String lsp, String limit, String offset, String search}) {
-    String _kLaunchesUrl = BASE_URL + '/launch/upcoming/?mode=list&limit=' + limit;
+  Future<LaunchesList> fetchUpcoming({String? lsp, String? limit, String? offset, String? search}) {
+    String _kLaunchesUrl = BASE_URL + '/launch/upcoming/?mode=list&limit=' + limit!;
     if (lsp != null) {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
     }
@@ -124,8 +124,8 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<Launches> fetchUpcomingHome({String lsps, String locations, String limit, String offset}) {
-    String _kLaunchesUrl = BASE_URL + '/launch/upcoming/?mode=detailed&limit=' + limit;
+  Future<Launches> fetchUpcomingHome({String? lsps, String? locations, String? limit, String? offset}) {
+    String _kLaunchesUrl = BASE_URL + '/launch/upcoming/?mode=detailed&limit=' + limit!;
     if (lsps != null) {
       _kLaunchesUrl = _kLaunchesUrl + '&lsp__ids=' + lsps;
     }
@@ -157,8 +157,8 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<Events> fetchNextEvent({ String limit, String offset}) {
-    String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=list&limit=' + limit;
+  Future<Events> fetchNextEvent({ String? limit, String? offset}) {
+    String _kEventsUrl = BASE_URL + '/event/upcoming/?mode=list&limit=' + limit!;
 
     if (offset != null){
       _kEventsUrl = _kEventsUrl + '&offset=' + offset;
@@ -178,8 +178,8 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<Events> fetchPreviousEvent({ String limit, String offset}) {
-    String _kEventsUrl = BASE_URL + '/event/previous/?mode=list&limit=' + limit;
+  Future<Events> fetchPreviousEvent({ String? limit, String? offset}) {
+    String _kEventsUrl = BASE_URL + '/event/previous/?mode=list&limit=' + limit!;
 
     if (offset != null){
       _kEventsUrl = _kEventsUrl + '&offset=' + offset;
@@ -199,7 +199,7 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<Event> fetchEventById(int id) {
+  Future<Event> fetchEventById(int? id) {
     String _kEventsUrl = BASE_URL + '/event/$id';
 
     print(_kEventsUrl);
@@ -262,7 +262,7 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<List<News>> fetchNewsByLaunch({String id}) {
+  Future<List<News>> fetchNewsByLaunch({String? id}) {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/$id/?_limit=30';
 
     print(_kEventsUrl);
@@ -283,7 +283,7 @@ class SLNRepositoryImpl implements SLNRepository {
   }
 
   @override
-  Future<List<News>> fetchNewsByEvent({int id}) {
+  Future<List<News>> fetchNewsByEvent({int? id}) {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/event/$id/?_limit=30';
 
     print(_kEventsUrl);

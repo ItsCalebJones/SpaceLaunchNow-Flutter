@@ -7,25 +7,25 @@ class EventDetailHeader extends StatelessWidget {
 
   EventDetailHeader(
     this.event,  {
-    @required this.backEnabled,
+    required this.backEnabled,
   });
 
-  final Event event;
+  final Event? event;
   final bool backEnabled;
 
   void _handleTap() {
   }
 
   void _handleShare() {
-    var id = event.id;
+    var id = event!.id;
     Share.share("https://spacelaunchnow.me/event/$id");
   }
 
   Widget _buildAvatar(BuildContext context) {
-    var avatarUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+    String? avatarUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
 
     if (avatarUrl != null) {
-      avatarUrl = event.featureImage;
+      avatarUrl = event!.featureImage;
     }
 
       return new Container(
@@ -38,7 +38,7 @@ class EventDetailHeader extends StatelessWidget {
         ),
         child: new CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(avatarUrl),
+          backgroundImage: new NetworkImage(avatarUrl!),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),

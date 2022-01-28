@@ -1,6 +1,6 @@
 class EventType {
-  final int id;
-  final String name;
+  final int? id;
+  final String? name;
 
   EventType({this.id, this.name});
 

@@ -6,24 +6,24 @@ import 'package:url_launcher/url_launcher.dart';
 class MissionShowcase extends StatelessWidget {
   MissionShowcase(this._launch);
 
-  final Launch _launch;
+  final Launch? _launch;
 
   Widget _buildOrbit(TextTheme textTheme) {
-    var orbit = "Unknown Orbit";
-    if (_launch.mission.orbit != null) {
-      orbit = _launch.mission.orbit.name;
+    String? orbit = "Unknown Orbit";
+    if (_launch!.mission!.orbit != null) {
+      orbit = _launch!.mission!.orbit!.name;
     }
     return new Row(
       children: <Widget>[
         new Text(
           "Orbit:",
-          style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         new Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: new Text(
-            orbit,
+            orbit!,
             maxLines: 2,
             style: textTheme.bodyText1,
             overflow: TextOverflow.fade,
@@ -38,13 +38,13 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         new Text(
           "Type:",
-          style: textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.start,
         ),
         new Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: new Text(
-            _launch.mission.typeName,
+            _launch!.mission!.typeName!,
             maxLines: 2,
             style: textTheme.bodyText1,
           ),
@@ -57,7 +57,7 @@ class MissionShowcase extends StatelessWidget {
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     var widgets = new List<Widget>();
-    Mission mission = _launch.mission;
+    Mission? mission = _launch!.mission;
     widgets.add(Padding(
       padding:
           const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 0.0),
@@ -66,14 +66,14 @@ class MissionShowcase extends StatelessWidget {
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline4
+            .headline4!
             .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
       ),
     ));
     if (mission != null) {
-      String typeName = _launch.mission.typeName;
-      String missionName = _launch.mission.name;
-      String missionDescription = _launch.mission.description;
+      String? typeName = _launch!.mission!.typeName;
+      String? missionName = _launch!.mission!.name;
+      String? missionDescription = _launch!.mission!.description;
       widgets.add(new Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
         child: new SingleChildScrollView(
@@ -84,7 +84,7 @@ class MissionShowcase extends StatelessWidget {
               new Padding(
                 padding: const EdgeInsets.only(top: 0.0),
                 child: new Text(
-                  mission.name,
+                  mission.name!,
                   style: textTheme.headline6,
                   textAlign: TextAlign.left,
                 ),
@@ -104,7 +104,7 @@ class MissionShowcase extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0.0),
                 child: new Text(
                   "$missionDescription",
-                  style: textTheme.bodyText1.copyWith(),
+                  style: textTheme.bodyText1!.copyWith(),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -120,12 +120,12 @@ class MissionShowcase extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             new Text(
-              _launch.name,
-              style: textTheme.headline6.copyWith(),
+              _launch!.name!,
+              style: textTheme.headline6!.copyWith(),
             ),
             new Text(
               "Type: Unknown",
-              style: textTheme.subtitle1.copyWith(),
+              style: textTheme.subtitle1!.copyWith(),
             ),
           ],
         ),
@@ -140,7 +140,7 @@ class MissionShowcase extends StatelessWidget {
   }
 
   _getInfographic(TextTheme textTheme) {
-    if (_launch.infographic != null) {
+    if (_launch!.infographic != null) {
       return new Column(
         children: <Widget>[
           new Padding(
@@ -150,7 +150,7 @@ class MissionShowcase extends StatelessWidget {
                 launch("https://www.patreon.com/geoffbarrett");
               },
               child: new Center(
-                child: new Image.network(_launch.infographic),
+                child: new Image.network(_launch!.infographic!),
               ),
             ),
           ),

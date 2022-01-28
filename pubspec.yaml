@@ -3,7 +3,7 @@ description: A new Space Launch Now flutter application.
 version: 2.4.1
 
 environment:
-  sdk: '>=2.10.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 
 dependencies:
@@ -26,9 +26,9 @@ dependencies:
   cached_network_image: ^3.2.0
   flutter_staggered_grid_view: ^0.6.0
   tweet_ui: ^3.0.1
-  better_player: 0.0.63
-  video_player: 2.0.2
-  video_player_platform_interface: 4.0.0
+  better_player: 0.0.81
+  video_player: 2.2.16
+  video_player_platform_interface: 5.0.1
 
   dart_twitter_api: ^0.5.5+1
   font_awesome_flutter: ^9.2.0
@@ -40,7 +40,7 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   google_fonts: ^2.2.0
   quiver: ^3.0.1+1
-  timeago: ^3.1.0
+  timeago: ^3.2.0
 
   # The following adds the Cupertino Icons Afont to your application.
   # Use with the CupertinoIcons class for iOS style icons.
