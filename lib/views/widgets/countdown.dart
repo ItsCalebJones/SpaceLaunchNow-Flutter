@@ -207,9 +207,10 @@ class CountdownState extends State<Countdown> {
                     );
                   },
                   child: new Chip(
+                    elevation: 5,
                     label: new Text(
                       status,
-                      style: theme.textTheme.title.copyWith(color: Colors.white),
+                      style: theme.textTheme.headline6.copyWith(color: Colors.white),
                     ),
                     backgroundColor: color,
                   ),
