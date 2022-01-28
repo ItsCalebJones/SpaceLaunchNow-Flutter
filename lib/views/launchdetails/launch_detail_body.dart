@@ -67,6 +67,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
 
   Widget _buildStatusInfo(TextTheme textTheme) {
     var icon = Icons.event;
+
     if (mLaunch.status.id == 1) {
       icon = Icons.thumb_up;
     } else if (mLaunch.status.id == 2) {
@@ -82,6 +83,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     } else if (mLaunch.status.id == 7) {
       icon = Icons.close;
     }
+
     return new Row(
       children: <Widget>[
         new Icon(icon),

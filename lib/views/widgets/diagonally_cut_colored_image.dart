@@ -11,48 +11,20 @@ class DiagonallyCutColoredImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (image == null) {
-      return new ClipPath(
-
+    return new ClipPath(
         clipper: new DiagonalClipper(),
         child: new DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: new BoxDecoration(color: Theme.of(context).primaryColor),
-          child: new Image.network(
-            '',
-            width: screenWidth,
-            height: 240.0,
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    } else {
-      return new ClipPath(
-        clipper: new DiagonalClipper(),
-        child: Stack(
-          children: <Widget>[
-            Image.network(
-              image,
+            position: DecorationPosition.foreground,
+            decoration:
+                new BoxDecoration(color: Theme.of(context).primaryColor),
+            child: new Image.network(
+              '',
               width: screenWidth,
               height: 240.0,
-              fit: BoxFit.fill,
-            ),
-            Positioned(
-              top: 10,
-              bottom: 150,
-              left: 30,
-              right: 100,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  color: Colors.black.withOpacity(0),
-                ),
-              ),
+              fit: BoxFit.cover,
             )
-          ],
-        ),
-      );
-    }
+        )
+    );
   }
 }
 

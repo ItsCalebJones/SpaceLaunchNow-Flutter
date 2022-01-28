@@ -1,8 +1,10 @@
+import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/role.dart';
+
 import 'astronaut.dart';
 
 class Crew {
   final int id;
-  final String role;
+  final Role role;
   final Astronaut astronaut;
 
   Crew({this.id, this.role, this.astronaut});
@@ -14,9 +16,14 @@ class Crew {
       astronaut = new Astronaut.fromJson(json['astronaut']);
     }
 
+    var role;
+    if (json['role'] != null){
+      role = new Role.fromJson(json['role']);
+    }
+
     return Crew(
         id: json['id'],
-        role: json['role'],
+        role: role,
         astronaut: astronaut
     );
   }

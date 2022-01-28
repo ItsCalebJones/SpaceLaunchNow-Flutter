@@ -66,7 +66,6 @@ Future<void> main() async {
   runApp(new SpaceLaunchNow());
 }
 
-
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -564,7 +563,6 @@ class PagesState extends State<Pages> {
   void asyncInitState() async {
 
     String answer = await FlutterInappPurchase.instance.initConnection;
-    print("We here");
     print(answer);
     // refresh items for android
     try {
