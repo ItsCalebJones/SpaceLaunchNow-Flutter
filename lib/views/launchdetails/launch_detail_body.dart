@@ -303,7 +303,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: new Text(
             mLaunch.name,
-            style: textTheme.headline4.copyWith(fontWeight: FontWeight.bold, fontSize: 28),
+            style: textTheme.headline5.copyWith(fontWeight: FontWeight.bold, fontSize: 28),
             textAlign: TextAlign.start,
           ),
         ),
