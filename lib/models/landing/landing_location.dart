@@ -1,7 +1,7 @@
 class LandingLocation {
-  final String name;
-  final String abbrev;
-  final String description;
+  final String? name;
+  final String? abbrev;
+  final String? description;
 
   LandingLocation({this.name, this.abbrev, this.description});
 

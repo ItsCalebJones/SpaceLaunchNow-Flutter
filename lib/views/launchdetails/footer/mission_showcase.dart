@@ -4,28 +4,28 @@ import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MissionShowcase extends StatelessWidget {
-  MissionShowcase(this._launch);
+  const MissionShowcase(this._launch);
 
-  final Launch _launch;
+  final Launch? _launch;
 
   Widget _buildOrbit(TextTheme textTheme) {
-    var orbit = "Unknown Orbit";
-    if (_launch.mission.orbit != null) {
-      orbit = _launch.mission.orbit.name;
+    String? orbit = "Unknown Orbit";
+    if (_launch!.mission!.orbit != null) {
+      orbit = _launch!.mission!.orbit!.name;
     }
-    return new Row(
+    return Row(
       children: <Widget>[
-        new Text(
+        Text(
           "Orbit:",
-          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: new Text(
-            orbit,
+          child: Text(
+            orbit!,
             maxLines: 2,
-            style: textTheme.body1,
+            style: textTheme.bodyText1,
             overflow: TextOverflow.fade,
           ),
         ),
@@ -34,19 +34,19 @@ class MissionShowcase extends StatelessWidget {
   }
 
   Widget _buildMissionType(TextTheme textTheme) {
-    return new Row(
+    return Row(
       children: <Widget>[
-        new Text(
+        Text(
           "Type:",
-          style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.start,
         ),
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: new Text(
-            _launch.mission.typeName,
+          child: Text(
+            _launch!.mission!.typeName!,
             maxLines: 2,
-            style: textTheme.body1,
+            style: textTheme.bodyText1,
           ),
         ),
       ],
@@ -56,55 +56,55 @@ class MissionShowcase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
-    var widgets = new List<Widget>();
-    Mission mission = _launch.mission;
+    var widgets = <Widget>[];
+    Mission? mission = _launch!.mission;
     widgets.add(Padding(
       padding:
           const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 0.0),
-      child: new Text(
+      child: Text(
         "Mission Details",
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline
+            .headline4!
             .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
       ),
     ));
     if (mission != null) {
-      String typeName = _launch.mission.typeName;
-      String missionName = _launch.mission.name;
-      String missionDescription = _launch.mission.description;
-      widgets.add(new Padding(
+      String? typeName = _launch!.mission!.typeName;
+      String? missionName = _launch!.mission!.name;
+      String? missionDescription = _launch!.mission!.description;
+      widgets.add(Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-        child: new SingleChildScrollView(
-          child: new Column(
+        child: SingleChildScrollView(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(top: 0.0),
-                child: new Text(
-                  mission.name,
-                  style: textTheme.title,
+                child: Text(
+                  mission.name!,
+                  style: textTheme.headline6,
                   textAlign: TextAlign.left,
                 ),
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(
                     top: 4.0, left: 0.0, right: 0.0, bottom: 2.0),
                 child: _buildMissionType(textTheme),
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(
                     top: 4.0, left: 0.0, right: 0.0, bottom: 2.0),
                 child: _buildOrbit(textTheme),
               ),
               _getInfographic(textTheme),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(top: 0.0),
-                child: new Text(
+                child: Text(
                   "$missionDescription",
-                  style: textTheme.body1.copyWith(),
+                  style: textTheme.bodyText1!.copyWith(),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -113,26 +113,26 @@ class MissionShowcase extends StatelessWidget {
         ),
       ));
     } else {
-      widgets.add(new Padding(
+      widgets.add(Padding(
         padding: const EdgeInsets.only(left: 8.0),
-        child: new Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text(
-              _launch.name,
-              style: textTheme.title.copyWith(),
+            Text(
+              _launch!.name!,
+              style: textTheme.headline6!.copyWith(),
             ),
-            new Text(
+            Text(
               "Type: Unknown",
-              style: textTheme.subtitle.copyWith(),
+              style: textTheme.subtitle1!.copyWith(),
             ),
           ],
         ),
       ));
     }
 
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,
@@ -140,23 +140,23 @@ class MissionShowcase extends StatelessWidget {
   }
 
   _getInfographic(TextTheme textTheme) {
-    if (_launch.infographic != null) {
-      return new Column(
+    if (_launch!.infographic != null) {
+      return Column(
         children: <Widget>[
-          new Padding(
+          Padding(
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: new InkWell(
+            child: InkWell(
               onTap: () {
                 launch("https://www.patreon.com/geoffbarrett");
               },
-              child: new Center(
-                child: new Image.network(_launch.infographic),
+              child: Center(
+                child: Image.network(_launch!.infographic!),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: new Text(
+            child: Text(
               "Credit @geoffdbarrett",
               textAlign: TextAlign.center,
               style: textTheme.caption,
@@ -165,7 +165,7 @@ class MissionShowcase extends StatelessWidget {
         ],
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 }

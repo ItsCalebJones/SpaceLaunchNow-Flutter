@@ -1,32 +1,29 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
-import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
+import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../launch_detail_page.dart';
 
 class VehicleShowcase extends StatefulWidget {
-  final Launch _launch;
+  final Launch? _launch;
   final AppConfiguration _configuration;
 
-  VehicleShowcase(this._launch, this._configuration);
+  const VehicleShowcase(this._launch, this._configuration);
 
   @override
-  State createState() => new VehicleShowcaseState(this._launch);
+  State createState() => VehicleShowcaseState(_launch);
 }
 
 class VehicleShowcaseState extends State<VehicleShowcase> {
   VehicleShowcaseState(this._launch);
 
-  final Launch _launch;
+  final Launch? _launch;
 
   @override
   void initState() {}
@@ -40,56 +37,50 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildAvatar(ThemeData theme) {
-    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    if (_launch.rocket.configuration.image != null &&
-        _launch.rocket.configuration.image.length > 0) {
-      url = _launch.rocket.configuration.image;
-    } else if (_launch.rocket.configuration.manufacturer.imageURL != null &&
-        _launch.rocket.configuration.manufacturer.imageURL.length > 0) {
-      url = _launch.rocket.configuration.manufacturer.imageURL;
+    String? url =
+        "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+    if (_launch!.rocket!.configuration!.image != null &&
+        _launch!.rocket!.configuration!.image!.isNotEmpty) {
+      url = _launch!.rocket!.configuration!.image;
+    } else if (_launch!.rocket!.configuration!.manufacturer!.imageURL != null &&
+        _launch!.rocket!.configuration!.manufacturer!.imageURL!.isNotEmpty) {
+      url = _launch!.rocket!.configuration!.manufacturer!.imageURL;
     }
 
-    if (_launch.rocket.configuration.image != null) {
+    if (_launch!.rocket!.configuration!.image != null) {
       return Row(
         children: <Widget>[
-          new Padding(
+          Padding(
               padding: const EdgeInsets.only(
                   left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
-              child: new Container(
+              child: Container(
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
                 // borde width
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
-                child: new CircleAvatar(
+                child: CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage: new NetworkImage(url),
+                  backgroundImage: NetworkImage(url!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
               )),
           Flexible(
-            child: new Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: new Text(
-                    _launch.rocket.configuration.fullName ?? "",
-                    style: theme.textTheme.title,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: new Text(
-                    _launch.rocket.configuration.manufacturer.name ?? "",
-                    style: theme.textTheme.subhead,
+                  child: Text(
+                    _launch!.rocket!.configuration!.manufacturer!.name ?? "",
+                    style: theme.textTheme.subtitle1,
                     maxLines: 2,
-                    overflow: TextOverflow.fade,
+                    overflow: TextOverflow.ellipsis,
                     softWrap: true,
                   ),
                 ),
@@ -99,207 +90,206 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           )
         ],
       );
-    } else
-      return new Column(
+    } else {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                _launch.rocket.configuration.fullName ?? "",
-                style: theme.textTheme.title,
+              child: Text(
+                _launch!.rocket!.configuration!.fullName ?? "",
+                style: theme.textTheme.headline5,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
-                _launch.rocket.configuration.manufacturer.name ?? "",
-                style: theme.textTheme.subhead,
+                _launch!.rocket!.configuration!.manufacturer!.name ?? "",
+                style: theme.textTheme.subtitle1,
                 textAlign: TextAlign.center,
               ),
             ),
           ]);
+    }
   }
 
   Widget _buildStats(ThemeData theme) {
-    var vehicle = _launch.rocket.configuration.fullName ?? "Vehicle";
+    var vehicle = _launch!.rocket!.configuration!.fullName ?? "Vehicle";
     var leo = "";
-    if (_launch.rocket.configuration.leoCapacity != null) {
-      leo = _launch.rocket.configuration.leoCapacity.toString() + "kg";
+    if (_launch!.rocket!.configuration!.leoCapacity != null) {
+      leo = _launch!.rocket!.configuration!.leoCapacity.toString() + "kg";
     } else {
       leo = "N/A";
     }
 
     var gto = "";
-    if (_launch.rocket.configuration.geoCapacity != null) {
-      gto = _launch.rocket.configuration.geoCapacity.toString() + "kg";
+    if (_launch!.rocket!.configuration!.geoCapacity != null) {
+      gto = _launch!.rocket!.configuration!.geoCapacity.toString() + "kg";
     } else {
       gto = "N/A";
     }
 
     var minStage = "";
-    if (_launch.rocket.configuration.minStage != null) {
-      minStage = _launch.rocket.configuration.minStage.toString();
+    if (_launch!.rocket!.configuration!.minStage != null) {
+      minStage = _launch!.rocket!.configuration!.minStage.toString();
     }
 
     var maxStage = "";
-    if (_launch.rocket.configuration.maxStage != null) {
-      maxStage = _launch.rocket.configuration.maxStage.toString();
+    if (_launch!.rocket!.configuration!.maxStage != null) {
+      maxStage = _launch!.rocket!.configuration!.maxStage.toString();
     }
 
     var length = "";
-    if (_launch.rocket.configuration.length != null) {
-      length = _launch.rocket.configuration.length.toString() + "m";
+    if (_launch!.rocket!.configuration!.length != null) {
+      length = _launch!.rocket!.configuration!.length.toString() + "m";
     }
 
     var launchMass = "";
-    if (_launch.rocket.configuration.launchMass != null) {
-      launchMass = _launch.rocket.configuration.launchMass.toString() + " T";
+    if (_launch!.rocket!.configuration!.launchMass != null) {
+      launchMass = _launch!.rocket!.configuration!.launchMass.toString() + " T";
     }
 
     var diameter = "";
-    if (_launch.rocket.configuration.diameter != null) {
-      diameter = _launch.rocket.configuration.diameter.toString() + "m";
+    if (_launch!.rocket!.configuration!.diameter != null) {
+      diameter = _launch!.rocket!.configuration!.diameter.toString() + "m";
     }
 
     var thrust = "";
-    if (_launch.rocket.configuration.thrust != null) {
-      thrust = _launch.rocket.configuration.thrust.toString() + " kn";
+    if (_launch!.rocket!.configuration!.thrust != null) {
+      thrust = _launch!.rocket!.configuration!.thrust.toString() + " kn";
     }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Text(
+          Text(
             "$vehicle Stats",
-            style:
-                theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.headline6!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
-          new Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Successful:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.successfulLaunches
-                                  .toString() ??
-                              "",
+                        child: Text(
+                          _launch!.rocket!.configuration!.successfulLaunches
+                              .toString(),
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Failed:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.failedLaunches
-                                  .toString() ??
-                              "",
+                        child: Text(
+                          _launch!.rocket!.configuration!.failedLaunches
+                              .toString(),
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Min Stage:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           minStage,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Length:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.left,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           length,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Mass:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           launchMass,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "LEO:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           leo,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -307,124 +297,122 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                   ),
                 ],
               ),
-              new Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Consecutive:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration
-                                  .consecutiveSuccessfulLaunches
-                                  .toString() ??
-                              "",
+                        child: Text(
+                          _launch!.rocket!.configuration!
+                              .consecutiveSuccessfulLaunches
+                              .toString(),
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Pending:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
-                          _launch.rocket.configuration.pendingLaunches
-                                  .toString() ??
-                              "",
+                        child: Text(
+                          _launch!.rocket!.configuration!.pendingLaunches
+                              .toString(),
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Max Stage:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           maxStage,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Diameter:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           diameter,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "Thrust:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           thrust,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  new Row(
+                  Row(
                     children: <Widget>[
-                      new Text(
+                      Text(
                         "GEO:",
-                        style: theme.textTheme.subhead
+                        style: theme.textTheme.subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      new Padding(
+                      Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text(
+                        child: Text(
                           gto,
                           maxLines: 1,
-                          style: theme.textTheme.subhead,
+                          style: theme.textTheme.subtitle1,
                           overflow: TextOverflow.fade,
                         ),
                       ),
@@ -442,29 +430,29 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
-    if (_launch.rocket.configuration.infoUrl != null) {
-      materialButtons.add(new IconButton(
-        icon: Icon(FontAwesomeIcons.desktop),
+    if (_launch!.rocket!.configuration!.infoUrl != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          _launchURL(_launch.rocket.configuration.infoUrl);
+          _launchURL(_launch!.rocket!.configuration!.infoUrl!);
         },
         tooltip: "Website",
       ));
     }
 
-    if (_launch.rocket.configuration.wikiUrl != null) {
-      materialButtons.add(new IconButton(
-        icon: Icon(FontAwesomeIcons.wikipediaW),
+    if (_launch!.rocket!.configuration!.wikiUrl != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(_launch.rocket.configuration.wikiUrl);
+          _launchURL(_launch!.rocket!.configuration!.wikiUrl!);
         },
         tooltip: "Website",
       ));
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(0.0),
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),
@@ -472,23 +460,22 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   Widget _buildDescription(ThemeData theme) {
-    return new Padding(
+    return Padding(
       padding:
           const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
-      child: new Text(
-        _launch.rocket.configuration.description ?? "",
-        style: theme.textTheme.body1,
+      child: Text(
+        _launch!.rocket!.configuration!.description ?? "",
+        style: theme.textTheme.bodyText1,
         textAlign: TextAlign.start,
       ),
     );
   }
 
-  void _navigateToLaunchDetails({String launchId}) {
-    Ads.hideBannerAd();
+  void _navigateToLaunchDetails({String? launchId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(
+          return LaunchDetailPage(
             widget._configuration,
             launch: null,
             launchId: launchId,
@@ -501,19 +488,26 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
-          child: new Text(
+          child: Text(
             "Launch Vehicle",
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline
+                .headline4!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Text(
+            _launch!.rocket!.configuration!.fullName ?? "",
+            style: theme.textTheme.headline6,
           ),
         ),
         _buildAvatar(theme),
@@ -526,10 +520,10 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildLauncher(ThemeData theme) {
-    List<Widget> widgets = new List<Widget>();
-    if (_launch.rocket.firstStages.length > 0) {
-      var booster;
-      if (_launch.rocket.firstStages.length > 1) {
+    List<Widget> widgets = <Widget>[];
+    if (_launch!.rocket!.firstStages!.isNotEmpty) {
+      String booster;
+      if (_launch!.rocket!.firstStages!.length > 1) {
         booster = "First Stage Boosters";
       } else {
         booster = "First Stage Booster";
@@ -538,10 +532,11 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           booster,
-          style: theme.textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+          style:
+              theme.textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
         ),
       ));
-      for (var booster in _launch.rocket.firstStages) {
+      for (var booster in _launch!.rocket!.firstStages!) {
         widgets.add(Padding(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Column(
@@ -551,9 +546,9 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               _buildBoosterAvatar(theme, booster),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: new Text(booster.launcher.details),
+                child: Text(booster.launcher!.details!),
               ),
-              new Column(
+              Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _buildLanding(theme, booster)),
@@ -563,7 +558,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         ));
       }
     }
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,
@@ -571,65 +566,65 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildLanding(ThemeData theme, FirstStage booster) {
-    List<Widget> widgets = new List<Widget>();
+    List<Widget> widgets = <Widget>[];
     if (booster.landing != null &&
-        booster.landing.attempt != null &&
-        booster.landing.attempt) {
+        booster.landing!.attempt != null &&
+        booster.landing!.attempt!) {
       widgets.add(Text(
         "Landing",
-        style: theme.textTheme.title.copyWith(fontWeight: FontWeight.bold),
+        style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
       ));
-      if (booster.landing.success == null) {
+      if (booster.landing!.success == null) {
         widgets.add(
-          new Row(
+          Row(
             children: <Widget>[
-              new Icon(
+              const Icon(
                 Icons.thumbs_up_down,
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: new Text(
+                child: Text(
                   "Pending",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
             ],
           ),
         );
-      } else if (booster.landing.success) {
+      } else if (booster.landing!.success!) {
         widgets.add(
-          new Row(
+          Row(
             children: <Widget>[
-              new Icon(
+              const Icon(
                 Icons.check_circle,
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: new Text(
+                child: Text(
                   "Successful Landing",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
             ],
           ),
         );
-      } else if (!booster.landing.success) {
+      } else if (!booster.landing!.success!) {
         widgets.add(
-          new Row(
+          Row(
             children: <Widget>[
-              new Icon(
+              const Icon(
                 Icons.thumb_down,
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: new Text(
+                child: Text(
                   "Failed",
                   maxLines: 1,
-                  style: theme.textTheme.subtitle,
+                  style: theme.textTheme.subtitle1,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -637,54 +632,54 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           ),
         );
       }
-      if (!booster.landing.attempt) {
-        widgets.add(new Row(
+      if (!booster.landing!.attempt!) {
+        widgets.add(Row(
           children: <Widget>[
-            new Icon(
+            const Icon(
               Icons.error,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
+              child: Text(
                 "No Landing",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
           ],
         ));
       }
-      if (booster.landing.type != null) {
-        widgets.add(new Row(
+      if (booster.landing!.type != null) {
+        widgets.add(Row(
           children: <Widget>[
-            new Icon(
+            const Icon(
               Icons.developer_board,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                booster.landing.type.name ?? "",
+              child: Text(
+                booster.landing!.type!.name ?? "",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
           ],
         ));
       }
-      if (booster.landing.location != null) {
-        widgets.add(new Row(
+      if (booster.landing!.location != null) {
+        widgets.add(Row(
           children: <Widget>[
-            new Icon(
+            const Icon(
               Icons.map,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                booster.landing.location.name ?? "",
+              child: Text(
+                booster.landing!.location!.name ?? "",
                 maxLines: 1,
-                style: theme.textTheme.subtitle,
+                style: theme.textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -696,17 +691,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildSpacecraft(ThemeData theme) {
-    List<Widget> widgets = new List<Widget>();
-    if (_launch.rocket.spacecraftStage != null) {
+    List<Widget> widgets = <Widget>[];
+    if (_launch!.rocket!.spacecraftStage != null) {
       widgets.add(
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
-          child: new Text(
+          child: Text(
             "Spacecraft",
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
-                .headline
+                .headline4!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
           ),
         ),
@@ -717,19 +712,19 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildSpacecraftAvatar(theme, _launch.rocket.spacecraftStage),
-            new Row(
+            _buildSpacecraftAvatar(theme, _launch!.rocket!.spacecraftStage!),
+            Row(
               children: <Widget>[
-                new Text(
+                Text(
                   "Destination:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
-                    _launch.rocket.spacecraftStage.destination,
+                  child: Text(
+                    _launch!.rocket!.spacecraftStage!.destination!,
                     maxLines: 1,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -737,21 +732,21 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
               ],
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: new Text(
-                  _launch.rocket.spacecraftStage.spacecraft.description),
+              child: Text(
+                  _launch!.rocket!.spacecraftStage!.spacecraft!.description!),
             ),
-            new Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _buildCrew(theme, _launch.rocket.spacecraftStage),
+              children: _buildCrew(theme, _launch!.rocket!.spacecraftStage!),
             )
           ],
         ),
       ));
     }
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,
@@ -759,10 +754,10 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   }
 
   _buildCrew(ThemeData theme, SpacecraftStage spacecraftStage) {
-    List<Widget> widgets = new List<Widget>();
+    List<Widget> widgets = <Widget>[];
     if (spacecraftStage.launchCrew != null &&
-        spacecraftStage.launchCrew.length > 0) {
-      for (var crew in spacecraftStage.launchCrew) {
+        spacecraftStage.launchCrew!.isNotEmpty) {
+      for (var crew in spacecraftStage.launchCrew!) {
         widgets.add(Padding(
           padding: const EdgeInsets.only(left: 0.0, right: 0.0),
           child: Column(
@@ -770,12 +765,12 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildCrewAvatar(theme, crew),
-              new Padding(
-                padding:
-                const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 0.0, right: 0.0),
-                child: new Text(
-                  crew.astronaut.bio,
-                  style: theme.textTheme.body1,
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 8.0, bottom: 8.0, left: 0.0, right: 0.0),
+                child: Text(
+                  crew.astronaut!.bio!,
+                  style: theme.textTheme.bodyText1,
                   textAlign: TextAlign.start,
                 ),
               )
@@ -789,77 +784,77 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
   _checkPrevious(FirstStage booster) {
     if (booster.previousFlightUUID != null &&
-        _launch.id != booster.previousFlightUUID) {
+        _launch!.id != booster.previousFlightUUID) {
       return Align(
         alignment: Alignment.center,
-        child: new Padding(
+        child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: new CupertinoButton(
-              color: Theme.of(context).accentColor,
-              child: Text("Previous Flight"),
+          child: CupertinoButton(
+              color: Theme.of(context).colorScheme.secondary,
+              child: const Text("Previous Flight"),
               onPressed: () {
                 _navigateToLaunchDetails(launchId: booster.previousFlightUUID);
               }),
         ),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 
   _buildBoosterAvatar(ThemeData theme, FirstStage booster) {
-    var title = booster.launcher.serialNumber;
-    var status = booster.launcher.status.substring(0, 1).toUpperCase() +
-        booster.launcher.status.substring(1).toLowerCase();
+    var title = booster.launcher!.serialNumber;
+    var status = booster.launcher!.status!.substring(0, 1).toUpperCase() +
+        booster.launcher!.status!.substring(1).toLowerCase();
     var turnaroundTime = "N/A";
-    if (booster.turnAround != null && booster.turnAround > 0) {
+    if (booster.turnAround != null && booster.turnAround! > 0) {
       turnaroundTime = booster.turnAround.toString() + " Days";
     }
 
-    if (booster.launcher.image != null) {
+    if (booster.launcher!.image != null) {
       return Row(
         children: <Widget>[
-          new Padding(
+          Padding(
               padding: const EdgeInsets.only(
                   left: 0.0, right: 4.0, top: 8.0, bottom: 4.0),
-              child: new Container(
+              child: Container(
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
                 // borde width
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
-                child: new CircleAvatar(
+                child: CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage: new NetworkImage(booster.launcher.image),
+                  backgroundImage: NetworkImage(booster.launcher!.image!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
               )),
           Flexible(
-            child: new Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline
+                  title!,
+                  style: theme.textTheme.headline5!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                new Row(
+                Row(
                   children: <Widget>[
-                    new Text(
+                    Text(
                       "Type:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
-                    new Padding(
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
-                        booster.type,
+                      child: Text(
+                        booster.type!,
                         maxLines: 1,
                         style: theme.textTheme.caption,
                         overflow: TextOverflow.fade,
@@ -867,17 +862,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     ),
                   ],
                 ),
-                new Row(
+                Row(
                   children: <Widget>[
-                    new Text(
+                    Text(
                       "Status:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
-                    new Padding(
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
+                      child: Text(
                         status,
                         maxLines: 1,
                         style: theme.textTheme.caption,
@@ -886,17 +881,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     ),
                   ],
                 ),
-                new Row(
+                Row(
                   children: <Widget>[
-                    new Text(
+                    Text(
                       "Flight:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
-                    new Padding(
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
+                      child: Text(
                         booster.flightNumber.toString(),
                         maxLines: 1,
                         style: theme.textTheme.caption,
@@ -905,17 +900,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                     ),
                   ],
                 ),
-                new Row(
+                Row(
                   children: <Widget>[
-                    new Text(
+                    Text(
                       "Turnaround:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
-                    new Padding(
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
+                      child: Text(
                         turnaroundTime,
                         maxLines: 1,
                         style: theme.textTheme.caption,
@@ -929,28 +924,28 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           )
         ],
       );
-    } else
-      return new Column(
+    } else {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline
+              title!,
+              style: theme.textTheme.headline4!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            new Row(
+            Row(
               children: <Widget>[
-                new Text(
+                Text(
                   "Type:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
-                    booster.type,
+                  child: Text(
+                    booster.type!,
                     maxLines: 1,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -958,17 +953,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
               ],
             ),
-            new Row(
+            Row(
               children: <Widget>[
-                new Text(
+                Text(
                   "Status:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
+                  child: Text(
                     status,
                     maxLines: 1,
                     style: theme.textTheme.caption,
@@ -977,17 +972,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
               ],
             ),
-            new Row(
+            Row(
               children: <Widget>[
-                new Text(
+                Text(
                   "Flight:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
+                  child: Text(
                     booster.flightNumber.toString(),
                     maxLines: 1,
                     style: theme.textTheme.caption,
@@ -996,17 +991,17 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 ),
               ],
             ),
-            new Row(
+            Row(
               children: <Widget>[
-                new Text(
+                Text(
                   "Turnaround Time:",
-                  style: theme.textTheme.subtitle
+                  style: theme.textTheme.subtitle1!
                       .copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.left,
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
+                  child: Text(
                     turnaroundTime,
                     maxLines: 1,
                     style: theme.textTheme.caption,
@@ -1016,59 +1011,59 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
               ],
             ),
           ]);
+    }
   }
 
   _buildCrewAvatar(ThemeData theme, Crew crew) {
-    var title = crew.astronaut.name;
-    var subtitle = crew.role.role;
-    var nationality = crew.astronaut.nationality;
+    var title = crew.astronaut!.name;
+    var subtitle = crew.role!.role;
+    var nationality = crew.astronaut!.nationality;
 
-    if (crew.astronaut.profileImage != null) {
+    if (crew.astronaut!.profileImage != null) {
       return Row(
         children: <Widget>[
-          new Padding(
+          Padding(
               padding: const EdgeInsets.only(
                   left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
-              child: new Container(
+              child: Container(
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
                 // borde width
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
-                child: new CircleAvatar(
+                child: CircleAvatar(
                   foregroundColor: Colors.white,
-                  backgroundImage:
-                      new NetworkImage(crew.astronaut.profileImage),
+                  backgroundImage: NetworkImage(crew.astronaut!.profileImage!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
               )),
           Flexible(
-            child: new Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline
+                  title!,
+                  style: theme.textTheme.headline4!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
-                    nationality,
+                  child: Text(
+                    nationality!,
                     maxLines: 2,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
                   ),
                 ),
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: new Text(
-                    subtitle,
+                  child: Text(
+                    subtitle!,
                     maxLines: 2,
                     style: theme.textTheme.caption,
                     overflow: TextOverflow.fade,
@@ -1080,87 +1075,88 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           )
         ],
       );
-    } else
-      return new Column(
+    } else {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline
+              title!,
+              style: theme.textTheme.headline4!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                nationality,
+              child: Text(
+                nationality!,
                 maxLines: 2,
                 style: theme.textTheme.caption,
                 overflow: TextOverflow.fade,
               ),
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                subtitle,
+              child: Text(
+                subtitle!,
                 maxLines: 2,
                 style: theme.textTheme.caption,
                 overflow: TextOverflow.fade,
               ),
             ),
           ]);
+    }
   }
 
   _buildSpacecraftAvatar(ThemeData theme, SpacecraftStage spacecraftStage) {
-    var title = spacecraftStage.spacecraft.name;
+    var title = spacecraftStage.spacecraft!.name;
 
-    var status = spacecraftStage.spacecraft.status;
+    var status = spacecraftStage.spacecraft!.status;
 
-    if (spacecraftStage.spacecraft.image != null) {
+    if (spacecraftStage.spacecraft!.image != null) {
       return Row(
         children: <Widget>[
-          new Padding(
+          Padding(
               padding: const EdgeInsets.only(
                   left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
-              child: new Container(
+              child: Container(
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
                 // borde width
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
                 ),
-                child: new CircleAvatar(
+                child: CircleAvatar(
                   foregroundColor: Colors.white,
                   backgroundImage:
-                      new NetworkImage(spacecraftStage.spacecraft.image),
+                      NetworkImage(spacecraftStage.spacecraft!.image!),
                   radius: 50.0,
                   backgroundColor: Colors.white,
                 ),
               )),
           Flexible(
-            child: new Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
-                  style: theme.textTheme.headline
+                  title!,
+                  style: theme.textTheme.headline5!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                new Row(
+                Row(
                   children: <Widget>[
-                    new Text(
+                    Text(
                       "Status:",
-                      style: theme.textTheme.subtitle
+                      style: theme.textTheme.subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.left,
                     ),
-                    new Padding(
+                    Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
-                        status,
+                      child: Text(
+                        status!,
                         maxLines: 1,
                         style: theme.textTheme.caption,
                         overflow: TextOverflow.fade,
@@ -1173,54 +1169,55 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
           )
         ],
       );
-    } else
-      return new Column(
+    } else {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              title,
-              style: theme.textTheme.headline
+              title!,
+              style: theme.textTheme.headline4!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
           ]);
+    }
   }
 
   Widget _buildCrewActionButtons(ThemeData theme, Crew crew) {
     List<Widget> materialButtons = [];
 
-    if (crew.astronaut.wikiUrl != null) {
-      materialButtons.add(new IconButton(
-        icon: Icon(FontAwesomeIcons.wikipediaW),
+    if (crew.astronaut!.wikiUrl != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(crew.astronaut.wikiUrl);
+          _launchURL(crew.astronaut!.wikiUrl!);
         },
         tooltip: "Wiki",
       ));
     }
 
-    if (crew.astronaut.instagramUrl != null) {
-      materialButtons.add(new IconButton(
-        icon: Icon(FontAwesomeIcons.instagram),
+    if (crew.astronaut!.instagramUrl != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.instagram),
         onPressed: () {
-          _launchURL(crew.astronaut.instagramUrl);
+          _launchURL(crew.astronaut!.instagramUrl!);
         },
         tooltip: "Wiki",
       ));
     }
 
-    if (crew.astronaut.twitterUrl != null) {
-      materialButtons.add(new IconButton(
-        icon: Icon(FontAwesomeIcons.twitter),
+    if (crew.astronaut!.twitterUrl != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.twitter),
         onPressed: () {
-          _launchURL(crew.astronaut.twitterUrl);
+          _launchURL(crew.astronaut!.twitterUrl!);
         },
         tooltip: "Twitter",
       ));
     }
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(0.0),
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),

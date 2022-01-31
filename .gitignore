@@ -18,7 +18,6 @@ windows/flutter/generated_plugin_registrant.cc
 windows/flutter/generated_plugin_registrant.h
 .gradle/
 .flutter-plugins-dependencies
-ios/Flutter/flutter_export_environment.sh
-ios/Flutter/flutter_export_environment.sh
-ios/Runner.xcodeproj/project.pbxproj
+ios/Flutter/flutter_export_environment.sh*
 ios/.symlinks**
+pubspec.lock

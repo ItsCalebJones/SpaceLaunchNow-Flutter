@@ -10,19 +10,18 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventListPage extends StatefulWidget {
-  EventListPage(this._configuration);
+  const EventListPage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _EventListPageState createState() => new _EventListPageState();
+  _EventListPageState createState() => _EventListPageState();
 }
 
 class _EventListPageState extends State<EventListPage> {
@@ -33,14 +32,14 @@ class _EventListPageState extends State<EventListPage> {
   bool loading = false;
   List<bool> isSelected = [true, false];
 
-  SLNRepository _repository = new Injector().slnRepository;
+  final SLNRepository _repository = Injector().slnRepository;
 
   @override
   void initState() {
     super.initState();
-    List<EventList> upcomingEvents = PageStorage.of(context)
+    List<EventList>? upcomingEvents = PageStorage.of(context)!
         .readState(context, identifier: 'upcoming_events');
-    List<EventList> previousEvents = PageStorage.of(context)
+    List<EventList>? previousEvents = PageStorage.of(context)!
         .readState(context, identifier: 'previous_events');
 
     if (upcomingEvents != null && previousEvents != null) {
@@ -81,7 +80,7 @@ class _EventListPageState extends State<EventListPage> {
     });
   }
 
-  Future<Null> _handleRefresh() async {
+  Future<void> _handleRefresh() async {
     lockedLoadNext();
   }
 
@@ -93,8 +92,8 @@ class _EventListPageState extends State<EventListPage> {
     }
 
     setState(() {
-      _upcomingEvents.addAll(events.events);
-      PageStorage.of(context)
+      _upcomingEvents.addAll(events.events!);
+      PageStorage.of(context)!
           .writeState(context, _upcomingEvents, identifier: 'upcoming_events');
     });
   }
@@ -107,18 +106,18 @@ class _EventListPageState extends State<EventListPage> {
     }
 
     setState(() {
-      _previousEvents.addAll(events.events);
-      PageStorage.of(context)
+      _previousEvents.addAll(events.events!);
+      PageStorage.of(context)!
           .writeState(context, _previousEvents, identifier: 'previous_events');
     });
   }
 
   void onLoadEventsError() {
     loading = false;
-    Scaffold.of(context).showSnackBar(new SnackBar(
-      duration: new Duration(seconds: 10),
-      content: new Text('Unable to load events.'),
-      action: new SnackBarAction(
+    Scaffold.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 10),
+      content: Text('Unable to load events.'),
+      action: SnackBarAction(
         label: 'Refresh',
         onPressed: () {
           // Some code to undo the change!
@@ -137,11 +136,11 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {Events event, Object avatarTag, String launchId}) {
+      {Events? event, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(
+          return LaunchDetailPage(
             widget._configuration,
             launch: null,
             avatarTag: avatarTag,
@@ -152,19 +151,17 @@ class _EventListPageState extends State<EventListPage> {
     );
   }
 
-
   List<Widget> _buildList() {
     var data = [];
-    List<Widget> content = new List<Widget>();
-
+    List<Widget> content = <Widget>[];
 
     if (isSelected[0]) {
-      for (Object item in _upcomingEvents){
-        content.add(_buildEventListTile(item));
+      for (Object item in _upcomingEvents) {
+        content.add(_buildEventListTile(item as EventList));
       }
     } else {
-      for (Object item in _previousEvents){
-        content.add(_buildEventListTile(item));
+      for (Object item in _previousEvents) {
+        content.add(_buildEventListTile(item as EventList));
       }
     }
     print(data);
@@ -173,67 +170,68 @@ class _EventListPageState extends State<EventListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
 
     if (_upcomingEvents.isEmpty && _previousEvents.isEmpty && loading) {
-      content.add(new SizedBox(height: 200));
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
+      content.add(const SizedBox(height: 200));
+      content.add(Center(
+        child: const CircularProgressIndicator(),
       ));
     } else if (_upcomingEvents.isEmpty && _previousEvents.isEmpty) {
-      content.add(new SizedBox(height: 200));
+      content.add(SizedBox(height: 200));
       content.add(Center(
-        child: new Text("Unable to Load Dashboard"),
+        child: Text("Unable to Load Dashboard"),
       ));
     } else {
       content.addAll(_buildList());
     }
 
-
-      return new Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ToggleButtons(
-                borderRadius: BorderRadius.circular(8.0),
-                textStyle: Theme.of(context).textTheme.subtitle1,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Upcoming"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Previous"),
-                  ),
-                ],
-                onPressed: (int index) {
-                  setState(() {
-                    for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
-                      if (buttonIndex == index) {
-                        isSelected[buttonIndex] = true;
-                      } else {
-                        isSelected[buttonIndex] = false;
-                      }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ToggleButtons(
+              borderRadius: BorderRadius.circular(8.0),
+              textStyle: Theme.of(context).textTheme.subtitle1,
+              children: const <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Upcoming"),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Previous"),
+                ),
+              ],
+              onPressed: (int index) {
+                setState(() {
+                  for (int buttonIndex = 0;
+                      buttonIndex < isSelected.length;
+                      buttonIndex++) {
+                    if (buttonIndex == index) {
+                      isSelected[buttonIndex] = true;
+                    } else {
+                      isSelected[buttonIndex] = false;
                     }
-                  });
-                },
-                isSelected: isSelected,
-              ),
+                  }
+                });
+              },
+              isSelected: isSelected,
             ),
           ),
-          Expanded(
-            child: new ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: content,
-            ),
+        ),
+        Expanded(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: content,
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _buildEventButtons(EventList event) {
@@ -242,20 +240,20 @@ class _EventListPageState extends State<EventListPage> {
 
     if (event.id != null) {
       eventButtons.add(
-        new CupertinoButton(
+        CupertinoButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: new Icon(
+                child: const Icon(
                   Icons.explore,
                 ),
               ),
-              new Text(
+              Text(
                 'Explore',
-                style: TextStyle(),
+                style: const TextStyle(),
               ),
             ],
           ),
@@ -267,60 +265,62 @@ class _EventListPageState extends State<EventListPage> {
     }
 
     if (event.videoUrl != null) {
-      iconButtons.add(new Padding(
+      iconButtons.add(Padding(
           padding: const EdgeInsets.only(
               top: 4.0, bottom: 4.0, right: 8.0, left: 8.0),
-          child: new IconButton(
-            icon: Icon(Icons.live_tv),
+          child: IconButton(
+            icon: const Icon(Icons.live_tv),
             tooltip: 'Watch Event',
             onPressed: () {
-              _openBrowser(event.videoUrl);
+              _openBrowser(event.videoUrl!);
             }, //
           )));
     }
 
     eventButtons.add(Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: new Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: iconButtons,
       ),
     ));
 
-    return new Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: eventButtons);
   }
 
   Widget _buildEventListTile(EventList event) {
-    var formatter = new DateFormat.yMd();
-    var location = "";
+    var formatter = DateFormat.yMd();
+    String? location = "";
 
-    if (event.location != null){
+    if (event.location != null) {
       location = event.location;
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(8),
-      child: new ListTile(
+      child: ListTile(
         onTap: () => _navigateToEventDetails(event: null, eventId: event.id),
-        leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(event.featureImage),
+        leading: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(event.featureImage!),
         ),
-        title: new Text(event.name,
-            style:
-                Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15.0)),
-        subtitle: new Text(location),
-        trailing: new Text(formatter.format(event.net),
+        title: Text(event.name!,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(fontSize: 15.0)),
+        subtitle: Text(location!),
+        trailing: Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   _openBrowser(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -336,12 +336,11 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   void _navigateToEventDetails(
-      {EventList event, Object avatarTag, int eventId}) {
-    Ads.hideBannerAd();
+      {EventList? event, Object? avatarTag, int? eventId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new EventDetailPage(
+          return EventDetailPage(
             widget._configuration,
             eventList: event,
             eventId: eventId,

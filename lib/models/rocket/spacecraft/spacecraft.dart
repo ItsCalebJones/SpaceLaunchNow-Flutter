@@ -1,10 +1,8 @@
-
-
 class Spacecraft {
-  final String name;
-  final String description;
-  final String status;
-  final String image;
+  final String? name;
+  final String? description;
+  final String? status;
+  final String? image;
 
   Spacecraft({this.name, this.description, this.status, this.image});
 

@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
-import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
-
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_event_page.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_vehicle_page.dart';
-import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_list_page.dart';
 
 class StarshipDashboardPage extends StatefulWidget {
-  StarshipDashboardPage(this._configuration, this.index);
+  const StarshipDashboardPage(this._configuration, this.index);
 
   final AppConfiguration _configuration;
   final int index;
 
   @override
-  _StarshipDashboardPageState createState() => new _StarshipDashboardPageState();
+  _StarshipDashboardPageState createState() =>
+      _StarshipDashboardPageState();
 }
 
-class _StarshipDashboardPageState extends State<StarshipDashboardPage> with SingleTickerProviderStateMixin {
-
-  TabController _tabController;
+class _StarshipDashboardPageState extends State<StarshipDashboardPage>
+    with SingleTickerProviderStateMixin {
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
-    _tabController.animateTo(widget.index);
+    _tabController = TabController(vsync: this, length: 3);
+    _tabController!.animateTo(widget.index);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
+  }
+
+  ThemeData get barTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark) {
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
   }
 
   @override
@@ -41,11 +48,12 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: barTheme.canvasColor,
             elevation: 0.0,
             centerTitle: false,
             bottom: TabBar(
               controller: _tabController,
-              tabs: [
+              tabs: const [
                 Tab(
                   text: "Overview",
                 ),
@@ -57,18 +65,20 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage> with Sing
                 )
               ],
             ),
-            title: Text('Starship',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 30),),
+            title: Text(
+              'Starship',
+              style: Theme.of(context).textTheme.headline1!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 34,
+                  color: barTheme.focusColor),
+            ),
           ),
           body: TabBarView(
             controller: _tabController,
             children: [
-              new StarshipOverviewPage(widget._configuration),
-              new StarshipEventPage(widget._configuration),
-              new StarshipVehiclePage(widget._configuration),
+              StarshipOverviewPage(widget._configuration),
+              StarshipEventPage(widget._configuration),
+              StarshipVehiclePage(widget._configuration),
             ],
           ),
         ));

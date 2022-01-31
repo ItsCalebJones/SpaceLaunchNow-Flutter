@@ -1,27 +1,24 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/location.dart';
-import 'package:spacelaunchnow_flutter/models/mission.dart';
-import 'package:spacelaunchnow_flutter/models/pad.dart';
-import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class LaunchList {
-  final String id;
-  final String name;
-  final DateTime windowStart;
-  final DateTime windowEnd;
-  final DateTime net;
-  final Status status;
-  final String image;
-  final String location;
-  final String mission;
-  final String missionType;
-  final String landing;
-  final int landingSuccess;
-  final String launcher;
-  final String orbit;
-  final String pad;
+  final String? id;
+  final String? name;
+  final DateTime? windowStart;
+  final DateTime? windowEnd;
+  final DateTime? net;
+  final Status? status;
+  final String? image;
+  final String? location;
+  final String? mission;
+  final String? missionType;
+  final String? landing;
+  final int? landingSuccess;
+  final String? launcher;
+  final String? orbit;
+  final String? pad;
 
   const LaunchList(
       {this.id,
@@ -40,7 +37,7 @@ class LaunchList {
       this.launcher,
       this.orbit});
 
-  static List<LaunchList> allFromResponse(String response) {
+  static List<LaunchList>? allFromResponse(String response) {
     var decodedJson = json.decode(response).cast<String, dynamic>();
 
     return decodedJson['results']
@@ -51,15 +48,13 @@ class LaunchList {
   }
 
   factory LaunchList.fromJson(Map<String, dynamic> json) {
-    var image = json['image'];
-    if (image == null) {
-      image = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    }
+    var image = json['image'] ??
+        "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
 
-    return new LaunchList(
+    return LaunchList(
       id: json['id'],
       name: json['name'],
-      status: new Status.fromJson(json['status']),
+      status: Status.fromJson(json['status']),
       windowStart: DateTime.parse(json['window_start']),
       windowEnd: DateTime.parse(json['window_end']),
       net: DateTime.parse(json['net']),
@@ -72,7 +67,6 @@ class LaunchList {
       landingSuccess: json['landing_success'],
       launcher: json['launcher'],
       orbit: json['orbit'],
-
     );
   }
 }

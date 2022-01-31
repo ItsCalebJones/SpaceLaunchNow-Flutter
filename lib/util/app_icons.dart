@@ -19,8 +19,10 @@ class CustomSLN {
   CustomSLN._();
 
   static const _kFontFam = 'CustomSLN';
-  static const String _kFontPkg = null;
+  static const String? _kFontPkg = null;
 
-  static const IconData starship = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData threedee_rotation = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData starship =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData threedee_rotation =
+      IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

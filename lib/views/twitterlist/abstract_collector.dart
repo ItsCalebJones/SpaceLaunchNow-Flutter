@@ -17,8 +17,9 @@ abstract class AbstractCollector {
 class ExampleCollector extends AbstractCollector {
   ExampleCollector();
 
+  @override
   gather() async {
-    await new Future.delayed(new Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     return [1, 2, 3];
   }

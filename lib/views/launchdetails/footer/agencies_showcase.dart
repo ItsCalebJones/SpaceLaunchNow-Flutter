@@ -6,24 +6,24 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AgenciesShowcase extends StatelessWidget {
-  AgenciesShowcase(this.mLaunch);
+  const AgenciesShowcase(this.mLaunch);
 
-  final Launch mLaunch;
+  final Launch? mLaunch;
 
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
 
-    Agency lsp = mLaunch.launchServiceProvider;
-    String lspName = "Unknown";
-    String lspAdmin = "Unknown Administrator";
+    Agency? lsp = mLaunch!.launchServiceProvider;
+    String? lspName = "Unknown";
+    String? lspAdmin = "Unknown Administrator";
     String lspfounded = "Founded: Unknown";
-    String lspDescription = "";
+    String? lspDescription = "";
 
     if (lsp != null) {
-      String lspFoundedYear = lsp.foundingYear;
+      String? lspFoundedYear = lsp.foundingYear;
       if (lspFoundedYear != null) {
-        lspfounded = "Founded: " + lsp.foundingYear;
+        lspfounded = "Founded: " + lsp.foundingYear!;
       }
 
       if (lsp.name != null) {
@@ -37,81 +37,82 @@ class AgenciesShowcase extends StatelessWidget {
       }
     }
 
-    Widget _buildStats(TextTheme theme) {
+    Widget? _buildStats(TextTheme theme) {
       if (lsp != null &&
           lsp.successfulLaunches != null &&
           lsp.failedLaunches != null &&
           lsp.pendingLaunches != null) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: new Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Text(
+              Text(
                 "$lspName Stats",
-                style: textTheme.headline.copyWith(fontWeight: FontWeight.bold),
+                style:
+                    textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
               ),
-              new Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          new Text(
+                          Text(
                             "Successful:",
-                            style: textTheme.subhead
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
-                          new Padding(
+                          Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: new Text(
-                              lsp.successfulLaunches.toString() ?? "",
+                            child: Text(
+                              lsp.successfulLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subhead,
+                              style: textTheme.subtitle1,
                               overflow: TextOverflow.fade,
                             ),
                           ),
                         ],
                       ),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          new Text(
+                          Text(
                             "Pending:",
-                            style: textTheme.subhead
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
-                          new Padding(
+                          Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: new Text(
-                              lsp.pendingLaunches.toString() ?? "",
+                            child: Text(
+                              lsp.pendingLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subhead,
+                              style: textTheme.subtitle1,
                               overflow: TextOverflow.fade,
                             ),
                           ),
                         ],
                       ),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          new Text(
+                          Text(
                             "Failed:",
-                            style: textTheme.subhead
+                            style: textTheme.subtitle1!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
-                          new Padding(
+                          Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: new Text(
-                              lsp.failedLaunches.toString() ?? "",
+                            child: Text(
+                              lsp.failedLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subhead,
+                              style: textTheme.subtitle1,
                               overflow: TextOverflow.fade,
                             ),
                           ),
@@ -119,7 +120,7 @@ class AgenciesShowcase extends StatelessWidget {
                       ),
                     ],
                   ),
-                  new Column(
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: _buildLandingWidgets(textTheme))
@@ -133,143 +134,142 @@ class AgenciesShowcase extends StatelessWidget {
     }
 
     Widget _buildAvatar() {
+      String? url =
+          "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+      if (lsp!.nationURL != null && lsp.nationURL!.isNotEmpty) {
+        url = lsp.nationURL;
+      } else if (lsp.imageURL != null && lsp.imageURL!.isNotEmpty) {
+        url = lsp.imageURL;
+      }
 
-        var url = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
-        if (lsp.nationURL != null && lsp.nationURL.length > 0){
-          url = lsp.nationURL;
-        } else if (lsp.imageURL != null && lsp.imageURL.length > 0){
-          url = lsp.imageURL;
-        }
-
-        return Row(
-          children: <Widget>[
-            new Padding(
-                padding: const EdgeInsets.only(
-                    left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
-                child: new Container(
-                  width: 125.0,
-                  height: 125.0,
-                  padding: const EdgeInsets.all(2.0),
-                  // borde width
-                  decoration: new BoxDecoration(
-                    color: Theme.of(context).highlightColor, // border color
-                    shape: BoxShape.circle,
+      return Row(
+        children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 4.0, top: 8.0, bottom: 4.0),
+              child: Container(
+                width: 125.0,
+                height: 125.0,
+                padding: const EdgeInsets.all(2.0),
+                // borde width
+                decoration: BoxDecoration(
+                  color: Theme.of(context).highlightColor, // border color
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  foregroundColor: Colors.white,
+                  backgroundImage: NetworkImage(url!),
+                  radius: 50.0,
+                  backgroundColor: Colors.white,
+                ),
+              )),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    lspAdmin!,
+                    style: textTheme.subtitle1!.copyWith(),
+                    textAlign: TextAlign.center,
                   ),
-                  child: new CircleAvatar(
-                    foregroundColor: Colors.white,
-                    backgroundImage: new NetworkImage(url),
-                    radius: 50.0,
-                    backgroundColor: Colors.white,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    lspfounded,
+                    style: textTheme.subtitle1!.copyWith(),
+                    textAlign: TextAlign.center,
                   ),
-                )),
-            Flexible(
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(
-                      lspName,
-                      style: textTheme.title,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      lspAdmin,
-                      style: textTheme.subhead.copyWith(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      lspfounded,
-                      style: textTheme.subhead.copyWith(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  _buildActionButtons(),
-                ],
-              ),
-            )
-          ],
-        );
+                ),
+                _buildActionButtons(),
+              ],
+            ),
+          )
+        ],
+      );
     }
 
     Widget _buildLSP() {
       List<Widget> lspWidgets = [];
       if (lsp != null) {
       } else {
-        lspWidgets.add(new Text(
+        lspWidgets.add(Text(
           "Unknown",
-          style: textTheme.subhead.copyWith(),
+          style: textTheme.subtitle1!.copyWith(),
           textAlign: TextAlign.left,
         ));
       }
 
-      return new Column(
+      return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
-            child: new Text(
+            child: Text(
               "Launch Agency",
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline
+                  .headline4!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
-          _buildAvatar(),
           Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              lspName!,
+              style: textTheme.headline6,
+            ),
           ),
-          new Padding(
+          _buildAvatar(),
+          const Padding(
+            padding: EdgeInsets.all(4.0),
+          ),
+          Padding(
             padding: const EdgeInsets.only(
                 top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
-            child: new Text(
-              lspDescription,
-              style: textTheme.body1.copyWith(),
+            child: Text(
+              lspDescription!,
+              style: textTheme.bodyText1!.copyWith(),
               textAlign: TextAlign.start,
             ),
           ),
-          new Column(children: lspWidgets),
-          _buildStats(textTheme),
+          Column(children: lspWidgets),
+          _buildStats(textTheme)!,
         ],
       );
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(0.0),
-      child: new Column(
+      child: Column(
         children: <Widget>[_buildLSP()],
       ),
     );
   }
 
   List<Widget> _buildLandingWidgets(TextTheme textTheme) {
-    if (mLaunch.launchServiceProvider != null &&
-        mLaunch.launchServiceProvider.attemptedLandings > 0) {
-      List<Widget> widgets = new List<Widget>();
+    if (mLaunch!.launchServiceProvider != null &&
+        mLaunch!.launchServiceProvider!.attemptedLandings! > 0) {
+      List<Widget> widgets = <Widget>[];
       widgets.add(
-        new Row(
+        Row(
           children: <Widget>[
-            new Text(
+            Text(
               "Attempted Landing:",
-              style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                mLaunch.launchServiceProvider.attemptedLandings.toString() ??
-                    "",
+              child: Text(
+                mLaunch!.launchServiceProvider!.attemptedLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subhead,
+                style: textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -277,20 +277,19 @@ class AgenciesShowcase extends StatelessWidget {
         ),
       );
       widgets.add(
-        new Row(
+        Row(
           children: <Widget>[
-            new Text(
+            Text(
               "Successful Landing:",
-              style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                mLaunch.launchServiceProvider.successfulLandings.toString() ??
-                    "",
+              child: Text(
+                mLaunch!.launchServiceProvider!.successfulLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subhead,
+                style: textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -298,21 +297,20 @@ class AgenciesShowcase extends StatelessWidget {
         ),
       );
       widgets.add(
-        new Row(
+        Row(
           children: <Widget>[
-            new Text(
+            Text(
               "Consecutive Landing:",
-              style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                mLaunch.launchServiceProvider.consecutiveSuccessfulLandings
-                        .toString() ??
-                    "",
+              child: Text(
+                mLaunch!.launchServiceProvider!.consecutiveSuccessfulLandings
+                    .toString(),
                 maxLines: 1,
-                style: textTheme.subhead,
+                style: textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -320,19 +318,19 @@ class AgenciesShowcase extends StatelessWidget {
         ),
       );
       widgets.add(
-        new Row(
+        Row(
           children: <Widget>[
-            new Text(
+            Text(
               "Failed Landing:",
-              style: textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
-            new Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: new Text(
-                mLaunch.launchServiceProvider.failedLandings.toString() ?? "",
+              child: Text(
+                mLaunch!.launchServiceProvider!.failedLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subhead,
+                style: textTheme.subtitle1,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -342,7 +340,7 @@ class AgenciesShowcase extends StatelessWidget {
 
       return widgets;
     } else {
-      List<Widget> widgets = new List<Widget>();
+      List<Widget> widgets = <Widget>[];
       return widgets;
     }
   }
@@ -350,29 +348,29 @@ class AgenciesShowcase extends StatelessWidget {
   Widget _buildActionButtons() {
     List<Widget> materialButtons = [];
 
-    if (mLaunch.launchServiceProvider.infoURL != null) {
-      materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.desktop),
+    if (mLaunch!.launchServiceProvider!.infoURL != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          launch(mLaunch.launchServiceProvider.infoURL);
+          launch(mLaunch!.launchServiceProvider!.infoURL!);
         },
         tooltip: "Website",
       ));
     }
 
-    if (mLaunch.launchServiceProvider.wikiURL != null) {
-      materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.wikipediaW),
+    if (mLaunch!.launchServiceProvider!.wikiURL != null) {
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          launch(mLaunch.launchServiceProvider.wikiURL);
+          launch(mLaunch!.launchServiceProvider!.wikiURL!);
         },
         tooltip: "Wikipedia",
       ));
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(0.0),
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),

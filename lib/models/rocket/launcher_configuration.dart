@@ -1,29 +1,29 @@
 import 'package:spacelaunchnow_flutter/models/agency.dart';
 
 class LauncherConfiguration {
-  final int id;
-  final String name;
-  final String description;
-  final String family;
-  final String fullName;
-  final String variant;
-  final String image;
-  final Agency manufacturer;
-  final int minStage;
-  final int maxStage;
-  final num length;
-  final num diameter;
-  final int launchMass;
-  final int geoCapacity;
-  final int leoCapacity;
-  final int thrust;
-  final int totalLaunchCount;
-  final int consecutiveSuccessfulLaunches;
-  final int successfulLaunches;
-  final int failedLaunches;
-  final int pendingLaunches;
-  final String infoUrl;
-  final String wikiUrl;
+  final int? id;
+  final String? name;
+  final String? description;
+  final String? family;
+  final String? fullName;
+  final String? variant;
+  final String? image;
+  final Agency? manufacturer;
+  final int? minStage;
+  final int? maxStage;
+  final num? length;
+  final num? diameter;
+  final int? launchMass;
+  final int? geoCapacity;
+  final int? leoCapacity;
+  final int? thrust;
+  final int? totalLaunchCount;
+  final int? consecutiveSuccessfulLaunches;
+  final int? successfulLaunches;
+  final int? failedLaunches;
+  final int? pendingLaunches;
+  final String? infoUrl;
+  final String? wikiUrl;
 
   LauncherConfiguration(
       {this.name,
@@ -51,17 +51,18 @@ class LauncherConfiguration {
       this.pendingLaunches});
 
   factory LauncherConfiguration.fromJson(Map<String, dynamic> json) {
-    var image = json['image_url'];
-    if (image == null) {
-      image =
-          "";
+    var image = json['image_url'] ?? "";
+
+    Agency? _manufacturer;
+    var manufacturerJson = json['manufacturer'];
+    if (manufacturerJson != null) {
+      _manufacturer = Agency.fromJson(manufacturerJson);
     }
-    print(json);
 
     return LauncherConfiguration(
       id: json['id'],
       image: image,
-      manufacturer: new Agency.fromJson(json['manufacturer']),
+      manufacturer: _manufacturer,
       name: json['name'],
       description: json['description'],
       family: json['family'],

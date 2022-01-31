@@ -1,13 +1,18 @@
 class Location {
-  final int id;
-  final String name;
-  final String countryCode;
-  final String infoURL;
-  final String wikiURL;
-  final String mapImage;
+  final int? id;
+  final String? name;
+  final String? countryCode;
+  final String? infoURL;
+  final String? wikiURL;
+  final String? mapImage;
 
-  Location({this.id, this.name,  this.countryCode,  this.infoURL, this.wikiURL,
-  this.mapImage});
+  Location(
+      {this.id,
+      this.name,
+      this.countryCode,
+      this.infoURL,
+      this.wikiURL,
+      this.mapImage});
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(

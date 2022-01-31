@@ -3,28 +3,29 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeListPage extends StatefulWidget {
-  HomeListPage(this._configuration);
+  const HomeListPage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _HomeListPageState createState() => new _HomeListPageState();
+  _HomeListPageState createState() => _HomeListPageState();
 }
 
 class _HomeListPageState extends State<HomeListPage> {
@@ -34,38 +35,39 @@ class _HomeListPageState extends State<HomeListPage> {
   int offset = 0;
   int limit = 5;
   bool loading = false;
-  String lsps;
-  String locations;
-  bool subscribeALL;
-  bool subscribeSpaceX;
-  bool subscribeRussia;
-  bool subscribeWallops;
-  bool subscribeNZ;
-  bool subscribeJapan;
-  bool subscribeFG;
-  bool subscribeCAPE;
-  bool subscribePLES;
-  bool subscribeISRO;
-  bool subscribeKSC;
-  bool subscribeVAN;
-  bool subscribeChina;
-  bool subscribeNASA;
-  bool subscribeArianespace;
-  bool subscribeULA;
-  bool subscribeRoscosmos;
-  bool subscribeRocketLab;
-  bool subscribeBlueOrigin;
-  bool subscribeNorthrop;
-  SLNRepository _repository = new Injector().slnRepository;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String? lsps;
+  String? locations;
+  late bool subscribeALL;
+  late bool subscribeSpaceX;
+  late bool subscribeRussia;
+  late bool subscribeWallops;
+  late bool subscribeNZ;
+  late bool subscribeJapan;
+  late bool subscribeFG;
+  late bool subscribeCAPE;
+  bool? subscribePLES;
+  late bool subscribeISRO;
+  bool? subscribeKSC;
+  late bool subscribeVAN;
+  late bool subscribeChina;
+  late bool subscribeNASA;
+  late bool subscribeArianespace;
+  late bool subscribeULA;
+  late bool subscribeRoscosmos;
+  late bool subscribeRocketLab;
+  late bool subscribeBlueOrigin;
+  late bool subscribeNorthrop;
+  final SLNRepository _repository = Injector().slnRepository;
+  BannerAd? _anchoredAdaptiveAd;
+  bool _isLoaded = false;
 
   @override
   void initState() {
     super.initState();
     print("Initing state of Upcoming!");
 
-    List<Launch> launches =
-        PageStorage.of(context).readState(context, identifier: 'homeLaunches');
+    List<Launch>? launches =
+        PageStorage.of(context)!.readState(context, identifier: 'homeLaunches');
     if (launches != null) {
       _launches = launches;
     }
@@ -81,6 +83,7 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void dispose() {
     super.dispose();
+    _anchoredAdaptiveAd!.dispose();
   }
 
   @override
@@ -97,23 +100,23 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     setState(() {
-      _launches.addAll(launches.launches);
-      PageStorage.of(context)
+      _launches.addAll(launches.launches!);
+      PageStorage.of(context)!
           .writeState(context, _launches, identifier: 'homeLaunches');
     });
   }
 
-  void onLoadContactsError([bool search]) {
+  void onLoadContactsError([bool? search]) {
     print("Error occured");
     loading = false;
     if (search == true) {
       setState(() {
         _launches.clear();
       });
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        duration: new Duration(seconds: 10),
-        content: new Text('Unable to load launches.'),
-        action: new SnackBarAction(
+      Scaffold.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 10),
+        content: const Text('Unable to load launches.'),
+        action: SnackBarAction(
           label: 'Refresh',
           onPressed: () {
             // Some code to undo the change!
@@ -124,7 +127,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Color getPrimaryColor() {
+  Color? getPrimaryColor() {
     if (widget._configuration.nightMode) {
       return Colors.grey[800];
     } else {
@@ -133,33 +136,34 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
-    var formatter = new DateFormat("EEEE, MMMM d, yyyy");
-    var title = "";
+    var formatter = DateFormat("EEEE, MMMM d, yyyy");
+    String? title = "";
 
     if (launch.launchServiceProvider != null &&
-        launch.rocket.configuration.name != null) {
-      title = launch.launchServiceProvider.name +
+        launch.rocket!.configuration!.name != null) {
+      title = launch.launchServiceProvider!.name! +
           " | " +
-          launch.rocket.configuration.name;
+          launch.rocket!.configuration!.name!;
     } else {
       title = launch.name;
     }
 
-    var url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
-    if (launch.launchServiceProvider != null){
-      if (launch.launchServiceProvider.nationURL != null &&
-          launch.launchServiceProvider.nationURL.length > 0) {
-        url = launch.launchServiceProvider.nationURL;
-      } else if (launch.launchServiceProvider.imageURL != null &&
-          launch.launchServiceProvider.imageURL.length > 0) {
-        url = launch.launchServiceProvider.imageURL;
+    String? url =
+        "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+    if (launch.launchServiceProvider != null) {
+      if (launch.launchServiceProvider!.nationURL != null &&
+          launch.launchServiceProvider!.nationURL!.isNotEmpty) {
+        url = launch.launchServiceProvider!.nationURL;
+      } else if (launch.launchServiceProvider!.imageURL != null &&
+          launch.launchServiceProvider!.imageURL!.isNotEmpty) {
+        url = launch.launchServiceProvider!.imageURL;
       }
-    } else if (launch.pad.location.mapImage != null &&
-        launch.pad.location.mapImage.length > 0) {
-      url = launch.pad.location.mapImage;
+    } else if (launch.pad!.location!.mapImage != null &&
+        launch.pad!.location!.mapImage!.isNotEmpty) {
+      url = launch.pad!.location!.mapImage;
     }
 
-    return new Padding(
+    return Padding(
       padding:
           const EdgeInsets.only(top: 8.0, bottom: 4.0, left: 8.0, right: 8.0),
       child: Card(
@@ -172,58 +176,61 @@ class _HomeListPageState extends State<HomeListPage> {
 //                color: getPrimaryColor(),
                 child: Row(
                   children: <Widget>[
-                    new Padding(
+                    Padding(
                         padding: const EdgeInsets.only(
                             left: 16.0, right: 4.0, top: 8.0, bottom: 8.0),
-                        child: new Container(
+                        child: Container(
                           width: 75.0,
                           height: 75.0,
                           padding: const EdgeInsets.all(2.0),
                           // borde width
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .highlightColor, // border color
                             shape: BoxShape.circle,
                           ),
-                          child: new CircleAvatar(
+                          child: CircleAvatar(
                             foregroundColor: Colors.white,
-                            backgroundImage: new NetworkImage(url),
+                            backgroundImage: NetworkImage(url!),
                             radius: 50.0,
                             backgroundColor: Colors.white,
                           ),
                         )),
                     Flexible(
-                      child: new Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 8.0),
-                            child: new Text(
-                              title,
+                            child: Text(
+                              title!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.title.copyWith(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(launch.pad.location.name,
+                            child: Text(launch.pad!.location!.name!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.body2),
+                                style: Theme.of(context).textTheme.bodyText2),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(
-                                formatter.format(launch.net.toLocal()),
+                            child: Text(formatter.format(launch.net!.toLocal()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.body2),
+                                style: Theme.of(context).textTheme.bodyText2),
                           ),
                         ],
                       ),
@@ -231,16 +238,15 @@ class _HomeListPageState extends State<HomeListPage> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
-                  placeholder: new AssetImage('assets/placeholder.png'),
-                  image:
-                      new CachedNetworkImageProvider(_getLaunchImage(launch)),
+                  placeholder: const AssetImage('assets/placeholder.png'),
+                  image: CachedNetworkImageProvider(_getLaunchImage(launch)!),
                   fit: BoxFit.cover,
                   height: 175.0,
                   alignment: Alignment.center,
-                  fadeInDuration: new Duration(milliseconds: 75),
+                  fadeInDuration: const Duration(milliseconds: 75),
                   fadeInCurve: Curves.easeIn,
                 ),
               ),
@@ -260,12 +266,11 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {Launch launch, Object avatarTag, String launchId}) {
-    Ads.hideBannerAd();
+      {Launch? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(
+          return LaunchDetailPage(
             widget._configuration,
             launch: null,
             launchId: launchId,
@@ -276,81 +281,79 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildCountDown(Launch mLaunch) {
-    return new Countdown(mLaunch);
+    return Countdown(mLaunch);
   }
 
   Widget _buildLaunchButtons(Launch launch) {
     List<Widget> eventButtons = [];
     List<Widget> iconButtons = [];
 
-    if (launch != null) {
-      eventButtons.add(
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-          child: new CupertinoButton(
-            color: Theme.of(context).accentColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                new Icon(
-                  Icons.explore,
-                ),
-                new Text(
-                  'Explore',
-                  style: TextStyle(),
-                ),
-              ],
-            ),
-            onPressed: () {
-              _navigateToLaunchDetails(launch: launch, launchId: launch.id);
-            }, //
+    eventButtons.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 4.0),
+        child: CupertinoButton(
+          color: Theme.of(context).accentColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const <Widget>[
+              Icon(
+                Icons.explore,
+              ),
+              Text(
+                'Explore',
+                style: TextStyle(),
+              ),
+            ],
           ),
+          onPressed: () {
+            _navigateToLaunchDetails(launch: launch, launchId: launch.id);
+          }, //
         ),
-      );
-    }
+      ),
+    );
 
-    if (launch.vidURLs != null && launch.vidURLs.length > 0) {
-      iconButtons.add(new Padding(
+    if (launch.vidURLs != null && launch.vidURLs!.isNotEmpty) {
+      iconButtons.add(Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
-          child: new IconButton(
-            icon: Icon(Icons.live_tv),
+          child: IconButton(
+            icon: const Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openUrl(launch.vidURLs.first.url);
+              _openUrl(launch.vidURLs!.first.url!);
             }, //
           )));
     }
 
     if (launch.slug != null) {
-      iconButtons.add(new Padding(
+      iconButtons.add(Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
-          child: new IconButton(
-            icon: Icon(Icons.share),
+          child: IconButton(
+            icon: const Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
-              share("https://spacelaunchnow.me/launch/" + launch.slug);
+              Share.share("https://spacelaunchnow.me/launch/" + launch.slug!);
             }, //
           )));
     }
 
     eventButtons.add(Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: new Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: iconButtons,
       ),
     ));
 
-    return new Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: eventButtons);
   }
 
   _openUrl(String url) async {
-    Uri _url = Uri.tryParse(url);
+    Uri? _url = Uri.tryParse(url);
     if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
@@ -365,20 +368,32 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
+  ThemeData get barTheme {
+    var qdarkMode = MediaQuery.of(context).platformBrightness;
+    if (qdarkMode == Brightness.dark) {
+      return kIOSThemeDarkBar;
+    } else {
+      return kIOSThemeBar;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     print("Upcoming build!");
 
-    Widget view = new Scaffold(
-        body: new CustomScrollView(slivers: <Widget>[
-      new SliverAppBar(
-        elevation: 0.0,
-        expandedHeight: 50,
+    Widget view = Scaffold(
+      body: _buildBody(),
+      appBar: AppBar(
+        backgroundColor: barTheme.canvasColor,
         centerTitle: false,
+        elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(
+              Icons.refresh,
+              color: barTheme.focusColor,
+            ),
             onPressed: () {
               setState(() {
                 _handleRefresh();
@@ -386,24 +401,17 @@ class _HomeListPageState extends State<HomeListPage> {
             },
           )
         ],
-        title: new Text(
+        title: Text(
           'Home',
-          style: Theme.of(context)
-              .textTheme
-              .headline
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 34),
+          textAlign: TextAlign.left,
+          style: Theme.of(context).textTheme.headline1!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 34,
+              color: barTheme.focusColor),
         ),
       ),
-      _buildBody()
-    ]));
+    );
     return view;
-  }
-
-  bool isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return double.parse(s, (e) => null) != null;
   }
 
   void lockedLoadNext() {
@@ -412,7 +420,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Future<Null> loadNext() async {
+  Future<void> loadNext() async {
     loading = true;
     print("Checking Filters!");
     await checkFilters();
@@ -432,7 +440,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Future<Null> _handleRefresh() async {
+  Future<void> _handleRefresh() async {
     setState(() {});
     _launches.clear();
     totalCount = 0;
@@ -454,58 +462,58 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   String _buildLSPFilter() {
-    var lsp_ids = List<int>();
+    var lspIds = <int>[];
     if (subscribeNASA) {
-      lsp_ids.add(44);
+      lspIds.add(44);
     }
 
     if (subscribeArianespace) {
-      lsp_ids.add(115);
+      lspIds.add(115);
     }
 
     if (subscribeSpaceX) {
-      lsp_ids.add(121);
+      lspIds.add(121);
     }
 
     if (subscribeULA) {
-      lsp_ids.add(124);
+      lspIds.add(124);
     }
 
     if (subscribeRoscosmos) {
-      lsp_ids.add(111);
-      lsp_ids.add(163);
-      lsp_ids.add(63);
+      lspIds.add(111);
+      lspIds.add(163);
+      lspIds.add(63);
     }
 
     if (subscribeISRO) {
-      lsp_ids.add(31);
+      lspIds.add(31);
     }
 
     if (subscribeBlueOrigin) {
-      lsp_ids.add(141);
+      lspIds.add(141);
     }
 
     if (subscribeRocketLab) {
-      lsp_ids.add(147);
+      lspIds.add(147);
     }
 
     if (subscribeNorthrop) {
-      lsp_ids.add(257);
+      lspIds.add(257);
     }
-    String lsp_string_list = "";
+    String lspStringList = "";
     var index = 0;
-    for (var id in lsp_ids) {
-      lsp_string_list = lsp_string_list + id.toString();
+    for (var id in lspIds) {
+      lspStringList = lspStringList + id.toString();
       index = index + 1;
-      if (index != lsp_ids.length) {
-        lsp_string_list = lsp_string_list + ",";
+      if (index != lspIds.length) {
+        lspStringList = lspStringList + ",";
       }
     }
-    return lsp_string_list;
+    return lspStringList;
   }
 
   String _buildLocationFilter() {
-    var locationIds = List<int>();
+    var locationIds = <int>[];
     if (subscribeChina) {
       locationIds.add(17);
       locationIds.add(19);
@@ -593,24 +601,24 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  String _getLaunchImage(Launch launch) {
+  String? _getLaunchImage(Launch launch) {
     if (launch.image != null) {
       return launch.image;
     } else if (launch.infographic != null) {
       return launch.infographic;
-    } else if (launch.rocket.configuration.image != null &&
-        launch.rocket.configuration.image.length > 0) {
-      return launch.rocket.configuration.image;
-    } else if (launch.launchServiceProvider.imageURL != null &&
-        launch.launchServiceProvider.imageURL.length > 0) {
-      return launch.launchServiceProvider.imageURL;
-    } else if (launch.launchServiceProvider.nationURL != null &&
-        launch.launchServiceProvider.nationURL.length > 0) {
-      return launch.launchServiceProvider.nationURL;
+    } else if (launch.rocket!.configuration!.image != null &&
+        launch.rocket!.configuration!.image!.isNotEmpty) {
+      return launch.rocket!.configuration!.image;
+    } else if (launch.launchServiceProvider!.imageURL != null &&
+        launch.launchServiceProvider!.imageURL!.isNotEmpty) {
+      return launch.launchServiceProvider!.imageURL;
+    } else if (launch.launchServiceProvider!.nationURL != null &&
+        launch.launchServiceProvider!.nationURL!.isNotEmpty) {
+      return launch.launchServiceProvider!.nationURL;
     } else if (launch.pad != null &&
-        launch.pad.mapImage != null &&
-        launch.pad.mapImage.length > 0) {
-      return launch.pad.mapImage;
+        launch.pad!.mapImage != null &&
+        launch.pad!.mapImage!.isNotEmpty) {
+      return launch.pad!.mapImage;
     } else {
       return "";
     }
@@ -621,14 +629,14 @@ class _HomeListPageState extends State<HomeListPage> {
       return Padding(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission.name,
+        child: Text(launch.mission!.name!,
             style: Theme.of(context)
                 .textTheme
-                .title
+                .headline5!
                 .copyWith(fontWeight: FontWeight.bold)),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 
@@ -637,35 +645,124 @@ class _HomeListPageState extends State<HomeListPage> {
       return Container(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission.description,
+        child: Text(launch.mission!.description!,
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.body1,
+            style: Theme.of(context).textTheme.bodyText2,
             textAlign: TextAlign.left),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAd();
+  }
+
+  Future<void> _loadAd() async {
+    late bool _showAds;
+    await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
+        {_showAds = prefs.getBool("showAds") ?? true});
+
+    if (!_showAds) {
+      return;
+    }
+
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    _anchoredAdaptiveAd = BannerAd(
+      adUnitId: Platform.isAndroid
+          ? BannerAd.testAdUnitId
+          : "ca-app-pub-9824528399164059/8172962746",
+      size: size,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$ad loaded: ${ad.responseInfo}');
+          setState(() {
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _anchoredAdaptiveAd = ad as BannerAd;
+            _isLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('Anchored adaptive banner failedToLoad: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    return _anchoredAdaptiveAd!.load();
+  }
+
   Widget _buildBody() {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     if (_launches.isEmpty || loading) {
-      content.add(new SizedBox(height: 200));
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: CircularProgressIndicator(),
       ));
     } else if (_launches.isEmpty) {
-      content.add(new SizedBox(height: 200));
-      content.add(Center(
-        child: new Text("No Launches Loaded"),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: Text("No Launches Loaded"),
       ));
     } else {
-      for (var item in _launches) {
-        content.add(_buildLaunchTile(context, item));
-      }
-      content.add(new SizedBox(height: 50));
+      _launches.asMap().forEach(
+          (index, item) => {content.addAll(_map_launch_to_tile(index, item))});
+
+      // content.add(const SizedBox(height: 400));
     }
-    return new SliverList(delegate: new SliverChildListDelegate(content));
+    return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          ListView.separated(
+            padding: const EdgeInsets.fromLTRB(2, 2, 2, 64),
+            itemCount: _launches.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildLaunchTile(context, _launches[index]);
+            },
+            separatorBuilder: (context, index) {
+              return Container(height: 5);
+            },
+          ),
+          if (_anchoredAdaptiveAd != null && _isLoaded)
+            SizedBox(
+                width: _anchoredAdaptiveAd!.size.width.toDouble(),
+                height: _anchoredAdaptiveAd!.size.height.toDouble(),
+                child: AdWidget(ad: _anchoredAdaptiveAd!)),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: ListAdWidget(AdSize.banner),
+          // ),
+        ]);
+  }
+
+  Iterable<Widget> _map_launch_to_tile(int index, Launch item) {
+    List<Widget> content = <Widget>[];
+    index += 1;
+
+    // if (index == 2) {
+    //   content.add(_bannerAd);
+    // }
+
+    content.add(_buildLaunchTile(context, item));
+
+    // if (index != 0 && index % 3 == 0) {
+    //   content.add(_bannerAd);
+    // }
+
+    return content;
   }
 }

@@ -1,39 +1,69 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
-import 'package:spacelaunchnow_flutter/util/ads.dart';
 import 'package:spacelaunchnow_flutter/util/app_icons.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
-import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/settings/settings_page.dart';
-import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:spacelaunchnow_flutter/views/tabs/launches.dart';
+import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
-import 'views/settings/product_store.dart';
 
-void main() {
+RateMyApp _rateMyApp = RateMyApp(
+  preferencesPrefix: 'rateMyApp_',
+  minDays: 3,
+  minLaunches: 3,
+  remindDays: 5,
+  remindLaunches: 10,
+);
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(new SpaceLaunchNow());
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  MobileAds.instance.initialize();
+
+  /// Update the iOS foreground notification presentation options to allow
+  /// heads up notifications.
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: false,
+  );
+  runApp(SpaceLaunchNow());
 }
 
 class SpaceLaunchNow extends StatelessWidget {
-  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   static bool get isInDebugMode {
     bool inDebugMode = false;
@@ -43,49 +73,51 @@ class SpaceLaunchNow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
         title: 'Space Launch Now',
         debugShowCheckedModeBanner: false,
-        home: new Pages(_firebaseMessaging),
-        routes: <String, WidgetBuilder>{});
+        home: Pages(_firebaseMessaging),
+        routes: const <String, WidgetBuilder>{});
   }
 }
 
 class Pages extends StatefulWidget {
-  FirebaseMessaging _firebaseMessaging;
+  final FirebaseMessaging _firebaseMessaging;
 
   Pages(this._firebaseMessaging);
 
   @override
-  createState() => new PagesState(_firebaseMessaging);
+  createState() => PagesState(_firebaseMessaging);
 }
 
 class PagesState extends State<Pages> {
   bool showAds = true;
-  TabController controller;
+  TabController? controller;
 
   final List<String> _productLists = [
-    '2021_super_fan',
-    '2021_gse',
-    '2021_launch_director',
-    '2021_flight_controller',
-    '2021_elon'
+    '2022_super_fan',
+    '2022_gse',
+    '2022_launch_director',
+    '2022_flight_controller',
+    '2022_elon'
   ];
+
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
   bool _purchaseRestored = false;
+  final bool _purchaseRestoredAttempted = false;
 
   bool _loading = true;
 
-  GlobalKey stickyKey = new GlobalKey();
+  GlobalKey stickyKey = GlobalKey();
 
   PagesState(this._firebaseMessaging);
 
-  FirebaseMessaging _firebaseMessaging;
+  final FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
   int newsAndEventsIndex = 0;
   int starshipIndex = 0;
-  AppConfiguration _configuration = new AppConfiguration(
+  AppConfiguration _configuration = AppConfiguration(
     showAds: true,
     nightMode: false,
     allowOneHourNotifications: true,
@@ -114,16 +146,107 @@ class PagesState extends State<Pages> {
     subscribeJapan: true,
     subscribeFG: true,
   );
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
     super.initState();
 
-    Ads.init('ca-app-pub-9824528399164059/8172962746');
+    _rateMyApp.init().then((_) {
+      if (_rateMyApp.shouldOpenDialog) {
+        _rateMyApp.showRateDialog(
+          context,
+          title: 'Rate this app',
+          message:
+              'If you like this app, please take a little bit of your time to review it !\nIt really helps us and it shouldn\'t take you more than one minute.',
+          rateButton: 'RATE',
+          noButton: 'NO THANKS',
+          laterButton: 'MAYBE LATER',
+          listener: (button) {
+            switch (button) {
+              case RateMyAppDialogButton.rate:
+                print('Clicked on "Rate".');
+                break;
+              case RateMyAppDialogButton.later:
+                print('Clicked on "Later".');
+                break;
+              case RateMyAppDialogButton.no:
+                print('Clicked on "No".');
+                break;
+            }
+
+            return true;
+          },
+          ignoreNativeDialog: false,
+          dialogStyle: const DialogStyle(),
+          onDismissed: () =>
+              _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed),
+        );
+      }
+    });
+
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      if (message != null) {
+        print("Received a new message!");
+        if (message.data['launch_uuid'] != null) {
+          _navigateToLaunchDetails(message.data['launch_uuid']);
+        }
+
+        if (message.data.containsKey('notification_type')) {
+          if (message.data['notification_type'] == 'featured_news') {
+            changeTab(2);
+            newsAndEventsIndex = 0;
+            _openBrowser(message.data['item']['url']);
+          } else if (message.data['notification_type'] ==
+                  'event_notification' ||
+              message.data['notification_type'] == 'event_webcast') {
+            changeTab(2);
+            newsAndEventsIndex = 1;
+          }
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CustomDialogBox(
+                title: message.notification?.title,
+                descriptions: message.notification?.body,
+                text: "Okay",
+              );
+            });
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        print('A new onMessageOpenedApp event was published!');
+      }
+      if (message.data['launch_uuid'] != null) {
+        _navigateToLaunchDetails(message.data['launch_uuid']);
+      }
+
+      if (message.data.containsKey('notification_type')) {
+        if (message.data['notification_type'] == 'featured_news') {
+          changeTab(2);
+          newsAndEventsIndex = 0;
+          _openBrowser(message.data['item']['url']);
+        } else if (message.data['notification_type'] == 'event_notification' ||
+            message.data['notification_type'] == 'event_webcast') {
+          changeTab(2);
+          newsAndEventsIndex = 1;
+        }
+      }
+    });
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
+      bool appInitialized = prefs.getBool("appInitialized") ?? true;
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
@@ -154,254 +277,179 @@ class PagesState extends State<Pages> {
       bool subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
       bool subscribeFG = prefs.getBool("subscribeFG") ?? true;
 
-      _firebaseMessaging.unsubscribeFromTopic("flutter_production");
-      _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
-
-      if (SpaceLaunchNow.isInDebugMode) {
-        _firebaseMessaging.subscribeToTopic("flutter_debug_v2");
-        _firebaseMessaging.subscribeToTopic("custom");
+      if (!appInitialized) {
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
         _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
-      } else {
-        _firebaseMessaging.subscribeToTopic("flutter_production_v2");
         _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
-        _firebaseMessaging.subscribeToTopic("custom");
+
+        if (SpaceLaunchNow.isInDebugMode) {
+          _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
+          _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
+          _firebaseMessaging.subscribeToTopic("custom");
+        } else {
+          _firebaseMessaging.subscribeToTopic("flutter_production_v3");
+          _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
+          _firebaseMessaging.subscribeToTopic("custom");
+        }
+
+        if (allowTenMinuteNotifications) {
+          _firebaseMessaging.subscribeToTopic("tenMinutes");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+        }
+
+        if (allowOneHourNotifications) {
+          _firebaseMessaging.subscribeToTopic("oneHour");
+          _firebaseMessaging.subscribeToTopic("webcastLive");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("oneHour");
+          _firebaseMessaging.unsubscribeFromTopic("webcastLive");
+        }
+
+        if (allowTwentyFourHourNotifications) {
+          _firebaseMessaging.subscribeToTopic("twentyFourHour");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+        }
+
+        if (subscribeNewsAndEvents) {
+          _firebaseMessaging.subscribeToTopic("featured_news");
+          _firebaseMessaging.subscribeToTopic("events");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("featured_news");
+          _firebaseMessaging.unsubscribeFromTopic("events");
+        }
+
+        if (allowStatusChanged) {
+          _firebaseMessaging.subscribeToTopic("netstampChanged");
+          _firebaseMessaging.subscribeToTopic("success");
+          _firebaseMessaging.subscribeToTopic("failure");
+          _firebaseMessaging.subscribeToTopic("partial_failure");
+          _firebaseMessaging.subscribeToTopic("inFlight");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+          _firebaseMessaging.unsubscribeFromTopic("success");
+          _firebaseMessaging.unsubscribeFromTopic("failure");
+          _firebaseMessaging.unsubscribeFromTopic("partial_failure");
+          _firebaseMessaging.unsubscribeFromTopic("inFlight");
+        }
+
+        if (subscribeALL) {
+          _firebaseMessaging.subscribeToTopic("all");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("all");
+        }
+
+        if (subscribeNASA) {
+          _firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
+
+        if (subscribeArianespace) {
+          _firebaseMessaging.subscribeToTopic("arianespace");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("arianespace");
+        }
+
+        if (subscribeSpaceX) {
+          _firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("spacex");
+        }
+
+        if (subscribeBlueOrigin) {
+          _firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
+
+        if (subscribeRocketLab) {
+          _firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("rocketLab");
+        }
+
+        if (subscribeNorthrop) {
+          _firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
+
+        if (subscribeKSC) {
+          _firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ksc");
+        }
+
+        if (subscribeCAPE) {
+          _firebaseMessaging.subscribeToTopic("cape");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("cape");
+        }
+
+        if (subscribePLES) {
+          _firebaseMessaging.subscribeToTopic("ples");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ples");
+        }
+
+        if (subscribeVAN) {
+          _firebaseMessaging.subscribeToTopic("van");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("van");
+        }
+
+        if (subscribeRoscosmos) {
+          _firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+        }
+
+        if (subscribeULA) {
+          _firebaseMessaging.subscribeToTopic("ula");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("ula");
+        }
+
+        if (subscribeWallops) {
+          _firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
+
+        if (subscribeNZ) {
+          _firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("newZealand");
+        }
+
+        if (subscribeJapan) {
+          _firebaseMessaging.subscribeToTopic("japan");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("japan");
+        }
+
+        if (subscribeRussia) {
+          _firebaseMessaging.subscribeToTopic("russia");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("japan");
+        }
+
+        if (subscribeChina) {
+          _firebaseMessaging.subscribeToTopic("china");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("china");
+        }
+
+        if (subscribeFG) {
+          _firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+          _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
+        prefs.setBool("appInitialized", true);
       }
-
-      if (allowTenMinuteNotifications) {
-        _firebaseMessaging.subscribeToTopic("tenMinutes");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
-      }
-
-      if (allowOneHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("oneHour");
-        _firebaseMessaging.subscribeToTopic("webcastLive");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("oneHour");
-        _firebaseMessaging.unsubscribeFromTopic("webcastLive");
-      }
-
-      if (allowTwentyFourHourNotifications) {
-        _firebaseMessaging.subscribeToTopic("twentyFourHour");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
-      }
-
-      if (subscribeNewsAndEvents) {
-        _firebaseMessaging.subscribeToTopic("featured_news");
-        _firebaseMessaging.subscribeToTopic("events");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("featured_news");
-        _firebaseMessaging.unsubscribeFromTopic("events");
-      }
-
-      if (allowStatusChanged) {
-        _firebaseMessaging.subscribeToTopic("netstampChanged");
-        _firebaseMessaging.subscribeToTopic("success");
-        _firebaseMessaging.subscribeToTopic("failure");
-        _firebaseMessaging.subscribeToTopic("partial_failure");
-        _firebaseMessaging.subscribeToTopic("inFlight");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
-        _firebaseMessaging.unsubscribeFromTopic("success");
-        _firebaseMessaging.unsubscribeFromTopic("failure");
-        _firebaseMessaging.unsubscribeFromTopic("partial_failure");
-        _firebaseMessaging.unsubscribeFromTopic("inFlight");
-      }
-
-      if (subscribeALL) {
-        _firebaseMessaging.subscribeToTopic("all");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("all");
-      }
-
-      if (subscribeNASA) {
-        _firebaseMessaging.subscribeToTopic("nasa");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("nasa");
-      }
-
-      if (subscribeArianespace) {
-        _firebaseMessaging.subscribeToTopic("arianespace");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("arianespace");
-      }
-
-      if (subscribeSpaceX) {
-        _firebaseMessaging.subscribeToTopic("spacex");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("spacex");
-      }
-
-      if (subscribeBlueOrigin) {
-        _firebaseMessaging.subscribeToTopic("blueOrigin");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
-      }
-
-      if (subscribeRocketLab) {
-        _firebaseMessaging.subscribeToTopic("rocketLab");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("rocketLab");
-      }
-
-      if (subscribeNorthrop) {
-        _firebaseMessaging.subscribeToTopic("northrop");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("northrop");
-      }
-
-      if (subscribeKSC) {
-        _firebaseMessaging.subscribeToTopic("ksc");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ksc");
-      }
-
-      if (subscribeCAPE) {
-        _firebaseMessaging.subscribeToTopic("cape");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("cape");
-      }
-
-      if (subscribePLES) {
-        _firebaseMessaging.subscribeToTopic("ples");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ples");
-      }
-
-      if (subscribeVAN) {
-        _firebaseMessaging.subscribeToTopic("van");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("van");
-      }
-
-      if (subscribeRoscosmos) {
-        _firebaseMessaging.subscribeToTopic("roscosmos");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("roscosmos");
-      }
-
-      if (subscribeULA) {
-        _firebaseMessaging.subscribeToTopic("ula");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("ula");
-      }
-
-      if (subscribeWallops) {
-        _firebaseMessaging.subscribeToTopic("wallops");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("wallops");
-      }
-
-      if (subscribeNZ) {
-        _firebaseMessaging.subscribeToTopic("newZealand");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("newZealand");
-      }
-
-      if (subscribeJapan) {
-        _firebaseMessaging.subscribeToTopic("japan");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("japan");
-      }
-
-      if (subscribeRussia) {
-        _firebaseMessaging.subscribeToTopic("russia");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("japan");
-      }
-
-      if (subscribeChina) {
-        _firebaseMessaging.subscribeToTopic("china");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("china");
-      }
-
-      if (subscribeFG) {
-        _firebaseMessaging.subscribeToTopic("frenchGuiana");
-      } else {
-        _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
-      }
-
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-          if (message.containsKey('launch_uuid')) {
-            _showLaunchDialog(message);
-          }
-
-          if (message['data'].containsKey('notification_type')) {
-            if (message['data']['notification_type'] == 'featured_news') {
-              changeTab(2);
-              newsAndEventsIndex = 0;
-              _openBrowser(message['data']['item']['url']);
-            } else if (message['data']['notification_type'] ==
-                    'event_notification' ||
-                message['data']['notification_type'] == 'event_webcast') {
-              changeTab(2);
-              newsAndEventsIndex = 1;
-            }
-          }
-        },
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-          if (message.containsKey('launch_uuid')) {
-            _navigateToLaunchDetails(message['launch_uuid']);
-          }
-
-          if (message.containsKey('notification_type')) {
-            if (message['notification_type'] == 'featured_news') {
-              final item = json.decode(message['data']['item']);
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 0;
-              });
-              _openBrowser(item['url']);
-            } else if (message['notification_type'] == 'event_notification' ||
-                message['notification_type'] == 'event_webcast') {
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 1;
-              });
-            }
-          }
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-          if (message.containsKey('launch_uuid')) {
-            _navigateToLaunchDetails(message['launch_uuid']);
-          }
-
-          if (message.containsKey('notification_type')) {
-            if (message['notification_type'] == 'featured_news') {
-              final item = json.decode(message['item']);
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 0;
-              });
-              _openBrowser(item['url']);
-            } else if (message['notification_type'] == 'event_notification' ||
-                message['notification_type'] == 'event_webcast') {
-              setState(() {
-                changeTab(2);
-                newsAndEventsIndex = 1;
-              });
-            }
-          } else {
-            print("Didn't find anything.");
-          }
-        },
-      );
-      _firebaseMessaging.requestNotificationPermissions(
-          const IosNotificationSettings(sound: true, badge: true, alert: true));
-      _firebaseMessaging.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
-      _firebaseMessaging.getToken().then((String token) {
-        assert(token != null);
-        print("Push Messaging token: $token");
-      });
 
       configurationUpdater(_configuration.copyWith(
           showAds: showAds,
@@ -431,25 +479,97 @@ class PagesState extends State<Pages> {
           subscribeKSC: subscribeKSC,
           subscribeVAN: subscribeVAN));
     });
-    initAds();
+
+    startBackground();
+    requestiOSPermissions();
+
+    _firebaseMessaging.getToken().then((String? token) {
+      assert(token != null);
+      print("Push Messaging token: $token");
+    });
+
     asyncInitState();
+    checkAd();
+  }
+
+  void startBackground() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage?.data['launch_uuid'] != null) {
+      _navigateToLaunchDetails(initialMessage!.data['launch_uuid']);
+
+      if (initialMessage.data.containsKey('notification_type')) {
+        if (initialMessage.data['notification_type'] == 'featured_news') {
+          changeTab(2);
+          newsAndEventsIndex = 0;
+          _openBrowser(initialMessage.data['item']['url']);
+        } else if (initialMessage.data['notification_type'] ==
+                'event_notification' ||
+            initialMessage.data['notification_type'] == 'event_webcast') {
+          changeTab(2);
+          newsAndEventsIndex = 1;
+        }
+      }
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data['type'] == 'chat') {
+        _navigateToLaunchDetails(initialMessage!.data['launch_uuid']);
+
+        if (initialMessage.data.containsKey('notification_type')) {
+          if (initialMessage.data['notification_type'] == 'featured_news') {
+            changeTab(2);
+            newsAndEventsIndex = 0;
+            _openBrowser(initialMessage.data['item']['url']);
+          } else if (initialMessage.data['notification_type'] ==
+                  'event_notification' ||
+              initialMessage.data['notification_type'] == 'event_webcast') {
+            changeTab(2);
+            newsAndEventsIndex = 1;
+          }
+        }
+      }
+    });
+  }
+
+  void requestiOSPermissions() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   void asyncInitState() async {
-    await FlutterInappPurchase.instance.initConnection;
+    String? answer = await FlutterInappPurchase.instance.initConnection;
+    print(answer);
     // refresh items for android
     try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      String? msg = await (FlutterInappPurchase.instance.consumeAllItems
+          as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
       print('consumeAllItems error: $err');
     }
   }
 
-
   void showPendingUI() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   void _showAds(bool value) {
@@ -460,40 +580,39 @@ class PagesState extends State<Pages> {
 
   @override
   void dispose() async {
-    Ads.dispose();
     super.dispose();
     await FlutterInappPurchase.instance.endConnection;
   }
 
-  void hideAd() {
-    Ads.hideBannerAd();
-  }
+  void hideAd() {}
 
   Future _getProduct() async {
-    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts(_productLists);
     for (var item in items) {
-      print('${item.toString()}');
-      this._items.add(item);
+      print(item.toString());
+      _items.add(item);
     }
 
     setState(() {
-      this._items = items;
-      this._purchases = [];
+      _items = items;
+      _purchases = [];
     });
   }
 
   Future _getPurchaseHistory() async {
-    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    List<PurchasedItem> items = await (FlutterInappPurchase.instance
+        .getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
     for (var item in items) {
-      print('${item.toString()}');
-      this._purchases.add(item);
+      print(item.toString());
+      _purchases.add(item);
     }
 
     setState(() {
-      this._purchaseRestored = true;
-      this._items = [];
-      this._purchases = items;
-      this._loading = false;
+      _purchaseRestored = true;
+      _items = [];
+      _purchases = items;
+      _loading = false;
     });
   }
 
@@ -508,9 +627,8 @@ class PagesState extends State<Pages> {
   }
 
   ThemeData get barTheme {
-    bool qDarkmodeEnable;
     var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark){
+    if (qdarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -518,22 +636,22 @@ class PagesState extends State<Pages> {
   }
 
   Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
-    return new AlertDialog(
-      content: new Column(
+    return AlertDialog(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          new Text(message['launch_name']),
-          new Text(message['launch_location']),
+          Text(message['launch_name']),
+          Text(message['launch_location']),
         ],
       ),
       actions: <Widget>[
-        new FlatButton(
+        FlatButton(
           child: const Text('CLOSE'),
           onPressed: () {
             Navigator.pop(context, false);
           },
         ),
-        new FlatButton(
+        FlatButton(
           child: const Text('SHOW'),
           onPressed: () {
             Navigator.pop(context, true);
@@ -544,11 +662,11 @@ class PagesState extends State<Pages> {
   }
 
   void _showLaunchDialog(Map<String, dynamic> message) {
-    final String launchId = message['launch_uuid'];
+    final String? launchId = message['launch_uuid'];
     showDialog<bool>(
       context: context,
       builder: (_) => _buildDialog(context, message),
-    ).then((bool shouldNavigate) {
+    ).then((bool? shouldNavigate) {
       if (shouldNavigate == true) {
         _navigateToLaunchDetails(launchId);
       }
@@ -565,45 +683,38 @@ class PagesState extends State<Pages> {
   PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   Widget pageChooser() {
-    switch (this.pageIndex) {
+    switch (pageIndex) {
       case 0:
-        checkAd();
-        return new HomeListPage(_configuration);
+        return HomeListPage(_configuration);
         break;
 
       case 1:
-        checkAd();
-        return new LaunchesTabPage(_configuration);
+        return LaunchesTabPage(_configuration);
         break;
 
       case 2:
-        checkAd();
-        return new NewsAndEventsPage(_configuration, newsAndEventsIndex);
+        return NewsAndEventsPage(_configuration, newsAndEventsIndex);
         break;
 
       case 3:
-        checkAd();
-        return new StarshipDashboardPage(_configuration, starshipIndex);
+        return StarshipDashboardPage(_configuration, starshipIndex);
         break;
 
       case 4:
-        if (Ads.isBannerShowing()) {
-          Ads.hideBannerAd();
-        }
-        return new SettingsPage(_configuration, configurationUpdater);
+        return SettingsPage(_configuration, configurationUpdater);
 
       default:
-        return new Container(
-          child: new Center(
-              child: new Text('No page found by page chooser.',
-                  style: new TextStyle(fontSize: 30.0))),
+        return Container(
+          child: Center(
+              child: Text('No page found by page chooser.',
+                  style: const TextStyle(fontSize: 30.0))),
         );
     }
   }
 
   void changeTab(int index) {
     setState(() {
-      this.pageIndex = index;
+      pageIndex = index;
     });
   }
 
@@ -620,73 +731,73 @@ class PagesState extends State<Pages> {
         debugShowCheckedModeBanner: false,
         routes: <String, WidgetBuilder>{
           '/settings': (BuildContext context) =>
-              new SettingsPage(_configuration, configurationUpdater),
+              SettingsPage(_configuration, configurationUpdater),
         },
-        home: new Scaffold(
-            body: new PageStorage(
-                bucket: pageStorageBucket, child: pageChooser()),
+        home: Scaffold(
+            body: PageStorage(bucket: pageStorageBucket, child: pageChooser()),
 //            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            bottomNavigationBar: new Theme(
+            bottomNavigationBar: Theme(
                 data: barTheme,
 
                 // sets the inactive color of the `BottomNavigationBar`
-                child: new BottomNavigationBar(
+                child: BottomNavigationBar(
                   key: stickyKey,
                   type: BottomNavigationBarType.fixed,
                   currentIndex: pageIndex,
                   onTap: (int tappedIndex) {
                     //Toggle pageChooser and rebuild state with the index that was tapped in bottom navbar
                     setState(() {
-                      this.pageIndex = tappedIndex;
+                      pageIndex = tappedIndex;
                     });
                   },
-                  items: <BottomNavigationBarItem>[
-                    new BottomNavigationBarItem(
-                        icon: new Icon(FontAwesomeIcons.home),
-                        title: new Text("Home")),
-                    new BottomNavigationBarItem(
-                        title: new Text('Launches'),
-                        icon: new Icon(MaterialCommunityIcons.clipboard_text)),
-                    new BottomNavigationBarItem(
-                        title: new Text('News'),
-                        icon: new Icon(FontAwesomeIcons.newspaper)),
-                    new BottomNavigationBarItem(
-                        title: new Text('Starship'),
-                        icon: Icon(CustomSLN.starship)),
-                    new BottomNavigationBarItem(
-                        title: new Text('Settings'),
-                        icon: new Icon(MaterialCommunityIcons.settings)),
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: Icon(FontAwesomeIcons.home), label: "Home"),
+                    BottomNavigationBarItem(
+                        label: 'Launches',
+                        icon: Icon(MaterialCommunityIcons.clipboard_text)),
+                    BottomNavigationBarItem(
+                        label: 'News', icon: Icon(FontAwesomeIcons.newspaper)),
+                    BottomNavigationBarItem(
+                        label: 'Starship', icon: Icon(CustomSLN.starship)),
+                    BottomNavigationBarItem(
+                        label: 'Settings', icon: Icon(MaterialIcons.settings)),
                   ],
                 ))));
   }
 
-  void _navigateToLaunchDetails(String launchId) {
+  void _navigateToLaunchDetails(String? launchId) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(_configuration, launchId: launchId);
+          return LaunchDetailPage(_configuration, launchId: launchId);
         },
       ),
     );
   }
 
-  initAds() async {}
-
-
   void checkAd() async {
-    if(!_purchaseRestored) {
-      await _getPurchaseHistory();
-    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_purchases.length > 0) {
-      prefs.setBool("showAds", false);
+
+    bool initialRestoreAttempted =
+        prefs.getBool("initialRestoreAttempted") ?? false;
+
+    if (!_purchaseRestored && !initialRestoreAttempted) {
+      await _getPurchaseHistory();
+      prefs.setBool("initialRestoreAttempted", true);
     }
+
+    if (kReleaseMode) {
+      print("\n\n\n\nRelease mode!\n\n\n\n\n\n\n");
+      if (_purchases.isNotEmpty) {
+        prefs.setBool("showAds", false);
+      }
+    } else {
+      print("\n\n\n\nIDK mode!\n\n\n\n\n\n\n");
+    }
+
     showAds = prefs.getBool("showAds") ?? true;
-    if (showAds && !_loading) {
-      Ads.showBannerAd();
-    } else if (!showAds) {
-      Ads.hideBannerAd();
-    }
+    print("Show ads: $showAds");
   }
 
   _openBrowser(String url) async {

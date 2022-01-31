@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_renderer.dart';
 
 class TwitterFeedWidget extends StatefulWidget {
-  TwitterFeedWidget(this._configuration);
+  const TwitterFeedWidget(this._configuration);
 
   final String query = '1.1/lists/statuses.json';
   final AppConfiguration _configuration;
@@ -17,16 +17,16 @@ class TwitterFeedWidget extends StatefulWidget {
 }
 
 class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
-  List tweets;
+  List? tweets;
 
-  Future<Null> _gatherTweets() async {
+  Future<void> _gatherTweets() async {
     var collector = TwitterCollector.fromFile("config.yaml", widget.query);
 
     await collector.getConfigCredentials().then((success) {
       collector.gather().then((response) {
         setState(() {
           tweets = response;
-          PageStorage.of(context)
+          PageStorage.of(context)!
               .writeState(context, tweets, identifier: 'tweets');
         });
       }).catchError((onError) {
@@ -40,8 +40,8 @@ class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
   @override
   initState() {
     super.initState();
-    List _tweets =
-        PageStorage.of(context).readState(context, identifier: 'tweets');
+    List? _tweets =
+        PageStorage.of(context)!.readState(context, identifier: 'tweets');
     if (_tweets != null) {
       setState(() {
         tweets = _tweets;
@@ -54,13 +54,13 @@ class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
   @override
   Widget build(BuildContext context) {
     if (tweets == null) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
       return Center(
         child: RefreshIndicator(
-            child: TwitterRenderer(widget._configuration).render(tweets),
+            child: TwitterRenderer(widget._configuration).render(tweets!),
             onRefresh: () => _gatherTweets()),
       );
     }

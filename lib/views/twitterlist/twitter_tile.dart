@@ -4,7 +4,7 @@ import 'package:tweet_ui/embedded_tweet_view.dart';
 import 'package:tweet_ui/models/api/tweet.dart';
 
 class TwitterTile extends StatefulWidget {
-  TwitterTile(this.tweet, this._configuration);
+  const TwitterTile(this.tweet, this._configuration);
 
   final Map<String, dynamic> tweet;
   final AppConfiguration _configuration;
@@ -14,7 +14,6 @@ class TwitterTile extends StatefulWidget {
 }
 
 class _TwitterTileState extends State<TwitterTile> {
-
   @override
   Widget build(BuildContext context) {
     print(widget._configuration.nightMode);
@@ -22,7 +21,7 @@ class _TwitterTileState extends State<TwitterTile> {
     bool darkModeOn = brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new EmbeddedTweetView.fromTweet(Tweet.fromJson(widget.tweet),
+      child: EmbeddedTweetView.fromTweet(Tweet.fromJson(widget.tweet),
           backgroundColor: (darkModeOn) ? Colors.grey[800] : Colors.white,
           darkMode: darkModeOn),
     );
