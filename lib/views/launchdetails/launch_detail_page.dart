@@ -5,12 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
-import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-
 
 class ElapsedTime {
   final int? hundreds;
@@ -25,14 +23,14 @@ class ElapsedTime {
 }
 
 class Dependencies {
-
-  final List<ValueChanged<ElapsedTime>> timerListeners = <ValueChanged<ElapsedTime>>[];
-  final Stopwatch stopwatch = new Stopwatch();
+  final List<ValueChanged<ElapsedTime>> timerListeners =
+      <ValueChanged<ElapsedTime>>[];
+  final Stopwatch stopwatch = Stopwatch();
   final int timerMillisecondsRefreshRate = 30;
 }
 
 class LaunchDetailPage extends StatefulWidget {
-  LaunchDetailPage(this._configuration,
+  const LaunchDetailPage(this._configuration,
       {this.launch, this.launchId, this.avatarTag});
 
   final AppConfiguration _configuration;
@@ -41,20 +39,20 @@ class LaunchDetailPage extends StatefulWidget {
   final Object? avatarTag;
 
   @override
-  _LaunchDetailsPageState createState() => new _LaunchDetailsPageState();
+  _LaunchDetailsPageState createState() => _LaunchDetailsPageState();
 }
 
 class _LaunchDetailsPageState extends State<LaunchDetailPage>
     with TickerProviderStateMixin {
-  List<News> _news = [];
+  final List<News> _news = [];
   late AnimationController _controller;
   List<Launch>? _launches = [];
   Launch? launch;
   bool? backEnabled;
   Timer? timer;
   final int timerMillisecondsRefreshRate = 100;
-  final Stopwatch stopwatch = new Stopwatch();
-  SLNRepository _repository = new Injector().slnRepository;
+  final Stopwatch stopwatch = Stopwatch();
+  final SLNRepository _repository = Injector().slnRepository;
 
   @override
   void initState() {
@@ -67,8 +65,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _loadLaunch(widget.launchId);
       backEnabled = true;
     } else {
-      Launch? mLaunch =
-          PageStorage.of(context)!.readState(context, identifier: 'next_launch');
+      Launch? mLaunch = PageStorage.of(context)!
+          .readState(context, identifier: 'next_launch');
       if (mLaunch != null) {
         launch = mLaunch;
         setController();
@@ -80,7 +78,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     if (launch != null) {
       _loadNews(launch!.id);
     }
-    timer = new Timer.periodic(new Duration(milliseconds: timerMillisecondsRefreshRate), callback);
+    timer = Timer.periodic(
+        Duration(milliseconds: timerMillisecondsRefreshRate), callback);
   }
 
   void callback(Timer timer) {}
@@ -90,8 +89,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _launches = null;
       launch = null;
     });
-    http.Response response =
-        await http.get(Uri.parse('https://spacelaunchnow.me/api/ll/2.2.0/launch/' + id.toString() + '/?mode=detailed'));
+    http.Response response = await http.get(Uri.parse(
+        'https://spacelaunchnow.me/api/ll/2.2.0/launch/' +
+            id.toString() +
+            '/?mode=detailed'));
 
     setState(() {
       launch = Launch.fromResponse(response);
@@ -104,12 +105,11 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   Future<void> _loadNextLaunch() async {
     List<Launch>? _nextLaunches;
-    http.Response response =
-        await http.get(Uri.parse('https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
+    http.Response response = await http.get(Uri.parse(
+        'https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
 
     _nextLaunches = Launch.allFromResponse(response);
-    PageStorage
-        .of(context)!
+    PageStorage.of(context)!
         .writeState(context, _nextLaunches!.first, identifier: 'next_launch');
     setState(() {
       _launches = _nextLaunches;
@@ -134,8 +134,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     } else {
       colors.addAll([Colors.grey[800]!, Colors.blueGrey[700]!]);
     }
-    var linearGradient = new BoxDecoration(
-      gradient: new LinearGradient(
+    var linearGradient = BoxDecoration(
+      gradient: LinearGradient(
         begin: FractionalOffset.topCenter,
         end: FractionalOffset.bottomCenter,
         colors: colors,
@@ -143,32 +143,29 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     );
 
     if (launch == null) {
-      content = new Center(
-        child: new CircularProgressIndicator(),
+      content = Center(
+        child: CircularProgressIndicator(),
       );
     } else {
-      content = new Scaffold(body: new LayoutBuilder(
+      content = Scaffold(body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        return new SingleChildScrollView(
-          child: new ConstrainedBox(
-            constraints: new BoxConstraints(minHeight: constraints.maxHeight),
-            child: new Container(
-              child: new Column(
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Container(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new LaunchDetailHeader(
+                  LaunchDetailHeader(
                     launch,
                     loadLaunch: _loadLaunch,
                     avatarTag: widget.avatarTag,
                     backEnabled: backEnabled,
                   ),
-                  new Padding(
+                  Padding(
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                    child: new LaunchDetailBodyWidget(
-                      launch,
-                      widget._configuration,
-                      _news
-                    ),
+                    child: LaunchDetailBodyWidget(
+                        launch, widget._configuration, _news),
                   ),
                 ],
               ),
@@ -181,11 +178,11 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   void setController() {
-    var until = launch!.net!.difference(new DateTime.now());
+    var until = launch!.net!.difference(DateTime.now());
     if (until.inSeconds > 0) {
-      _controller = new AnimationController(
+      _controller = AnimationController(
         vsync: this,
-        duration: new Duration(seconds: until.inSeconds),
+        duration: Duration(seconds: until.inSeconds),
       );
       _controller.forward();
     }
@@ -193,8 +190,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   void _loadNews(String? id) async {
     List<News> response =
-        await _repository.fetchNewsByLaunch(id: id).catchError((onError) {
-    });
+        await _repository.fetchNewsByLaunch(id: id).catchError((onError) {});
     onLoadResponseComplete(response);
   }
 
@@ -203,9 +199,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _news.clear();
     }
     setState(() {
-      if (response != null) {
-        _news.addAll(response);
-      }
+      _news.addAll(response);
     });
   }
 }

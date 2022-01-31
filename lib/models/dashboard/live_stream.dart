@@ -7,15 +7,11 @@ class LiveStream {
   LiveStream({this.title, this.description, this.image, this.url});
 
   factory LiveStream.fromJson(Map<String, dynamic> json) {
-    if (json != null) {
-      return new LiveStream(
-        title: json['title'],
-        description: json['description'],
-        image: json['image'],
-        url: json['url'],
-      );
-    } else {
-      return null;
-    }
+    return LiveStream(
+      title: json['title'],
+      description: json['description'],
+      image: json['image'],
+      url: json['url'],
+    );
   }
 }

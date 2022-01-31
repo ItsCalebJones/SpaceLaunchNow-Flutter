@@ -9,18 +9,23 @@ class Program {
   final String? imageUrl;
   final List<AgencyMini>? agencies;
 
-  Program({this.id, this.name, this.description, this.infoUrl, this.wikiUrl,
-    this.imageUrl, this.agencies});
+  Program(
+      {this.id,
+      this.name,
+      this.description,
+      this.infoUrl,
+      this.wikiUrl,
+      this.imageUrl,
+      this.agencies});
 
   factory Program.fromJson(Map<String, dynamic> json) {
-
-    var _agencies;
-    if (json['agencies'] != null) {
-      _agencies = new List<AgencyMini>.from(json['agencies'].map((update) => new AgencyMini.fromJson(update)));
+    List<AgencyMini> _agencies = <AgencyMini>[];
+    var agencyJson = json['updates'];
+    if (agencyJson != null) {
+      _agencies.addAll(agencyJson.map((agency) => AgencyMini.fromJson(agency)));
     }
 
-
-    return new Program(
+    return Program(
       id: json['id'],
       name: json['name'],
       description: json['description'],

@@ -22,12 +22,24 @@ class Event {
   final Iterable<LaunchCommon>? launches;
   final Iterable<Program>? programs;
 
-  Event({this.id, this.name, this.description, this.type, this.location,
-    this.newsUrl, this.videoUrl, this.featureImage, this.date, this.launches,
-    this.net, this.updates, this.programs});
+  Event(
+      {this.id,
+      this.name,
+      this.description,
+      this.type,
+      this.location,
+      this.newsUrl,
+      this.videoUrl,
+      this.featureImage,
+      this.date,
+      this.launches,
+      this.net,
+      this.updates,
+      this.programs});
 
   static List<Event>? allFromResponse(http.Response response) {
-    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
+    var decodedJson =
+        json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()
@@ -37,28 +49,28 @@ class Event {
   }
 
   static Event fromResponse(http.Response response) {
-    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
+    var decodedJson =
+        json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
     return Event.fromJson(decodedJson);
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    print (json);
-    var _updates;
-
-    if (json['updates'] != null) {
-      _updates = new List<Update>.from(json['updates'].map((update) => new Update.fromJson(update)));
+    List<Update> _updates = <Update>[];
+    var updateJson = json['updates'];
+    if (updateJson != null) {
+      _updates.addAll(updateJson.map((update) => Update.fromJson(update)));
     }
 
-    var _programs;
-
-    if (json['program'] != null) {
-      _programs = new List<Program>.from(json['program'].map((program) => new Program.fromJson(program)));
+    List<Program> _programs = <Program>[];
+    var programJson = json['program'];
+    if (programJson != null) {
+      _programs.addAll(programJson.map((program) => Program.fromJson(program)));
     }
 
-    return new Event(
+    return Event(
         id: json['id'],
         name: json['name'],
-        type: new EventType.fromJson(json['type']),
+        type: EventType.fromJson(json['type']),
         description: json['description'],
         location: json['location'],
         newsUrl: json['news_url'],
@@ -66,10 +78,9 @@ class Event {
         featureImage: json['feature_image'],
         date: DateTime.parse(json['date']),
         net: DateTime.parse(json['date']),
-        launches: new List<LaunchCommon>.from(json['launches'].map((launch) => new LaunchCommon.fromJson(launch))),
+        launches: List<LaunchCommon>.from(
+            json['launches'].map((launch) => LaunchCommon.fromJson(launch))),
         updates: _updates,
-        programs: _programs
-    );
+        programs: _programs);
   }
 }
-

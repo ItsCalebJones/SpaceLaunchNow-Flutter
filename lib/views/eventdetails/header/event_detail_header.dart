@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 
 class EventDetailHeader extends StatelessWidget {
-
-  EventDetailHeader(
-    this.event,  {
+  const EventDetailHeader(
+    this.event, {
     required this.backEnabled,
   });
 
   final Event? event;
   final bool backEnabled;
 
-  void _handleTap() {
-  }
+  void _handleTap() {}
 
   void _handleShare() {
     var id = event!.id;
@@ -22,28 +19,27 @@ class EventDetailHeader extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context) {
-    String? avatarUrl = "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+    String? avatarUrl =
+        "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
 
-    if (avatarUrl != null) {
-      avatarUrl = event!.featureImage;
-    }
+    avatarUrl = event!.featureImage;
 
-      return new Container(
-        width: 200.0,
-        height: 200.0,
-        padding: const EdgeInsets.all(2.0), // borde width
-        decoration: new BoxDecoration(
-          color: Theme.of(context).highlightColor, // border color
-          shape: BoxShape.circle,
-        ),
-        child: new CircleAvatar(
-          foregroundColor: Colors.white,
-          backgroundImage: new NetworkImage(avatarUrl!),
-          radius: 100.0,
-          backgroundColor: Colors.white,
-        ),
-      );
-    }
+    return Container(
+      width: 200.0,
+      height: 200.0,
+      padding: const EdgeInsets.all(2.0), // borde width
+      decoration: BoxDecoration(
+        color: Theme.of(context).highlightColor, // border color
+        shape: BoxShape.circle,
+      ),
+      child: CircleAvatar(
+        foregroundColor: Colors.white,
+        backgroundImage: NetworkImage(avatarUrl!),
+        radius: 100.0,
+        backgroundColor: Colors.white,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +47,22 @@ class EventDetailHeader extends StatelessWidget {
     var textTheme = theme.textTheme;
 
     if (backEnabled) {
-      return new Stack(
+      return Stack(
         children: <Widget>[
-          new Align(
+          Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.5,
             child: _buildAvatar(context),
           ),
-          new Positioned(
+          const Positioned(
             top: 24.0,
             left: 4.0,
-            child: new BackButton(),
+            child: BackButton(),
           ),
-          new Positioned(
+          Positioned(
             top: 24.0,
             right: 4.0,
-            child: new IconButton(
+            child: IconButton(
                 icon: const Icon(Icons.share),
                 tooltip: 'Refresh',
                 onPressed: () {
@@ -76,17 +72,17 @@ class EventDetailHeader extends StatelessWidget {
         ],
       );
     } else {
-      return new Stack(
+      return Stack(
         children: <Widget>[
-          new Align(
+          Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
             child: _buildAvatar(context),
           ),
-          new Positioned(
+          Positioned(
             top: 24.0,
             right: 4.0,
-            child: new IconButton(
+            child: IconButton(
                 icon: const Icon(Icons.refresh),
                 tooltip: 'Refresh',
                 onPressed: () {

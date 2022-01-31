@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-
 /// A widget to display play/pause button.
 class CustomPlayPauseButton extends StatefulWidget {
   /// Overrides the default [YoutubePlayerController].
@@ -15,7 +14,7 @@ class CustomPlayPauseButton extends StatefulWidget {
   final Widget? bufferIndicator;
 
   /// Creates [CustomPlayPauseButton] widget.
-  CustomPlayPauseButton({
+  const CustomPlayPauseButton({
     this.controller,
     this.bufferIndicator,
   });
@@ -45,9 +44,9 @@ class _PlayPauseButtonState extends State<CustomPlayPauseButton>
     _controller = YoutubePlayerController.of(context);
     if (_controller == null) {
       assert(
-      widget.controller != null,
-      '\n\nNo controller could be found in the provided context.\n\n'
-          'Try passing the controller explicitly.',
+        widget.controller != null,
+        '\n\nNo controller could be found in the provided context.\n\n'
+        'Try passing the controller explicitly.',
       );
       _controller = widget.controller;
     }
@@ -96,5 +95,4 @@ class _PlayPauseButtonState extends State<CustomPlayPauseButton>
     if (_controller!.value.hasError) return const SizedBox();
     return const SizedBox();
   }
-
 }

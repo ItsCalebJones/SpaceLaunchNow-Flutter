@@ -5,13 +5,7 @@ class Role {
 
   Role({this.id, this.role, this.priority});
 
-
   factory Role.fromJson(Map<String, dynamic> json) {
-    print(json);
-    return Role(
-        id: json['id'],
-        role: json['role'],
-        priority: json['priority']
-    );
+    return Role(id: json['id'], role: json['role'], priority: json['priority']);
   }
 }

@@ -9,7 +9,8 @@ class TwitterRenderer {
 
   Widget render(List data) {
     return ListView(
-      children: data.map((tweet) => TwitterTile(tweet, _configuration)).toList(),
+      children:
+          data.map((tweet) => TwitterTile(tweet, _configuration)).toList(),
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/countdown_helper.dart';
-import 'package:spacelaunchnow_flutter/util/utils.dart';
 
 class ElapsedTime {
   final int? hundreds;
@@ -22,7 +21,7 @@ class ElapsedTime {
 class Dependencies {
   final List<ValueChanged<ElapsedTime>> timerListeners =
       <ValueChanged<ElapsedTime>>[];
-  final Stopwatch stopwatch = new Stopwatch();
+  final Stopwatch stopwatch = Stopwatch();
   final int timerMillisecondsRefreshRate = 1000;
 }
 
@@ -30,10 +29,11 @@ class Countdown extends StatefulWidget {
   Countdown(this.launch);
 
   final Launch? launch;
-  final Dependencies dependencies = new Dependencies();
+  final Dependencies dependencies = Dependencies();
 
+  @override
   CountdownState createState() =>
-      new CountdownState(dependencies: dependencies, launch: launch);
+      CountdownState(dependencies: dependencies, launch: launch);
 }
 
 class CountdownState extends State<Countdown> {
@@ -48,8 +48,8 @@ class CountdownState extends State<Countdown> {
 
   @override
   void initState() {
-    timer = new Timer.periodic(
-        new Duration(milliseconds: dependencies!.timerMillisecondsRefreshRate),
+    timer = Timer.periodic(
+        Duration(milliseconds: dependencies!.timerMillisecondsRefreshRate),
         callback);
     dependencies!.timerListeners.add(onTick);
     if (launch!.status!.id == 1) {
@@ -83,7 +83,7 @@ class CountdownState extends State<Countdown> {
       final int hundreds = (milliseconds! / 10).truncate();
       final int seconds = (hundreds / 100).truncate();
       final int minutes = (seconds / 60).truncate();
-      final ElapsedTime elapsedTime = new ElapsedTime(
+      final ElapsedTime elapsedTime = ElapsedTime(
         hundreds: hundreds,
         seconds: seconds,
         minutes: minutes,
@@ -96,7 +96,7 @@ class CountdownState extends State<Countdown> {
 
   ThemeData get textTheme {
     var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark){
+    if (qdarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -109,9 +109,9 @@ class CountdownState extends State<Countdown> {
     var textThemeDigits = theme.textTheme.subtitle1!.copyWith(fontSize: 46.0);
     var textThemeDivider = theme.textTheme.subtitle1!.copyWith(fontSize: 34.0);
     var textThemeDescription = theme.textTheme.caption;
-    Duration duration = new Duration(
-        seconds: launch!.net!.difference(new DateTime.now()).inSeconds);
-    PrettyDuration prettyDuration = new PrettyDuration(duration);
+    Duration duration = Duration(
+        seconds: launch!.net!.difference(DateTime.now()).inSeconds);
+    PrettyDuration prettyDuration = PrettyDuration(duration);
     String status = launch!.status!.name!;
     Color? color;
     var days = prettyDuration.days;
@@ -127,7 +127,6 @@ class CountdownState extends State<Countdown> {
       hours = "--";
       minutes = "--";
       seconds = "--";
-
     } else if (launch!.status!.id == 3) {
       color = Colors.green[800];
       days = "00";
@@ -165,18 +164,18 @@ class CountdownState extends State<Countdown> {
       minutes = "--";
       seconds = "--";
     }
-    return new Container(
+    return Container(
       padding:
-          new EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0, bottom: 0.0),
-      child: new Column(
+          const EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0, bottom: 0.0),
+      child: Column(
         children: <Widget>[
-          new Stack(
+          Stack(
             children: <Widget>[
               // Max Size
               Positioned.fill(
                 child: Align(
-                    alignment: Alignment.centerRight,
-                    child: new Divider(),
+                  alignment: Alignment.centerRight,
+                  child: Divider(),
                 ),
               ),
               Center(
@@ -184,9 +183,10 @@ class CountdownState extends State<Countdown> {
                   onTap: () {
                     // set up the button
                     Widget okButton = FlatButton(
-                      child: Text("OK"),
+                      child: const Text("OK"),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                       },
                     );
 
@@ -206,11 +206,12 @@ class CountdownState extends State<Countdown> {
                       },
                     );
                   },
-                  child: new Chip(
+                  child: Chip(
                     elevation: 5,
-                    label: new Text(
+                    label: Text(
                       status,
-                      style: theme.textTheme.headline6!.copyWith(color: Colors.white),
+                      style: theme.textTheme.headline6!
+                          .copyWith(color: Colors.white),
                     ),
                     backgroundColor: color,
                   ),
@@ -218,31 +219,31 @@ class CountdownState extends State<Countdown> {
               ),
             ],
           ),
-          new Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              new Column(children: <Widget>[
-                new Text(days!, style: textThemeDigits),
-                new Text("DAYS", style: textThemeDescription)
+              Column(children: <Widget>[
+                Text(days!, style: textThemeDigits),
+                Text("DAYS", style: textThemeDescription)
               ]),
-              new Text(":", style: textThemeDivider),
-              new Column(children: <Widget>[
-                new Text(hours!, style: textThemeDigits),
-                new Text("HOURS", style: textThemeDescription)
+              Text(":", style: textThemeDivider),
+              Column(children: <Widget>[
+                Text(hours!, style: textThemeDigits),
+                Text("HOURS", style: textThemeDescription)
               ]),
-              new Text(":", style: textThemeDivider),
-              new Column(children: <Widget>[
-                new Text(minutes!, style: textThemeDigits),
-                new Text("MINUTES", style: textThemeDescription)
+              Text(":", style: textThemeDivider),
+              Column(children: <Widget>[
+                Text(minutes!, style: textThemeDigits),
+                Text("MINUTES", style: textThemeDescription)
               ]),
-              new Text(":", style: textThemeDivider),
-              new Column(children: <Widget>[
-                new Text(seconds!, style: textThemeDigits),
-                new Text("SECONDS", style: textThemeDescription)
+              Text(":", style: textThemeDivider),
+              Column(children: <Widget>[
+                Text(seconds!, style: textThemeDigits),
+                Text("SECONDS", style: textThemeDescription)
               ]),
             ],
           ),
-          new Divider(),
+          Divider(),
         ],
       ),
     );

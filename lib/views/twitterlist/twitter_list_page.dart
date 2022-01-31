@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_feed.dart';
 
 class TwitterFeedPage extends StatefulWidget {
-  TwitterFeedPage(this._configuration);
+  const TwitterFeedPage(this._configuration);
 
   final AppConfiguration _configuration;
 
@@ -17,7 +16,7 @@ class _TwitterFeedPageState extends State<TwitterFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: new TwitterFeedWidget(widget._configuration),
+        child: TwitterFeedWidget(widget._configuration),
       ),
     );
   }

@@ -1,8 +1,6 @@
 import 'package:spacelaunchnow_flutter/models/rocket/landing.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 
-import '../launch/detailed/launch.dart';
-
 class FirstStage {
   final String? type;
   final int? turnAround;
@@ -14,36 +12,43 @@ class FirstStage {
   final String? previousFlightUUID;
 
   FirstStage(
-      {this.type, this.reused, this.flightNumber, this.launcher, this.landing,
-      this.previousFlight, this.turnAround, this.previousFlightUUID});
+      {this.type,
+      this.reused,
+      this.flightNumber,
+      this.launcher,
+      this.landing,
+      this.previousFlight,
+      this.turnAround,
+      this.previousFlightUUID});
 
   factory FirstStage.fromJson(Map<String, dynamic> json) {
-    var landing;
-    if (json['landing'] != null){
-      landing = new Landing.fromJson(json['landing']);
+    var landingJson = json['landing'];
+    Landing? _landing;
+    if (landingJson != null) {
+      _landing = Landing.fromJson(landingJson);
     }
 
-    var launcher;
-    if (json['launcher'] != null){
-      launcher = new Launcher.fromJson(json['launcher']);
+    var launcherJson = json['launcher'];
+    Launcher? _launcher;
+    if (launcherJson != null) {
+      _launcher = Launcher.fromJson(launcherJson);
     }
 
-    var launch;
-    var previousFlightUUID;
-    if (json['previous_flight'] != null){
+    String? launch;
+    String? previousFlightUUID;
+    if (json['previous_flight'] != null) {
       launch = json['previous_flight']['name'];
       previousFlightUUID = json['previous_flight']['id'];
     }
 
     return FirstStage(
-      type: json['type'],
-      reused: json['reused'],
-      flightNumber: json['launcher_flight_number'],
-      launcher: launcher,
-      landing: landing,
-      turnAround: json['turn_around_time_days'],
-      previousFlight: launch,
-      previousFlightUUID: previousFlightUUID
-    );
+        type: json['type'],
+        reused: json['reused'],
+        flightNumber: json['launcher_flight_number'],
+        launcher: _launcher,
+        landing: _landing,
+        turnAround: json['turn_around_time_days'],
+        previousFlight: launch,
+        previousFlightUUID: previousFlightUUID);
   }
 }

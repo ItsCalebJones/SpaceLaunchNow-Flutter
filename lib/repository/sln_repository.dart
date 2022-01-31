@@ -1,21 +1,24 @@
 import 'dart:async';
 
+import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
-import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 
 abstract class SLNRepository {
   Future<List<Launch>> fetch([String? lsp]);
 
-  Future<Launches> fetchUpcomingHome({String? lsps, String? locations, String? limit, String? offset});
+  Future<Launches> fetchUpcomingHome(
+      {String? lsps, String? locations, String? limit, String? offset});
 
-  Future<LaunchesList> fetchUpcoming({String? lsp, String? limit, String? offset, String? search});
+  Future<LaunchesList> fetchUpcoming(
+      {String? lsp, String? limit, String? offset, String? search});
 
-  Future<LaunchesList> fetchPrevious({String? lsp, String? limit, String? offset, String? search});
+  Future<LaunchesList> fetchPrevious(
+      {String? lsp, String? limit, String? offset, String? search});
 
   Future<List<Launch>> fetchNext([String? lsp]);
 
@@ -34,14 +37,14 @@ abstract class SLNRepository {
   Future<List<News>> fetchNewsByEvent({int? id});
 
   Future<Starship> fetchStarshipDashboard();
-
 }
 
 class FetchDataException implements Exception {
-  String _message;
+  final String _message;
 
   FetchDataException(this._message);
 
+  @override
   String toString() {
     return "Exception: $_message";
   }

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -8,10 +7,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BannerAdWidget extends StatefulWidget {
-  BannerAdWidget(this.size);
+  const BannerAdWidget(this.size);
 
   final AdSize size;
-
 
   @override
   State<StatefulWidget> createState() => BannerAdState();
@@ -20,19 +18,19 @@ class BannerAdWidget extends StatefulWidget {
 class BannerAdState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   final Completer<BannerAd> bannerCompleter = Completer<BannerAd>();
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _showAds = false;
 
   @override
   void initState() {
     super.initState();
     _prefs.then((SharedPreferences prefs) =>
-    {_showAds = prefs.getBool("showAds") ?? true});
+        {_showAds = prefs.getBool("showAds") ?? true});
     _bannerAd = BannerAd(
       adUnitId: Platform.isAndroid
           ? BannerAd.testAdUnitId
           : "ca-app-pub-9824528399164059/8172962746",
-      request: AdRequest(),
+      request: const AdRequest(),
       size: widget.size,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
@@ -42,13 +40,13 @@ class BannerAdState extends State<BannerAdWidget> {
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           ad.dispose();
           print('$BannerAd failedToLoad: $error');
-          bannerCompleter.completeError(null);
+          bannerCompleter.completeError(error);
         },
         onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
       ),
     );
-    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
+    Future<void>.delayed(const Duration(seconds: 1), () => _bannerAd?.load());
   }
 
   @override
@@ -60,31 +58,31 @@ class BannerAdState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder<BannerAd>(
-        future: bannerCompleter.future,
-        builder: (BuildContext context, AsyncSnapshot<BannerAd> snapshot) {
-          Widget? child;
+    return FutureBuilder<BannerAd>(
+      future: bannerCompleter.future,
+      builder: (BuildContext context, AsyncSnapshot<BannerAd> snapshot) {
+        Widget? child;
 
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-              child = Container();
-              break;
-            case ConnectionState.done:
-              if (snapshot.hasData) {
-                child = AdWidget(ad: _bannerAd!);
-              } else {
-                child = Text('Error loading $BannerAd');
-              }
-          }
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            child = Container();
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              child = AdWidget(ad: _bannerAd!);
+            } else {
+              child = Text('Error loading $BannerAd');
+            }
+        }
 
-          return Container(
-            width: _bannerAd!.size.width.toDouble(),
-            height: _bannerAd!.size.height.toDouble(),
-            child: child,
-          );
-        },
-      );
+        return SizedBox(
+          width: _bannerAd!.size.width.toDouble(),
+          height: _bannerAd!.size.height.toDouble(),
+          child: child,
+        );
+      },
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +9,7 @@ import 'package:flutter_inapp_purchase/modules.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'product_store.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
@@ -25,17 +22,17 @@ class SettingsPage extends StatefulWidget {
 
   @override
   NotificationFilterPageState createState() =>
-      new NotificationFilterPageState(_firebaseMessaging);
+      NotificationFilterPageState(_firebaseMessaging);
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  FirebaseMessaging _firebaseMessaging;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final FirebaseMessaging _firebaseMessaging;
 
   NotificationFilterPageState(this._firebaseMessaging);
 
-  List<String> _productLists = [
+  final List<String> _productLists = [
     "2022_super_fan",
     "2022_gse",
     "2022_flight_controller",
@@ -43,10 +40,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
     "2022_elon"
   ];
 
-  List<String> _notFoundIds = [];
+  final List<String> _notFoundIds = [];
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
-  bool _isAvailable = false;
+  final bool _isAvailable = false;
   bool _loading = true;
 
   StreamSubscription? _purchaseUpdatedSubscription;
@@ -62,44 +59,43 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   ThemeData get barTheme {
     var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark){
+    if (qdarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
     }
   }
 
-
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
     print("I AM THERE");
-    List<PurchasedItem> items =
-        await (FlutterInappPurchase.instance.getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
+    List<PurchasedItem> items = await (FlutterInappPurchase.instance
+        .getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
     for (var item in items) {
-      print('${item.toString()}');
-      this._purchases.add(item);
+      print(item.toString());
+      _purchases.add(item);
     }
 
     setState(() {
-      this._purchases = items;
+      _purchases = items;
     });
 
     if (!initial) {
-      if (_purchases.length > 0) {
+      if (_purchases.isNotEmpty) {
         sendUpdates(widget.configuration.copyWith(showAds: false));
         _prefs.then((SharedPreferences prefs) {
           return (prefs.setBool('showAds', false));
         });
-        final snackBar = new SnackBar(
-          content: new Text(
+        final snackBar = SnackBar(
+          content: Text(
               'Purchase history restored - thank you for your support!'),
-          duration: new Duration(seconds: 5),
+          duration: Duration(seconds: 5),
         );
         Scaffold.of(context).showSnackBar(snackBar);
       } else {
-        final snackBar = new SnackBar(
-          content: new Text('Purchase history restored - no purchases found.'),
-          duration: new Duration(seconds: 5),
+        final snackBar = SnackBar(
+          content: Text('Purchase history restored - no purchases found.'),
+          duration: const Duration(seconds: 5),
         );
         Scaffold.of(context).showSnackBar(snackBar);
       }
@@ -110,7 +106,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
     await FlutterInappPurchase.instance.initConnection;
     // refresh items for android
     try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAllItems as FutureOr<String?>);
+      String? msg = await (FlutterInappPurchase.instance.consumeAllItems
+          as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
       print('consumeAllItems error: $err');
@@ -136,7 +133,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         var message = purchaseError.message;
         final scaffold = Scaffold.of(context);
         scaffold.showSnackBar(SnackBar(
-          content: new Text('Error: $message'),
+          content: Text('Error: $message'),
         ));
       }
     });
@@ -153,7 +150,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     await _getPurchaseHistory(initial: true);
     await _getProduct();
     setState(() {
-      this._loading = false;
+      _loading = false;
     });
   }
 
@@ -161,15 +158,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
     List<IAPItem> items =
         await FlutterInappPurchase.instance.getProducts(_productLists);
     for (var item in items) {
-      print('${item.toString()}');
-      this._items.add(item);
+      print(item.toString());
+      _items.add(item);
     }
-    this
-        ._items
-        .sort((a, b) => double.parse(a.price!).compareTo(double.parse(b.price!)));
+    _items.sort(
+        (a, b) => double.parse(a.price!).compareTo(double.parse(b.price!)));
 
     setState(() {
-      this._items = this._items;
+      _items = _items;
     });
   }
 
@@ -177,7 +173,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     FlutterInappPurchase.instance.requestPurchase(item.productId!);
     final scaffold = Scaffold.of(context);
     scaffold.showSnackBar(SnackBar(
-      content: new Text('Sending purchase request to iTunes.'),
+      content: Text('Sending purchase request to iTunes.'),
     ));
   }
 
@@ -566,7 +562,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void sendUpdates(AppConfiguration value) {
-    if (widget.updater != null) widget.updater(value);
+ widget.updater(value);
   }
 
   void _showAds(bool value) {
@@ -577,17 +573,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: barTheme.canvasColor,
         centerTitle: false,
         elevation: 0.0,
         title: Text(
           "Settings",
-          style: Theme.of(context)
-              .textTheme
-              .headline1!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 34, color: barTheme.focusColor,),
+          style: Theme.of(context).textTheme.headline1!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 34,
+                color: barTheme.focusColor,
+              ),
         ),
       ),
       body: buildSettingsPane(context),
@@ -600,122 +597,126 @@ class NotificationFilterPageState extends State<SettingsPage> {
     final List<Widget> rows = <Widget>[
       _buildProductList(),
       _buildDebug(),
-      new ListTile(
-        title: new Text('Notification Settings', style: theme.textTheme.headline5),
-        subtitle: new Text('Select what kind of notifications to receive.'),
+      ListTile(
+        title:
+            Text('Notification Settings', style: theme.textTheme.headline5),
+        subtitle: Text('Select what kind of notifications to receive.'),
       ),
-      new MergeSemantics(
-        child: new ListTile(
+      MergeSemantics(
+        child: ListTile(
           title: const Text('Allow 24 Hour Notifications'),
           onTap: () {
             _handleTwentyFourHour(
                 !widget.configuration.allowTwentyFourHourNotifications);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.allowTwentyFourHourNotifications,
             onChanged: _handleTwentyFourHour,
           ),
         ),
       ),
-      new MergeSemantics(
-        child: new ListTile(
+      MergeSemantics(
+        child: ListTile(
           title: const Text('Allow One Hour Notifications'),
           onTap: () {
             _handleOneHour(!widget.configuration.allowOneHourNotifications);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.allowOneHourNotifications,
             onChanged: _handleOneHour,
           ),
         ),
       ),
-      new MergeSemantics(
-        child: new ListTile(
+      MergeSemantics(
+        child: ListTile(
           title: const Text('Allow Ten Minute Notifications'),
           onTap: () {
             _handleTenMinute(!widget.configuration.allowTenMinuteNotifications);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.allowTenMinuteNotifications,
             onChanged: _handleTenMinute,
           ),
         ),
       ),
-      new MergeSemantics(
-        child: new ListTile(
+      MergeSemantics(
+        child: ListTile(
           title: const Text('Allow Status Changed Notifications'),
           onTap: () {
             _handleTenMinute(!widget.configuration.allowStatusChanged);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.allowStatusChanged,
             onChanged: _handleStatusChanged,
           ),
         ),
       ),
-      new MergeSemantics(
-        child: new ListTile(
+      MergeSemantics(
+        child: ListTile(
           title: const Text('Allow News and Events Notifications'),
           onTap: () {
             _handleNews(!widget.configuration.subscribeNewsAndEvents);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.subscribeNewsAndEvents,
             onChanged: _handleNews,
           ),
         ),
       ),
     ];
-    return new ListView(
+    return ListView(
       shrinkWrap: true,
       children: <Widget>[
-        new Column(
+        Column(
           children: rows,
         ),
-        new ListTile(
-          title: new Text('Favorites Filters', style: theme.textTheme.headline5),
-          subtitle: new Text(
+        ListTile(
+          title:
+              Text('Favorites Filters', style: theme.textTheme.headline5),
+          subtitle: Text(
               'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
         buildNotificationFilters(context),
-        new Container(
+        Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[new Text('About', style: theme.textTheme.headline5)],
+            children: <Widget>[
+              Text('About', style: theme.textTheme.headline5)
+            ],
           ),
         ),
-        new Divider(),
-        new MergeSemantics(
-          child: new ListTile(
-            title: new Text('Privacy Policy'),
+        Divider(),
+        MergeSemantics(
+          child: ListTile(
+            title: Text('Privacy Policy'),
             subtitle:
-                new Text('View the Space Launch Now privacy policy here.'),
+                Text('View the Space Launch Now privacy policy here.'),
             onTap: () {
               _launchURL("https://spacelaunchnow.me/app/privacy");
             },
           ),
         ),
-        new MergeSemantics(
-          child: new ListTile(
-            title: new Text('Terms of Use'),
-            subtitle: new Text(
+        MergeSemantics(
+          child: ListTile(
+            title: const Text('Terms of Use'),
+            subtitle: Text(
                 'By using this application you agree to the Terms of Use.'),
             onTap: () {
               _launchURL("https://spacelaunchnow.me/app/tos");
             },
           ),
         ),
-        new MergeSemantics(
-          child: new ListTile(
-            title: new Text('Restore Purchases'),
-            subtitle: new Text('Click here to restore in app purchases.'),
+        MergeSemantics(
+          child: ListTile(
+            title: Text('Restore Purchases'),
+            subtitle: const Text('Click here to restore in app purchases.'),
             onTap: () async {
               _getPurchaseHistory(initial: false);
             },
           ),
         ),
-        new SizedBox(height: 50)
+        const SizedBox(height: 50)
       ],
     );
   }
@@ -730,24 +731,24 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   Card _buildProductList() {
     if (_loading) {
-      return Card(
+      return const Card(
           child: (ListTile(
               leading: CircularProgressIndicator(),
               title: Text('Loading In-App Products...'))));
     }
 
     final ListTile productHeader = ListTile(
-        title: new Text('Become a Supporter',
+        title: Text('Become a Supporter',
             style: Theme.of(context)
                 .textTheme
                 .headline3!
                 .copyWith(fontWeight: FontWeight.bold)),
-        subtitle: new Text(
+        subtitle: Text(
             'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
     List<ListTile> productList = <ListTile>[];
 
-    if (!_notFoundIds.isEmpty) {
-      productList.add(ListTile(
+    if (_notFoundIds.isNotEmpty) {
+      productList.add(const ListTile(
           title: Text('Error loading in-app-purchases.',
               style: TextStyle(fontWeight: FontWeight.bold))));
     }
@@ -755,8 +756,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     print(_items);
     productList.addAll(_items.map(
       (IAPItem product) {
-        bool isNotFound = this
-            ._purchases
+        bool isNotFound = _purchases
             .where((element) => element.productId == product.productId)
             .toList()
             .isEmpty;
@@ -769,13 +769,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
               product.description!,
             ),
             trailing: !isNotFound
-                ? Icon(Icons.check)
+                ? const Icon(Icons.check)
                 : FlatButton(
                     child: Text(product.localizedPrice!),
                     color: Colors.green[800],
                     textColor: Colors.white,
                     onPressed: () {
-                      this._requestPurchase(product);
+                      _requestPurchase(product);
                     },
                   ));
       },
@@ -784,25 +784,25 @@ class NotificationFilterPageState extends State<SettingsPage> {
     if (kReleaseMode) {
       if (_purchases.isNotEmpty) {
         print("Purchases found!");
-        purchaseWidget.add(new Row(
+        purchaseWidget.add(Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Divider(),
+            Divider(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                  decoration: new BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.green,
                     shape: BoxShape.circle,
-                    border: new Border.all(
+                    border: Border.all(
                       color: Colors.white,
                       width: 2.5,
                     ),
                   ),
-                  child: new Icon(Icons.check, color: Colors.white)),
+                  child: const Icon(Icons.check, color: Colors.white)),
             ),
-            new Text("Purchase confirmed - ads disabled!")
+            Text("Purchase confirmed - ads disabled!")
           ],
         ));
         _showAds(false);
@@ -814,7 +814,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     return Card(
         child: Column(
-            children: <Widget>[productHeader, Divider()] +
+            children: <Widget>[productHeader, const Divider()] +
                 productList +
                 purchaseWidget));
   }
@@ -822,241 +822,241 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Widget buildNotificationFilters(BuildContext context) {
     var theme = Theme.of(context);
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-      child: new Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Follow All Launches'),
               onTap: () {
                 _handleAll(!widget.configuration.subscribeALL);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeALL,
                 onChanged: _handleAll,
               ),
             ),
           ),
-          new ListTile(
-            title: new Text('Agencies', style: theme.textTheme.headline5),
-            subtitle: new Text('Select your favorite launch agencies.'),
+          ListTile(
+            title: Text('Agencies', style: theme.textTheme.headline5),
+            subtitle: const Text('Select your favorite launch agencies.'),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: new Text(
+                child: Text(
                     'NOTE: You will only receive notifications for launches matching both agency and location.'
                     ' Example - if you have Florida and SpaceX selected you will only receive notifications for SpaceX launches in Florida.',
                     style: Theme.of(context).textTheme.caption),
               ),
             ),
           ),
-          new Divider(),
-          new MergeSemantics(
-            child: new ListTile(
+          Divider(),
+          MergeSemantics(
+            child: ListTile(
               title: const Text('SpaceX'),
               onTap: () {
                 _handleSpaceX(!widget.configuration.subscribeSpaceX);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeSpaceX,
                 onChanged: _handleSpaceX,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('NASA'),
               onTap: () {
                 _handleNASA(!widget.configuration.subscribeNASA);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeNASA,
                 onChanged: _handleNASA,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('ULA'),
               onTap: () {
                 _handleULA(!widget.configuration.subscribeULA);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeULA,
                 onChanged: _handleULA,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('ROSCOSMOS'),
               onTap: () {
                 _handleRoscosmos(!widget.configuration.subscribeRoscosmos);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeRoscosmos,
                 onChanged: _handleRoscosmos,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Blue Origin'),
               onTap: () {
                 _handleBlueOrigin(!widget.configuration.subscribeBlueOrigin);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeBlueOrigin,
                 onChanged: _handleBlueOrigin,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Rocket Lab'),
               onTap: () {
                 _handleRocketLab(!widget.configuration.subscribeRocketLab);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeRocketLab,
                 onChanged: _handleRocketLab,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Northrop Grumman'),
               onTap: () {
                 _handleNorthrop(!widget.configuration.subscribeNorthrop);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeNorthrop,
                 onChanged: _handleNorthrop,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Arianespace'),
               onTap: () {
                 _handleArianespace(!widget.configuration.subscribeArianespace);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeArianespace,
                 onChanged: _handleArianespace,
               ),
             ),
           ),
-          new ListTile(
-            title: new Text('Locations', style: theme.textTheme.headline5),
-            subtitle: new Text('Select your favorite launch locations.'),
+          ListTile(
+            title: Text('Locations', style: theme.textTheme.headline5),
+            subtitle: const Text('Select your favorite launch locations.'),
           ),
-          new Divider(),
-          new MergeSemantics(
-            child: new ListTile(
+          const Divider(),
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Florida'),
               onTap: () {
                 _handleCAPE(!widget.configuration.subscribeCAPE);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeCAPE,
                 onChanged: _handleCAPE,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('Russia'),
               onTap: () {
                 _handleRussia(!widget.configuration.subscribeRussia);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeRussia,
                 onChanged: _handleRussia,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('India'),
               onTap: () {
                 _handleISRO(!widget.configuration.subscribeISRO);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeISRO,
                 onChanged: _handleISRO,
               ),
             ),
           ),
-          new MergeSemantics(
-            child: new ListTile(
+          MergeSemantics(
+            child: ListTile(
               title: const Text('China'),
               onTap: () {
                 _handleChina(!widget.configuration.subscribeChina);
               },
-              trailing: new Switch(
+              trailing: Switch(
                 value: widget.configuration.subscribeChina,
                 onChanged: _handleChina,
               ),
             ),
           ),
-          new MergeSemantics(
-              child: new ListTile(
+          MergeSemantics(
+              child: ListTile(
             title: const Text('Vandenberg'),
             onTap: () {
               _handleVAN(!widget.configuration.subscribeVAN);
             },
-            trailing: new Switch(
+            trailing: Switch(
               value: widget.configuration.subscribeVAN,
               onChanged: _handleVAN,
             ),
           )),
-          new MergeSemantics(
-              child: new ListTile(
+          MergeSemantics(
+              child: ListTile(
             title: const Text('Wallops'),
             onTap: () {
               _handleWallops(!widget.configuration.subscribeWallops);
             },
-            trailing: new Switch(
+            trailing: Switch(
               value: widget.configuration.subscribeWallops,
               onChanged: _handleWallops,
             ),
           )),
-          new MergeSemantics(
-              child: new ListTile(
+          MergeSemantics(
+              child: ListTile(
             title: const Text('New Zealand'),
             onTap: () {
               _handleNZ(!widget.configuration.subscribeNZ);
             },
-            trailing: new Switch(
+            trailing: Switch(
               value: widget.configuration.subscribeNZ,
               onChanged: _handleNZ,
             ),
           )),
-          new MergeSemantics(
-              child: new ListTile(
+          MergeSemantics(
+              child: ListTile(
             title: const Text('Japan'),
             onTap: () {
               _handleJapan(!widget.configuration.subscribeJapan);
             },
-            trailing: new Switch(
+            trailing: Switch(
               value: widget.configuration.subscribeJapan,
               onChanged: _handleJapan,
             ),
           )),
-          new MergeSemantics(
-              child: new ListTile(
+          MergeSemantics(
+              child: ListTile(
             title: const Text('French Guiana'),
             onTap: () {
               _handleFG(!widget.configuration.subscribeFG);
             },
-            trailing: new Switch(
+            trailing: Switch(
               value: widget.configuration.subscribeFG,
               onChanged: _handleFG,
             ),
@@ -1068,21 +1068,20 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   Widget _buildDebug() {
     if (!kReleaseMode) {
-      return new MergeSemantics(
-        child: new ListTile(
+      return MergeSemantics(
+        child: ListTile(
           title: const Text('DEBUG - Show Ads?'),
           onTap: () {
-            _handleDebugSupporter(
-                !widget.configuration.showAds);
+            _handleDebugSupporter(!widget.configuration.showAds);
           },
-          trailing: new Switch(
+          trailing: Switch(
             value: widget.configuration.showAds,
             onChanged: _handleDebugSupporter,
           ),
         ),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 }

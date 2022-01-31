@@ -9,15 +9,11 @@ class Notice {
   Notice({this.id, this.date, this.type, this.url});
 
   factory Notice.fromJson(Map<String, dynamic> json) {
-    if (json != null) {
-      return new Notice(
-        id: json['id'],
-        date: DateTime.parse(json['date']),
-        url: json['url'],
-        type: new NoticeType.fromJson(json['type']),
-      );
-    } else {
-      return null;
-    }
+    return Notice(
+      id: json['id'],
+      date: DateTime.parse(json['date']),
+      url: json['url'],
+      type: NoticeType.fromJson(json['type']),
+    );
   }
 }

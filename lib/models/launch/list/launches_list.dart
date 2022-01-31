@@ -8,17 +8,16 @@ class LaunchesList {
   LaunchesList({this.launches, this.nextOffset, this.count});
 
   factory LaunchesList.fromJson(Map<String, dynamic> json) {
-
     int? offset;
     if (json['next'] != null) {
       Uri offsetUri = Uri.parse(json['next']);
       offset = int.parse(offsetUri.queryParameters['offset']!);
     }
 
-    return new LaunchesList(
-        launches: new List<LaunchList>.from(json['results'].map((launch) => new LaunchList.fromJson(launch))),
+    return LaunchesList(
+        launches: List<LaunchList>.from(
+            json['results'].map((launch) => LaunchList.fromJson(launch))),
         nextOffset: offset,
-        count: json['count']
-    );
+        count: json['count']);
   }
 }

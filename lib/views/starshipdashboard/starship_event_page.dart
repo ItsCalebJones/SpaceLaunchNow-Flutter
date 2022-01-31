@@ -18,19 +18,19 @@ import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StarshipEventPage extends StatefulWidget {
-  StarshipEventPage(this._configuration);
+  const StarshipEventPage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _StarshipEventPageState createState() => new _StarshipEventPageState();
+  _StarshipEventPageState createState() => _StarshipEventPageState();
 }
 
 class _StarshipEventPageState extends State<StarshipEventPage> {
   Starship? _starship;
   bool loading = false;
   bool usingCached = false;
-  SLNRepository _repository = new Injector().slnRepository;
+  final SLNRepository _repository = Injector().slnRepository;
   List<bool> isSelected = [true, false];
 
   @override
@@ -80,7 +80,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: _buildBody(),
     );
   }
@@ -96,17 +96,16 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 //  }
 
   Widget _buildBody() {
-
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     if (_starship == null || loading) {
-      content.add(new SizedBox(height: 200));
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: CircularProgressIndicator(),
       ));
     } else if (_starship == null) {
-      content.add(new SizedBox(height: 200));
-      content.add(Center(
-        child: new Text("Unable to Load Dashboard"),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: Text("Unable to Load Dashboard"),
       ));
     } else {
       content.addAll(_buildList());
@@ -122,19 +121,21 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
             child: ToggleButtons(
               borderRadius: BorderRadius.circular(8.0),
               textStyle: Theme.of(context).textTheme.subtitle1,
-              children: <Widget>[
+              children: const <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text("Upcoming"),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text("Previous"),
                 ),
               ],
               onPressed: (int index) {
                 setState(() {
-                  for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+                  for (int buttonIndex = 0;
+                      buttonIndex < isSelected.length;
+                      buttonIndex++) {
                     if (buttonIndex == index) {
                       isSelected[buttonIndex] = true;
                     } else {
@@ -148,19 +149,17 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
           ),
         ),
         Expanded(
-          child: Stack(
-            children: <Widget>[
-                new ListView(
-                physics: AlwaysScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: content,
-              ),
-              Align(
+          child: Stack(children: <Widget>[
+            ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: content,
+            ),
+            const Align(
               alignment: Alignment.bottomCenter,
               child: ListAdWidget(AdSize.banner),
-              ),
-            ]
-          ),
+            ),
+          ]),
         ),
       ],
     );
@@ -187,8 +186,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 
   List<Widget> _buildList() {
     var dataUpcoming = [];
-    List<Widget> content = new List<Widget>();
-
+    List<Widget> content = <Widget>[];
 
     if (isSelected[0]) {
       dataUpcoming.addAll(_starship!.upcoming!.events!);
@@ -200,7 +198,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       dataUpcoming.sort((a, b) => b.net.compareTo(a.net));
     }
     print(dataUpcoming);
-    for (Object item in dataUpcoming as Iterable<Object>){
+    for (Object item in dataUpcoming) {
       content.add(_buildTile(item));
     }
     return content;
@@ -223,50 +221,53 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   }
 
   _buildTile(Object item) {
-      if (item is EventList) {
-        return _buildEventListTile(item);
-      } else if (item is LaunchList) {
-        return _buildLaunchListTile(item);
-      } else {
-        return new Container();
-      }
+    if (item is EventList) {
+      return _buildEventListTile(item);
+    } else if (item is LaunchList) {
+      return _buildLaunchListTile(item);
+    } else {
+      return Container();
     }
+  }
 
   Widget _buildLaunchListTile(LaunchList launch) {
-    var formatter = new DateFormat.yMd();
-    return new Padding(
+    var formatter = DateFormat.yMd();
+    return Padding(
       padding: const EdgeInsets.all(8),
-      child: new ListTile(
+      child: ListTile(
         onTap: () =>
             _navigateToLaunchDetails(launch: null, launchId: launch.id),
-        leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(launch.image!),
+        leading: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(launch.image!),
         ),
-        title: new Text(launch.name!,
-            style:
-                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
-        subtitle: new Text(launch.location!),
-        trailing: new Text(formatter.format(launch.net!),
+        title: Text(launch.name!,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(fontSize: 15.0)),
+        subtitle: Text(launch.location!),
+        trailing: Text(formatter.format(launch.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
 
   Widget _buildEventListTile(EventList event) {
-    var formatter = new DateFormat.yMd();
-    return new Padding(
+    var formatter = DateFormat.yMd();
+    return Padding(
       padding: const EdgeInsets.all(8),
-      child: new ListTile(
-        onTap: () =>
-            _navigateToEventDetails(event: null, eventId: event.id),
-        leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(event.featureImage!),
+      child: ListTile(
+        onTap: () => _navigateToEventDetails(event: null, eventId: event.id),
+        leading: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(event.featureImage!),
         ),
-        title: new Text(event.name!,
-            style:
-                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
-        subtitle: new Text(event.location!),
-        trailing: new Text(formatter.format(event.net!),
+        title: Text(event.name!,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(fontSize: 15.0)),
+        subtitle: Text(event.location!),
+        trailing: Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
@@ -275,9 +276,9 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   void _navigateToLaunchDetails(
       {LaunchList? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(
+          return LaunchDetailPage(
             widget._configuration,
             launch: null,
             avatarTag: avatarTag,
@@ -291,11 +292,13 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   void _navigateToEventDetails(
       {EventList? event, Object? avatarTag, int? eventId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new EventDetailPage(widget._configuration,
+          return EventDetailPage(
+            widget._configuration,
             eventList: event,
-            eventId: eventId,);
+            eventId: eventId,
+          );
         },
       ),
     );

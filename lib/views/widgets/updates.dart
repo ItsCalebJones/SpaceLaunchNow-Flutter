@@ -5,17 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:spacelaunchnow_flutter/models/update.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Widget buildUpdates(
     List<Update> updates, BuildContext context, String rootSlug) {
-  var formatter = new DateFormat.MMMEd().add_jm();
+  var formatter = DateFormat.MMMEd().add_jm();
   if (updates.isNotEmpty) {
-    List<Widget> widgets = new List<Widget>();
+    List<Widget> widgets = <Widget>[];
     widgets.add(
-      new Text(
+      Text(
         "Status Updates",
         textAlign: TextAlign.left,
         style: Theme.of(context)
@@ -31,32 +30,29 @@ Widget buildUpdates(
       _updates = updates;
     }
     for (Update update in _updates) {
-      var comment = update.comment;
+      var comment = update.comment ?? "N/A";
       if (update.infoUrl != null) {
         comment += "\n\nSource:\n" + update.infoUrl!;
       }
       widgets.add(Padding(
           padding: const EdgeInsets.all(4.0),
-          child: Container(
-              child: new ListTile(
+          child: ListTile(
             onTap: () => _openUrl(update.infoUrl!),
-            leading: new CircleAvatar(
-              backgroundImage:
-                  new CachedNetworkImageProvider(update.profileImage!),
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(update.profileImage!),
             ),
-            title: new Text(
+            title: Text(
                 update.createdBy! + " - " + formatter.format(update.createdOn!),
                 style: Theme.of(context).textTheme.subtitle2),
-            subtitle:
-                new Text(comment!, style: Theme.of(context).textTheme.caption),
-          ))));
+            subtitle: Text(comment, style: Theme.of(context).textTheme.caption),
+          )));
     }
     if (updates.length >= 6) {
       widgets.add(
         Center(
-          child: new CupertinoButton(
-              color: Theme.of(context).accentColor,
-              child: Text("Read More"),
+          child: CupertinoButton(
+              color: Theme.of(context).colorScheme.secondary,
+              child: const Text("Read More"),
               onPressed: () {
                 _openUrl(rootSlug);
               }),
@@ -65,14 +61,14 @@ Widget buildUpdates(
     }
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: widgets,
       ),
     );
   } else {
-    return new SizedBox(height: 0);
+    return const SizedBox(height: 0);
   }
 }
 

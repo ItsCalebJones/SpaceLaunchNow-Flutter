@@ -10,12 +10,20 @@ class NewsResponse {
   final int? pagingCounter;
   final int? nextPage;
 
-  NewsResponse({this.news, this.limit, this.totalDocs, this.hasNextPage, this.page, this.totalPages, this.nextPage,
-    this.pagingCounter});
+  NewsResponse(
+      {this.news,
+      this.limit,
+      this.totalDocs,
+      this.hasNextPage,
+      this.page,
+      this.totalPages,
+      this.nextPage,
+      this.pagingCounter});
 
   factory NewsResponse.fromJson(Map<String, dynamic> json) {
-    return new NewsResponse(
-      news: new List<News>.from(json['docs'].map((news) => new News.fromJson(news))),
+    return NewsResponse(
+      news: List<News>.from(
+          json['docs'].map((news) => News.fromJson(news))),
       limit: json['limit'],
       totalDocs: json['totalDocs'],
       hasNextPage: json['hasNextPage'],

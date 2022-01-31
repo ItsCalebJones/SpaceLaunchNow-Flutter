@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +10,19 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class StarshipVehiclePage extends StatefulWidget {
-  StarshipVehiclePage(this._configuration);
+  const StarshipVehiclePage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _StarshipVehiclePageState createState() => new _StarshipVehiclePageState();
+  _StarshipVehiclePageState createState() => _StarshipVehiclePageState();
 }
 
 class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   Starship? _starship;
   bool loading = false;
   bool usingCached = false;
-  SLNRepository _repository = new Injector().slnRepository;
+  final SLNRepository _repository = Injector().slnRepository;
   List<bool> isSelected = [true, false];
 
   @override
@@ -74,28 +72,28 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: _buildBody(),
     );
   }
 
-
   Widget _buildBody() {
-
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     if (_starship == null || loading) {
-      content.add(new SizedBox(height: 200));
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
+      content.add(SizedBox(height: 200));
+      content.add(Center(
+        child: CircularProgressIndicator(),
       ));
     } else if (_starship == null) {
-      content.add(new SizedBox(height: 200));
+      content.add(const SizedBox(height: 200));
       content.add(Center(
-        child: new Text("Unable to Load Dashboard"),
+        child: const Text("Unable to Load Dashboard"),
       ));
     } else {
       content.addAll(_buildList());
-      content.add(new SizedBox(height: 50,));
+      content.add(const SizedBox(
+        height: 50,
+      ));
     }
 
     return Column(
@@ -103,8 +101,8 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
-          child: new ListView(
-            physics: AlwaysScrollableScrollPhysics(),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             children: content,
           ),
@@ -133,37 +131,40 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   }
 
   List<Widget> _buildList() {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
 
-    for (Object item in _starship!.launchers!){
+    for (Object item in _starship!.launchers!) {
       content.add(_buildVehicleTile(item as Launcher));
     }
     return content;
   }
 
-
   Widget _buildVehicleTile(Launcher item) {
-    var formatter = new DateFormat.yMd();
-    String? img_url;
-    if (item.image != null){
-      img_url = item.image;
+    var formatter = DateFormat.yMd();
+    String? imgUrl;
+    if (item.image != null) {
+      imgUrl = item.image;
     } else {
-      img_url = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+      imgUrl =
+          "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     }
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.all(8),
-      child: new ListTile(
-        leading: new CircleAvatar(
-          backgroundImage: new CachedNetworkImageProvider(img_url!),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(imgUrl!),
         ),
-        title: new Text(item.launcherConfiguration!.name! + " | " + item.serialNumber!,
-            style:
-                Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15.0)),
-        subtitle: new Text(item.details!),
-        trailing: new Text('${item.status![0].toUpperCase()}${item.status!.substring(1)}',
+        title: Text(
+            item.launcherConfiguration!.name! + " | " + item.serialNumber!,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(fontSize: 15.0)),
+        subtitle: Text(item.details!),
+        trailing: Text(
+            '${item.status![0].toUpperCase()}${item.status!.substring(1)}',
             style: Theme.of(context).textTheme.caption),
       ),
     );
   }
-
 }

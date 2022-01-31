@@ -1,14 +1,10 @@
-import 'package:flutter/foundation.dart';
-
 class AppConfiguration {
   AppConfiguration({
     required this.allowOneHourNotifications,
     required this.allowTwentyFourHourNotifications,
     required this.allowTenMinuteNotifications,
     required this.allowStatusChanged,
-
     required this.subscribeNewsAndEvents,
-
     required this.subscribeSpaceX,
     required this.subscribeNASA,
     required this.subscribeArianespace,
@@ -22,49 +18,16 @@ class AppConfiguration {
     required this.subscribeISRO,
     required this.subscribeKSC,
     required this.subscribeVAN,
-
     required this.subscribeRussia,
     required this.subscribeChina,
     required this.subscribeWallops,
     required this.subscribeNZ,
     required this.subscribeJapan,
     required this.subscribeFG,
-
     required this.subscribeALL,
     required this.nightMode,
     required this.showAds,
-  })
-      : assert(showAds != null),
-        assert(nightMode != null),
-        assert(allowOneHourNotifications != null),
-        assert(allowTwentyFourHourNotifications != null),
-        assert(allowTenMinuteNotifications != null),
-        assert(allowStatusChanged != null),
-
-        assert(subscribeNewsAndEvents != null),
-
-        assert(subscribeSpaceX != null),
-        assert(subscribeNASA != null),
-        assert(subscribeArianespace != null),
-        assert(subscribeULA != null),
-        assert(subscribeRoscosmos != null),
-        assert(subscribeBlueOrigin != null),
-        assert(subscribeRocketLab != null),
-        assert(subscribeNorthrop != null),
-        assert(subscribeCAPE != null),
-        assert(subscribePLES != null),
-        assert(subscribeISRO != null),
-        assert(subscribeKSC != null),
-        assert(subscribeVAN != null),
-
-        assert(subscribeRussia != null),
-        assert(subscribeChina != null),
-        assert(subscribeWallops != null),
-        assert(subscribeNZ != null),
-        assert(subscribeJapan != null),
-        assert(subscribeFG != null),
-
-        assert(subscribeALL != null);
+  })  : assert(nightMode != null);
 
   bool showAds;
   bool nightMode;
@@ -118,27 +81,26 @@ class AppConfiguration {
     bool? subscribeISRO,
     bool? subscribeKSC,
     bool? subscribeVAN,
-
     bool? subscribeRussia,
     bool? subscribeChina,
     bool? subscribeWallops,
     bool? subscribeNZ,
     bool? subscribeJapan,
     bool? subscribeFG,
-
     bool? subscribeALL,
   }) {
-    return new AppConfiguration(
+    return AppConfiguration(
       showAds: showAds ?? this.showAds,
       nightMode: nightMode ?? this.nightMode,
-      allowOneHourNotifications: allowOneHourNotifications ??
-          this.allowOneHourNotifications,
+      allowOneHourNotifications:
+          allowOneHourNotifications ?? this.allowOneHourNotifications,
       allowTwentyFourHourNotifications: allowTwentyFourHourNotifications ??
           this.allowTwentyFourHourNotifications,
-      allowTenMinuteNotifications: allowTenMinuteNotifications ??
-          this.allowTenMinuteNotifications,
+      allowTenMinuteNotifications:
+          allowTenMinuteNotifications ?? this.allowTenMinuteNotifications,
       allowStatusChanged: allowStatusChanged ?? this.allowStatusChanged,
-      subscribeNewsAndEvents: subscribeNewsAndEvents ?? this.subscribeNewsAndEvents,
+      subscribeNewsAndEvents:
+          subscribeNewsAndEvents ?? this.subscribeNewsAndEvents,
       subscribeSpaceX: subscribeSpaceX ?? this.subscribeSpaceX,
       subscribeNASA: subscribeNASA ?? this.subscribeNASA,
       subscribeArianespace: subscribeArianespace ?? this.subscribeArianespace,
@@ -152,14 +114,12 @@ class AppConfiguration {
       subscribeISRO: subscribeISRO ?? this.subscribeISRO,
       subscribeKSC: subscribeKSC ?? this.subscribeKSC,
       subscribeVAN: subscribeVAN ?? this.subscribeVAN,
-
       subscribeRussia: subscribeRussia ?? this.subscribeRussia,
       subscribeChina: subscribeChina ?? this.subscribeChina,
       subscribeWallops: subscribeWallops ?? this.subscribeWallops,
       subscribeNZ: subscribeNZ ?? this.subscribeNZ,
       subscribeJapan: subscribeJapan ?? this.subscribeJapan,
       subscribeFG: subscribeFG ?? this.subscribeFG,
-
       subscribeALL: subscribeALL ?? this.subscribeALL,
     );
   }

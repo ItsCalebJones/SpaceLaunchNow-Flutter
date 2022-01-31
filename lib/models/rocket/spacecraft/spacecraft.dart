@@ -1,5 +1,3 @@
-
-
 class Spacecraft {
   final String? name;
   final String? description;

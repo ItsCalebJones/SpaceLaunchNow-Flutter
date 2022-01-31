@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:spacelaunchnow_flutter/models/location.dart';
+import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
@@ -9,7 +9,6 @@ import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 
 import '../../agency.dart';
-import 'package:http/http.dart' as http;
 
 class Launch {
   final String? id;
@@ -48,7 +47,8 @@ class Launch {
       this.slug});
 
   static List<Launch>? allFromResponse(http.Response response) {
-    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
+    var decodedJson =
+        json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
 
     return decodedJson['results']
         .cast<Map<String, dynamic>>()
@@ -58,34 +58,39 @@ class Launch {
   }
 
   static Launch fromResponse(http.Response response) {
-    var decodedJson = json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
+    var decodedJson =
+        json.decode(utf8.decode(response.bodyBytes)).cast<String, dynamic>();
     return Launch.fromJson(decodedJson);
   }
 
   factory Launch.fromJson(Map<String, dynamic> json) {
-    print(json);
-    var mission;
-    if (json['mission'] != null) {
-      mission = new Mission.fromJson(json['mission']);
+    var missionJson = json['mission'];
+    Mission? _mission;
+    if (missionJson != null) {
+      _mission = Mission.fromJson(missionJson);
     }
 
-    return new Launch(
+    return Launch(
       id: json['id'],
       name: json['name'],
       infographic: json['infographic'],
       image: json['image'],
       slug: json['slug'],
-      status: new Status.fromJson(json['status']),
+      status: Status.fromJson(json['status']),
       windowStart: DateTime.parse(json['window_start']),
       windowEnd: DateTime.parse(json['window_end']),
       net: DateTime.parse(json['net']),
       probability: json['probability'],
-      launchServiceProvider: new Agency.fromJson(json['launch_service_provider']),
-      rocket: new Rocket.fromJson(json['rocket']),
-      pad: new Pad.fromJson(json['pad']),
-      mission: mission,
-      vidURLs: new List<VidURL>.from(json['vidURLs'].map((vidURL) => new VidURL.fromJson(vidURL))),
-      updates: new List<Update>.from(json['updates'].map((update) => new Update.fromJson(update))),
+      launchServiceProvider: Agency.fromJson(json['launch_service_provider']),
+      rocket: Rocket.fromJson(json['rocket']),
+      pad: Pad.fromJson(json['pad']),
+      mission: _mission,
+      vidURLs: List<VidURL>.from(
+          json['vidURLs']?.map((vidURL) => VidURL.fromJson(vidURL)) ??
+              <VidURL>[]),
+      updates: List<Update>.from(
+          json['updates'].map((update) => Update.fromJson(update)) ??
+              <Update>[]),
     );
   }
 }

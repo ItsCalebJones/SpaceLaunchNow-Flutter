@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,12 +20,12 @@ import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeListPage extends StatefulWidget {
-  HomeListPage(this._configuration);
+  const HomeListPage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _HomeListPageState createState() => new _HomeListPageState();
+  _HomeListPageState createState() => _HomeListPageState();
 }
 
 class _HomeListPageState extends State<HomeListPage> {
@@ -57,7 +57,7 @@ class _HomeListPageState extends State<HomeListPage> {
   late bool subscribeRocketLab;
   late bool subscribeBlueOrigin;
   late bool subscribeNorthrop;
-  SLNRepository _repository = new Injector().slnRepository;
+  final SLNRepository _repository = Injector().slnRepository;
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
 
@@ -113,10 +113,10 @@ class _HomeListPageState extends State<HomeListPage> {
       setState(() {
         _launches.clear();
       });
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        duration: new Duration(seconds: 10),
-        content: new Text('Unable to load launches.'),
-        action: new SnackBarAction(
+      Scaffold.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 10),
+        content: const Text('Unable to load launches.'),
+        action: SnackBarAction(
           label: 'Refresh',
           onPressed: () {
             // Some code to undo the change!
@@ -136,7 +136,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
-    var formatter = new DateFormat("EEEE, MMMM d, yyyy");
+    var formatter = DateFormat("EEEE, MMMM d, yyyy");
     String? title = "";
 
     if (launch.launchServiceProvider != null &&
@@ -152,18 +152,18 @@ class _HomeListPageState extends State<HomeListPage> {
         "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
     if (launch.launchServiceProvider != null) {
       if (launch.launchServiceProvider!.nationURL != null &&
-          launch.launchServiceProvider!.nationURL!.length > 0) {
+          launch.launchServiceProvider!.nationURL!.isNotEmpty) {
         url = launch.launchServiceProvider!.nationURL;
       } else if (launch.launchServiceProvider!.imageURL != null &&
-          launch.launchServiceProvider!.imageURL!.length > 0) {
+          launch.launchServiceProvider!.imageURL!.isNotEmpty) {
         url = launch.launchServiceProvider!.imageURL;
       }
     } else if (launch.pad!.location!.mapImage != null &&
-        launch.pad!.location!.mapImage!.length > 0) {
+        launch.pad!.location!.mapImage!.isNotEmpty) {
       url = launch.pad!.location!.mapImage;
     }
 
-    return new Padding(
+    return Padding(
       padding:
           const EdgeInsets.only(top: 8.0, bottom: 4.0, left: 8.0, right: 8.0),
       child: Card(
@@ -176,46 +176,50 @@ class _HomeListPageState extends State<HomeListPage> {
 //                color: getPrimaryColor(),
                 child: Row(
                   children: <Widget>[
-                    new Padding(
+                    Padding(
                         padding: const EdgeInsets.only(
                             left: 16.0, right: 4.0, top: 8.0, bottom: 8.0),
-                        child: new Container(
+                        child: Container(
                           width: 75.0,
                           height: 75.0,
                           padding: const EdgeInsets.all(2.0),
                           // borde width
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .highlightColor, // border color
                             shape: BoxShape.circle,
                           ),
-                          child: new CircleAvatar(
+                          child: CircleAvatar(
                             foregroundColor: Colors.white,
-                            backgroundImage: new NetworkImage(url!),
+                            backgroundImage: NetworkImage(url!),
                             radius: 50.0,
                             backgroundColor: Colors.white,
                           ),
                         )),
                     Flexible(
-                      child: new Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 8.0),
-                            child: new Text(
+                            child: Text(
                               title!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.headline3!.copyWith(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(launch.pad!.location!.name!,
+                            child: Text(launch.pad!.location!.name!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText2),
@@ -223,8 +227,7 @@ class _HomeListPageState extends State<HomeListPage> {
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: new Text(
-                                formatter.format(launch.net!.toLocal()),
+                            child: Text(formatter.format(launch.net!.toLocal()),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.bodyText2),
@@ -235,16 +238,15 @@ class _HomeListPageState extends State<HomeListPage> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: FadeInImage(
-                  placeholder: new AssetImage('assets/placeholder.png'),
-                  image:
-                      new CachedNetworkImageProvider(_getLaunchImage(launch)!),
+                  placeholder: const AssetImage('assets/placeholder.png'),
+                  image: CachedNetworkImageProvider(_getLaunchImage(launch)!),
                   fit: BoxFit.cover,
                   height: 175.0,
                   alignment: Alignment.center,
-                  fadeInDuration: new Duration(milliseconds: 75),
+                  fadeInDuration: const Duration(milliseconds: 75),
                   fadeInCurve: Curves.easeIn,
                 ),
               ),
@@ -266,9 +268,9 @@ class _HomeListPageState extends State<HomeListPage> {
   void _navigateToLaunchDetails(
       {Launch? launch, Object? avatarTag, String? launchId}) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
-          return new LaunchDetailPage(
+          return LaunchDetailPage(
             widget._configuration,
             launch: null,
             launchId: launchId,
@@ -279,45 +281,43 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildCountDown(Launch mLaunch) {
-    return new Countdown(mLaunch);
+    return Countdown(mLaunch);
   }
 
   Widget _buildLaunchButtons(Launch launch) {
     List<Widget> eventButtons = [];
     List<Widget> iconButtons = [];
 
-    if (launch != null) {
-      eventButtons.add(
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-          child: new CupertinoButton(
-            color: Theme.of(context).accentColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                new Icon(
-                  Icons.explore,
-                ),
-                new Text(
-                  'Explore',
-                  style: TextStyle(),
-                ),
-              ],
-            ),
-            onPressed: () {
-              _navigateToLaunchDetails(launch: launch, launchId: launch.id);
-            }, //
+    eventButtons.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 4.0),
+        child: CupertinoButton(
+          color: Theme.of(context).accentColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const <Widget>[
+              Icon(
+                Icons.explore,
+              ),
+              Text(
+                'Explore',
+                style: TextStyle(),
+              ),
+            ],
           ),
+          onPressed: () {
+            _navigateToLaunchDetails(launch: launch, launchId: launch.id);
+          }, //
         ),
-      );
-    }
+      ),
+    );
 
-    if (launch.vidURLs != null && launch.vidURLs!.length > 0) {
-      iconButtons.add(new Padding(
+    if (launch.vidURLs != null && launch.vidURLs!.isNotEmpty) {
+      iconButtons.add(Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
-          child: new IconButton(
-            icon: Icon(Icons.live_tv),
+          child: IconButton(
+            icon: const Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
               _openUrl(launch.vidURLs!.first.url!);
@@ -326,29 +326,27 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     if (launch.slug != null) {
-      iconButtons.add(new Padding(
+      iconButtons.add(Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
-          child: new IconButton(
-            icon: Icon(Icons.share),
+          child: IconButton(
+            icon: const Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
               Share.share("https://spacelaunchnow.me/launch/" + launch.slug!);
             }, //
-          )
-      )
-      );
+          )));
     }
 
     eventButtons.add(Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: new Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: iconButtons,
       ),
     ));
 
-    return new Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: eventButtons);
@@ -372,7 +370,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
   ThemeData get barTheme {
     var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark){
+    if (qdarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -381,12 +379,10 @@ class _HomeListPageState extends State<HomeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     print("Upcoming build!");
 
-
-
-    Widget view = new Scaffold(
+    Widget view = Scaffold(
       body: _buildBody(),
       appBar: AppBar(
         backgroundColor: barTheme.canvasColor,
@@ -394,7 +390,10 @@ class _HomeListPageState extends State<HomeListPage> {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.refresh, color: barTheme.focusColor,),
+            icon: Icon(
+              Icons.refresh,
+              color: barTheme.focusColor,
+            ),
             onPressed: () {
               setState(() {
                 _handleRefresh();
@@ -402,25 +401,17 @@ class _HomeListPageState extends State<HomeListPage> {
             },
           )
         ],
-        title: new Text(
+        title: Text(
           'Home',
           textAlign: TextAlign.left,
-          style: Theme.of(context)
-              .textTheme
-              .headline1!
-              .copyWith(fontWeight: FontWeight.bold,
-                                    fontSize: 34, color: barTheme.focusColor),
+          style: Theme.of(context).textTheme.headline1!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 34,
+              color: barTheme.focusColor),
         ),
       ),
     );
     return view;
-  }
-
-  bool isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void lockedLoadNext() {
@@ -429,7 +420,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Future<Null> loadNext() async {
+  Future<void> loadNext() async {
     loading = true;
     print("Checking Filters!");
     await checkFilters();
@@ -449,7 +440,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Future<Null> _handleRefresh() async {
+  Future<void> _handleRefresh() async {
     setState(() {});
     _launches.clear();
     totalCount = 0;
@@ -471,58 +462,58 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   String _buildLSPFilter() {
-    var lsp_ids = List<int>();
+    var lspIds = <int>[];
     if (subscribeNASA) {
-      lsp_ids.add(44);
+      lspIds.add(44);
     }
 
     if (subscribeArianespace) {
-      lsp_ids.add(115);
+      lspIds.add(115);
     }
 
     if (subscribeSpaceX) {
-      lsp_ids.add(121);
+      lspIds.add(121);
     }
 
     if (subscribeULA) {
-      lsp_ids.add(124);
+      lspIds.add(124);
     }
 
     if (subscribeRoscosmos) {
-      lsp_ids.add(111);
-      lsp_ids.add(163);
-      lsp_ids.add(63);
+      lspIds.add(111);
+      lspIds.add(163);
+      lspIds.add(63);
     }
 
     if (subscribeISRO) {
-      lsp_ids.add(31);
+      lspIds.add(31);
     }
 
     if (subscribeBlueOrigin) {
-      lsp_ids.add(141);
+      lspIds.add(141);
     }
 
     if (subscribeRocketLab) {
-      lsp_ids.add(147);
+      lspIds.add(147);
     }
 
     if (subscribeNorthrop) {
-      lsp_ids.add(257);
+      lspIds.add(257);
     }
-    String lsp_string_list = "";
+    String lspStringList = "";
     var index = 0;
-    for (var id in lsp_ids) {
-      lsp_string_list = lsp_string_list + id.toString();
+    for (var id in lspIds) {
+      lspStringList = lspStringList + id.toString();
       index = index + 1;
-      if (index != lsp_ids.length) {
-        lsp_string_list = lsp_string_list + ",";
+      if (index != lspIds.length) {
+        lspStringList = lspStringList + ",";
       }
     }
-    return lsp_string_list;
+    return lspStringList;
   }
 
   String _buildLocationFilter() {
-    var locationIds = List<int>();
+    var locationIds = <int>[];
     if (subscribeChina) {
       locationIds.add(17);
       locationIds.add(19);
@@ -616,17 +607,17 @@ class _HomeListPageState extends State<HomeListPage> {
     } else if (launch.infographic != null) {
       return launch.infographic;
     } else if (launch.rocket!.configuration!.image != null &&
-        launch.rocket!.configuration!.image!.length > 0) {
+        launch.rocket!.configuration!.image!.isNotEmpty) {
       return launch.rocket!.configuration!.image;
     } else if (launch.launchServiceProvider!.imageURL != null &&
-        launch.launchServiceProvider!.imageURL!.length > 0) {
+        launch.launchServiceProvider!.imageURL!.isNotEmpty) {
       return launch.launchServiceProvider!.imageURL;
     } else if (launch.launchServiceProvider!.nationURL != null &&
-        launch.launchServiceProvider!.nationURL!.length > 0) {
+        launch.launchServiceProvider!.nationURL!.isNotEmpty) {
       return launch.launchServiceProvider!.nationURL;
     } else if (launch.pad != null &&
         launch.pad!.mapImage != null &&
-        launch.pad!.mapImage!.length > 0) {
+        launch.pad!.mapImage!.isNotEmpty) {
       return launch.pad!.mapImage;
     } else {
       return "";
@@ -638,14 +629,14 @@ class _HomeListPageState extends State<HomeListPage> {
       return Padding(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission!.name!,
+        child: Text(launch.mission!.name!,
             style: Theme.of(context)
                 .textTheme
                 .headline5!
                 .copyWith(fontWeight: FontWeight.bold)),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 
@@ -654,14 +645,14 @@ class _HomeListPageState extends State<HomeListPage> {
       return Container(
         padding: const EdgeInsets.only(
             top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
-        child: new Text(launch.mission!.description!,
+        child: Text(launch.mission!.description!,
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyText2,
             textAlign: TextAlign.left),
       );
     } else {
-      return new Container();
+      return Container();
     }
   }
 
@@ -673,18 +664,17 @@ class _HomeListPageState extends State<HomeListPage> {
 
   Future<void> _loadAd() async {
     late bool _showAds;
-    await SharedPreferences.getInstance().then((SharedPreferences prefs) => {
-        _showAds = prefs.getBool("showAds") ?? true
-    });
+    await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
+        {_showAds = prefs.getBool("showAds") ?? true});
 
-    if (!_showAds){
+    if (!_showAds) {
       return;
     }
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final AnchoredAdaptiveBannerAdSize? size =
-    await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.of(context).size.width.truncate());
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
 
     if (size == null) {
       print('Unable to get height of anchored banner.');
@@ -693,10 +683,10 @@ class _HomeListPageState extends State<HomeListPage> {
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ?  BannerAd.testAdUnitId
+          ? BannerAd.testAdUnitId
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$ad loaded: ${ad.responseInfo}');
@@ -717,50 +707,50 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Widget _buildBody() {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     if (_launches.isEmpty || loading) {
-      content.add(new SizedBox(height: 200));
-      content.add(new Center(
-        child: new CircularProgressIndicator(),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: CircularProgressIndicator(),
       ));
     } else if (_launches.isEmpty) {
-      content.add(new SizedBox(height: 200));
-      content.add(Center(
-        child: new Text("No Launches Loaded"),
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
+        child: Text("No Launches Loaded"),
       ));
     } else {
       _launches.asMap().forEach(
           (index, item) => {content.addAll(_map_launch_to_tile(index, item))});
 
-      content.add(new SizedBox(height: 64));
+      // content.add(const SizedBox(height: 400));
     }
     return Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
-            ListView.separated(
-                padding: const EdgeInsets.fromLTRB(2, 2, 0, 2),
-                itemCount: _launches.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildLaunchTile(context, _launches[index]);
-                },
-              separatorBuilder: (context, index) {
-                  return Container(height: 5);
-              },
-            ),
-            if (_anchoredAdaptiveAd != null && _isLoaded)
-              Container(
+          ListView.separated(
+            padding: const EdgeInsets.fromLTRB(2, 2, 2, 64),
+            itemCount: _launches.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildLaunchTile(context, _launches[index]);
+            },
+            separatorBuilder: (context, index) {
+              return Container(height: 5);
+            },
+          ),
+          if (_anchoredAdaptiveAd != null && _isLoaded)
+            SizedBox(
                 width: _anchoredAdaptiveAd!.size.width.toDouble(),
                 height: _anchoredAdaptiveAd!.size.height.toDouble(),
                 child: AdWidget(ad: _anchoredAdaptiveAd!)),
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: ListAdWidget(AdSize.banner),
-            // ),
-          ]);
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: ListAdWidget(AdSize.banner),
+          // ),
+        ]);
   }
 
   Iterable<Widget> _map_launch_to_tile(int index, Launch item) {
-    List<Widget> content = new List<Widget>();
+    List<Widget> content = <Widget>[];
     index += 1;
 
     // if (index == 2) {

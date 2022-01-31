@@ -7,28 +7,21 @@ class Update {
   final DateTime? createdOn;
 
   Update(
-      {
-        this.id,
-        this.profileImage,
-        this.comment,
-        this.infoUrl,
-        this.createdBy,
-        this.createdOn
-      });
+      {this.id,
+      this.profileImage,
+      this.comment,
+      this.infoUrl,
+      this.createdBy,
+      this.createdOn});
 
   factory Update.fromJson(Map<String, dynamic> json) {
-    print(json);
-    if (json != null) {
-      return new Update(
-        id: json['id'],
-        profileImage: json['profile_image'],
-        comment: json['comment'],
-        infoUrl: json['info_url'],
-        createdBy: json['created_by'],
-        createdOn: DateTime.parse(json['created_on']),
-      );
-    } else {
-      return null;
-    }
+    return Update(
+      id: json['id'],
+      profileImage: json['profile_image'],
+      comment: json['comment'],
+      infoUrl: json['info_url'],
+      createdBy: json['created_by'],
+      createdOn: DateTime.parse(json['created_on']),
+    );
   }
 }

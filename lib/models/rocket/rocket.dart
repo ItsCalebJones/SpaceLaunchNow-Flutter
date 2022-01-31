@@ -5,30 +5,29 @@ import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage
 class Rocket {
   final int? id;
   final LauncherConfiguration? configuration;
-  final Iterable<FirstStage>? firstStages;
+  final List<FirstStage>? firstStages;
   final SpacecraftStage? spacecraftStage;
 
   Rocket({this.id, this.configuration, this.firstStages, this.spacecraftStage});
 
   factory Rocket.fromJson(Map<String, dynamic> json) {
-    var firstStagesJson = json['launcher_stage'];
-    final listFirstStages = (firstStagesJson as List).map((i) => new FirstStage.fromJson(i));
-    for (final item in listFirstStages) {
-      print(item.launcher!.serialNumber);
+    List<FirstStage> _firstStages = <FirstStage>[];
+    var firstStageJson = json['updates'];
+    if (firstStageJson != null) {
+      _firstStages.addAll(
+          firstStageJson.map((firstStage) => FirstStage.fromJson(firstStage)));
     }
 
-    var spacecraftStage;
-    if (json['spacecraft_stage'] != null){
-      spacecraftStage = new SpacecraftStage.fromJson(json['spacecraft_stage']);
+    var spacecraftStageJson = json['spacecraft_stage'];
+    SpacecraftStage? _spacecraftStage;
+    if (spacecraftStageJson != null) {
+      _spacecraftStage = SpacecraftStage.fromJson(spacecraftStageJson);
     }
-
-    print("Parsing Rocket...");
 
     return Rocket(
         id: json['id'],
-        configuration: new LauncherConfiguration.fromJson(json['configuration']),
-        firstStages: listFirstStages,
-        spacecraftStage: spacecraftStage
-    );
+        configuration: LauncherConfiguration.fromJson(json['configuration']),
+        firstStages: _firstStages,
+        spacecraftStage: _spacecraftStage);
   }
 }

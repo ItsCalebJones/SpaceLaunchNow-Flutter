@@ -8,24 +8,28 @@ class Landing {
   final LandingLocation? location;
   final LandingType? type;
 
-  Landing({this.description, this.attempt, this.success, this.location, this.type});
+  Landing(
+      {this.description, this.attempt, this.success, this.location, this.type});
 
   factory Landing.fromJson(Map<String, dynamic> json) {
-    var location;
-    if (json['location'] != null) {
-      location = new LandingLocation.fromJson(json['location']);
+    var locationJson = json['location'];
+    LandingLocation? _location;
+    if (locationJson != null) {
+      _location = LandingLocation.fromJson(locationJson);
     }
 
-    var type;
-    if (json['type'] != null) {
-      type = new LandingType.fromJson(json['type']);
+    var landingTypeJson = json['type'];
+    LandingType? _landingType;
+    if (landingTypeJson != null) {
+      _landingType = LandingType.fromJson(landingTypeJson);
     }
+
     return Landing(
       description: json['description'],
       attempt: json['attempt'],
       success: json['success'],
-      location: location,
-      type: type,
+      location: _location,
+      type: _landingType,
     );
   }
 }

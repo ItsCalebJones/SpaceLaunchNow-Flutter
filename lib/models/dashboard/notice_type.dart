@@ -4,14 +4,10 @@ class NoticeType {
 
   NoticeType({this.id, this.name});
 
-  factory NoticeType.fromJson(Map<String, dynamic>? json) {
-    if (json != null) {
-      return new NoticeType(
-        id: json['id'],
-        name: json['name'],
-      );
-    } else {
-      return null;
-    }
+  factory NoticeType.fromJson(Map<String, dynamic> json) {
+    return NoticeType(
+      id: json['id'],
+      name: json['name'],
+    );
   }
 }

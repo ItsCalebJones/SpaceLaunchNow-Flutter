@@ -1,37 +1,34 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 class DiagonallyCutColoredImage extends StatelessWidget {
-  DiagonallyCutColoredImage({required this.screenWidth, required this.image});
+  const DiagonallyCutColoredImage({required this.screenWidth, required this.image});
 
   final double screenWidth;
   final String image;
 
   @override
   Widget build(BuildContext context) {
-    return new ClipPath(
-        clipper: new DiagonalClipper(),
-        child: new DecoratedBox(
+    return ClipPath(
+        clipper: DiagonalClipper(),
+        child: DecoratedBox(
             position: DecorationPosition.foreground,
             decoration:
-                new BoxDecoration(color: Theme.of(context).primaryColor),
-            child: new Image.network(
+                BoxDecoration(color: Theme.of(context).primaryColor),
+            child: Image.network(
               '',
               width: screenWidth,
               height: 240.0,
               fit: BoxFit.cover,
-            )
-        )
-    );
+            )));
   }
 }
 
 class DiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    Path path = new Path();
+    Path path = Path();
     path.lineTo(0.0, size.height - 40);
 
     var firstControlPoint = Offset(size.width / 2, size.height);

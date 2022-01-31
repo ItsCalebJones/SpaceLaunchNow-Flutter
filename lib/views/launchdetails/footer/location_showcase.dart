@@ -1,19 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:share/share.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationShowcaseWidget extends StatefulWidget {
   final Launch? _launch;
 
-  LocationShowcaseWidget(this._launch);
+  const LocationShowcaseWidget(this._launch);
 
   @override
-  State createState() => new LocationShowcaseState(this._launch);
+  State createState() => LocationShowcaseState(_launch);
 }
 
 class LocationShowcaseState extends State<LocationShowcaseWidget> {
@@ -44,8 +41,8 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
     List<Widget> materialButtons = [];
 
     if (_launch!.pad!.mapURL != null) {
-      materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.map),
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.map),
         onPressed: () {
           launch(_launch!.pad!.mapURL!);
         },
@@ -54,8 +51,8 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
     }
 
     if (_launch!.pad!.wikiURL != null) {
-      materialButtons.add(new IconButton(
-        icon:Icon(FontAwesomeIcons.wikipediaW),
+      materialButtons.add(IconButton(
+        icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
           launch(_launch!.pad!.wikiURL!);
         },
@@ -63,9 +60,9 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
       ));
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: materialButtons,
       ),
@@ -75,13 +72,14 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Padding(
-            padding: const EdgeInsets.only(left: 8.0, right:8.0, top:8.0, bottom: 8.0),
-            child: new Text(
+        Padding(
+            padding: const EdgeInsets.only(
+                left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
+            child: Text(
               "Launch Location",
               textAlign: TextAlign.left,
               style: Theme.of(context)
@@ -89,60 +87,62 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
                   .headline4!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             )),
-        new Padding(
-            padding: const EdgeInsets.only(left: 8.0, right:8.0,),
-            child: new Text(
+        Padding(
+            padding: const EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+            ),
+            child: Text(
               _launch!.pad!.name!,
               textAlign: TextAlign.left,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5,
+              style: Theme.of(context).textTheme.headline5,
             )),
-        new Padding(
-            padding: const EdgeInsets.only(left: 8.0, right:8.0,),
-            child: new Text(
+        Padding(
+            padding: const EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+            ),
+            child: Text(
               _launch!.pad!.location!.name!,
               textAlign: TextAlign.left,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1,
+              style: Theme.of(context).textTheme.subtitle1,
             )),
         _buildActionButtons(theme),
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(
               top: 0.0, bottom: 0.0, left: 8.0, right: 8.0),
-          child: new InkWell(
-            child: new Center(
-              child: new Image.network(_launch!.pad!.location!.mapImage!),
-            ),
-          ),
-        ),
-       Align(
-         alignment: Alignment.center,
-         child: new Text(
-              _launch!.pad!.location!.name!,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.caption!.copyWith(),
-            ),
-       ),
-        new Padding(
-          padding: const EdgeInsets.only(
-              top: 8.0, bottom: 0.0, left: 8.0, right: 8.0),
-          child: new InkWell(
-            child: new Center(
-              child: new Image.network(_launch!.pad!.mapImage!),
+          child: InkWell(
+            child: Center(
+              child: Image.network(_launch!.pad!.location!.mapImage!),
             ),
           ),
         ),
         Align(
           alignment: Alignment.center,
-          child: new Text(
+          child: Text(
+            _launch!.pad!.location!.name!,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.caption!.copyWith(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+              top: 8.0, bottom: 0.0, left: 8.0, right: 8.0),
+          child: InkWell(
+            child: Center(
+              child: Image.network(_launch!.pad!.mapImage!),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Text(
             _launch!.pad!.name!,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.caption,
           ),
         ),
-        new SizedBox(height: 100)
+        const SizedBox(height: 100)
       ],
     );
   }

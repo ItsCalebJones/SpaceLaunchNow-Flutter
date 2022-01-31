@@ -5,14 +5,15 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AnchorAdWidget extends StatefulWidget {
-  AnchorAdWidget(this.size);
+  const AnchorAdWidget(this.size);
   final AnchoredAdaptiveBannerAdSize size;
 
   @override
   _AnchorAdWidgetState createState() => _AnchorAdWidgetState();
 }
 
-class _AnchorAdWidgetState extends State<AnchorAdWidget> with AutomaticKeepAliveClientMixin {
+class _AnchorAdWidgetState extends State<AnchorAdWidget>
+    with AutomaticKeepAliveClientMixin {
   BannerAd? _bannerAd;
   bool _isReady = false;
   bool _showAds = false;
@@ -21,21 +22,21 @@ class _AnchorAdWidgetState extends State<AnchorAdWidget> with AutomaticKeepAlive
   void initState() {
     super.initState();
     SharedPreferences.getInstance().then((SharedPreferences prefs) => {
-      setState((){
-        _showAds = prefs.getBool("showAds") ?? true;
-        print("Show ads: $_showAds");
-      })
-    });
-    Future.delayed(Duration(milliseconds: 250), createAd);
+          setState(() {
+            _showAds = prefs.getBool("showAds") ?? true;
+            print("Show ads: $_showAds");
+          })
+        });
+    Future.delayed(const Duration(milliseconds: 250), createAd);
   }
 
   createAd() {
     _bannerAd = BannerAd(
       size: widget.size,
       adUnitId: Platform.isAndroid
-          ?  BannerAd.testAdUnitId
+          ? BannerAd.testAdUnitId
           : "ca-app-pub-9824528399164059/8172962746",
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           print('${ad.runtimeType} loaded!');
@@ -75,14 +76,14 @@ class _AnchorAdWidgetState extends State<AnchorAdWidget> with AutomaticKeepAlive
     if (_isReady && _showAds) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
+        child: SizedBox(
           width: widget.size.width.toDouble(),
           height: widget.size.height.toDouble(),
           child: AdWidget(ad: _bannerAd!),
         ),
       );
     } else if (!_isReady && _showAds) {
-      return Container(
+      return SizedBox(
         width: widget.size.width.toDouble(),
         height: widget.size.height.toDouble(),
       );

@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LaunchesTabPage extends StatefulWidget {
-  LaunchesTabPage(this._configuration);
+  const LaunchesTabPage(this._configuration);
 
   final AppConfiguration _configuration;
 
   @override
-  _LaunchesTabPageState createState() => new _LaunchesTabPageState();
+  _LaunchesTabPageState createState() => _LaunchesTabPageState();
 }
 
 class _LaunchesTabPageState extends State<LaunchesTabPage>
@@ -26,7 +26,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   String? searchQuery;
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
-  bool _showAds = false;
+  final bool _showAds = false;
 
   @override
   void initState() {
@@ -49,33 +49,34 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   Widget build(BuildContext context) {
     print("Building!");
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: _appBar(),
-          body: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children:  <Widget>[
-                TabBarView(
-                  children: [
-                    new UpcomingLaunchListPage(widget._configuration, searchQuery, searchActive),
-                    new PreviousLaunchListPage(widget._configuration, searchQuery, searchActive),
+      length: 2,
+      child: Scaffold(
+        appBar: _appBar(),
+        body: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: <Widget>[
+              TabBarView(
+                children: [
+                  UpcomingLaunchListPage(
+                      widget._configuration, searchQuery, searchActive),
+                  PreviousLaunchListPage(
+                      widget._configuration, searchQuery, searchActive),
                 ],
               ),
               if (_anchoredAdaptiveAd != null && _isLoaded)
-                Container(
+                SizedBox(
                   width: _anchoredAdaptiveAd!.size.width.toDouble(),
                   height: _anchoredAdaptiveAd!.size.height.toDouble(),
                   child: AdWidget(ad: _anchoredAdaptiveAd!),
                 )
-            ]
-          ),
-        ),
+            ]),
+      ),
     );
   }
 
   ThemeData get barTheme {
     var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark){
+    if (qdarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -84,19 +85,17 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
 
   Future<void> _loadAd() async {
     late bool _showAds;
-    await SharedPreferences.getInstance().then((SharedPreferences prefs) => {
-      _showAds = prefs.getBool("showAds") ?? true
-    });
+    await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
+        {_showAds = prefs.getBool("showAds") ?? true});
 
-    if (!_showAds){
+    if (!_showAds) {
       return;
     }
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final AnchoredAdaptiveBannerAdSize? size =
-    await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.of(context).size.width.truncate());
-
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
 
     if (size == null) {
       print('Unable to get height of anchored banner.');
@@ -105,10 +104,10 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ?  BannerAd.testAdUnitId
+          ? BannerAd.testAdUnitId
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$ad loaded: ${ad.responseInfo}');
@@ -133,56 +132,66 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
       return AppBar(
         centerTitle: false,
         elevation: 0.0,
-        leading: Icon(Icons.search),
+        leading: const Icon(Icons.search),
         title: TextField(
-          style: new TextStyle(),
+          style: TextStyle(),
           onSubmitted: _search,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: "Example: SpaceX, Delta IV, JWST...",
             hintStyle: TextStyle(),
           ),
         ),
-        bottom: TabBar(
+        bottom: const TabBar(
           tabs: [
-            Tab(text: "Upcoming",),
-            Tab(text: "Previous",),
+            Tab(
+              text: "Upcoming",
+            ),
+            Tab(
+              text: "Previous",
+            ),
           ],
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () => setState((){
-              searchViewActive = false;
-              searchQuery = null;
-              searchActive = false;
-              },)
-          )
+              icon: const Icon(Icons.close),
+              onPressed: () => setState(
+                    () {
+                      searchViewActive = false;
+                      searchQuery = null;
+                      searchActive = false;
+                    },
+                  ))
         ],
       );
     } else {
       return AppBar(
-        backgroundColor: barTheme.canvasColor,
-        centerTitle: false,
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search, color: barTheme.focusColor,),
-            onPressed: () => setState(() => searchViewActive = true),
-          ),
-        ],
-        bottom: TabBar(
-          tabs: [
-            Tab( text: "Upcoming",),
-            Tab( text: "Previous",),
+          backgroundColor: barTheme.canvasColor,
+          centerTitle: false,
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: barTheme.focusColor,
+              ),
+              onPressed: () => setState(() => searchViewActive = true),
+            ),
           ],
-        ),
-        title: Text(myTitle,
-          style: Theme.of(context)
-              .textTheme
-              .headline1!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 30,
-              color: barTheme.focusColor))
-      );
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                text: "Upcoming",
+              ),
+              Tab(
+                text: "Previous",
+              ),
+            ],
+          ),
+          title: Text(myTitle,
+              style: Theme.of(context).textTheme.headline1!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: barTheme.focusColor)));
     }
   }
 

@@ -51,17 +51,18 @@ class LauncherConfiguration {
       this.pendingLaunches});
 
   factory LauncherConfiguration.fromJson(Map<String, dynamic> json) {
-    var image = json['image_url'];
-    if (image == null) {
-      image =
-          "";
+    var image = json['image_url'] ?? "";
+
+    Agency? _manufacturer;
+    var manufacturerJson = json['manufacturer'];
+    if (manufacturerJson != null) {
+      _manufacturer = Agency.fromJson(manufacturerJson);
     }
-    print(json);
 
     return LauncherConfiguration(
       id: json['id'],
       image: image,
-      manufacturer: new Agency.fromJson(json['manufacturer']),
+      manufacturer: _manufacturer,
       name: json['name'],
       description: json['description'],
       family: json['family'],

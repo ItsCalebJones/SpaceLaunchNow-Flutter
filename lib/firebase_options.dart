@@ -61,8 +61,10 @@ class DefaultFirebaseOptions {
     projectId: 'space-launch-now',
     databaseURL: 'https://space-launch-now.firebaseio.com',
     storageBucket: 'space-launch-now.appspot.com',
-    androidClientId: '610310574961-52or82fnmqohinpab58n6epn4rvri2bt.apps.googleusercontent.com',
-    iosClientId: '610310574961-g4aqhlvabn5eckam55kos5hoicrrtnvj.apps.googleusercontent.com',
+    androidClientId:
+        '610310574961-52or82fnmqohinpab58n6epn4rvri2bt.apps.googleusercontent.com',
+    iosClientId:
+        '610310574961-g4aqhlvabn5eckam55kos5hoicrrtnvj.apps.googleusercontent.com',
     iosBundleId: 'me.spacelaunchnow.spacelaunchnow',
   );
 
@@ -73,8 +75,10 @@ class DefaultFirebaseOptions {
     projectId: 'space-launch-now',
     databaseURL: 'https://space-launch-now.firebaseio.com',
     storageBucket: 'space-launch-now.appspot.com',
-    androidClientId: '610310574961-52or82fnmqohinpab58n6epn4rvri2bt.apps.googleusercontent.com',
-    iosClientId: '610310574961-g4aqhlvabn5eckam55kos5hoicrrtnvj.apps.googleusercontent.com',
+    androidClientId:
+        '610310574961-52or82fnmqohinpab58n6epn4rvri2bt.apps.googleusercontent.com',
+    iosClientId:
+        '610310574961-g4aqhlvabn5eckam55kos5hoicrrtnvj.apps.googleusercontent.com',
     iosBundleId: 'me.spacelaunchnow.spacelaunchnow',
   );
 }

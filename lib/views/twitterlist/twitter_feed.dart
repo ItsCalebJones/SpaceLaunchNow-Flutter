@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_renderer.dart';
 
 class TwitterFeedWidget extends StatefulWidget {
-  TwitterFeedWidget(this._configuration);
+  const TwitterFeedWidget(this._configuration);
 
   final String query = '1.1/lists/statuses.json';
   final AppConfiguration _configuration;
@@ -19,7 +19,7 @@ class TwitterFeedWidget extends StatefulWidget {
 class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
   List? tweets;
 
-  Future<Null> _gatherTweets() async {
+  Future<void> _gatherTweets() async {
     var collector = TwitterCollector.fromFile("config.yaml", widget.query);
 
     await collector.getConfigCredentials().then((success) {
@@ -54,7 +54,7 @@ class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
   @override
   Widget build(BuildContext context) {
     if (tweets == null) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
