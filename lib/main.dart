@@ -9,6 +9,7 @@ import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logger/logger.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
@@ -36,16 +37,16 @@ RateMyApp _rateMyApp = RateMyApp(
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   print("Handling a background message: ${message.messageId}");
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
@@ -93,6 +94,7 @@ class Pages extends StatefulWidget {
 class PagesState extends State<Pages> {
   bool showAds = true;
   TabController? controller;
+  var logger = Logger();
 
   final List<String> _productLists = [
     '2022_super_fan',
@@ -188,8 +190,9 @@ class PagesState extends State<Pages> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
+      logger.d(message);
       if (message != null) {
-        print("Received a new message!");
+        logger.d("Received a new message!");
         if (message.data['launch_uuid'] != null) {
           _navigateToLaunchDetails(message.data['launch_uuid']);
         }
@@ -210,6 +213,7 @@ class PagesState extends State<Pages> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      logger.d(message);
       if (message.notification != null) {
         showDialog(
             context: context,
@@ -246,7 +250,7 @@ class PagesState extends State<Pages> {
 
     _prefs.then((SharedPreferences prefs) {
       bool showAds = prefs.getBool("showAds") ?? true;
-      bool appInitialized = prefs.getBool("appInitialized") ?? true;
+      bool appInitialized = prefs.getBool("appInitialized") ?? false;
       bool nightMode = prefs.getBool("nightMode") ?? false;
       bool allowOneHourNotifications =
           prefs.getBool("allowOneHourNotifications") ?? true;
@@ -277,179 +281,179 @@ class PagesState extends State<Pages> {
       bool subscribeJapan = prefs.getBool("subscribeJapan") ?? true;
       bool subscribeFG = prefs.getBool("subscribeFG") ?? true;
 
-      if (!appInitialized) {
-        _firebaseMessaging.unsubscribeFromTopic("flutter_production");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
-        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
+      logger.d(
+          "Initialized: $appInitialized - Debug: ${SpaceLaunchNow.isInDebugMode}");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_production");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_debug");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_production_v2");
+      _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v2");
 
-        if (SpaceLaunchNow.isInDebugMode) {
-          _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
-          _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
-          _firebaseMessaging.subscribeToTopic("custom");
-        } else {
-          _firebaseMessaging.subscribeToTopic("flutter_production_v3");
-          _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
-          _firebaseMessaging.subscribeToTopic("custom");
-        }
-
-        if (allowTenMinuteNotifications) {
-          _firebaseMessaging.subscribeToTopic("tenMinutes");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
-        }
-
-        if (allowOneHourNotifications) {
-          _firebaseMessaging.subscribeToTopic("oneHour");
-          _firebaseMessaging.subscribeToTopic("webcastLive");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("oneHour");
-          _firebaseMessaging.unsubscribeFromTopic("webcastLive");
-        }
-
-        if (allowTwentyFourHourNotifications) {
-          _firebaseMessaging.subscribeToTopic("twentyFourHour");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
-        }
-
-        if (subscribeNewsAndEvents) {
-          _firebaseMessaging.subscribeToTopic("featured_news");
-          _firebaseMessaging.subscribeToTopic("events");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("featured_news");
-          _firebaseMessaging.unsubscribeFromTopic("events");
-        }
-
-        if (allowStatusChanged) {
-          _firebaseMessaging.subscribeToTopic("netstampChanged");
-          _firebaseMessaging.subscribeToTopic("success");
-          _firebaseMessaging.subscribeToTopic("failure");
-          _firebaseMessaging.subscribeToTopic("partial_failure");
-          _firebaseMessaging.subscribeToTopic("inFlight");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
-          _firebaseMessaging.unsubscribeFromTopic("success");
-          _firebaseMessaging.unsubscribeFromTopic("failure");
-          _firebaseMessaging.unsubscribeFromTopic("partial_failure");
-          _firebaseMessaging.unsubscribeFromTopic("inFlight");
-        }
-
-        if (subscribeALL) {
-          _firebaseMessaging.subscribeToTopic("all");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("all");
-        }
-
-        if (subscribeNASA) {
-          _firebaseMessaging.subscribeToTopic("nasa");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("nasa");
-        }
-
-        if (subscribeArianespace) {
-          _firebaseMessaging.subscribeToTopic("arianespace");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("arianespace");
-        }
-
-        if (subscribeSpaceX) {
-          _firebaseMessaging.subscribeToTopic("spacex");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("spacex");
-        }
-
-        if (subscribeBlueOrigin) {
-          _firebaseMessaging.subscribeToTopic("blueOrigin");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
-        }
-
-        if (subscribeRocketLab) {
-          _firebaseMessaging.subscribeToTopic("rocketLab");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("rocketLab");
-        }
-
-        if (subscribeNorthrop) {
-          _firebaseMessaging.subscribeToTopic("northrop");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("northrop");
-        }
-
-        if (subscribeKSC) {
-          _firebaseMessaging.subscribeToTopic("ksc");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("ksc");
-        }
-
-        if (subscribeCAPE) {
-          _firebaseMessaging.subscribeToTopic("cape");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("cape");
-        }
-
-        if (subscribePLES) {
-          _firebaseMessaging.subscribeToTopic("ples");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("ples");
-        }
-
-        if (subscribeVAN) {
-          _firebaseMessaging.subscribeToTopic("van");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("van");
-        }
-
-        if (subscribeRoscosmos) {
-          _firebaseMessaging.subscribeToTopic("roscosmos");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("roscosmos");
-        }
-
-        if (subscribeULA) {
-          _firebaseMessaging.subscribeToTopic("ula");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("ula");
-        }
-
-        if (subscribeWallops) {
-          _firebaseMessaging.subscribeToTopic("wallops");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("wallops");
-        }
-
-        if (subscribeNZ) {
-          _firebaseMessaging.subscribeToTopic("newZealand");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("newZealand");
-        }
-
-        if (subscribeJapan) {
-          _firebaseMessaging.subscribeToTopic("japan");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("japan");
-        }
-
-        if (subscribeRussia) {
-          _firebaseMessaging.subscribeToTopic("russia");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("japan");
-        }
-
-        if (subscribeChina) {
-          _firebaseMessaging.subscribeToTopic("china");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("china");
-        }
-
-        if (subscribeFG) {
-          _firebaseMessaging.subscribeToTopic("frenchGuiana");
-        } else {
-          _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
-        }
-        prefs.setBool("appInitialized", true);
+      if (SpaceLaunchNow.isInDebugMode) {
+        _firebaseMessaging.subscribeToTopic("flutter_debug_v3");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_production_v3");
+        _firebaseMessaging.subscribeToTopic("custom");
+      } else {
+        _firebaseMessaging.subscribeToTopic("flutter_production_v3");
+        _firebaseMessaging.unsubscribeFromTopic("flutter_debug_v3");
+        _firebaseMessaging.subscribeToTopic("custom");
       }
+
+      if (allowTenMinuteNotifications) {
+        _firebaseMessaging.subscribeToTopic("tenMinutes");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+      }
+
+      if (allowOneHourNotifications) {
+        _firebaseMessaging.subscribeToTopic("oneHour");
+        _firebaseMessaging.subscribeToTopic("webcastLive");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("oneHour");
+        _firebaseMessaging.unsubscribeFromTopic("webcastLive");
+      }
+
+      if (allowTwentyFourHourNotifications) {
+        _firebaseMessaging.subscribeToTopic("twentyFourHour");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+      }
+
+      if (subscribeNewsAndEvents) {
+        _firebaseMessaging.subscribeToTopic("featured_news");
+        _firebaseMessaging.subscribeToTopic("events");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("featured_news");
+        _firebaseMessaging.unsubscribeFromTopic("events");
+      }
+
+      if (allowStatusChanged) {
+        _firebaseMessaging.subscribeToTopic("netstampChanged");
+        _firebaseMessaging.subscribeToTopic("success");
+        _firebaseMessaging.subscribeToTopic("failure");
+        _firebaseMessaging.subscribeToTopic("partial_failure");
+        _firebaseMessaging.subscribeToTopic("inFlight");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+        _firebaseMessaging.unsubscribeFromTopic("success");
+        _firebaseMessaging.unsubscribeFromTopic("failure");
+        _firebaseMessaging.unsubscribeFromTopic("partial_failure");
+        _firebaseMessaging.unsubscribeFromTopic("inFlight");
+      }
+
+      if (subscribeALL) {
+        _firebaseMessaging.subscribeToTopic("all");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("all");
+      }
+
+      if (subscribeNASA) {
+        _firebaseMessaging.subscribeToTopic("nasa");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("nasa");
+      }
+
+      if (subscribeArianespace) {
+        _firebaseMessaging.subscribeToTopic("arianespace");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("arianespace");
+      }
+
+      if (subscribeSpaceX) {
+        _firebaseMessaging.subscribeToTopic("spacex");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("spacex");
+      }
+
+      if (subscribeBlueOrigin) {
+        _firebaseMessaging.subscribeToTopic("blueOrigin");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+      }
+
+      if (subscribeRocketLab) {
+        _firebaseMessaging.subscribeToTopic("rocketLab");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("rocketLab");
+      }
+
+      if (subscribeNorthrop) {
+        _firebaseMessaging.subscribeToTopic("northrop");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("northrop");
+      }
+
+      if (subscribeKSC) {
+        _firebaseMessaging.subscribeToTopic("ksc");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ksc");
+      }
+
+      if (subscribeCAPE) {
+        _firebaseMessaging.subscribeToTopic("cape");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("cape");
+      }
+
+      if (subscribePLES) {
+        _firebaseMessaging.subscribeToTopic("ples");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ples");
+      }
+
+      if (subscribeVAN) {
+        _firebaseMessaging.subscribeToTopic("van");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("van");
+      }
+
+      if (subscribeRoscosmos) {
+        _firebaseMessaging.subscribeToTopic("roscosmos");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("roscosmos");
+      }
+
+      if (subscribeULA) {
+        _firebaseMessaging.subscribeToTopic("ula");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("ula");
+      }
+
+      if (subscribeWallops) {
+        _firebaseMessaging.subscribeToTopic("wallops");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("wallops");
+      }
+
+      if (subscribeNZ) {
+        _firebaseMessaging.subscribeToTopic("newZealand");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("newZealand");
+      }
+
+      if (subscribeJapan) {
+        _firebaseMessaging.subscribeToTopic("japan");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("japan");
+      }
+
+      if (subscribeRussia) {
+        _firebaseMessaging.subscribeToTopic("russia");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("japan");
+      }
+
+      if (subscribeChina) {
+        _firebaseMessaging.subscribeToTopic("china");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("china");
+      }
+
+      if (subscribeFG) {
+        _firebaseMessaging.subscribeToTopic("frenchGuiana");
+      } else {
+        _firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+      }
+      prefs.setBool("appInitialized", true);
 
       configurationUpdater(_configuration.copyWith(
           showAds: showAds,
@@ -485,8 +489,15 @@ class PagesState extends State<Pages> {
 
     _firebaseMessaging.getToken().then((String? token) {
       assert(token != null);
-      print("Push Messaging token: $token");
+      logger.d("Push Messaging token: $token");
     });
+
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      FirebaseMessaging.instance.getAPNSToken().then((value) {
+        logger.d('FlutterFire Messaging Example: Got APNs token: $value');
+      });
+    }
 
     asyncInitState();
     checkAd();
@@ -497,6 +508,7 @@ class PagesState extends State<Pages> {
     // a terminated state.
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
+    logger.d(initialMessage);
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -520,6 +532,7 @@ class PagesState extends State<Pages> {
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      logger.d(message);
       if (message.data['type'] == 'chat') {
         _navigateToLaunchDetails(initialMessage!.data['launch_uuid']);
 
@@ -704,11 +717,9 @@ class PagesState extends State<Pages> {
         return SettingsPage(_configuration, configurationUpdater);
 
       default:
-        return Container(
-          child: Center(
-              child: Text('No page found by page chooser.',
-                  style: const TextStyle(fontSize: 30.0))),
-        );
+        return const Center(
+            child: Text('No page found by page chooser.',
+                style: TextStyle(fontSize: 30.0)));
     }
   }
 

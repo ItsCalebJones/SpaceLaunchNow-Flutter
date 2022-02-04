@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
 
-  SettingsPage(this.configuration, this.updater);
+  SettingsPage(this.configuration, this.updater, {Key? key}) : super(key: key);
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final AppConfiguration configuration;
@@ -69,9 +69,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
     print("I AM THERE");
-    List<PurchasedItem> items = await (FlutterInappPurchase.instance
-        .getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
-    for (var item in items) {
+    List<PurchasedItem>? items =
+        await FlutterInappPurchase.instance.getPurchaseHistory();
+    for (var item in items!) {
       print(item.toString());
       _purchases.add(item);
     }
@@ -86,16 +86,16 @@ class NotificationFilterPageState extends State<SettingsPage> {
         _prefs.then((SharedPreferences prefs) {
           return (prefs.setBool('showAds', false));
         });
-        final snackBar = SnackBar(
-          content: Text(
-              'Purchase history restored - thank you for your support!'),
+        const snackBar = SnackBar(
+          content:
+              Text('Purchase history restored - thank you for your support!'),
           duration: Duration(seconds: 5),
         );
         Scaffold.of(context).showSnackBar(snackBar);
       } else {
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
           content: Text('Purchase history restored - no purchases found.'),
-          duration: const Duration(seconds: 5),
+          duration: Duration(seconds: 5),
         );
         Scaffold.of(context).showSnackBar(snackBar);
       }
@@ -562,7 +562,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void sendUpdates(AppConfiguration value) {
- widget.updater(value);
+    widget.updater(value);
   }
 
   void _showAds(bool value) {
@@ -598,8 +598,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _buildProductList(),
       _buildDebug(),
       ListTile(
-        title:
-            Text('Notification Settings', style: theme.textTheme.headline5),
+        title: Text('Notification Settings', style: theme.textTheme.headline5),
         subtitle: Text('Select what kind of notifications to receive.'),
       ),
       MergeSemantics(
@@ -671,8 +670,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           children: rows,
         ),
         ListTile(
-          title:
-              Text('Favorites Filters', style: theme.textTheme.headline5),
+          title: Text('Favorites Filters', style: theme.textTheme.headline5),
           subtitle: Text(
               'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
@@ -681,17 +679,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('About', style: theme.textTheme.headline5)
-            ],
+            children: <Widget>[Text('About', style: theme.textTheme.headline5)],
           ),
         ),
         Divider(),
         MergeSemantics(
           child: ListTile(
             title: Text('Privacy Policy'),
-            subtitle:
-                Text('View the Space Launch Now privacy policy here.'),
+            subtitle: Text('View the Space Launch Now privacy policy here.'),
             onTap: () {
               _launchURL("https://spacelaunchnow.me/app/privacy");
             },
@@ -741,9 +736,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
         title: Text('Become a Supporter',
             style: Theme.of(context)
                 .textTheme
-                .headline3!
+                .headline4!
                 .copyWith(fontWeight: FontWeight.bold)),
-        subtitle: Text(
+        subtitle: const Text(
             'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
     List<ListTile> productList = <ListTile>[];
 
