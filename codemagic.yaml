@@ -80,7 +80,7 @@ workflows:
       - app-store-connect fetch-signing-files "me.spacelaunchnow.spacelaunchnow" --type
         IOS_APP_STORE --create
       - keychain add-certificates
-      - flutter build ios --release --no-codesign
+      - flutter build ios --release --no-codesign --build-number=$PROJECT_BUILD_NUMBER
       - xcode-project use-profiles
       - xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme "Runner"
     artifacts:

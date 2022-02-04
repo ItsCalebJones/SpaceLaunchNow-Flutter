@@ -358,6 +358,8 @@ class _HomeListPageState extends State<HomeListPage> {
       final String _finalUrl = _url.host + _url.path + "?" + _url.query;
       if (await canLaunch('youtube://$_finalUrl')) {
         await launch('youtube://$_finalUrl', forceSafariVC: false);
+      } else {
+        await launch(url);
       }
     } else {
       if (await canLaunch(url)) {
