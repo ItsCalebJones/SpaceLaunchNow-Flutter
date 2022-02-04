@@ -4,7 +4,7 @@
 workflows:
   master---publish-to-appstore:
     name: Master - Publish to AppStore
-    instance_type: mac_mini
+    instance_type: mac_pro
     max_build_duration: 60
     environment:
       vars:
@@ -80,9 +80,14 @@ workflows:
       - app-store-connect fetch-signing-files "me.spacelaunchnow.spacelaunchnow" --type
         IOS_APP_STORE --create
       - keychain add-certificates
-      - flutter build ios --release --no-codesign --build-number=$PROJECT_BUILD_NUMBER
-      - xcode-project use-profiles
-      - xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme "Runner"
+      - name: Install pods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Flutter build ipa and automatic versioning
+        script: |
+          flutter build ipa --release \
+          --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
+          --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
