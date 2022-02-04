@@ -26,8 +26,9 @@ final ThemeData kIOSTheme = ThemeData(
         headline4: Typography.whiteMountainView.headline4!
             .copyWith(color: Colors.white),
       )),
-  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
-      .copyWith(secondary: Colors.red, brightness: Brightness.light),
+  colorScheme:
+      ColorScheme.fromSwatch(primarySwatch: Colors.red, accentColor: Colors.red)
+          .copyWith(secondary: Colors.red, brightness: Brightness.light),
 );
 
 final ThemeData kIOSThemeDark = ThemeData(
