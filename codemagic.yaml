@@ -80,14 +80,9 @@ workflows:
       - app-store-connect fetch-signing-files "me.spacelaunchnow.spacelaunchnow" --type
         IOS_APP_STORE --create
       - keychain add-certificates
-      - name: Install pods
-        script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Flutter build ipa and automatic versioning
-        script: |
-          flutter build ipa --release \
-          --build-number=$BUILD_NUMBER \
-          --export-options-plist=/Users/builder/export_options.plist
+      - flutter build ios --release --no-codesign
+      - xcode-project use-profiles
+      - xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme "Runner"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
