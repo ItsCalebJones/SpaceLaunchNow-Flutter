@@ -164,7 +164,6 @@ class _EventListPageState extends State<EventListPage> {
         content.add(_buildEventListTile(item as EventList));
       }
     }
-    print(data);
     return content;
   }
 
@@ -174,12 +173,12 @@ class _EventListPageState extends State<EventListPage> {
 
     if (_upcomingEvents.isEmpty && _previousEvents.isEmpty && loading) {
       content.add(const SizedBox(height: 200));
-      content.add(Center(
-        child: const CircularProgressIndicator(),
+      content.add(const Center(
+        child: CircularProgressIndicator(),
       ));
     } else if (_upcomingEvents.isEmpty && _previousEvents.isEmpty) {
-      content.add(SizedBox(height: 200));
-      content.add(Center(
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
         child: Text("Unable to Load Dashboard"),
       ));
     } else {
@@ -194,8 +193,9 @@ class _EventListPageState extends State<EventListPage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ToggleButtons(
+              color: Theme.of(context).colorScheme.onPrimary,
               borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context).textTheme.subtitle1,
+              textStyle: Theme.of(context).textTheme.subtitle2,
               children: const <Widget>[
                 Padding(
                   padding: EdgeInsets.all(8.0),
@@ -244,16 +244,16 @@ class _EventListPageState extends State<EventListPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
+            children: const <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: const Icon(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Icon(
                   Icons.explore,
                 ),
               ),
               Text(
                 'Explore',
-                style: const TextStyle(),
+                style: TextStyle(),
               ),
             ],
           ),

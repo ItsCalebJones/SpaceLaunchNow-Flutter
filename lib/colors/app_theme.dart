@@ -59,8 +59,8 @@ final ThemeData kIOSThemeDark = ThemeData(
       )),
   colorScheme: ColorScheme.fromSwatch(
     primarySwatch: Colors.blue,
-    accentColor: Colors.red,
-  ).copyWith(secondary: Colors.red, brightness: Brightness.dark),
+    accentColor: Colors.grey[700],
+  ).copyWith(secondary: Colors.grey[700], brightness: Brightness.dark),
 );
 
 final ThemeData kIOSThemeBar = ThemeData(

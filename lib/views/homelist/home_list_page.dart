@@ -290,9 +290,9 @@ class _HomeListPageState extends State<HomeListPage> {
 
     eventButtons.add(
       Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 4.0),
+        padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 4.0),
         child: CupertinoButton(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
