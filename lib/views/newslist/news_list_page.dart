@@ -351,48 +351,52 @@ class _NewsListPageState extends State<NewsListPage> {
   Widget _buildMiniItem(int index, News item) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 7, // 60%
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                    "${index.toString()}. ${item.newsSiteLong!} • ${timeago.format(item.datePublished!)}",
-                    style: Theme.of(context).textTheme.caption),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
-                  child: Text(item.title!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5!
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 3, // 20%
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/placeholder.png'),
-                image: CachedNetworkImageProvider(item.featureImage!),
-                fit: BoxFit.cover,
-                height: 80.0,
-                alignment: Alignment.center,
-                fadeInDuration: const Duration(milliseconds: 50),
-                fadeInCurve: Curves.easeIn,
+      child:
+      InkWell(
+        onTap: () => _openBrowser(item),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 7, // 60%
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                      "${index.toString()}. ${item.newsSiteLong!} • ${timeago.format(item.datePublished!)}",
+                      style: Theme.of(context).textTheme.caption),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
+                    child: Text(item.title!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5!
+                            .copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              flex: 3, // 20%
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/placeholder.png'),
+                  image: CachedNetworkImageProvider(item.featureImage!),
+                  fit: BoxFit.cover,
+                  height: 80.0,
+                  alignment: Alignment.center,
+                  fadeInDuration: const Duration(milliseconds: 50),
+                  fadeInCurve: Curves.easeIn,
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 
