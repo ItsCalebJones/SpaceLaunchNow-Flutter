@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/repository/http_client.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
@@ -89,7 +90,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _launches = null;
       launch = null;
     });
-    http.Response response = await http.get(Uri.parse(
+    final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
+    http.Response response = await client.get(Uri.parse(
         'https://spacelaunchnow.me/api/ll/2.2.0/launch/' +
             id.toString() +
             '/?mode=detailed'));
@@ -105,7 +107,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   Future<void> _loadNextLaunch() async {
     List<Launch>? _nextLaunches;
-    http.Response response = await http.get(Uri.parse(
+    final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
+    http.Response response = await client.get(Uri.parse(
         'https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
 
     _nextLaunches = Launch.allFromResponse(response);
