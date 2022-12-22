@@ -11,6 +11,8 @@ class Rocket {
   Rocket({this.id, this.configuration, this.firstStages, this.spacecraftStage});
 
   factory Rocket.fromJson(Map<String, dynamic> json) {
+    print("Rocket");
+    print(json);
     List<FirstStage> _firstStages = <FirstStage>[];
     var firstStageJson = json['updates'];
     if (firstStageJson != null) {

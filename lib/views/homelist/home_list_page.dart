@@ -33,7 +33,7 @@ class _HomeListPageState extends State<HomeListPage> {
   int nextOffset = 0;
   int totalCount = 0;
   int offset = 0;
-  int limit = 5;
+  int limit = 3;
   bool loading = false;
   String? lsps;
   String? locations;

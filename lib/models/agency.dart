@@ -47,6 +47,9 @@ class Agency {
       this.wikiURL});
 
   factory Agency.fromJson(Map<String, dynamic> json) {
+    print("Agency");
+    print(json);
+
     var logoURL = json['logo_url'] ?? "";
 
     var imageURL = json['image_url'] ?? "";

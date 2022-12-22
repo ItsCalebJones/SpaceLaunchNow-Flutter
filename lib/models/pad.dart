@@ -24,7 +24,22 @@ class Pad {
       this.mapImage});
 
   factory Pad.fromJson(Map<String, dynamic> json) {
+
     var logger = Logger();
+    logger.i("Pad");
+    logger.i(json);
+
+    var latJson = json['latitude'];
+    num? _latitude;
+    if (latJson != null) {
+      _latitude = num.parse(json['latitude']);
+    }
+
+    var lonJson = json['longitude'];
+    num? _longitude;
+    if (lonJson != null) {
+      _longitude = num.parse(json['longitude']);
+    }
 
     return Pad(
         id: json['id'],
@@ -33,8 +48,8 @@ class Pad {
         wikiURL: json['wiki_url'],
         mapURL: json['map_url'],
         mapImage: json['map_image'],
-        latitude: num.parse(json['latitude']),
-        longitude: num.parse(json['longitude']),
+        latitude: _latitude,
+        longitude: _longitude,
         location: Location.fromJson(json['location']));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 class Location {
   final int? id;
   final String? name;
@@ -15,6 +17,11 @@ class Location {
       this.mapImage});
 
   factory Location.fromJson(Map<String, dynamic> json) {
+
+    var logger = Logger();
+    logger.i("Location");
+    logger.i(json);
+
     return Location(
       id: json['id'],
       name: json['name'],

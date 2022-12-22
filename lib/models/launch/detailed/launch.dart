@@ -70,6 +70,8 @@ class Launch {
       _mission = Mission.fromJson(missionJson);
     }
 
+    print(json);
+
     return Launch(
       id: json['id'],
       name: json['name'],
