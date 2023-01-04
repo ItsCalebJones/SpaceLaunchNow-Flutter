@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 
 class EventDetailHeader extends StatelessWidget {

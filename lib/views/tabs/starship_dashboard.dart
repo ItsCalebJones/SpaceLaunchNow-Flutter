@@ -6,7 +6,7 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_vehicle_page.dart';
 
 class StarshipDashboardPage extends StatefulWidget {
-  const StarshipDashboardPage(this._configuration, this.index);
+  const StarshipDashboardPage(this._configuration, this.index, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
   final int index;

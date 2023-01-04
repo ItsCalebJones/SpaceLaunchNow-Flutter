@@ -1,0 +1,22 @@
+name: Flutter Test
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  flutter_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Install and set Flutter version
+        uses: subosito/flutter-action@v1.4.0
+        with:
+          flutter-version: '3.3.10'
+
+      - name: Run Flutter Tests
+        uses: ./.github/actions/flutter-test

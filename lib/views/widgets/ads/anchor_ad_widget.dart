@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../util/banner_constant.dart';
+
 class AnchorAdWidget extends StatefulWidget {
   const AnchorAdWidget(this.size);
   final AnchoredAdaptiveBannerAdSize size;
@@ -34,7 +36,7 @@ class _AnchorAdWidgetState extends State<AnchorAdWidget>
     _bannerAd = BannerAd(
       size: widget.size,
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       request: const AdRequest(),
       listener: BannerAdListener(

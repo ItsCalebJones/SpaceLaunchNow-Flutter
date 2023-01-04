@@ -110,7 +110,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       setState(() {
         _launches.clear();
       });
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 10),
         content: const Text('Unable to load launches matching search.'),
         action: SnackBarAction(

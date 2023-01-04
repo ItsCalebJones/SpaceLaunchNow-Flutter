@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -565,19 +566,21 @@ class PagesState extends State<Pages> {
       sound: true,
     );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    logger.d('User granted permission: ${settings.authorizationStatus}');
   }
 
   void asyncInitState() async {
-    String? answer = await FlutterInappPurchase.instance.initConnection;
-    print(answer);
-    // refresh items for android
-    try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAllItems
-          as FutureOr<String?>);
-      print('consumeAllItems: $msg');
-    } catch (err) {
-      print('consumeAllItems error: $err');
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      var result = await FlutterInappPurchase.instance.initialize();
+      logger.d(result);
+      // refresh items for android
+      try {
+        String? msg = await (FlutterInappPurchase.instance.consumeAll()
+        as FutureOr<String?>);
+        logger.d('consumeAllItems: $msg');
+      } catch (err) {
+        logger.d('consumeAllItems error: $err');
+      }
     }
   }
 
@@ -594,7 +597,6 @@ class PagesState extends State<Pages> {
   @override
   void dispose() async {
     super.dispose();
-    await FlutterInappPurchase.instance.endConnection;
   }
 
   void hideAd() {}
@@ -658,13 +660,13 @@ class PagesState extends State<Pages> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: const Text('CLOSE'),
           onPressed: () {
             Navigator.pop(context, false);
           },
         ),
-        FlatButton(
+        TextButton(
           child: const Text('SHOW'),
           onPressed: () {
             Navigator.pop(context, true);

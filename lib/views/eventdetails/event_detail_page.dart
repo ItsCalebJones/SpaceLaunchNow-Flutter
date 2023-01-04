@@ -77,7 +77,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     print("Error occured");
     loading = false;
     if (search == true) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 10),
         content: const Text('Unable to load events.'),
         action: SnackBarAction(

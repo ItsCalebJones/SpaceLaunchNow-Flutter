@@ -3,7 +3,7 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_feed.dart';
 
 class TwitterFeedPage extends StatefulWidget {
-  const TwitterFeedPage(this._configuration);
+  const TwitterFeedPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 

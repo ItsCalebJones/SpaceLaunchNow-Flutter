@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:tweet_ui/embedded_tweet_view.dart';
-import 'package:tweet_ui/models/api/tweet.dart';
+import 'package:tweet_ui/models/api/v1/tweet.dart';
 
 class TwitterTile extends StatefulWidget {
   const TwitterTile(this.tweet, this._configuration);
@@ -21,7 +21,7 @@ class _TwitterTileState extends State<TwitterTile> {
     bool darkModeOn = brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: EmbeddedTweetView.fromTweet(Tweet.fromJson(widget.tweet),
+      child: EmbeddedTweetView.fromTweetV1(TweetV1Response.fromJson(widget.tweet),
           backgroundColor: (darkModeOn) ? Colors.grey[800] : Colors.white,
           darkMode: darkModeOn),
     );

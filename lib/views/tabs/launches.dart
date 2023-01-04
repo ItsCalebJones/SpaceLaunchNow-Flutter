@@ -9,6 +9,9 @@ import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_p
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
+import '../../util/banner_constant.dart';
+import '../../util/utils.dart';
+
 class LaunchesTabPage extends StatefulWidget {
   const LaunchesTabPage(this._configuration);
 
@@ -104,7 +107,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),

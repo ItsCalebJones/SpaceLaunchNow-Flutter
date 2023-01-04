@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../util/banner_constant.dart';
+
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget(this.size);
 
@@ -28,7 +30,7 @@ class BannerAdState extends State<BannerAdWidget> {
         {_showAds = prefs.getBool("showAds") ?? true});
     _bannerAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       request: const AdRequest(),
       size: widget.size,

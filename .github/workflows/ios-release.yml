@@ -2,12 +2,27 @@ name: Flutter iOS Release
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - "workflow/initial"
 
 jobs:
+  flutter_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Install and set Flutter version
+        uses: subosito/flutter-action@v1.4.0
+        with:
+          flutter-version: '3.3.10'
+
+      - name: Run Flutter Tests
+        uses: ./.github/actions/flutter-test
+
   build_ios:
+    needs: flutter_test
     runs-on: macos-latest
     env:
       SHEME: Runner
@@ -29,6 +44,7 @@ jobs:
         run: |
           # create variables
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          
           # import provisioning profile from secrets
           echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode --output $PP_PATH
           # apply provisioning profile
@@ -37,7 +53,7 @@ jobs:
       - name: Install and set Flutter version
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: '2.8.1'
+          flutter-version: '3.3.10'
 
       - name: Restore packages
         run: flutter pub get

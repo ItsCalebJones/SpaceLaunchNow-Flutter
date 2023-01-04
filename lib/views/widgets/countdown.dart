@@ -172,7 +172,7 @@ class CountdownState extends State<Countdown> {
           Stack(
             children: <Widget>[
               // Max Size
-              Positioned.fill(
+              const Positioned.fill(
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Divider(),
@@ -182,7 +182,7 @@ class CountdownState extends State<Countdown> {
                 child: GestureDetector(
                   onTap: () {
                     // set up the button
-                    Widget okButton = FlatButton(
+                    Widget okButton = TextButton(
                       child: const Text("OK"),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true)

@@ -21,3 +21,5 @@ windows/flutter/generated_plugin_registrant.h
 ios/Flutter/flutter_export_environment.sh*
 ios/.symlinks**
 pubspec.lock
+macos/Flutter/ephemeral/flutter_export_environment.sh
+macos/Flutter/ephemeral/Flutter-Generated.xcconfig

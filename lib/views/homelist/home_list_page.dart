@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -83,7 +83,7 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void dispose() {
     super.dispose();
-    _anchoredAdaptiveAd!.dispose();
+    _anchoredAdaptiveAd?.dispose();
   }
 
   @override
@@ -113,7 +113,7 @@ class _HomeListPageState extends State<HomeListPage> {
       setState(() {
         _launches.clear();
       });
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 10),
         content: const Text('Unable to load launches.'),
         action: SnackBarAction(
@@ -683,9 +683,11 @@ class _HomeListPageState extends State<HomeListPage> {
       return;
     }
 
+    var testAdUnit = "ca-app-pub-3940256099942544/6300978111";
+
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),

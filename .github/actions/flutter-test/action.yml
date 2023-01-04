@@ -1,0 +1,19 @@
+---
+name: Flutter Test
+description: Run Flutter Test
+
+
+runs:
+  using: composite
+  steps:
+    - name: Pub Get
+      shell: bash
+      run: flutter pub get
+
+    - name: Analyze
+      shell: bash
+      run: flutter analyze
+
+    - name: Test
+      shell: bash
+      run: flutter test
