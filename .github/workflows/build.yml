@@ -17,7 +17,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.3.10'
-          channel: 'stable'
 
       - name: Run Flutter Tests
         uses: ./.github/actions/flutter-test
