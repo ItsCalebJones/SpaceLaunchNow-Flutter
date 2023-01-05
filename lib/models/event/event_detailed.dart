@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/launch/common/launch_common.dart';
-
-import '../program.dart';
-import '../update.dart';
+import 'package:spacelaunchnow_flutter/models/program.dart';
+import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'event_type.dart';
 
 class Event {
@@ -55,16 +54,16 @@ class Event {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    List<Update> _updates = <Update>[];
+    List<Update> updates = <Update>[];
     var updateJson = json['updates'];
     if (updateJson != null) {
-      _updates.addAll(updateJson.map((update) => Update.fromJson(update)));
+      updates.addAll(updateJson.map((update) => Update.fromJson(update)));
     }
 
-    List<Program> _programs = <Program>[];
+    List<Program> programs = <Program>[];
     var programJson = json['program'];
     if (programJson != null) {
-      _programs.addAll(programJson.map((program) => Program.fromJson(program)));
+      programs.addAll(programJson.map((program) => Program.fromJson(program)));
     }
 
     return Event(
@@ -80,7 +79,7 @@ class Event {
         net: DateTime.parse(json['date']),
         launches: List<LaunchCommon>.from(
             json['launches'].map((launch) => LaunchCommon.fromJson(launch))),
-        updates: _updates,
-        programs: _programs);
+        updates: updates,
+        programs: programs);
   }
 }

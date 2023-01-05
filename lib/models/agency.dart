@@ -47,8 +47,9 @@ class Agency {
       this.wikiURL});
 
   factory Agency.fromJson(Map<String, dynamic> json) {
-    print("Agency");
-    print(json);
+    var logger = Logger();
+    logger.d("Agency");
+    logger.d(json);
 
     var logoURL = json['logo_url'] ?? "";
 
@@ -56,7 +57,7 @@ class Agency {
 
     var nationURL = json['nation_url'];
 
-    var logger = Logger();
+    
 
     return Agency(
       id: json['id'],

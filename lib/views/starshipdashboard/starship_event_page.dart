@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
@@ -15,10 +13,9 @@ import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class StarshipEventPage extends StatefulWidget {
-  const StarshipEventPage(this._configuration);
+  const StarshipEventPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -32,6 +29,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   bool usingCached = false;
   final SLNRepository _repository = Injector().slnRepository;
   List<bool> isSelected = [true, false];
+  var logger = Logger();
 
   @override
   void initState() {
@@ -64,7 +62,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   }
 
   void onLoadContactsError([bool? search]) {
-    print("An error occured!");
+    logger.d("An error occured!");
     setState(() {
       loading = false;
     });
@@ -121,16 +119,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
             child: ToggleButtons(
               borderRadius: BorderRadius.circular(8.0),
               textStyle: Theme.of(context).textTheme.subtitle1,
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Upcoming"),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Previous"),
-                ),
-              ],
               onPressed: (int index) {
                 setState(() {
                   for (int buttonIndex = 0;
@@ -145,6 +133,16 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
                 });
               },
               isSelected: isSelected,
+              children: const <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Upcoming"),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Previous"),
+                ),
+              ],
             ),
           ),
         ),
@@ -178,7 +176,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
           .fetchStarshipDashboard()
           .then((response) => onLoadResponseComplete(response))
           .catchError((onError) {
-        print(onError);
+        logger.d(onError);
         onLoadContactsError();
       });
     }
@@ -197,27 +195,11 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       dataUpcoming.addAll(_starship!.previous!.launches!);
       dataUpcoming.sort((a, b) => b.net.compareTo(a.net));
     }
-    print(dataUpcoming);
+    logger.d(dataUpcoming);
     for (Object item in dataUpcoming) {
       content.add(_buildTile(item));
     }
     return content;
-  }
-
-  _openUrl(String url) async {
-    Uri? _url = Uri.tryParse(url);
-    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
-      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
-      if (await canLaunch('youtube://$_finalUrl')) {
-        await launch('youtube://$_finalUrl', forceSafariVC: false);
-      }
-    } else {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
   }
 
   _buildTile(Object item) {

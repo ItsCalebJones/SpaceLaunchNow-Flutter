@@ -53,16 +53,16 @@ class LauncherConfiguration {
   factory LauncherConfiguration.fromJson(Map<String, dynamic> json) {
     var image = json['image_url'] ?? "";
 
-    Agency? _manufacturer;
+    Agency? manufacturer;
     var manufacturerJson = json['manufacturer'];
     if (manufacturerJson != null) {
-      _manufacturer = Agency.fromJson(manufacturerJson);
+      manufacturer = Agency.fromJson(manufacturerJson);
     }
 
     return LauncherConfiguration(
       id: json['id'],
       image: image,
-      manufacturer: _manufacturer,
+      manufacturer: manufacturer,
       name: json['name'],
       description: json['description'],
       family: json['family'],

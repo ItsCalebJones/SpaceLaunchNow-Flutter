@@ -23,3 +23,7 @@ ios/.symlinks**
 pubspec.lock
 macos/Flutter/ephemeral/flutter_export_environment.sh
 macos/Flutter/ephemeral/Flutter-Generated.xcconfig
+
+# Envify related
+.env
+env.g.dart

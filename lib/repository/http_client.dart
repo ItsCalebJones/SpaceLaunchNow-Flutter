@@ -1,7 +1,7 @@
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:yaml/yaml.dart';
+
+import 'package:spacelaunchnow_flutter/config/env.dart';
 
 class ClientWithUserAgent extends http.BaseClient {
   final http.Client _client;
@@ -11,14 +11,12 @@ class ClientWithUserAgent extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    String data = await rootBundle.loadString("config.yaml");
-    Map config = loadYaml(data)['token'];
-    var token = config['token'];
+    var token = Secret.ll_api_key;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     if (useSLNAuth) {
       request.headers['User-Agent'] =
-          'SpaceLaunchNow-Flutter-' + packageInfo.version;
-      request.headers['Authorization'] = 'Token ' + token;
+          'SpaceLaunchNow-Flutter-${packageInfo.version}';
+      request.headers['Authorization'] = 'Token $token';
     }
     return _client.send(request);
   }

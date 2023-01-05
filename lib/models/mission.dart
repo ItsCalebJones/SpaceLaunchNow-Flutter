@@ -1,5 +1,3 @@
-import 'package:logger/logger.dart';
-
 import 'orbit.dart';
 
 class Mission {
@@ -19,12 +17,10 @@ class Mission {
       this.orbit});
 
   factory Mission.fromJson(Map<String, dynamic> json) {
-    var logger = Logger();
-
     var orbitJson = json['orbit'];
-    Orbit? _orbit;
+    Orbit? orbit;
     if (orbitJson != null) {
-      _orbit = Orbit.fromJson(orbitJson);
+      orbit = Orbit.fromJson(orbitJson);
     }
 
     return Mission(
@@ -33,6 +29,6 @@ class Mission {
         description: json['description'],
         typeName: json['type'],
         wikiURL: json['wiki_url'],
-        orbit: _orbit);
+        orbit: orbit);
   }
 }

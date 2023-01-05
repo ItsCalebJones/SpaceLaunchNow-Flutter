@@ -14,10 +14,10 @@ class CustomPlayPauseButton extends StatefulWidget {
   final Widget? bufferIndicator;
 
   /// Creates [CustomPlayPauseButton] widget.
-  const CustomPlayPauseButton({
+  const CustomPlayPauseButton({Key? key,
     this.controller,
     this.bufferIndicator,
-  });
+  }) : super(key: key);
 
   @override
   _PlayPauseButtonState createState() => _PlayPauseButtonState();

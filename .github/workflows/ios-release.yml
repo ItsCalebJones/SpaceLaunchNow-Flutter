@@ -65,6 +65,16 @@ jobs:
       - name: Restore packages
         run: flutter pub get
 
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          envkey_TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          envkey_TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          envkey_TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          envkey_LL_API_KEY: ${{ secrets.LL_API_KEY }}
+          file_name: .env
+
       - name: Build Flutter
         run: flutter build ios --release --no-codesign
 

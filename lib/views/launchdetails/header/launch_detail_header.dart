@@ -3,11 +3,11 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 
 class LaunchDetailHeader extends StatelessWidget {
   const LaunchDetailHeader(
-    this.launch, {
+    this.launch, {Key? key,
     required this.loadLaunch,
     this.avatarTag,
     required this.backEnabled,
-  });
+  }) : super(key: key);
 
   final ValueChanged<String?> loadLaunch;
   final Launch? launch;
@@ -19,13 +19,13 @@ class LaunchDetailHeader extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context) {
-    String? avataruUrl =
+    String? avatarUrl =
         "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
     if (launch!.rocket!.configuration!.image != null &&
         launch!.rocket!.configuration!.image!.isNotEmpty) {
-      avataruUrl = launch!.rocket!.configuration!.image;
+      avatarUrl = launch!.rocket!.configuration!.image;
     } else if (launch!.pad != null) {
-      avataruUrl = launch!.pad!.mapImage;
+      avatarUrl = launch!.pad!.mapImage;
     }
 
     if (avatarTag != null) {
@@ -34,14 +34,14 @@ class LaunchDetailHeader extends StatelessWidget {
         child: Container(
           width: 200.0,
           height: 200.0,
-          padding: const EdgeInsets.all(2.0), // borde width
+          padding: const EdgeInsets.all(2.0), // border width
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor, // border color
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(
             foregroundColor: Colors.white,
-            backgroundImage: NetworkImage(avataruUrl!),
+            backgroundImage: NetworkImage(avatarUrl!),
             radius: 100.0,
             backgroundColor: Colors.white,
           ),
@@ -51,14 +51,14 @@ class LaunchDetailHeader extends StatelessWidget {
       return Container(
         width: 200.0,
         height: 200.0,
-        padding: const EdgeInsets.all(2.0), // borde width
+        padding: const EdgeInsets.all(2.0), // border width
         decoration: BoxDecoration(
           color: Theme.of(context).highlightColor, // border color
           shape: BoxShape.circle,
         ),
         child: CircleAvatar(
           foregroundColor: Colors.white,
-          backgroundImage: NetworkImage(avataruUrl!),
+          backgroundImage: NetworkImage(avatarUrl!),
           radius: 100.0,
           backgroundColor: Colors.white,
         ),
@@ -68,8 +68,6 @@ class LaunchDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var textTheme = theme.textTheme;
 
     if (backEnabled!) {
       return Stack(
@@ -79,10 +77,10 @@ class LaunchDetailHeader extends StatelessWidget {
             heightFactor: 1.35,
             child: _buildAvatar(context),
           ),
-          Positioned(
+          const Positioned(
             top: 24.0,
             left: 4.0,
-            child: const BackButton(),
+            child: BackButton(),
           ),
           Positioned(
             top: 24.0,

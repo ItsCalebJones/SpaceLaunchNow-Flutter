@@ -5,6 +5,7 @@ import 'package:dart_twitter_api/twitter_api.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:yaml/yaml.dart';
 
+import '../../config/env.dart';
 import 'abstract_collector.dart';
 
 class TwitterCollector implements AbstractCollector {
@@ -12,11 +13,9 @@ class TwitterCollector implements AbstractCollector {
   String? _consumerSecret;
   String? _accessToken;
   String? _accessTokenSecret;
-  late String _filename;
   late String _query;
 
-  TwitterCollector.fromFile(String configFileName, String query) {
-    _filename = configFileName;
+  TwitterCollector.fromFile(String query) {
     _query = query;
   }
 
@@ -30,13 +29,10 @@ class TwitterCollector implements AbstractCollector {
   }
 
   Future getConfigCredentials() async {
-    String data = await rootBundle.loadString(_filename);
-    Map config = loadYaml(data)['twitterFeed'];
-    _consumerKey = config['consumerKey'];
-    _consumerSecret = config['consumerSecret'];
-    _accessToken = config['accessToken'];
-    _accessTokenSecret = config['accessTokenSecret'];
-
+    _consumerKey = Secret.twitter_consumer_key;
+    _consumerSecret = Secret.twitter_consumer_secret;
+    _accessToken = Secret.twitter_access_token;
+    _accessTokenSecret = Secret.twitter_access_token_secret;
     return true;
   }
 

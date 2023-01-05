@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
-import '../../../util/banner_constant.dart';
+
 
 class ListAdWidget extends StatefulWidget {
-  const ListAdWidget(this.size);
+  const ListAdWidget(this.size, {Key? key}) : super(key: key);
 
   final AdSize size;
 
@@ -20,6 +22,7 @@ class _ListAdWidgetState extends State<ListAdWidget>
   BannerAd? _bannerAd;
   bool _isReady = false;
   bool _showAds = false;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -27,7 +30,7 @@ class _ListAdWidgetState extends State<ListAdWidget>
     SharedPreferences.getInstance().then((SharedPreferences prefs) => {
           setState(() {
             _showAds = prefs.getBool("showAds") ?? true;
-            print("Show ads: $_showAds");
+            logger.d("Show ads: $_showAds");
           })
         });
     Future.delayed(const Duration(milliseconds: 250), createAd);
@@ -42,13 +45,13 @@ class _ListAdWidgetState extends State<ListAdWidget>
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          print('${ad.runtimeType} loaded!');
+          logger.d('${ad.runtimeType} loaded!');
           setState(() {
             _isReady = true;
           });
         },
         onAdFailedToLoad: (ad, error) {
-          print('${ad.runtimeType} failed to load.\n$error');
+          logger.d('${ad.runtimeType} failed to load.\n$error');
           ad.dispose();
           _bannerAd = null;
         },
@@ -76,6 +79,7 @@ class _ListAdWidgetState extends State<ListAdWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_isReady && _showAds) {
       return Padding(
         padding: const EdgeInsets.all(8.0),

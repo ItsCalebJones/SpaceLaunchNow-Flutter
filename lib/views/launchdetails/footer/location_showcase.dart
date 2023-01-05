@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class LocationShowcaseWidget extends StatefulWidget {
   final Launch? _launch;
 
-  const LocationShowcaseWidget(this._launch);
+  const LocationShowcaseWidget(this._launch, {Key? key}) : super(key: key);
 
   @override
   State createState() => LocationShowcaseState(_launch);
@@ -21,19 +20,12 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
 
   @override
   void initState() {
+    super.initState();
     if (_launch!.pad!.mapImage != null) {
       staticMapUri = Uri.parse(_launch!.pad!.mapImage!);
     }
     if (_launch!.pad!.location!.mapImage != null) {
       staticMapUri = Uri.parse(_launch!.pad!.mapImage!);
-    }
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
     }
   }
 
@@ -44,7 +36,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.map),
         onPressed: () {
-          launch(_launch!.pad!.mapURL!);
+          openUrl(_launch!.pad!.mapURL!);
         },
         tooltip: "Map",
       ));
@@ -54,7 +46,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          launch(_launch!.pad!.wikiURL!);
+          openUrl(_launch!.pad!.wikiURL!);
         },
         tooltip: "Wikipedia",
       ));

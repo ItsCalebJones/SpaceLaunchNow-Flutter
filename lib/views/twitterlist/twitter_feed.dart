@@ -20,7 +20,7 @@ class _TwitterFeedWidgetState extends State<TwitterFeedWidget> {
   List? tweets;
 
   Future<void> _gatherTweets() async {
-    var collector = TwitterCollector.fromFile("config.yaml", widget.query);
+    var collector = TwitterCollector.fromFile(widget.query);
 
     await collector.getConfigCredentials().then((success) {
       collector.gather().then((response) {

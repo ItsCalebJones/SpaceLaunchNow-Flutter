@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
-import 'package:flutter_inapp_purchase/modules.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
@@ -26,9 +25,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final FirebaseMessaging _firebaseMessaging;
+  var logger = Logger();
 
   NotificationFilterPageState(this._firebaseMessaging);
 
@@ -48,7 +47,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   StreamSubscription? _purchaseUpdatedSubscription;
   StreamSubscription? _purchaseErrorSubscription;
-  StreamSubscription? _conectionSubscription;
+  StreamSubscription? _connectionSubscription;
 
   @override
   initState() {
@@ -58,8 +57,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   ThemeData get barTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
+    var qDarkMode = MediaQuery.of(context).platformBrightness;
+    if (qDarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -68,11 +67,10 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
-    print("I AM THERE");
     List<PurchasedItem>? items =
         await FlutterInappPurchase.instance.getPurchaseHistory();
     for (var item in items!) {
-      print(item.toString());
+      logger.d(item.toString());
       _purchases.add(item);
     }
 
@@ -108,19 +106,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
     try {
       String? msg = await (FlutterInappPurchase.instance.consumeAll()
           as FutureOr<String?>);
-      print('consumeAllItems: $msg');
+      logger.d('consumeAllItems: $msg');
     } catch (err) {
-      print('consumeAllItems error: $err');
+      logger.d('consumeAllItems error: $err');
     }
 
-    _conectionSubscription =
+    _connectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
-      print('connected: $connected');
+      logger.d('connected: $connected');
     });
 
     _purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) {
-      print('purchase-updated: $productItem');
+      logger.d('purchase-updated: $productItem');
       if (productItem != null) {
         _getPurchaseHistory(initial: true);
       }
@@ -128,7 +126,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
     _purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
-      print('purchase-error: $purchaseError');
+      logger.d('purchase-error: $purchaseError');
       if (!purchaseError!.message!.contains("Cancelled")) {
         var message = purchaseError.message;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -144,7 +142,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   init() async {
-    print("async call");
+    logger.d("async call");
     await _getPurchaseHistory(initial: true);
     await _getProduct();
     setState(() {
@@ -156,7 +154,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     List<IAPItem> items =
         await FlutterInappPurchase.instance.getProducts(_productLists);
     for (var item in items) {
-      print(item.toString());
+      logger.d(item.toString());
       _items.add(item);
     }
     _items.sort(
@@ -182,7 +180,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   void _handleDebugSupporter(bool value) {
-    print("Debug supporters: $value");
+    logger.d("Debug supporters: $value");
     sendUpdates(widget.configuration.copyWith(showAds: value));
     _prefs.then((SharedPreferences prefs) {
       return (prefs.setBool('showAds', value));
@@ -596,7 +594,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _buildDebug(),
       ListTile(
         title: Text('Notification Settings', style: theme.textTheme.headline5),
-        subtitle: Text('Select what kind of notifications to receive.'),
+        subtitle: const Text('Select what kind of notifications to receive.'),
       ),
       MergeSemantics(
         child: ListTile(
@@ -668,40 +666,38 @@ class NotificationFilterPageState extends State<SettingsPage> {
         ),
         ListTile(
           title: Text('Favorites Filters', style: theme.textTheme.headline5),
-          subtitle: Text(
+          subtitle: const Text(
               'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
         buildNotificationFilters(context),
-        Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[Text('About', style: theme.textTheme.headline5)],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[Text('About', style: theme.textTheme.headline5)],
         ),
-        Divider(),
+        const Divider(),
         MergeSemantics(
           child: ListTile(
-            title: Text('Privacy Policy'),
-            subtitle: Text('View the Space Launch Now privacy policy here.'),
+            title: const Text('Privacy Policy'),
+            subtitle: const Text('View the Space Launch Now privacy policy here.'),
             onTap: () {
-              _launchURL("https://spacelaunchnow.me/app/privacy");
+              openUrl("https://spacelaunchnow.me/app/privacy");
             },
           ),
         ),
         MergeSemantics(
           child: ListTile(
             title: const Text('Terms of Use'),
-            subtitle: Text(
+            subtitle: const Text(
                 'By using this application you agree to the Terms of Use.'),
             onTap: () {
-              _launchURL("https://spacelaunchnow.me/app/tos");
+              openUrl("https://spacelaunchnow.me/app/tos");
             },
           ),
         ),
         MergeSemantics(
           child: ListTile(
-            title: Text('Restore Purchases'),
+            title: const Text('Restore Purchases'),
             subtitle: const Text('Click here to restore in app purchases.'),
             onTap: () async {
               _getPurchaseHistory(initial: false);
@@ -711,14 +707,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
         const SizedBox(height: 50)
       ],
     );
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   Card _buildProductList() {
@@ -744,15 +732,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
           title: Text('Error loading in-app-purchases.',
               style: TextStyle(fontWeight: FontWeight.bold))));
     }
-    print("Printing items");
-    print(_items);
+    logger.d("logger.ding items");
+    logger.d(_items);
     productList.addAll(_items.map(
       (IAPItem product) {
         bool isNotFound = _purchases
             .where((element) => element.productId == product.productId)
             .toList()
             .isEmpty;
-        print(product);
+        logger.d(product);
         return ListTile(
             title: Text(
               product.title!,
@@ -776,12 +764,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
     List<Widget> purchaseWidget = [];
     if (kReleaseMode) {
       if (_purchases.isNotEmpty) {
-        print("Purchases found!");
+        logger.d("Purchases found!");
         purchaseWidget.add(Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Divider(),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -795,13 +783,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
                   ),
                   child: const Icon(Icons.check, color: Colors.white)),
             ),
-            Text("Purchase confirmed - ads disabled!")
+            const Text("Purchase confirmed - ads disabled!")
           ],
         ));
         _showAds(false);
       } else {
         _showAds(true);
-        print("Purchases not found!");
+        logger.d("Purchases not found!");
       }
     }
 
@@ -849,7 +837,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
               ),
             ),
           ),
-          Divider(),
+          const Divider(),
           MergeSemantics(
             child: ListTile(
               title: const Text('SpaceX'),

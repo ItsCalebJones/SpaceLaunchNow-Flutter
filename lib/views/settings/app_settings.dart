@@ -27,7 +27,7 @@ class AppConfiguration {
     required this.subscribeALL,
     required this.nightMode,
     required this.showAds,
-  })  : assert(nightMode != null);
+  });
 
   bool showAds;
   bool nightMode;

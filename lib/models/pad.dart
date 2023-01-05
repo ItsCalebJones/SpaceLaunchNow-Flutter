@@ -30,15 +30,15 @@ class Pad {
     logger.i(json);
 
     var latJson = json['latitude'];
-    num? _latitude;
+    num? latitude;
     if (latJson != null) {
-      _latitude = num.parse(json['latitude']);
+      latitude = num.parse(json['latitude']);
     }
 
     var lonJson = json['longitude'];
-    num? _longitude;
+    num? longitude;
     if (lonJson != null) {
-      _longitude = num.parse(json['longitude']);
+      longitude = num.parse(json['longitude']);
     }
 
     return Pad(
@@ -48,8 +48,8 @@ class Pad {
         wikiURL: json['wiki_url'],
         mapURL: json['map_url'],
         mapImage: json['map_image'],
-        latitude: _latitude,
-        longitude: _longitude,
+        latitude: latitude,
+        longitude: longitude,
         location: Location.fromJson(json['location']));
   }
 }

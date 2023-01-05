@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
-import '../event/event_list.dart';
-import '../launch/list/launch_list.dart';
+import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
+import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 
 class LaunchEventList {
   final List<LaunchList>? launches;
@@ -10,7 +10,6 @@ class LaunchEventList {
   LaunchEventList({this.launches, this.events});
 
   factory LaunchEventList.fromJson(Map<String, dynamic> json) {
-    var logger = Logger();
     return LaunchEventList(
       launches: List<LaunchList>.from(
           json['launches'].map((launch) => LaunchList.fromJson(launch))),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class EventDetailBodyWidget extends StatefulWidget {
@@ -91,56 +89,6 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
     );
   }
 
-  _openUrl(String url) async {
-    Uri? _url = Uri.tryParse(url);
-    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
-      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
-      if (await canLaunch('youtube://$_finalUrl')) {
-        await launch('youtube://$_finalUrl', forceSafariVC: false);
-      }
-    } else {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
-  }
-
-  Widget _buildActionButtons(ThemeData theme) {
-    List<Widget> materialButtons = [];
-
-    if (widget.event.id != null) {
-      var eventUrl = "https://spacelaunchnow.me/event/$widget.event.id";
-      materialButtons.add(Row(
-        children: <Widget>[
-          const Icon(Icons.share),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: CupertinoButton(
-              onPressed: () {
-                Share.share(eventUrl);
-              },
-              child: const Text(
-                'Share Event',
-              ),
-            ),
-          ),
-        ],
-      ));
-    }
-
-    return Padding(
-      padding:
-          const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0, bottom: 0.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: materialButtons,
-      ),
-    );
-  }
-
   Widget _buildSpace() {
     return const SizedBox(height: 200);
   }
@@ -196,7 +144,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
 
     if (widget.event.videoUrl != null &&
         YoutubePlayer.convertUrlToId(widget.event.videoUrl!) != null) {
-      YoutubePlayerController _controller = YoutubePlayerController(
+      YoutubePlayerController controller = YoutubePlayerController(
         initialVideoId: YoutubePlayer.convertUrlToId(widget.event.videoUrl!)!,
         flags: const YoutubePlayerFlags(
           autoPlay: true,
@@ -205,10 +153,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
       widgets.add(Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: YoutubePlayer(
-          key: ObjectKey(_controller),
-          controller: _controller,
+          key: ObjectKey(controller),
+          controller: controller,
           showVideoProgressIndicator: false,
-          bottomActions: <Widget>[CustomPlayPauseButton()],
+          bottomActions: const <Widget>[CustomPlayPauseButton()],
         ),
       ));
 
@@ -235,7 +183,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 ],
               ),
               onPressed: () {
-                _openUrl(widget.event.videoUrl!);
+                openUrl(widget.event.videoUrl!);
               }, //
             ),
           ),
@@ -287,7 +235,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 ],
               ),
               onPressed: () {
-                _openUrl(widget.event.newsUrl!);
+                openUrl(widget.event.newsUrl!);
               }, //
             ),
           ),

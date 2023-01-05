@@ -23,6 +23,7 @@ import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
@@ -815,9 +816,10 @@ class PagesState extends State<Pages> {
 
   _openBrowser(String url) async {
     print("Checking $url");
-    if (await canLaunch(url)) {
+    var _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
       print("Launching $url");
-      await launch(url);
+      await launchUrl(_url);
     } else {
       throw 'Could not launch $url';
     }

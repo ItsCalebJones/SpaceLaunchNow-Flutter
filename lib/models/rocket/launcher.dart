@@ -22,9 +22,9 @@ class Launcher {
 
   factory Launcher.fromJson(Map<String, dynamic> json) {
     var launcherConfigJson = json['launcher_config'];
-    LauncherConfiguration? _launcherConfig;
+    LauncherConfiguration? launcherConfig;
     if (launcherConfigJson != null) {
-      _launcherConfig = LauncherConfiguration.fromJson(launcherConfigJson);
+      launcherConfig = LauncherConfiguration.fromJson(launcherConfigJson);
     }
 
     return Launcher(
@@ -35,7 +35,7 @@ class Launcher {
       status: json['status'],
       previousFlights: json['previous_flights'],
       image: json['image_url'],
-      launcherConfiguration: _launcherConfig,
+      launcherConfiguration: launcherConfig,
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/countdown_helper.dart';
@@ -26,7 +25,7 @@ class Dependencies {
 }
 
 class Countdown extends StatefulWidget {
-  Countdown(this.launch);
+  Countdown(this.launch, {Key? key}) : super(key: key);
 
   final Launch? launch;
   final Dependencies dependencies = Dependencies();
@@ -243,7 +242,7 @@ class CountdownState extends State<Countdown> {
               ]),
             ],
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

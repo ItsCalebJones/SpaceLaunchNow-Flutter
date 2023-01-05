@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
-
-import '../../agency.dart';
+import 'package:spacelaunchnow_flutter/models/agency.dart';
 
 class Launch {
   final String? id;
@@ -65,12 +65,15 @@ class Launch {
 
   factory Launch.fromJson(Map<String, dynamic> json) {
     var missionJson = json['mission'];
-    Mission? _mission;
+    var logger = Logger();
+    logger.d(json);
+
+    Mission? mission;
     if (missionJson != null) {
-      _mission = Mission.fromJson(missionJson);
+      mission = Mission.fromJson(missionJson);
     }
 
-    print(json);
+
 
     return Launch(
       id: json['id'],
@@ -86,7 +89,7 @@ class Launch {
       launchServiceProvider: Agency.fromJson(json['launch_service_provider']),
       rocket: Rocket.fromJson(json['rocket']),
       pad: Pad.fromJson(json['pad']),
-      mission: _mission,
+      mission: mission,
       vidURLs: List<VidURL>.from(
           json['vidURLs']?.map((vidURL) => VidURL.fromJson(vidURL)) ??
               <VidURL>[]),

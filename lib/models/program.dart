@@ -19,10 +19,10 @@ class Program {
       this.agencies});
 
   factory Program.fromJson(Map<String, dynamic> json) {
-    List<AgencyMini> _agencies = <AgencyMini>[];
+    List<AgencyMini> agencies = <AgencyMini>[];
     var agencyJson = json['updates'];
     if (agencyJson != null) {
-      _agencies.addAll(agencyJson.map((agency) => AgencyMini.fromJson(agency)));
+      agencies.addAll(agencyJson.map((agency) => AgencyMini.fromJson(agency)));
     }
 
     return Program(
@@ -32,7 +32,7 @@ class Program {
       infoUrl: json['info_url'],
       wikiUrl: json['wiki_url'],
       imageUrl: json['image_url'],
-      agencies: _agencies,
+      agencies: agencies,
     );
   }
 }

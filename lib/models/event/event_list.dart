@@ -47,17 +47,17 @@ class EventList {
   }
 
   factory EventList.fromJson(Map<String, dynamic> json) {
-    List<Update> _updates = <Update>[];
+    List<Update> updates = <Update>[];
     var updatesJson = json['updates'];
     if (updatesJson != null) {
-      _updates = List<Update>.from(
+      updates = List<Update>.from(
           updatesJson.map((update) => Update.fromJson(update)));
     }
 
-    List<LaunchList> _launches = <LaunchList>[];
+    List<LaunchList> launches = <LaunchList>[];
     var launchesJson = json['launches'];
     if (launchesJson != null) {
-      _launches = List<LaunchList>.from(
+      launches = List<LaunchList>.from(
           launchesJson.map((launch) => LaunchList.fromJson(launch)));
     }
 
@@ -72,8 +72,8 @@ class EventList {
       featureImage: json['feature_image'],
       date: DateTime.parse(json['date']),
       net: DateTime.parse(json['date']),
-      launches: _launches,
-      updates: _updates,
+      launches: launches,
+      updates: updates,
     );
   }
 }

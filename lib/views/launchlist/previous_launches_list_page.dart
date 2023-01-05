@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
@@ -15,7 +16,7 @@ import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class PreviousLaunchListPage extends StatefulWidget {
   const PreviousLaunchListPage(
-      this._configuration, this.searchQuery, this.searchActive);
+      this._configuration, this.searchQuery, this.searchActive, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
   final String? searchQuery;
@@ -34,6 +35,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   bool loading = false;
   final SLNRepository _repository = Injector().slnRepository;
   ListAdWidget? _bannerAdWidget;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -45,7 +47,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       nextOffset = PageStorage.of(context)!
           .readState(context, identifier: 'previousLaunchesNextOffset');
       totalCount = PageStorage.of(context)!
-          .readState(context, identifier: 'previousLaunchesnextTotalCount');
+          .readState(context, identifier: 'previousLaunchesNextTotalCount');
     }
 
     if (widget.searchActive) {
@@ -55,11 +57,11 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       nextOffset = PageStorage.of(context)!
           .readState(context, identifier: 'previousLaunchesNextOffset');
       totalCount = PageStorage.of(context)!
-          .readState(context, identifier: 'previousLaunchesnextTotalCount');
+          .readState(context, identifier: 'previousLaunchesNextTotalCount');
     } else {
       lockedLoadNext();
     }
-    _bannerAdWidget = ListAdWidget(AdSize.largeBanner);
+    _bannerAdWidget = const ListAdWidget(AdSize.largeBanner);
   }
 
   @override
@@ -87,8 +89,8 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     loading = false;
     nextOffset = launches.nextOffset;
     totalCount = launches.count;
-    print(
-        "Next: " + nextOffset.toString() + " Total: " + totalCount.toString());
+    logger.d(
+        "Next: $nextOffset Total: $totalCount");
     if (reload) {
       _launches.clear();
     }
@@ -99,19 +101,19 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       PageStorage.of(context)!.writeState(context, nextOffset,
           identifier: 'previousLaunchesNextOffset');
       PageStorage.of(context)!.writeState(context, totalCount,
-          identifier: 'previousLaunchesnextTotalCount');
+          identifier: 'previousLaunchesNextTotalCount');
     });
   }
 
   void onLoadContactsError([bool? search]) {
-    print("Error occured");
+    logger.d("Error occurred");
     loading = false;
     if (search == true) {
       setState(() {
         _launches.clear();
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 10),
+        duration: const Duration(seconds: 10),
         content: const Text('Unable to load launches matching search.'),
         action: SnackBarAction(
           label: 'Refresh',
@@ -184,12 +186,12 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     Widget content;
 
     if (_launches.isEmpty && loading) {
-      content = Center(
-        child: const CircularProgressIndicator(),
+      content = const Center(
+        child: CircularProgressIndicator(),
       );
     } else if (_launches.isEmpty) {
-      content = Center(
-        child: const Text("No Launches Loaded"),
+      content = const Center(
+        child: Text("No Launches Loaded"),
       );
     } else {
       ListView listView = ListView.builder(
@@ -202,13 +204,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     }
 
     return content;
-  }
-
-  bool isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void notifyThreshold() {
@@ -228,7 +223,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
           .fetchPrevious(limit: limit.toString(), offset: nextOffset.toString())
           .then((launches) => onLoadLaunchesComplete(launches))
           .catchError((onError) {
-        print(onError);
+        logger.d(onError);
         onLoadContactsError();
       });
     }
@@ -247,7 +242,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       onLoadContactsError();
     });
     onLoadLaunchesComplete(responseLaunches);
-    return null;
   }
 
   void _getLaunchBySearch(String? value) {

@@ -4,9 +4,9 @@ import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 
 class EventDetailHeader extends StatelessWidget {
   const EventDetailHeader(
-    this.event, {
+    this.event, {Key? key,
     required this.backEnabled,
-  });
+  }) : super(key: key);
 
   final Event? event;
   final bool backEnabled;
@@ -27,7 +27,7 @@ class EventDetailHeader extends StatelessWidget {
     return Container(
       width: 200.0,
       height: 200.0,
-      padding: const EdgeInsets.all(2.0), // borde width
+      padding: const EdgeInsets.all(2.0), // border width
       decoration: BoxDecoration(
         color: Theme.of(context).highlightColor, // border color
         shape: BoxShape.circle,
@@ -43,8 +43,6 @@ class EventDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var textTheme = theme.textTheme;
 
     if (backEnabled) {
       return Stack(
