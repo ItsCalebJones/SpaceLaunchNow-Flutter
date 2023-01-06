@@ -6,16 +6,6 @@ description: Run Flutter Test
 runs:
   using: composite
   steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1.3
-      with:
-        envkey_TWITTER_CONSUMER_KEY: ''
-        envkey_TWITTER_CONSUMER_SECRET: ''
-        envkey_TWITTER_ACCESS_TOKEN: ''
-        envkey_TWITTER_ACCESS_TOKEN_SECRET: ''
-        envkey_LL_API_KEY: ''
-        file_name: .env
-
     - name: Pub Get
       shell: bash
       run: flutter pub get
