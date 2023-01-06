@@ -42,12 +42,9 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      - name: Write .env
-        id: write_file
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: '.env'
-          encodedString: ${{ secrets.ENV_FILE }}
+      - name: Create .env
+        run: |
+          echo ${{ secrets.ENV_FILE_DEV }} | base64 --decode > .env
 
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v1
