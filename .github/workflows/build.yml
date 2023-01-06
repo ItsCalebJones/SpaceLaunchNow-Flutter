@@ -19,8 +19,7 @@ jobs:
           flutter-version: '3.3.10'
 
       - name: Create env
-        run: |
-          echo ${{ secrets.ENV_FILE_DEV }} | base64 --decode > .env
+        run: "echo ${{ secrets.ENV_FILE_DEV }} | base64 --decode > .env"
 
       - name: Run Flutter Tests
         uses: ./.github/actions/flutter-test
