@@ -18,8 +18,12 @@ jobs:
         with:
           flutter-version: '3.3.10'
 
-      - name: Create env
-        run: "echo ${{ secrets.ENV_FILE_DEV }} | base64 --decode > .env"
+      - name: Write .env
+        id: write_file
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: '.env'
+          encodedString: ${{ secrets.ENV_FILE_DEV }}
 
       - name: Run Flutter Tests
         uses: ./.github/actions/flutter-test
