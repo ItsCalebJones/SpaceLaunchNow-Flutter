@@ -3,7 +3,6 @@ import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:spacelaunchnow_flutter/views/twitterlist/twitter_list_page.dart';
 
 class NewsAndEventsPage extends StatefulWidget {
   const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {Key? key}) : super(key: key);
@@ -59,9 +58,6 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
                 Tab(
                   text: "Events",
                 ),
-                Tab(
-                  text: "Twitter",
-                )
               ],
             ),
             title: Text(
@@ -77,7 +73,6 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
             children: [
               NewsListPage(widget._configuration),
               EventListPage(widget._configuration),
-              TwitterFeedPage(widget._configuration),
             ],
           ),
         ));
