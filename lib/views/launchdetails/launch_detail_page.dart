@@ -62,7 +62,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       launch = widget.launch;
       setController();
       backEnabled = true;
-    } else if (widget.launchId != null && widget.launchId != 0) {
+    } else if (widget.launchId != null) {
       _loadLaunch(widget.launchId);
       backEnabled = true;
     } else {
