@@ -114,7 +114,7 @@ class _EventListPageState extends State<EventListPage> {
 
   void onLoadEventsError() {
     loading = false;
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: const Duration(seconds: 10),
       content: Text('Unable to load events.'),
       action: SnackBarAction(

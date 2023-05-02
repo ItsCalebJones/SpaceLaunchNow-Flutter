@@ -91,22 +91,22 @@ class NotificationFilterPageState extends State<SettingsPage> {
               Text('Purchase history restored - thank you for your support!'),
           duration: Duration(seconds: 5),
         );
-        Scaffold.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else {
         const snackBar = SnackBar(
           content: Text('Purchase history restored - no purchases found.'),
           duration: Duration(seconds: 5),
         );
-        Scaffold.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
   }
 
   void asyncInitState() async {
-    await FlutterInappPurchase.instance.initConnection;
+    await FlutterInappPurchase.instance.initialize();
     // refresh items for android
     try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAllItems
+      String? msg = await (FlutterInappPurchase.instance.consumeAll()
           as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
@@ -131,7 +131,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       print('purchase-error: $purchaseError');
       if (!purchaseError!.message!.contains("Cancelled")) {
         var message = purchaseError.message;
-        final scaffold = Scaffold.of(context);
+        final scaffold = ScaffoldMessenger.of(context);
         scaffold.showSnackBar(SnackBar(
           content: Text('Error: $message'),
         ));
@@ -142,7 +142,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   @override
   void dispose() async {
     super.dispose();
-    await FlutterInappPurchase.instance.endConnection;
   }
 
   init() async {
@@ -171,8 +170,8 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   void _requestPurchase(IAPItem item) {
     FlutterInappPurchase.instance.requestPurchase(item.productId!);
-    final scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(SnackBar(
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(const SnackBar(
       content: Text('Sending purchase request to iTunes.'),
     ));
   }
@@ -765,10 +764,14 @@ class NotificationFilterPageState extends State<SettingsPage> {
             ),
             trailing: !isNotFound
                 ? const Icon(Icons.check)
-                : FlatButton(
-                    child: Text(product.localizedPrice!),
-                    color: Colors.green[800],
-                    textColor: Colors.white,
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      fixedSize: const Size.fromWidth(100),
+                      padding: const EdgeInsets.all(10),
+                    ),
+                    child: Text(product.localizedPrice!,
+                      style: const TextStyle(color: Colors.white)),
                     onPressed: () {
                       _requestPurchase(product);
                     },

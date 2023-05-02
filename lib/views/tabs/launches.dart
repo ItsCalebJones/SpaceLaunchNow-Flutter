@@ -104,7 +104,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? "BannerAd.testAdUnitId"
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),

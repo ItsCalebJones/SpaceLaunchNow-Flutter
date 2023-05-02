@@ -113,7 +113,7 @@ class _HomeListPageState extends State<HomeListPage> {
       setState(() {
         _launches.clear();
       });
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 10),
         content: const Text('Unable to load launches.'),
         action: SnackBarAction(
@@ -685,7 +685,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? ""
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),

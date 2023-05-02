@@ -77,7 +77,7 @@ class _NewsListPageState extends State<NewsListPage> {
         _news.clear();
       });
     }
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: const Duration(seconds: 10),
       content: const Text('Unable to load news.'),
       action: SnackBarAction(

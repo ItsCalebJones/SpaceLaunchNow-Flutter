@@ -35,7 +35,7 @@ class _ListAdWidgetState extends State<ListAdWidget>
     _bannerAd = BannerAd(
       size: widget.size,
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? ""
           : "ca-app-pub-9824528399164059/8172962746",
       request: const AdRequest(),
       listener: BannerAdListener(

@@ -28,7 +28,7 @@ class BannerAdState extends State<BannerAdWidget> {
         {_showAds = prefs.getBool("showAds") ?? true});
     _bannerAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? BannerAd.testAdUnitId
+          ? ""
           : "ca-app-pub-9824528399164059/8172962746",
       request: const AdRequest(),
       size: widget.size,

@@ -182,7 +182,7 @@ class CountdownState extends State<Countdown> {
                 child: GestureDetector(
                   onTap: () {
                     // set up the button
-                    Widget okButton = FlatButton(
+                    Widget okButton = TextButton(
                       child: const Text("OK"),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true)

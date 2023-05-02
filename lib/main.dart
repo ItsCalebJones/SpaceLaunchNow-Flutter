@@ -569,11 +569,11 @@ class PagesState extends State<Pages> {
   }
 
   void asyncInitState() async {
-    String? answer = await FlutterInappPurchase.instance.initConnection;
+    String? answer = await FlutterInappPurchase.instance.initialize();
     print(answer);
     // refresh items for android
     try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAllItems
+      String? msg = await (FlutterInappPurchase.instance.consumeAll()
           as FutureOr<String?>);
       print('consumeAllItems: $msg');
     } catch (err) {
@@ -594,7 +594,6 @@ class PagesState extends State<Pages> {
   @override
   void dispose() async {
     super.dispose();
-    await FlutterInappPurchase.instance.endConnection;
   }
 
   void hideAd() {}
@@ -658,13 +657,13 @@ class PagesState extends State<Pages> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: const Text('CLOSE'),
           onPressed: () {
             Navigator.pop(context, false);
           },
         ),
-        FlatButton(
+        TextButton(
           child: const Text('SHOW'),
           onPressed: () {
             Navigator.pop(context, true);
