@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spacelaunchnow_flutter/models/agency.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class AgenciesShowcase extends StatelessWidget {
-  const AgenciesShowcase(this.mLaunch);
+  const AgenciesShowcase(this.mLaunch, {Key? key}) : super(key: key);
 
   final Launch? mLaunch;
 
@@ -17,13 +16,13 @@ class AgenciesShowcase extends StatelessWidget {
     Agency? lsp = mLaunch!.launchServiceProvider;
     String? lspName = "Unknown";
     String? lspAdmin = "Unknown Administrator";
-    String lspfounded = "Founded: Unknown";
+    String lspFounded = "Founded: Unknown";
     String? lspDescription = "";
 
     if (lsp != null) {
       String? lspFoundedYear = lsp.foundingYear;
       if (lspFoundedYear != null) {
-        lspfounded = "Founded: " + lsp.foundingYear!;
+        lspFounded = "Founded: ${lsp.foundingYear!}";
       }
 
       if (lsp.name != null) {
@@ -37,7 +36,7 @@ class AgenciesShowcase extends StatelessWidget {
       }
     }
 
-    Widget? _buildStats(TextTheme theme) {
+    Widget? buildStats(TextTheme theme) {
       if (lsp != null &&
           lsp.successfulLaunches != null &&
           lsp.failedLaunches != null &&
@@ -133,7 +132,7 @@ class AgenciesShowcase extends StatelessWidget {
       return null;
     }
 
-    Widget _buildAvatar() {
+    Widget buildAvatar() {
       String? url =
           "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
       if (lsp!.nationURL != null && lsp.nationURL!.isNotEmpty) {
@@ -151,7 +150,7 @@ class AgenciesShowcase extends StatelessWidget {
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
-                // borde width
+                // border width
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
@@ -179,7 +178,7 @@ class AgenciesShowcase extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    lspfounded,
+                    lspFounded,
                     style: textTheme.subtitle1!.copyWith(),
                     textAlign: TextAlign.center,
                   ),
@@ -192,7 +191,7 @@ class AgenciesShowcase extends StatelessWidget {
       );
     }
 
-    Widget _buildLSP() {
+    Widget buildLSP() {
       List<Widget> lspWidgets = [];
       if (lsp != null) {
       } else {
@@ -225,7 +224,7 @@ class AgenciesShowcase extends StatelessWidget {
               style: textTheme.headline6,
             ),
           ),
-          _buildAvatar(),
+          buildAvatar(),
           const Padding(
             padding: EdgeInsets.all(4.0),
           ),
@@ -239,7 +238,7 @@ class AgenciesShowcase extends StatelessWidget {
             ),
           ),
           Column(children: lspWidgets),
-          _buildStats(textTheme)!,
+          buildStats(textTheme)!,
         ],
       );
     }
@@ -247,7 +246,7 @@ class AgenciesShowcase extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Column(
-        children: <Widget>[_buildLSP()],
+        children: <Widget>[buildLSP()],
       ),
     );
   }
@@ -352,7 +351,7 @@ class AgenciesShowcase extends StatelessWidget {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          launch(mLaunch!.launchServiceProvider!.infoURL!);
+          openUrl(mLaunch!.launchServiceProvider!.infoURL!);
         },
         tooltip: "Website",
       ));
@@ -362,7 +361,7 @@ class AgenciesShowcase extends StatelessWidget {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          launch(mLaunch!.launchServiceProvider!.wikiURL!);
+          openUrl(mLaunch!.launchServiceProvider!.wikiURL!);
         },
         tooltip: "Wikipedia",
       ));

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class MissionShowcase extends StatelessWidget {
-  const MissionShowcase(this._launch);
+  const MissionShowcase(this._launch, {Key? key}) : super(key: key);
 
   final Launch? _launch;
 
@@ -71,8 +71,6 @@ class MissionShowcase extends StatelessWidget {
       ),
     ));
     if (mission != null) {
-      String? typeName = _launch!.mission!.typeName;
-      String? missionName = _launch!.mission!.name;
       String? missionDescription = _launch!.mission!.description;
       widgets.add(Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -147,7 +145,7 @@ class MissionShowcase extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
             child: InkWell(
               onTap: () {
-                launch("https://www.patreon.com/geoffbarrett");
+                openUrl("https://www.patreon.com/geoffbarrett");
               },
               child: Center(
                 child: Image.network(_launch!.infographic!),

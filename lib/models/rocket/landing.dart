@@ -13,23 +13,23 @@ class Landing {
 
   factory Landing.fromJson(Map<String, dynamic> json) {
     var locationJson = json['location'];
-    LandingLocation? _location;
+    LandingLocation? location;
     if (locationJson != null) {
-      _location = LandingLocation.fromJson(locationJson);
+      location = LandingLocation.fromJson(locationJson);
     }
 
     var landingTypeJson = json['type'];
-    LandingType? _landingType;
+    LandingType? landingType;
     if (landingTypeJson != null) {
-      _landingType = LandingType.fromJson(landingTypeJson);
+      landingType = LandingType.fromJson(landingTypeJson);
     }
 
     return Landing(
       description: json['description'],
       attempt: json['attempt'],
       success: json['success'],
-      location: _location,
-      type: _landingType,
+      location: location,
+      type: landingType,
     );
   }
 }

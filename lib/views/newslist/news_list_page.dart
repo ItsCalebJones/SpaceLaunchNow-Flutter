@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:share/share.dart';
+import 'package:logger/logger.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -14,10 +14,10 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class NewsListPage extends StatefulWidget {
-  const NewsListPage(this._configuration);
+  const NewsListPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -27,14 +27,14 @@ class NewsListPage extends StatefulWidget {
 
 class _NewsListPageState extends State<NewsListPage> {
   List<News> _news = [];
-  final List<ListItem> _list = [];
   int limit = 50;
   bool loading = false;
   bool showAds = false;
   int filterIndex = 0;
   final SLNRepository _repository = Injector().slnRepository;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  var _squareAd;
+  ListAdWidget? squareAd;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _NewsListPageState extends State<NewsListPage> {
     } else {
       _handleRefresh();
     }
-    _squareAd = const ListAdWidget(AdSize.mediumRectangle);
+    squareAd = const ListAdWidget(AdSize.mediumRectangle);
     _prefs.then((SharedPreferences prefs) =>
         {showAds = prefs.getBool("showAds") ?? true});
   }
@@ -68,7 +68,7 @@ class _NewsListPageState extends State<NewsListPage> {
   }
 
   void onLoadContactsError([bool? search]) {
-    print("An error occured!");
+    logger.d("An error occurred!");
     setState(() {
       loading = false;
     });
@@ -126,45 +126,10 @@ class _NewsListPageState extends State<NewsListPage> {
     limit = 30;
     loading = false;
     List<News> response = await _repository.fetchNews().catchError((onError) {
-      print(onError);
+      logger.d(onError);
       onLoadContactsError();
     });
     onLoadResponseComplete(response);
-    return null;
-  }
-
-  _openBrowser(News news) async {
-    var url = news.url!;
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Widget _buildBriefing() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-              left: 16.0, right: 16.0, top: 16.0, bottom: 0.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Latest News...",
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4!
-                      .copyWith(fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   List<Widget> _buildNewsList() {
@@ -174,7 +139,7 @@ class _NewsListPageState extends State<NewsListPage> {
     }
 
     if (showAds) {
-      content.add(_squareAd);
+      content.add(squareAd!);
     }
 
     List<String> filters = [
@@ -259,7 +224,7 @@ class _NewsListPageState extends State<NewsListPage> {
     for (News item in sublist) {
       content.add(_buildNewsCard(item));
     }
-    print(data);
+    logger.d(data);
     return content;
   }
 
@@ -279,7 +244,7 @@ class _NewsListPageState extends State<NewsListPage> {
     widget = Padding(
       padding: const EdgeInsets.only(top: 0, bottom: 8, left: 8, right: 8),
       child: GestureDetector(
-        onTap: () => _openBrowser(item),
+        onTap: () => openUrl(item.url!),
         child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
@@ -353,7 +318,7 @@ class _NewsListPageState extends State<NewsListPage> {
       padding: const EdgeInsets.all(8.0),
       child:
       InkWell(
-        onTap: () => _openBrowser(item),
+        onTap: () => openUrl(item.url!),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

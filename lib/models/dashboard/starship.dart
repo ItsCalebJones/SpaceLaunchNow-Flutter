@@ -28,33 +28,33 @@ class Starship {
   factory Starship.fromJson(Map<String, dynamic> json) {
     var logger = Logger();
 
-    LaunchEventList _upcoming = LaunchEventList.fromJson(json['upcoming']);
-    LaunchEventList _previous = LaunchEventList.fromJson(json['upcoming']);
-    List<LiveStream> _liveStreams = List<LiveStream>.from(
+    LaunchEventList upcoming = LaunchEventList.fromJson(json['upcoming']);
+    LaunchEventList previous = LaunchEventList.fromJson(json['upcoming']);
+    List<LiveStream> liveStreams = List<LiveStream>.from(
         json['live_streams'].map((stream) => LiveStream.fromJson(stream)));
 
-    List<RoadClosure> _roadClosures = List<RoadClosure>.from(
+    List<RoadClosure> roadClosures = List<RoadClosure>.from(
         json['road_closures'].map((stream) => RoadClosure.fromJson(stream)));
 
-    List<Notice> _notices = List<Notice>.from(
+    List<Notice> notices = List<Notice>.from(
         json['notices'].map((stream) => Notice.fromJson(stream)));
 
-    List<Launcher> _vehicles = List<Launcher>.from(
+    List<Launcher> vehicles = List<Launcher>.from(
         json['vehicles'].map((stream) => Launcher.fromJson(stream)));
 
-    List<Update> _updates = List<Update>.from(
+    List<Update> updates = List<Update>.from(
         json['updates'].map((stream) => Update.fromJson(stream)));
 
     logger.d("Made it here.");
 
     return Starship(
-      upcoming: _upcoming,
-      previous: _previous,
-      liveStream: _liveStreams,
-      roadClosures: _roadClosures,
-      notices: _notices,
-      launchers: _vehicles,
-      updates: _updates,
+      upcoming: upcoming,
+      previous: previous,
+      liveStream: liveStreams,
+      roadClosures: roadClosures,
+      notices: notices,
+      launchers: vehicles,
+      updates: updates,
     );
   }
 }

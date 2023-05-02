@@ -1,5 +1,3 @@
-import 'package:logger/logger.dart';
-
 import 'crew.dart';
 import 'spacecraft.dart';
 
@@ -20,7 +18,6 @@ class SpacecraftStage {
       this.spacecraft});
 
   factory SpacecraftStage.fromJson(Map<String, dynamic> json) {
-    var logger = Logger();
 
     return SpacecraftStage(
         id: json['id'],

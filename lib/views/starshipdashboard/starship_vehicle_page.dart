@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
@@ -10,7 +9,7 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class StarshipVehiclePage extends StatefulWidget {
-  const StarshipVehiclePage(this._configuration);
+  const StarshipVehiclePage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -24,6 +23,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   bool usingCached = false;
   final SLNRepository _repository = Injector().slnRepository;
   List<bool> isSelected = [true, false];
+  var logger = Logger();
 
   @override
   void initState() {
@@ -56,7 +56,6 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   }
 
   void onLoadContactsError([bool? search]) {
-    print("An error occured!");
     setState(() {
       loading = false;
     });
@@ -80,14 +79,14 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   Widget _buildBody() {
     List<Widget> content = <Widget>[];
     if (_starship == null || loading) {
-      content.add(SizedBox(height: 200));
-      content.add(Center(
+      content.add(const SizedBox(height: 200));
+      content.add(const Center(
         child: CircularProgressIndicator(),
       ));
     } else if (_starship == null) {
       content.add(const SizedBox(height: 200));
-      content.add(Center(
-        child: const Text("Unable to Load Dashboard"),
+      content.add(const Center(
+        child: Text("Unable to Load Dashboard"),
       ));
     } else {
       content.addAll(_buildList());
@@ -124,7 +123,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
           .fetchStarshipDashboard()
           .then((response) => onLoadResponseComplete(response))
           .catchError((onError) {
-        print(onError);
+        logger.d(onError);
         onLoadContactsError();
       });
     }
@@ -140,7 +139,6 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   }
 
   Widget _buildVehicleTile(Launcher item) {
-    var formatter = DateFormat.yMd();
     String? imgUrl;
     if (item.image != null) {
       imgUrl = item.image;
@@ -155,7 +153,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
           backgroundImage: CachedNetworkImageProvider(imgUrl!),
         ),
         title: Text(
-            item.launcherConfiguration!.name! + " | " + item.serialNumber!,
+            "${item.launcherConfiguration!.name!} | ${item.serialNumber!}",
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!

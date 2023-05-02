@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
@@ -16,7 +15,6 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'footer/vehicle_showcase.dart';
 
@@ -25,7 +23,7 @@ class LaunchDetailBodyWidget extends StatefulWidget {
   final AppConfiguration _configuration;
   final List<News> news;
 
-  const LaunchDetailBodyWidget(this.launch, this._configuration, this.news);
+  const LaunchDetailBodyWidget(this.launch, this._configuration, this.news, {Key? key}) : super(key: key);
 
   @override
   State createState() => LaunchDetailBodyState(launch);
@@ -46,7 +44,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildLocationInfo(TextTheme textTheme) {
     return Row(
       children: <Widget>[
-        Icon(
+        const Icon(
           Icons.place,
         ),
         Expanded(
@@ -104,7 +102,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildTimeInfo(TextTheme textTheme) {
     return Row(
       children: <Widget>[
-        Icon(
+        const Icon(
           Icons.timer,
         ),
         Expanded(
@@ -127,7 +125,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch!.rocket!.firstStages!.isNotEmpty) {
       bool landingAttempt = false;
       String landingLocation = "Landing: ";
-      String landingSuccess = "";
       for (var i = 0; i < mLaunch!.rocket!.firstStages!.length; i++) {
         final item = mLaunch!.rocket!.firstStages!.elementAt(i);
         if (item.landing != null && item.landing!.attempt!) {
@@ -139,19 +136,19 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               if (item.landing!.success == null) {
                 landingLocation = landingLocation;
               } else if (item.landing!.success!) {
-                landingLocation = landingLocation + " (Success)";
+                landingLocation = "$landingLocation (Success)";
               } else if (!item.landing!.success!) {
-                landingLocation = landingLocation + " (Failed)";
+                landingLocation = "$landingLocation (Failed)";
               }
             } else {
               landingLocation =
-                  landingLocation + ", " + item.landing!.location!.abbrev!;
+                  "$landingLocation, ${item.landing!.location!.abbrev!}";
               if (item.landing!.success == null) {
                 landingLocation = landingLocation;
               } else if (item.landing!.success!) {
-                landingLocation = landingLocation + " (Success)";
+                landingLocation = "$landingLocation (Success)";
               } else if (!item.landing!.success!) {
-                landingLocation = landingLocation + " (Failed)";
+                landingLocation = "$landingLocation (Failed)";
               }
             }
           }
@@ -185,22 +182,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     return Row();
   }
 
-  _openUrl(String url) async {
-    Uri? _url = Uri.tryParse(url);
-    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
-      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
-      if (await canLaunch('youtube://$_finalUrl')) {
-        await launch('youtube://$_finalUrl', forceSafariVC: false);
-      }
-    } else {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
-  }
-
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
@@ -227,12 +208,12 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch!.vidURLs != null && mLaunch!.vidURLs!.isNotEmpty) {
       materialButtons.add(Row(
         children: <Widget>[
-          Icon(Icons.live_tv),
+          const Icon(Icons.live_tv),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: CupertinoButton(
               onPressed: () {
-                _openUrl(mLaunch!.vidURLs!.first.url!);
+                openUrl(mLaunch!.vidURLs!.first.url!);
               },
               child: const Text('Watch'),
             ),
@@ -244,15 +225,15 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (mLaunch!.slug != null) {
       materialButtons.add(Row(
         children: <Widget>[
-          Icon(Icons.share),
+          const Icon(Icons.share),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: CupertinoButton(
               onPressed: () {
                 Share.share(
-                    "https://spacelaunchnow.me/launch/" + mLaunch!.slug!);
+                    "https://spacelaunchnow.me/launch/${mLaunch!.slug!}");
               },
-              child: Text(
+              child: const Text(
                 'Share',
               ),
             ),
@@ -279,7 +260,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
     if (diff.inSeconds > 0) {
       return Countdown(mLaunch);
     } else {
-      return SizedBox(width: 0.0, height: 0.0);
+      return const SizedBox(width: 0.0, height: 0.0);
     }
   }
 
@@ -290,8 +271,6 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildContentCard(BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
-
-    String status = Utils.getStatus(mLaunch!.status!.id);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -328,13 +307,13 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: _buildLandingInfo(textTheme),
         ),
         _buildActionButtons(theme),
-        Center(child: ListAdWidget(AdSize.banner)),
+        const Center(child: ListAdWidget(AdSize.banner)),
         MissionShowcase(mLaunch),
         buildUpdates(mLaunch!.updates!, context,
-            "https://spacelaunchnow.me/launch/" + mLaunch!.slug! + "#updates"),
+            "https://spacelaunchnow.me/launch/${mLaunch!.slug!}#updates"),
         _buildNews(),
         VehicleShowcase(mLaunch, widget._configuration),
-        Center(child: ListAdWidget(AdSize.mediumRectangle)),
+        const Center(child: ListAdWidget(AdSize.mediumRectangle)),
         AgenciesShowcase(mLaunch),
         LocationShowcaseWidget(mLaunch),
         _buildSpace(),
@@ -360,29 +339,28 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
         ),
       );
-      List<News> _news = [];
+      List<News> news = [];
       if (widget.news.length >= 6) {
-        _news = widget.news.sublist(0, 5);
+        news = widget.news.sublist(0, 5);
       } else {
-        _news = widget.news;
+        news = widget.news;
       }
-      for (News news in _news) {
+      for (News news in news) {
         widgets.add(Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Container(
-                child: ListTile(
-              onTap: () => _openUrl(news.url!),
+            child: ListTile(
+              onTap: () => openUrl(news.url!),
               leading: CircleAvatar(
-                backgroundImage:
-                    CachedNetworkImageProvider(news.featureImage!),
+            backgroundImage:
+                CachedNetworkImageProvider(news.featureImage!),
               ),
               title: Text(news.title!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(fontSize: 15.0)),
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(fontSize: 15.0)),
               subtitle: Text(news.newsSiteLong!),
-            ))));
+            )));
       }
       if (widget.news.length >= 6) {
         widgets.add(
@@ -391,9 +369,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                 color: Theme.of(context).colorScheme.secondary,
                 child: const Text("Read More"),
                 onPressed: () {
-                  _openUrl("https://spacelaunchnow.me/launch/" +
-                      mLaunch!.slug! +
-                      "#related-news");
+                  openUrl("https://spacelaunchnow.me/launch/${mLaunch!.slug!}#related-news");
                 }),
           ),
         );
@@ -407,7 +383,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
       );
     } else {
-      return SizedBox(height: 0);
+      return const SizedBox(height: 0);
     }
   }
 }

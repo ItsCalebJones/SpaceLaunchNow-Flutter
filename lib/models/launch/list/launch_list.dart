@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class LaunchList {

@@ -5,7 +5,7 @@ import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class NewsAndEventsPage extends StatefulWidget {
-  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex);
+  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
   final int newsAndEventsIndex;
@@ -57,7 +57,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
                 ),
                 Tab(
                   text: "Events",
-                )
+                ),
               ],
             ),
             title: Text(

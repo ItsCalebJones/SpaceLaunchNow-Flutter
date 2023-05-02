@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
@@ -26,14 +26,15 @@ class _EventDetailPageState extends State<EventDetailPage> {
   bool loading = false;
   late Event event;
   final SLNRepository _repository = Injector().slnRepository;
+  var logger = Logger();
 
   @override
   void initState() {
     super.initState();
-    Event? _event =
+    Event? event =
         PageStorage.of(context)!.readState(context, identifier: 'event_detail');
-    if (_event != null) {
-      event = _event;
+    if (event != null) {
+      event = event;
     } else {
       lockedLoadEvent();
     }
@@ -59,22 +60,22 @@ class _EventDetailPageState extends State<EventDetailPage> {
         .fetchEventById(eventId)
         .then((event) => onLoadEventComplete(event))
         .catchError((onError) {
-      print(onError);
+      logger.d(onError);
       onLoadEventError();
     });
   }
 
-  void onLoadEventComplete(Event _event, [bool reload = false]) {
+  void onLoadEventComplete(Event localEvent, [bool reload = false]) {
     setState(() {
       loading = false;
-      event = _event;
+      event = localEvent;
       PageStorage.of(context)!
           .writeState(context, event, identifier: 'event_detail');
     });
   }
 
   void onLoadEventError([bool? search]) {
-    print("Error occured");
+    logger.d("Error occurred");
     loading = false;
     if (search == true) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

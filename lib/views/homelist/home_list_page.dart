@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:logger/logger.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -17,10 +17,10 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class HomeListPage extends StatefulWidget {
-  const HomeListPage(this._configuration);
+  const HomeListPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -60,11 +60,12 @@ class _HomeListPageState extends State<HomeListPage> {
   final SLNRepository _repository = Injector().slnRepository;
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
+  var logger = Logger();
 
   @override
   void initState() {
     super.initState();
-    print("Initing state of Upcoming!");
+    logger.d("Init state of Upcoming!");
 
     List<Launch>? launches =
         PageStorage.of(context)!.readState(context, identifier: 'homeLaunches');
@@ -75,7 +76,7 @@ class _HomeListPageState extends State<HomeListPage> {
     if (launches != null) {
       _launches = launches;
     } else {
-      print("Loading!");
+      logger.d("Loading!");
       lockedLoadNext();
     }
   }
@@ -83,7 +84,7 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void dispose() {
     super.dispose();
-    _anchoredAdaptiveAd!.dispose();
+    _anchoredAdaptiveAd?.dispose();
   }
 
   @override
@@ -93,8 +94,8 @@ class _HomeListPageState extends State<HomeListPage> {
 
   void onLoadLaunchesComplete(Launches launches, [bool reload = false]) {
     loading = false;
-    print(
-        "Next: " + nextOffset.toString() + " Total: " + totalCount.toString());
+    logger.d(
+        "Next: $nextOffset Total: $totalCount");
     if (reload) {
       _launches.clear();
     }
@@ -107,7 +108,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   void onLoadContactsError([bool? search]) {
-    print("Error occured");
+    logger.d("Error occured");
     loading = false;
     if (search == true) {
       setState(() {
@@ -141,9 +142,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
     if (launch.launchServiceProvider != null &&
         launch.rocket!.configuration!.name != null) {
-      title = launch.launchServiceProvider!.name! +
-          " | " +
-          launch.rocket!.configuration!.name!;
+      title = "${launch.launchServiceProvider!.name!} | ${launch.rocket!.configuration!.name!}";
     } else {
       title = launch.name;
     }
@@ -172,71 +171,68 @@ class _HomeListPageState extends State<HomeListPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-//                color: getPrimaryColor(),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16.0, right: 4.0, top: 8.0, bottom: 8.0),
-                        child: Container(
-                          width: 75.0,
-                          height: 75.0,
-                          padding: const EdgeInsets.all(2.0),
-                          // borde width
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .highlightColor, // border color
-                            shape: BoxShape.circle,
+              Row(
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 4.0, top: 8.0, bottom: 8.0),
+                      child: Container(
+                        width: 75.0,
+                        height: 75.0,
+                        padding: const EdgeInsets.all(2.0),
+                        // border width
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .highlightColor, // border color
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          foregroundColor: Colors.white,
+                          backgroundImage: NetworkImage(url!),
+                          radius: 50.0,
+                          backgroundColor: Colors.white,
+                        ),
+                      )),
+                  Flexible(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16.0, right: 8.0),
+                          child: Text(
+                            title!,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3!
+                                .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
                           ),
-                          child: CircleAvatar(
-                            foregroundColor: Colors.white,
-                            backgroundImage: NetworkImage(url!),
-                            radius: 50.0,
-                            backgroundColor: Colors.white,
-                          ),
-                        )),
-                    Flexible(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 16.0, right: 8.0),
-                            child: Text(
-                              title!,
-                              maxLines: 2,
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Text(launch.pad!.location!.name!,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline3!
-                                  .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: Text(launch.pad!.location!.name!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodyText2),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: Text(formatter.format(launch.net!.toLocal()),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodyText2),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                              style: Theme.of(context).textTheme.bodyText2),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Text(formatter.format(launch.net!.toLocal()),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyText2),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -266,7 +262,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   void _navigateToLaunchDetails(
-      {Launch? launch, Object? avatarTag, String? launchId}) {
+      {Launch? launch, String? launchId}) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
@@ -320,7 +316,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: const Icon(Icons.live_tv),
             tooltip: 'Watch Launch',
             onPressed: () {
-              _openUrl(launch.vidURLs!.first.url!);
+              openUrl(launch.vidURLs!.first.url!);
             }, //
           )));
     }
@@ -332,7 +328,7 @@ class _HomeListPageState extends State<HomeListPage> {
             icon: const Icon(Icons.share),
             tooltip: 'Share',
             onPressed: () {
-              Share.share("https://spacelaunchnow.me/launch/" + launch.slug!);
+              Share.share("https://spacelaunchnow.me/launch/${launch.slug!}");
             }, //
           )));
     }
@@ -352,27 +348,10 @@ class _HomeListPageState extends State<HomeListPage> {
         children: eventButtons);
   }
 
-  _openUrl(String url) async {
-    Uri? _url = Uri.tryParse(url);
-    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
-      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
-      if (await canLaunch('youtube://$_finalUrl')) {
-        await launch('youtube://$_finalUrl', forceSafariVC: false);
-      } else {
-        await launch(url);
-      }
-    } else {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
-  }
 
   ThemeData get barTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
+    var qDarkMode = MediaQuery.of(context).platformBrightness;
+    if (qDarkMode == Brightness.dark) {
       return kIOSThemeDarkBar;
     } else {
       return kIOSThemeBar;
@@ -381,8 +360,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> content = <Widget>[];
-    print("Upcoming build!");
+    logger.d("Upcoming build!");
 
     Widget view = Scaffold(
       body: _buildBody(),
@@ -424,10 +402,10 @@ class _HomeListPageState extends State<HomeListPage> {
 
   Future<void> loadNext() async {
     loading = true;
-    print("Checking Filters!");
+    logger.d("Checking Filters!");
     await checkFilters();
-    print("Loading Next!");
-    if (totalCount == 0 || nextOffset != null) {
+    logger.d("Loading Next!");
+    if (totalCount == 0) {
       _repository
           .fetchUpcomingHome(
               limit: limit.toString(),
@@ -436,7 +414,7 @@ class _HomeListPageState extends State<HomeListPage> {
               locations: locations)
           .then((launches) => onLoadLaunchesComplete(launches))
           .catchError((onError) {
-        print(onError);
+        logger.d(onError);
         onLoadContactsError();
       });
     }
@@ -460,7 +438,6 @@ class _HomeListPageState extends State<HomeListPage> {
       onLoadContactsError();
     });
     onLoadLaunchesComplete(responseLaunches);
-    return null;
   }
 
   String _buildLSPFilter() {
@@ -508,7 +485,7 @@ class _HomeListPageState extends State<HomeListPage> {
       lspStringList = lspStringList + id.toString();
       index = index + 1;
       if (index != lspIds.length) {
-        lspStringList = lspStringList + ",";
+        lspStringList = "$lspStringList,";
       }
     }
     return lspStringList;
@@ -565,7 +542,7 @@ class _HomeListPageState extends State<HomeListPage> {
       stringList = stringList + id.toString();
       index = index + 1;
       if (index != locationIds.length) {
-        stringList = stringList + ",";
+        stringList = "$stringList,";
       }
     }
     return stringList;
@@ -665,11 +642,11 @@ class _HomeListPageState extends State<HomeListPage> {
   }
 
   Future<void> _loadAd() async {
-    late bool _showAds;
+    late bool showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
-        {_showAds = prefs.getBool("showAds") ?? true});
+        {showAds = prefs.getBool("showAds") ?? true});
 
-    if (!_showAds) {
+    if (!showAds) {
       return;
     }
 
@@ -679,19 +656,21 @@ class _HomeListPageState extends State<HomeListPage> {
             MediaQuery.of(context).size.width.truncate());
 
     if (size == null) {
-      print('Unable to get height of anchored banner.');
+      logger.d('Unable to get height of anchored banner.');
       return;
     }
 
+    var testAdUnit = "ca-app-pub-3940256099942544/6300978111";
+
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? ""
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$ad loaded: ${ad.responseInfo}');
+          logger.d('$ad loaded: ${ad.responseInfo}');
           setState(() {
             // When the ad is loaded, get the ad size and use it to set
             // the height of the ad container.
@@ -700,7 +679,7 @@ class _HomeListPageState extends State<HomeListPage> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Anchored adaptive banner failedToLoad: $error');
+          logger.d('Anchored adaptive banner failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -722,7 +701,7 @@ class _HomeListPageState extends State<HomeListPage> {
       ));
     } else {
       _launches.asMap().forEach(
-          (index, item) => {content.addAll(_map_launch_to_tile(index, item))});
+          (index, item) => {content.addAll(mapLaunchToTile(index, item))});
 
       // content.add(const SizedBox(height: 400));
     }
@@ -751,7 +730,7 @@ class _HomeListPageState extends State<HomeListPage> {
         ]);
   }
 
-  Iterable<Widget> _map_launch_to_tile(int index, Launch item) {
+  Iterable<Widget> mapLaunchToTile(int index, Launch item) {
     List<Widget> content = <Widget>[];
     index += 1;
 

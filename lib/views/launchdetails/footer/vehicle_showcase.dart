@@ -6,7 +6,7 @@ import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 import '../launch_detail_page.dart';
 
@@ -14,7 +14,7 @@ class VehicleShowcase extends StatefulWidget {
   final Launch? _launch;
   final AppConfiguration _configuration;
 
-  const VehicleShowcase(this._launch, this._configuration);
+  const VehicleShowcase(this._launch, this._configuration, {Key? key}) : super(key: key);
 
   @override
   State createState() => VehicleShowcaseState(_launch);
@@ -26,16 +26,10 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
   final Launch? _launch;
 
   @override
-  void initState() {}
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  void initState() {
+    super.initState();
   }
-
+  
   Widget _buildAvatar(ThemeData theme) {
     String? url =
         "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
@@ -57,7 +51,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
-                // borde width
+                // border width
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
@@ -118,14 +112,14 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
     var vehicle = _launch!.rocket!.configuration!.fullName ?? "Vehicle";
     var leo = "";
     if (_launch!.rocket!.configuration!.leoCapacity != null) {
-      leo = _launch!.rocket!.configuration!.leoCapacity.toString() + "kg";
+      leo = "${_launch!.rocket!.configuration!.leoCapacity}kg";
     } else {
       leo = "N/A";
     }
 
     var gto = "";
     if (_launch!.rocket!.configuration!.geoCapacity != null) {
-      gto = _launch!.rocket!.configuration!.geoCapacity.toString() + "kg";
+      gto = "${_launch!.rocket!.configuration!.geoCapacity}kg";
     } else {
       gto = "N/A";
     }
@@ -142,22 +136,22 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
 
     var length = "";
     if (_launch!.rocket!.configuration!.length != null) {
-      length = _launch!.rocket!.configuration!.length.toString() + "m";
+      length = "${_launch!.rocket!.configuration!.length}m";
     }
 
     var launchMass = "";
     if (_launch!.rocket!.configuration!.launchMass != null) {
-      launchMass = _launch!.rocket!.configuration!.launchMass.toString() + " T";
+      launchMass = "${_launch!.rocket!.configuration!.launchMass} T";
     }
 
     var diameter = "";
     if (_launch!.rocket!.configuration!.diameter != null) {
-      diameter = _launch!.rocket!.configuration!.diameter.toString() + "m";
+      diameter = "${_launch!.rocket!.configuration!.diameter}m";
     }
 
     var thrust = "";
     if (_launch!.rocket!.configuration!.thrust != null) {
-      thrust = _launch!.rocket!.configuration!.thrust.toString() + " kn";
+      thrust = "${_launch!.rocket!.configuration!.thrust} kn";
     }
 
     return Padding(
@@ -434,7 +428,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.desktop),
         onPressed: () {
-          _launchURL(_launch!.rocket!.configuration!.infoUrl!);
+          openUrl(_launch!.rocket!.configuration!.infoUrl!);
         },
         tooltip: "Website",
       ));
@@ -444,7 +438,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(_launch!.rocket!.configuration!.wikiUrl!);
+          openUrl(_launch!.rocket!.configuration!.wikiUrl!);
         },
         tooltip: "Website",
       ));
@@ -808,7 +802,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
         booster.launcher!.status!.substring(1).toLowerCase();
     var turnaroundTime = "N/A";
     if (booster.turnAround != null && booster.turnAround! > 0) {
-      turnaroundTime = booster.turnAround.toString() + " Days";
+      turnaroundTime = "${booster.turnAround} Days";
     }
 
     if (booster.launcher!.image != null) {
@@ -821,7 +815,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
-                // borde width
+                // border width
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
@@ -1029,7 +1023,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
-                // borde width
+                // border width
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
@@ -1122,7 +1116,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
                 width: 125.0,
                 height: 125.0,
                 padding: const EdgeInsets.all(2.0),
-                // borde width
+                // border width
                 decoration: BoxDecoration(
                   color: Theme.of(context).highlightColor, // border color
                   shape: BoxShape.circle,
@@ -1190,7 +1184,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.wikipediaW),
         onPressed: () {
-          _launchURL(crew.astronaut!.wikiUrl!);
+          openUrl(crew.astronaut!.wikiUrl!);
         },
         tooltip: "Wiki",
       ));
@@ -1200,7 +1194,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.instagram),
         onPressed: () {
-          _launchURL(crew.astronaut!.instagramUrl!);
+          openUrl(crew.astronaut!.instagramUrl!);
         },
         tooltip: "Wiki",
       ));
@@ -1210,7 +1204,7 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       materialButtons.add(IconButton(
         icon: const Icon(FontAwesomeIcons.twitter),
         onPressed: () {
-          _launchURL(crew.astronaut!.twitterUrl!);
+          openUrl(crew.astronaut!.twitterUrl!);
         },
         tooltip: "Twitter",
       ));

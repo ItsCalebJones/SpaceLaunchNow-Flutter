@@ -26,7 +26,7 @@ class PrettyDuration {
   PrettyDuration(this.duration) {
     if (duration.inDays > 0) {
       if (duration.inDays < 10) {
-        days = "0" + duration.inDays.toString();
+        days = "0${duration.inDays}";
       } else {
         days = duration.inDays.toString();
       }
@@ -37,7 +37,7 @@ class PrettyDuration {
     final int intHours = duration.inHours % 24;
     if (intHours > 0) {
       if (intHours < 10) {
-        hours = "0" + intHours.toString();
+        hours = "0$intHours";
       } else {
         hours = intHours.toString();
       }
@@ -48,7 +48,7 @@ class PrettyDuration {
     final int intMinutes = duration.inMinutes % 60;
     if (intMinutes > 0) {
       if (intMinutes < 10) {
-        minutes = "0" + intMinutes.toString();
+        minutes = "0$intMinutes";
       } else {
         minutes = intMinutes.toString();
       }
@@ -59,7 +59,7 @@ class PrettyDuration {
     final int intSeconds = duration.inSeconds % 60;
     if (intSeconds > 0) {
       if (intSeconds < 10) {
-        seconds = "0" + intSeconds.toString();
+        seconds = "0$intSeconds";
       } else {
         seconds = intSeconds.toString();
       }

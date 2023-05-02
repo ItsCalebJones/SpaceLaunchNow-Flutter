@@ -1,9 +1,7 @@
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
@@ -16,17 +14,17 @@ import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'custom_play_pause.dart';
 
 class StarshipOverviewPage extends StatefulWidget {
-  const StarshipOverviewPage(this._configuration);
+  const StarshipOverviewPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -39,7 +37,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   bool loading = false;
   bool usingCached = false;
   final SLNRepository _repository = Injector().slnRepository;
-  final GlobalKey _youTubeKey = GlobalKey(debugLabel: '_youTubeKey');
+  // final GlobalKey _youTubeKey = GlobalKey(debugLabel: '_youTubeKey');
 
   @override
   void initState() {
@@ -116,7 +114,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
 
     Widget widget;
     if (_starship != null && _starship!.liveStream!.isNotEmpty) {
-      YoutubePlayerController _controller = YoutubePlayerController(
+      YoutubePlayerController controller = YoutubePlayerController(
         initialVideoId:
             YoutubePlayer.convertUrlToId(_starship!.liveStream!.first.url!)!,
         flags: const YoutubePlayerFlags(
@@ -124,10 +122,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         ),
       );
       widget = YoutubePlayer(
-        key: ObjectKey(_controller),
-        controller: _controller,
+        key: ObjectKey(controller),
+        controller: controller,
         showVideoProgressIndicator: false,
-        bottomActions: <Widget>[CustomPlayPauseButton()],
+        bottomActions: const <Widget>[CustomPlayPauseButton()],
       );
     } else {
       widget = Container();
@@ -169,11 +167,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
 
   List<Widget> _buildDashboard() {
     var dataUpcoming = [];
+    var logger = Logger();
 
     dataUpcoming.addAll(_starship!.upcoming!.events!);
     dataUpcoming.addAll(_starship!.upcoming!.launches!);
     dataUpcoming.sort((a, b) => a.net.compareTo(b.net));
-    print(dataUpcoming);
+    logger.d(dataUpcoming);
 
     final List<Widget> rows = <Widget>[
       Column(
@@ -221,7 +220,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                 ],
               ),
               onPressed: () {
-                _openUrl(_starship!.liveStream!.first.url!);
+                openUrl(_starship!.liveStream!.first.url!);
               }, //
             ),
           ),
@@ -255,22 +254,6 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       )
     ];
     return rows;
-  }
-
-  _openUrl(String url) async {
-    Uri? _url = Uri.tryParse(url);
-    if (_url != null && _url.host.contains("youtube.com") && Platform.isIOS) {
-      final String _finalUrl = _url.host + _url.path + "?" + _url.query;
-      if (await canLaunch('youtube://$_finalUrl')) {
-        await launch('youtube://$_finalUrl', forceSafariVC: false);
-      }
-    } else {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    }
   }
 
   _addUpNext(List dataUpcoming) {
@@ -406,11 +389,9 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   .headline6!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            Text("Status: " + roadClosure.status!.name!),
+            Text("Status: ${roadClosure.status!.name!}"),
             Text(dateFormatter.format(roadClosure.windowStart!)),
-            Text(timeFormatter.format(roadClosure.windowStart!) +
-                " - " +
-                timeFormatter.format(roadClosure.windowEnd!)),
+            Text("${timeFormatter.format(roadClosure.windowStart!)} - ${timeFormatter.format(roadClosure.windowEnd!)}"),
             const Divider(),
           ],
         ));
@@ -489,13 +470,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   child: IconButton(
                     icon: const Icon(Icons.open_in_browser),
                     onPressed: () {
-                      _openUrl(notice.url!);
+                      openUrl(notice.url!);
                     },
                   ),
                 )
               ],
             ),
-            Divider(),
+            const Divider(),
           ],
         ));
   }

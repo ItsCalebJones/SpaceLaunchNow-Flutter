@@ -1,0 +1,23 @@
+---
+name: Flutter Test
+description: Run Flutter Test
+
+
+runs:
+  using: composite
+  steps:
+    - name: Pub Get
+      shell: bash
+      run: flutter pub get
+
+    - name: Generate Secerts File
+      shell: bash
+      run: flutter pub run build_runner build
+
+    - name: Analyze
+      shell: bash
+      run: flutter analyze --no-fatal-infos
+
+    - name: Test
+      shell: bash
+      run: flutter test

@@ -11,17 +11,17 @@ class Crew {
 
   factory Crew.fromJson(Map<String, dynamic> json) {
     var astronautJson = json['astronaut'];
-    Astronaut? _astronaut;
+    Astronaut? astronaut;
     if (astronautJson != null) {
-      _astronaut = Astronaut.fromJson(astronautJson);
+      astronaut = Astronaut.fromJson(astronautJson);
     }
 
     var roleJson = json['role'];
-    Role? _role;
+    Role? role;
     if (roleJson != null) {
-      _role = Role.fromJson(roleJson);
+      role = Role.fromJson(roleJson);
     }
 
-    return Crew(id: json['id'], role: _role, astronaut: _astronaut);
+    return Crew(id: json['id'], role: role, astronaut: astronaut);
   }
 }

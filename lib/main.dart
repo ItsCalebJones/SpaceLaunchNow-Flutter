@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -22,6 +23,7 @@ import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
@@ -565,19 +567,21 @@ class PagesState extends State<Pages> {
       sound: true,
     );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    logger.d('User granted permission: ${settings.authorizationStatus}');
   }
 
   void asyncInitState() async {
-    String? answer = await FlutterInappPurchase.instance.initialize();
-    print(answer);
-    // refresh items for android
-    try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAll()
-          as FutureOr<String?>);
-      print('consumeAllItems: $msg');
-    } catch (err) {
-      print('consumeAllItems error: $err');
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      var result = await FlutterInappPurchase.instance.initialize();
+      logger.d(result);
+      // refresh items for android
+      try {
+        String? msg = await (FlutterInappPurchase.instance.consumeAll()
+        as FutureOr<String?>);
+        logger.d('consumeAllItems: $msg');
+      } catch (err) {
+        logger.d('consumeAllItems error: $err');
+      }
     }
   }
 
@@ -812,9 +816,10 @@ class PagesState extends State<Pages> {
 
   _openBrowser(String url) async {
     print("Checking $url");
-    if (await canLaunch(url)) {
+    var _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
       print("Launching $url");
-      await launch(url);
+      await launchUrl(_url);
     } else {
       throw 'Could not launch $url';
     }

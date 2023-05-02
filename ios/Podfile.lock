@@ -71,12 +71,13 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - Google-Mobile-Ads-SDK (9.14.0):
+  - Google-Mobile-Ads-SDK (10.4.0):
     - GoogleAppMeasurement (< 11.0, >= 7.0)
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (1.0.0):
     - Flutter
-    - Google-Mobile-Ads-SDK (~> 9.13)
+    - Google-Mobile-Ads-SDK (~> 10.4.0)
+    - webview_flutter_wkwebview
   - GoogleAppMeasurement (10.7.0):
     - GoogleAppMeasurement/AdIdSupport (= 10.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
@@ -129,13 +130,15 @@ PODS:
   - OrderedSet (5.0.0)
   - package_info (0.0.1):
     - Flutter
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.2.0)
   - rate_my_app (1.1.4):
     - Flutter
-  - share (0.0.1):
+  - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -147,6 +150,8 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -157,13 +162,15 @@ DEPENDENCIES:
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - rate_my_app (from `.symlinks/plugins/rate_my_app/ios`)
-  - share (from `.symlinks/plugins/share/ios`)
+  - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
@@ -200,12 +207,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   rate_my_app:
     :path: ".symlinks/plugins/rate_my_app/ios"
-  share:
-    :path: ".symlinks/plugins/share/ios"
+  share_plus:
+    :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   sqflite:
@@ -214,6 +223,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
@@ -229,8 +240,8 @@ SPEC CHECKSUMS:
   flutter_inapp_purchase: 5c6a1ac3f11b11d0c8c0321c0c41c1f05805e4c8
   flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  Google-Mobile-Ads-SDK: 4fe6304b771f8467d29978cb790ec1e56e646946
-  google_mobile_ads: 528ab4673c5b5fd36321b7e90fc585064cdbaf2b
+  Google-Mobile-Ads-SDK: 32fe7836431a06a29f7734ae092b600137c8108d
+  google_mobile_ads: 53b1f0d74445963e5810e34ac38dfb27aabe278e
   GoogleAppMeasurement: fe17c92a32207dd5cdd4e8d742767f2da74857f6
   GoogleDataTransport: 8378d1fa8ac49753ea6ce70d65a7cb70ce5f66e6
   GoogleUserMessagingPlatform: 5f8b30daf181805317b6b985bb51c1ff3beca054
@@ -238,14 +249,16 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   rate_my_app: e249ec0751c276811746ff89558c23dc0da39f0c
-  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 
 PODFILE CHECKSUM: ae273562e2241d2b1bd4b6d2d349a48b8fe1a2a7
 

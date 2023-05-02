@@ -58,9 +58,9 @@ class LaunchCommon {
 
   factory LaunchCommon.fromJson(Map<String, dynamic> json) {
     var missionJson = json['mission'];
-    Mission? _mission;
+    Mission? mission;
     if (missionJson != null) {
-      _mission = Mission.fromJson(missionJson);
+      mission = Mission.fromJson(missionJson);
     }
 
     return LaunchCommon(
@@ -78,7 +78,7 @@ class LaunchCommon {
           AgencyMini.fromJson(json['launch_service_provider']),
       rocket: RocketCommon.fromJson(json['rocket']),
       pad: Pad.fromJson(json['pad']),
-      mission: _mission,
+      mission: mission,
     );
   }
 }

@@ -23,15 +23,15 @@ class FirstStage {
 
   factory FirstStage.fromJson(Map<String, dynamic> json) {
     var landingJson = json['landing'];
-    Landing? _landing;
+    Landing? landing;
     if (landingJson != null) {
-      _landing = Landing.fromJson(landingJson);
+      landing = Landing.fromJson(landingJson);
     }
 
     var launcherJson = json['launcher'];
-    Launcher? _launcher;
+    Launcher? launcher;
     if (launcherJson != null) {
-      _launcher = Launcher.fromJson(launcherJson);
+      launcher = Launcher.fromJson(launcherJson);
     }
 
     String? launch;
@@ -45,8 +45,8 @@ class FirstStage {
         type: json['type'],
         reused: json['reused'],
         flightNumber: json['launcher_flight_number'],
-        launcher: _launcher,
-        landing: _landing,
+        launcher: launcher,
+        landing: landing,
         turnAround: json['turn_around_time_days'],
         previousFlight: launch,
         previousFlightUUID: previousFlightUUID);

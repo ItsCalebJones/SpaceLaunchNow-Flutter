@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -32,7 +31,7 @@ class Dependencies {
 
 class LaunchDetailPage extends StatefulWidget {
   const LaunchDetailPage(this._configuration,
-      {this.launch, this.launchId, this.avatarTag});
+      {Key? key, this.launch, this.launchId, this.avatarTag}) : super(key: key);
 
   final AppConfiguration _configuration;
   final Launch? launch;
@@ -47,7 +46,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     with TickerProviderStateMixin {
   final List<News> _news = [];
   late AnimationController _controller;
-  List<Launch>? _launches = [];
   Launch? launch;
   bool? backEnabled;
   Timer? timer;
@@ -87,14 +85,11 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
 
   Future<void> _loadLaunch(String? id) async {
     setState(() {
-      _launches = null;
       launch = null;
     });
     final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
     http.Response response = await client.get(Uri.parse(
-        'https://spacelaunchnow.me/api/ll/2.2.0/launch/' +
-            id.toString() +
-            '/?mode=detailed'));
+        'https://spacelaunchnow.me/api/ll/2.2.0/launch/$id/?mode=detailed'));
 
     setState(() {
       launch = Launch.fromResponse(response);
@@ -106,17 +101,16 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   Future<void> _loadNextLaunch() async {
-    List<Launch>? _nextLaunches;
+    List<Launch>? nextLaunches;
     final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
     http.Response response = await client.get(Uri.parse(
         'https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
 
-    _nextLaunches = Launch.allFromResponse(response);
+    nextLaunches = Launch.allFromResponse(response);
     PageStorage.of(context)!
-        .writeState(context, _nextLaunches!.first, identifier: 'next_launch');
+        .writeState(context, nextLaunches!.first, identifier: 'next_launch');
     setState(() {
-      _launches = _nextLaunches;
-      launch = _nextLaunches!.first;
+      launch = nextLaunches!.first;
       _loadNews(launch!.id);
       setController();
     });
@@ -146,7 +140,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     );
 
     if (launch == null) {
-      content = Center(
+      content = const Center(
         child: CircularProgressIndicator(),
       );
     } else {
@@ -155,23 +149,21 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         return SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  LaunchDetailHeader(
-                    launch,
-                    loadLaunch: _loadLaunch,
-                    avatarTag: widget.avatarTag,
-                    backEnabled: backEnabled,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                    child: LaunchDetailBodyWidget(
-                        launch, widget._configuration, _news),
-                  ),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                LaunchDetailHeader(
+                  launch,
+                  loadLaunch: _loadLaunch,
+                  avatarTag: widget.avatarTag,
+                  backEnabled: backEnabled,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                  child: LaunchDetailBodyWidget(
+                      launch, widget._configuration, _news),
+                ),
+              ],
             ),
           ),
         );

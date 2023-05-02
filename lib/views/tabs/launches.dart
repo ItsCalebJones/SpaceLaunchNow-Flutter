@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
+import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 class LaunchesTabPage extends StatefulWidget {
-  const LaunchesTabPage(this._configuration);
+  const LaunchesTabPage(this._configuration, {Key? key}) : super(key: key);
 
   final AppConfiguration _configuration;
 
@@ -27,6 +29,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
   final bool _showAds = false;
+  var logger = Logger();
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
 
   @override
   Widget build(BuildContext context) {
-    print("Building!");
+    logger.d("Building!");
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -84,11 +87,11 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   }
 
   Future<void> _loadAd() async {
-    late bool _showAds;
+    late bool showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
-        {_showAds = prefs.getBool("showAds") ?? true});
+        {showAds = prefs.getBool("showAds") ?? true});
 
-    if (!_showAds) {
+    if (!showAds) {
       return;
     }
 
@@ -98,19 +101,19 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
             MediaQuery.of(context).size.width.truncate());
 
     if (size == null) {
-      print('Unable to get height of anchored banner.');
+      logger.d('Unable to get height of anchored banner.');
       return;
     }
 
     _anchoredAdaptiveAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? "BannerAd.testAdUnitId"
+          ? testAdUnit
           : "ca-app-pub-9824528399164059/8172962746",
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$ad loaded: ${ad.responseInfo}');
+          logger.d('$ad loaded: ${ad.responseInfo}');
           setState(() {
             // When the ad is loaded, get the ad size and use it to set
             // the height of the ad container.
@@ -119,7 +122,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Anchored adaptive banner failedToLoad: $error');
+          logger.d('Anchored adaptive banner failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -134,7 +137,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
         elevation: 0.0,
         leading: const Icon(Icons.search),
         title: TextField(
-          style: TextStyle(),
+          style: const TextStyle(),
           onSubmitted: _search,
           decoration: const InputDecoration(
             hintText: "Example: SpaceX, Delta IV, JWST...",
