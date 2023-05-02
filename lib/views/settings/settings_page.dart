@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:logger/logger.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -19,6 +20,7 @@ class SettingsPage extends StatefulWidget {
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
 
+
   @override
   NotificationFilterPageState createState() =>
       NotificationFilterPageState(_firebaseMessaging);
@@ -27,6 +29,7 @@ class SettingsPage extends StatefulWidget {
 class NotificationFilterPageState extends State<SettingsPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final FirebaseMessaging _firebaseMessaging;
+
   var logger = Logger();
 
   NotificationFilterPageState(this._firebaseMessaging);
@@ -49,11 +52,20 @@ class NotificationFilterPageState extends State<SettingsPage> {
   StreamSubscription? _purchaseErrorSubscription;
   StreamSubscription? _connectionSubscription;
 
+
+
   @override
   initState() {
     super.initState();
     asyncInitState();
     init();
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String version = packageInfo.version;
+      String buildNumber = packageInfo.buildNumber;
+      logger.d("$appName - $packageName $version $buildNumber");
+    });
   }
 
   ThemeData get barTheme {
@@ -102,6 +114,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   void asyncInitState() async {
     await FlutterInappPurchase.instance.initialize();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     // refresh items for android
     try {
       String? msg = await (FlutterInappPurchase.instance.consumeAll()
@@ -1048,17 +1061,22 @@ class NotificationFilterPageState extends State<SettingsPage> {
   }
 
   Widget _buildDebug() {
+
     if (!kReleaseMode) {
       return MergeSemantics(
-        child: ListTile(
-          title: const Text('DEBUG - Show Ads?'),
-          onTap: () {
-            _handleDebugSupporter(!widget.configuration.showAds);
-          },
-          trailing: Switch(
-            value: widget.configuration.showAds,
-            onChanged: _handleDebugSupporter,
-          ),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text('FUCK - Show Ads?'),
+              onTap: () {
+                _handleDebugSupporter(!widget.configuration.showAds);
+              },
+              trailing: Switch(
+                value: widget.configuration.showAds,
+                onChanged: _handleDebugSupporter,
+              ),
+            ),
+          ],
         ),
       );
     } else {
