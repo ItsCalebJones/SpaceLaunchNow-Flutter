@@ -3,7 +3,7 @@ description: A new Space Launch Now flutter application.
 version: 2.5.2+5
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 
 dependencies:
@@ -11,10 +11,10 @@ dependencies:
     sdk: flutter
     
   intl: ^0.18.1
-  share_plus: ^6.3.0
+  share_plus: ^6.3.4
 
   # https://pub.dartlang.org/packages/firebase_admob#-installing-tab-]
-  google_mobile_ads: 2.4.0
+  google_mobile_ads: ^3.0.0
   firebase_core: ^2.10.0
   firebase_messaging: ^14.4.1
   firebase_analytics: ^10.2.1
@@ -38,18 +38,19 @@ dependencies:
   google_fonts: ^4.0.4
   quiver: ^3.2.1
   timeago: ^3.4.0
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.1.0
 
   # The following adds the Cupertino Icons Afont to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
   logger: ^1.3.0
-  envify: ^2.0.2
-  firebase_core_platform_interface: ^4.5.2
+  firebase_core_platform_interface: ^4.6.0
+  package_info_plus: ^3.1.2
+  envied: ^0.3.0
 
 dev_dependencies:
-  envify_generator: ^2.0.2
-  build_runner: ^2.2.0
+  build_runner: ^2.3.3
+  envied_generator: ^0.3.0
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
