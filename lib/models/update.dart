@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 class Update {
   final int? id;
   final String? profileImage;
@@ -15,6 +17,8 @@ class Update {
       this.createdOn});
 
   factory Update.fromJson(Map<String, dynamic> json) {
+    var logger = Logger();
+    logger.d(json);
     return Update(
       id: json['id'],
       profileImage: json['profile_image'],

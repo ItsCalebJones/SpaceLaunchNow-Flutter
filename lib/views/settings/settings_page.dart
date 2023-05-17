@@ -1067,7 +1067,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         child: Column(
           children: [
             ListTile(
-              title: Text('FUCK - Show Ads?'),
+              title: const Text('Show Ads?'),
               onTap: () {
                 _handleDebugSupporter(!widget.configuration.showAds);
               },

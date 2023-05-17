@@ -172,7 +172,7 @@ class AgenciesShowcase extends StatelessWidget {
                   child: Text(
                     lspAdmin!,
                     style: textTheme.subtitle1!.copyWith(),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                 ),
                 Padding(
@@ -180,7 +180,7 @@ class AgenciesShowcase extends StatelessWidget {
                   child: Text(
                     lspFounded,
                     style: textTheme.subtitle1!.copyWith(),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                 ),
                 _buildActionButtons(),

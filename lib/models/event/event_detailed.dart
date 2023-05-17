@@ -18,8 +18,8 @@ class Event {
   final List<Update>? updates;
   final DateTime? date;
   final DateTime? net;
-  final Iterable<LaunchCommon>? launches;
-  final Iterable<Program>? programs;
+  final List<LaunchCommon>? launches;
+  final List<Program>? programs;
 
   Event(
       {this.id,
@@ -54,18 +54,6 @@ class Event {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    List<Update> updates = <Update>[];
-    var updateJson = json['updates'];
-    if (updateJson != null) {
-      updates.addAll(updateJson.map((update) => Update.fromJson(update)));
-    }
-
-    List<Program> programs = <Program>[];
-    var programJson = json['program'];
-    if (programJson != null) {
-      programs.addAll(programJson.map((program) => Program.fromJson(program)));
-    }
-
     return Event(
         id: json['id'],
         name: json['name'],
@@ -78,8 +66,14 @@ class Event {
         date: DateTime.parse(json['date']),
         net: DateTime.parse(json['date']),
         launches: List<LaunchCommon>.from(
-            json['launches'].map((launch) => LaunchCommon.fromJson(launch))),
-        updates: updates,
-        programs: programs);
+            json['launches'].map((launch) => LaunchCommon.fromJson(launch)) ??
+              <LaunchCommon>[]),
+        updates: List<Update>.from(
+            json['updates'].map((update) => Update.fromJson(update)) ??
+              <Update>[]),
+        programs: List<Program>.from(
+            json['program'].map((program) => Program.fromJson(program)) ??
+              <Program>[])
+    );
   }
 }

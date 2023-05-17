@@ -21,7 +21,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(vsync: this, length: 2);
     _tabController!.animateTo(widget.newsAndEventsIndex);
   }
 

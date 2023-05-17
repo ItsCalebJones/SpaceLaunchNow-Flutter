@@ -18,7 +18,7 @@ class SLNRepositoryImpl implements SLNRepository {
   static const String NEWS_BASE_URL = "https://api.spaceflightnewsapi.net/v3";
 
   final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
-  final newsClient = ClientWithUserAgent(http.Client());
+  final newsClient = ClientWithUserAgent(http.Client(), useSLNAuth: false);
 
   @override
   Future<List<Launch>> fetch([String? lsp]) {
@@ -243,7 +243,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=50';
 
     print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -268,7 +268,7 @@ class SLNRepositoryImpl implements SLNRepository {
         NEWS_BASE_URL + '/articles?newsSite.name_contains=$name';
 
     print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -292,7 +292,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/$id/?_limit=30';
 
     print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -314,7 +314,7 @@ class SLNRepositoryImpl implements SLNRepository {
     String _kEventsUrl = NEWS_BASE_URL + '/articles/event/$id/?_limit=30';
 
     print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 

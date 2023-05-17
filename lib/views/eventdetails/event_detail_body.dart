@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
@@ -26,6 +27,7 @@ class EventDetailBodyWidget extends StatefulWidget {
 }
 
 class EventDetailBodyState extends State<EventDetailBodyWidget> {
+  var logger = Logger();
   Widget _buildLocationInfo(TextTheme textTheme) {
     return Row(
       children: <Widget>[
@@ -36,7 +38,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              widget.event.location!,
+              widget.event.location ?? "Unknown Location",
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
