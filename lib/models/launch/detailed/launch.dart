@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:spacelaunchnow_flutter/models/date_precision.dart';
 import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/models/pad.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/rocket.dart';
@@ -26,6 +27,7 @@ class Launch {
   final Agency? launchServiceProvider;
   final Pad? pad;
   final Mission? mission;
+  final DatePrecision? netPrecision;
   final List<VidURL>? vidURLs;
 
   const Launch(
@@ -44,6 +46,7 @@ class Launch {
       this.launchServiceProvider,
       this.image,
       this.infographic,
+      this.netPrecision,
       this.slug});
 
   static List<Launch>? allFromResponse(http.Response response) {
@@ -65,6 +68,7 @@ class Launch {
 
   factory Launch.fromJson(Map<String, dynamic> json) {
     var missionJson = json['mission'];
+    var netPrecisionJson = json['net_precision'];
     var logger = Logger();
     logger.d(json);
 
@@ -73,7 +77,11 @@ class Launch {
       mission = Mission.fromJson(missionJson);
     }
 
-
+    DatePrecision? netPrecision;
+    if (netPrecisionJson != null) {
+      netPrecision = DatePrecision.fromJson(netPrecisionJson);
+    }
+    logger.d(netPrecision);
 
     return Launch(
       id: json['id'],
@@ -90,6 +98,7 @@ class Launch {
       rocket: Rocket.fromJson(json['rocket']),
       pad: Pad.fromJson(json['pad']),
       mission: mission,
+      netPrecision: netPrecision,
       vidURLs: List<VidURL>.from(
           json['vidURLs']?.map((vidURL) => VidURL.fromJson(vidURL)) ??
               <VidURL>[]),

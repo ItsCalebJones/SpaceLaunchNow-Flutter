@@ -10,6 +10,8 @@ import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl_standalone.dart'; // For standlone app
 import 'package:logger/logger.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -571,6 +573,7 @@ class PagesState extends State<Pages> {
   }
 
   void asyncInitState() async {
+    initializeDateFormatting(await findSystemLocale(), null);
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       var result = await FlutterInappPurchase.instance.initialize();
       logger.d(result);

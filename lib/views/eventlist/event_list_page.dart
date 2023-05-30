@@ -9,6 +9,7 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
@@ -217,7 +218,6 @@ class _EventListPageState extends State<EventListPage> {
   }
 
   Widget _buildEventListTile(EventList event) {
-    var formatter = DateFormat.yMd();
     String? location = "";
 
     if (event.location != null) {
@@ -237,7 +237,7 @@ class _EventListPageState extends State<EventListPage> {
                 .subtitle1!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(location!),
-        trailing: Text(formatter.format(event.net!),
+        trailing: Text(PrecisionFormattedDate.getShortPrecisionFormattedDate(event.datePrecision?.id ?? 0, event.date!),
             style: Theme.of(context).textTheme.caption),
       ),
     );

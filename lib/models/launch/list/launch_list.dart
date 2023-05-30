@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:spacelaunchnow_flutter/models/date_precision.dart';
 import 'package:spacelaunchnow_flutter/models/status.dart';
 
 class LaunchList {
@@ -18,6 +19,7 @@ class LaunchList {
   final String? launcher;
   final String? orbit;
   final String? pad;
+  final DatePrecision? netPrecision;
 
   const LaunchList(
       {this.id,
@@ -34,6 +36,7 @@ class LaunchList {
       this.landing,
       this.landingSuccess,
       this.launcher,
+      this.netPrecision,
       this.orbit});
 
   static List<LaunchList>? allFromResponse(String response) {
@@ -49,6 +52,12 @@ class LaunchList {
   factory LaunchList.fromJson(Map<String, dynamic> json) {
     var image = json['image'] ??
         "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+    var netPrecisionJson = json['net_precision'];
+
+    DatePrecision? netPrecision;
+    if (netPrecisionJson != null) {
+      netPrecision = DatePrecision.fromJson(netPrecisionJson);
+    }
 
     return LaunchList(
       id: json['id'],
@@ -66,6 +75,7 @@ class LaunchList {
       landingSuccess: json['landing_success'],
       launcher: json['launcher'],
       orbit: json['orbit'],
+      netPrecision: netPrecision,
     );
   }
 }

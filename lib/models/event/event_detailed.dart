@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/launch/common/launch_common.dart';
 import 'package:spacelaunchnow_flutter/models/program.dart';
 import 'package:spacelaunchnow_flutter/models/update.dart';
+import 'package:spacelaunchnow_flutter/models/date_precision.dart';
 import 'event_type.dart';
 
 class Event {
@@ -19,6 +20,7 @@ class Event {
   final DateTime? date;
   final DateTime? net;
   final List<LaunchCommon>? launches;
+  final DatePrecision? datePrecision;
   final List<Program>? programs;
 
   Event(
@@ -34,6 +36,7 @@ class Event {
       this.launches,
       this.net,
       this.updates,
+      this.datePrecision,
       this.programs});
 
   static List<Event>? allFromResponse(http.Response response) {
@@ -54,6 +57,13 @@ class Event {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    var datePrecisionJson = json['date_precision'];
+
+    DatePrecision? datePrecision;
+    if (datePrecisionJson != null) {
+      datePrecision = DatePrecision.fromJson(datePrecisionJson);
+    }
+
     return Event(
         id: json['id'],
         name: json['name'],
@@ -65,6 +75,7 @@ class Event {
         featureImage: json['feature_image'],
         date: DateTime.parse(json['date']),
         net: DateTime.parse(json['date']),
+        datePrecision: datePrecision,
         launches: List<LaunchCommon>.from(
             json['launches'].map((launch) => LaunchCommon.fromJson(launch)) ??
               <LaunchCommon>[]),

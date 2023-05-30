@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
@@ -109,8 +110,9 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
-                  .format(mLaunch!.net!.toLocal()),
+              PrecisionFormattedDate.getPrecisionFormattedDate(
+                widget.launch?.netPrecision?.id ?? 0,
+                widget.launch!.net!),
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,

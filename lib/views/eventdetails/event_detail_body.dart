@@ -13,6 +13,8 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../util/date_formatter.dart';
+
 class EventDetailBodyWidget extends StatefulWidget {
   const EventDetailBodyWidget(
       {Key? key, required this.event, required this.configuration})
@@ -70,6 +72,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
   }
 
   Widget _buildTimeInfo(TextTheme textTheme) {
+    var formattedDate = PrecisionFormattedDate.getPrecisionFormattedDate(
+      widget.event.datePrecision?.id ?? 0,
+      widget.event.net!.toLocal()
+    );
     return Row(
       children: <Widget>[
         const Icon(
@@ -78,9 +84,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              DateFormat("h:mm a 'on' EEEE, MMMM d, yyyy")
-                  .format(widget.event.net!.toLocal()),
+            child: Text(formattedDate,
               maxLines: 2,
               style: textTheme.subtitle1,
               overflow: TextOverflow.fade,
@@ -273,7 +277,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
               leading: Hero(
                 tag: 0,
                 child: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(launch.image!),
+                  backgroundImage: CachedNetworkImageProvider(launch.image ?? "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg"),
                 ),
               ),
               title: Text(launch.name!,

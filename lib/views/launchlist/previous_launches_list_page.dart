@@ -10,6 +10,7 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
+import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
@@ -159,7 +160,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
                 .subtitle1!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(launch.location!),
-        trailing: Text(formatter.format(launch.net!),
+        trailing: Text(PrecisionFormattedDate.getShortPrecisionFormattedDate(launch.netPrecision?.id ?? 0, launch.net!),
             style: Theme.of(context).textTheme.caption),
       ),
     );
