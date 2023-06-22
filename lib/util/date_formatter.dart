@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 class PrecisionFormattedDate {
   static String getPrecisionFormattedDate(int datePrecision, DateTime date, {String locale = "en_US"}) {
-    initializeDateFormatting(locale);
+    date = date.toLocal();
     switch (datePrecision) {
       case 0:
         return DateFormat.jms(locale).addPattern("'-'").add_yMMMMEEEEd().format(date);
@@ -48,7 +48,7 @@ class PrecisionFormattedDate {
     }
   }
   static String getShortPrecisionFormattedDate(int datePrecision, DateTime date, {String locale = "en_US"}) {
-    initializeDateFormatting(locale);
+    date = date.toLocal();
     switch (datePrecision) {
       case 0:
         return DateFormat.yMd().format(date);
