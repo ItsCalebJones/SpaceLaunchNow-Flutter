@@ -21,9 +21,10 @@ jobs:
       - name: Check Flutter Version
         run: flutter --version
 
-      - name: Create .env
+      - name: 'Create env file'
         run: |
-          echo ${{ secrets.ENV_FILE_DEV }} | base64 --decode > .env
+          touch .env
+          echo LL_API_KEY=${{ secrets.LL_API_KEY }} >> .env
 
       - name: Run Flutter Tests
         uses: ./.github/actions/flutter-test
@@ -63,9 +64,10 @@ jobs:
         with:
           flutter-version: '3.3.10'
 
-      - name: Create .env
+      - name: 'Create env file'
         run: |
-          echo ${{ secrets.ENV_FILE }} | base64 --decode > .env
+          touch .env
+          echo LL_API_KEY=${{ secrets.LL_API_KEY }} >> .env
 
       - name: Check Flutter Version
         run: flutter --version
