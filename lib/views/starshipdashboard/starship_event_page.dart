@@ -15,12 +15,12 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class StarshipEventPage extends StatefulWidget {
-  const StarshipEventPage(this._configuration, {Key? key}) : super(key: key);
+  const StarshipEventPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _StarshipEventPageState createState() => _StarshipEventPageState();
+  State<StarshipEventPage> createState() => _StarshipEventPageState();
 }
 
 class _StarshipEventPageState extends State<StarshipEventPage> {
@@ -35,7 +35,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   void initState() {
     super.initState();
     Starship? starship =
-        PageStorage.of(context)!.readState(context, identifier: 'starship');
+        PageStorage.of(context).readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -56,7 +56,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _starship, identifier: 'starship');
     });
   }
@@ -118,7 +118,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
             padding: const EdgeInsets.all(8.0),
             child: ToggleButtons(
               borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context).textTheme.subtitle1,
+              textStyle: Theme.of(context).textTheme.titleMedium,
               onPressed: (int index) {
                 setState(() {
                   for (int buttonIndex = 0;
@@ -225,11 +225,11 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
         title: Text(launch.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(launch.location!),
         trailing: Text(formatter.format(launch.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -246,11 +246,11 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
         title: Text(event.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(event.location!),
         trailing: Text(formatter.format(event.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -272,7 +272,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   }
 
   void _navigateToEventDetails(
-      {EventList? event, Object? avatarTag, int? eventId}) {
+      {EventList? event, int? eventId}) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {

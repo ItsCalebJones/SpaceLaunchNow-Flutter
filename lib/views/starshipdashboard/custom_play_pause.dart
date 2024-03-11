@@ -14,13 +14,13 @@ class CustomPlayPauseButton extends StatefulWidget {
   final Widget? bufferIndicator;
 
   /// Creates [CustomPlayPauseButton] widget.
-  const CustomPlayPauseButton({Key? key,
+  const CustomPlayPauseButton({super.key,
     this.controller,
     this.bufferIndicator,
-  }) : super(key: key);
+  });
 
   @override
-  _PlayPauseButtonState createState() => _PlayPauseButtonState();
+  State<CustomPlayPauseButton> createState() => _PlayPauseButtonState();
 }
 
 class _PlayPauseButtonState extends State<CustomPlayPauseButton>
@@ -67,12 +67,12 @@ class _PlayPauseButtonState extends State<CustomPlayPauseButton>
 
   @override
   Widget build(BuildContext context) {
-    final _playerState = _controller!.value.playerState;
+    final playerState = _controller!.value.playerState;
     if ((!_controller!.flags.autoPlay && _controller!.value.isReady) ||
-        _playerState == PlayerState.playing ||
-        _playerState == PlayerState.paused) {
+        playerState == PlayerState.playing ||
+        playerState == PlayerState.paused) {
       return Visibility(
-        visible: _playerState == PlayerState.cued ||
+        visible: playerState == PlayerState.cued ||
             !_controller!.value.isPlaying ||
             _controller!.value.isControlsVisible,
         child: Material(

@@ -1,4 +1,3 @@
-import 'package:logger/logger.dart';
 
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';

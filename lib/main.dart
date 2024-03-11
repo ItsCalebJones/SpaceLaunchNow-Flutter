@@ -25,7 +25,6 @@ import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
@@ -70,6 +69,8 @@ Future<void> main() async {
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  SpaceLaunchNow({super.key});
+
   static bool get isInDebugMode {
     bool inDebugMode = false;
     assert(inDebugMode = true);
@@ -89,7 +90,7 @@ class SpaceLaunchNow extends StatelessWidget {
 class Pages extends StatefulWidget {
   final FirebaseMessaging _firebaseMessaging;
 
-  Pages(this._firebaseMessaging);
+  const Pages(this._firebaseMessaging, {super.key});
 
   @override
   createState() => PagesState(_firebaseMessaging);
@@ -819,10 +820,10 @@ class PagesState extends State<Pages> {
 
   _openBrowser(String url) async {
     print("Checking $url");
-    var _url = Uri.parse(url);
-    if (await canLaunchUrl(_url)) {
+    var url0 = Uri.parse(url);
+    if (await canLaunchUrl(url0)) {
       print("Launching $url");
-      await launchUrl(_url);
+      await launchUrl(url0);
     } else {
       throw 'Could not launch $url';
     }

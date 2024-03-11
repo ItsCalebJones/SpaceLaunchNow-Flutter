@@ -5,7 +5,7 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class AgenciesShowcase extends StatelessWidget {
-  const AgenciesShowcase(this.mLaunch, {Key? key}) : super(key: key);
+  const AgenciesShowcase(this.mLaunch, {super.key});
 
   final Launch? mLaunch;
 
@@ -50,7 +50,7 @@ class AgenciesShowcase extends StatelessWidget {
               Text(
                 "$lspName Stats",
                 style:
-                    textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
+                    textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +64,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             "Successful:",
-                            style: textTheme.subtitle1!
+                            style: textTheme.titleMedium!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -73,7 +73,7 @@ class AgenciesShowcase extends StatelessWidget {
                             child: Text(
                               lsp.successfulLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subtitle1,
+                              style: textTheme.titleMedium,
                               overflow: TextOverflow.fade,
                             ),
                           ),
@@ -83,7 +83,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             "Pending:",
-                            style: textTheme.subtitle1!
+                            style: textTheme.titleMedium!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -92,7 +92,7 @@ class AgenciesShowcase extends StatelessWidget {
                             child: Text(
                               lsp.pendingLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subtitle1,
+                              style: textTheme.titleMedium,
                               overflow: TextOverflow.fade,
                             ),
                           ),
@@ -102,7 +102,7 @@ class AgenciesShowcase extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             "Failed:",
-                            style: textTheme.subtitle1!
+                            style: textTheme.titleMedium!
                                 .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
@@ -111,7 +111,7 @@ class AgenciesShowcase extends StatelessWidget {
                             child: Text(
                               lsp.failedLaunches.toString(),
                               maxLines: 1,
-                              style: textTheme.subtitle1,
+                              style: textTheme.titleMedium,
                               overflow: TextOverflow.fade,
                             ),
                           ),
@@ -171,7 +171,7 @@ class AgenciesShowcase extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     lspAdmin!,
-                    style: textTheme.subtitle1!.copyWith(),
+                    style: textTheme.titleMedium!.copyWith(),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -179,7 +179,7 @@ class AgenciesShowcase extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     lspFounded,
-                    style: textTheme.subtitle1!.copyWith(),
+                    style: textTheme.titleMedium!.copyWith(),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -197,7 +197,7 @@ class AgenciesShowcase extends StatelessWidget {
       } else {
         lspWidgets.add(Text(
           "Unknown",
-          style: textTheme.subtitle1!.copyWith(),
+          style: textTheme.titleMedium!.copyWith(),
           textAlign: TextAlign.left,
         ));
       }
@@ -213,7 +213,7 @@ class AgenciesShowcase extends StatelessWidget {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline4!
+                  .headlineMedium!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
@@ -221,7 +221,7 @@ class AgenciesShowcase extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
               lspName!,
-              style: textTheme.headline6,
+              style: textTheme.titleLarge,
             ),
           ),
           buildAvatar(),
@@ -233,7 +233,7 @@ class AgenciesShowcase extends StatelessWidget {
                 top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
             child: Text(
               lspDescription!,
-              style: textTheme.bodyText1!.copyWith(),
+              style: textTheme.bodyLarge!.copyWith(),
               textAlign: TextAlign.start,
             ),
           ),
@@ -260,7 +260,7 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             Text(
               "Attempted Landing:",
-              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             Padding(
@@ -268,7 +268,7 @@ class AgenciesShowcase extends StatelessWidget {
               child: Text(
                 mLaunch!.launchServiceProvider!.attemptedLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subtitle1,
+                style: textTheme.titleMedium,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -280,7 +280,7 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             Text(
               "Successful Landing:",
-              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             Padding(
@@ -288,7 +288,7 @@ class AgenciesShowcase extends StatelessWidget {
               child: Text(
                 mLaunch!.launchServiceProvider!.successfulLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subtitle1,
+                style: textTheme.titleMedium,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -300,7 +300,7 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             Text(
               "Consecutive Landing:",
-              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             Padding(
@@ -309,7 +309,7 @@ class AgenciesShowcase extends StatelessWidget {
                 mLaunch!.launchServiceProvider!.consecutiveSuccessfulLandings
                     .toString(),
                 maxLines: 1,
-                style: textTheme.subtitle1,
+                style: textTheme.titleMedium,
                 overflow: TextOverflow.fade,
               ),
             ),
@@ -321,7 +321,7 @@ class AgenciesShowcase extends StatelessWidget {
           children: <Widget>[
             Text(
               "Failed Landing:",
-              style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+              style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
             Padding(
@@ -329,7 +329,7 @@ class AgenciesShowcase extends StatelessWidget {
               child: Text(
                 mLaunch!.launchServiceProvider!.failedLandings.toString(),
                 maxLines: 1,
-                style: textTheme.subtitle1,
+                style: textTheme.titleMedium,
                 overflow: TextOverflow.fade,
               ),
             ),

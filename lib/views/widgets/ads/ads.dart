@@ -10,7 +10,7 @@ import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 
 class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget(this.size, {Key? key}) : super(key: key);
+  const BannerAdWidget(this.size, {super.key});
 
   final AdSize size;
 

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
@@ -14,7 +14,7 @@ import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
 
-  SettingsPage(this.configuration, this.updater, {Key? key}) : super(key: key);
+  SettingsPage(this.configuration, this.updater, {super.key});
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final AppConfiguration configuration;
@@ -22,7 +22,7 @@ class SettingsPage extends StatefulWidget {
 
 
   @override
-  NotificationFilterPageState createState() =>
+  State<SettingsPage> createState() =>
       NotificationFilterPageState(_firebaseMessaging);
 }
 
@@ -588,7 +588,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         elevation: 0.0,
         title: Text(
           "Settings",
-          style: Theme.of(context).textTheme.headline1!.copyWith(
+          style: Theme.of(context).textTheme.displayLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 34,
                 color: barTheme.focusColor,
@@ -606,7 +606,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       _buildProductList(),
       _buildDebug(),
       ListTile(
-        title: Text('Notification Settings', style: theme.textTheme.headline5),
+        title: Text('Notification Settings', style: theme.textTheme.headlineSmall),
         subtitle: const Text('Select what kind of notifications to receive.'),
       ),
       MergeSemantics(
@@ -678,7 +678,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           children: rows,
         ),
         ListTile(
-          title: Text('Favorites Filters', style: theme.textTheme.headline5),
+          title: Text('Favorites Filters', style: theme.textTheme.headlineSmall),
           subtitle: const Text(
               'Select which agencies and locations you want follow and receive launch notifications.'),
         ),
@@ -686,7 +686,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text('About', style: theme.textTheme.headline5)],
+          children: <Widget>[Text('About', style: theme.textTheme.headlineSmall)],
         ),
         const Divider(),
         MergeSemantics(
@@ -734,7 +734,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
         title: Text('Become a Supporter',
             style: Theme.of(context)
                 .textTheme
-                .headline4!
+                .headlineMedium!
                 .copyWith(fontWeight: FontWeight.bold)),
         subtitle: const Text(
             'Help ensure continued support, timely bug fixes, and new features by making a one-time in app purchase to remove ads or become a monthly supporter on Patreon.'));
@@ -835,7 +835,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: Text('Agencies', style: theme.textTheme.headline5),
+            title: Text('Agencies', style: theme.textTheme.headlineSmall),
             subtitle: const Text('Select your favorite launch agencies.'),
           ),
           Padding(
@@ -846,7 +846,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
                 child: Text(
                     'NOTE: You will only receive notifications for launches matching both agency and location.'
                     ' Example - if you have Florida and SpaceX selected you will only receive notifications for SpaceX launches in Florida.',
-                    style: Theme.of(context).textTheme.caption),
+                    style: Theme.of(context).textTheme.bodySmall),
               ),
             ),
           ),
@@ -948,7 +948,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: Text('Locations', style: theme.textTheme.headline5),
+            title: Text('Locations', style: theme.textTheme.headlineSmall),
             subtitle: const Text('Select your favorite launch locations.'),
           ),
           const Divider(),

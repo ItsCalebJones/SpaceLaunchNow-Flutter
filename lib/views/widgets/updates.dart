@@ -17,7 +17,7 @@ Widget buildUpdates(
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline1!
+            .displayLarge!
             .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
       ),
     );
@@ -41,8 +41,8 @@ Widget buildUpdates(
             ),
             title: Text(
                 "${update.createdBy!} - ${formatter.format(update.createdOn!)}",
-                style: Theme.of(context).textTheme.subtitle2),
-            subtitle: Text(comment, style: Theme.of(context).textTheme.caption),
+                style: Theme.of(context).textTheme.titleSmall),
+            subtitle: Text(comment, style: Theme.of(context).textTheme.bodySmall),
           )));
     }
     if (updates.length >= 6) {

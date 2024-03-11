@@ -4,11 +4,10 @@ class CustomDialogBox extends StatefulWidget {
   final String? title, descriptions, text, imgUrl;
 
   const CustomDialogBox(
-      {Key? key, this.title, this.descriptions, this.text, this.imgUrl})
-      : super(key: key);
+      {super.key, this.title, this.descriptions, this.text, this.imgUrl});
 
   @override
-  _CustomDialogBoxState createState() => _CustomDialogBoxState();
+  State<CustomDialogBox> createState() => _CustomDialogBoxState();
 }
 
 class _CustomDialogBoxState extends State<CustomDialogBox> {

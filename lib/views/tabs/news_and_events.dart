@@ -5,13 +5,13 @@ import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class NewsAndEventsPage extends StatefulWidget {
-  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {Key? key}) : super(key: key);
+  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {super.key});
 
   final AppConfiguration _configuration;
   final int newsAndEventsIndex;
 
   @override
-  _NewsAndEventsPageState createState() => _NewsAndEventsPageState();
+  State<NewsAndEventsPage> createState() => _NewsAndEventsPageState();
 }
 
 class _NewsAndEventsPageState extends State<NewsAndEventsPage>
@@ -62,7 +62,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
             ),
             title: Text(
               'News',
-              style: Theme.of(context).textTheme.headline1!.copyWith(
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 34,
                   color: barTheme.focusColor),

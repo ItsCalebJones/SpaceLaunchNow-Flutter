@@ -4,7 +4,7 @@ import 'package:spacelaunchnow_flutter/models/mission.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class MissionShowcase extends StatelessWidget {
-  const MissionShowcase(this._launch, {Key? key}) : super(key: key);
+  const MissionShowcase(this._launch, {super.key});
 
   final Launch? _launch;
 
@@ -17,7 +17,7 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         Text(
           "Orbit:",
-          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         Padding(
@@ -25,7 +25,7 @@ class MissionShowcase extends StatelessWidget {
           child: Text(
             orbit!,
             maxLines: 2,
-            style: textTheme.bodyText1,
+            style: textTheme.bodyLarge,
             overflow: TextOverflow.fade,
           ),
         ),
@@ -38,7 +38,7 @@ class MissionShowcase extends StatelessWidget {
       children: <Widget>[
         Text(
           "Type:",
-          style: textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.start,
         ),
         Padding(
@@ -46,7 +46,7 @@ class MissionShowcase extends StatelessWidget {
           child: Text(
             _launch!.mission!.typeName!,
             maxLines: 2,
-            style: textTheme.bodyText1,
+            style: textTheme.bodyLarge,
           ),
         ),
       ],
@@ -66,7 +66,7 @@ class MissionShowcase extends StatelessWidget {
         textAlign: TextAlign.left,
         style: Theme.of(context)
             .textTheme
-            .headline4!
+            .headlineMedium!
             .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
       ),
     ));
@@ -83,7 +83,7 @@ class MissionShowcase extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0.0),
                 child: Text(
                   mission.name!,
-                  style: textTheme.headline6,
+                  style: textTheme.titleLarge,
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -102,7 +102,7 @@ class MissionShowcase extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 0.0),
                 child: Text(
                   "$missionDescription",
-                  style: textTheme.bodyText1!.copyWith(),
+                  style: textTheme.bodyLarge!.copyWith(),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -119,11 +119,11 @@ class MissionShowcase extends StatelessWidget {
           children: <Widget>[
             Text(
               _launch!.name!,
-              style: textTheme.headline6!.copyWith(),
+              style: textTheme.titleLarge!.copyWith(),
             ),
             Text(
               "Type: Unknown",
-              style: textTheme.subtitle1!.copyWith(),
+              style: textTheme.titleMedium!.copyWith(),
             ),
           ],
         ),
@@ -157,7 +157,7 @@ class MissionShowcase extends StatelessWidget {
             child: Text(
               "Credit @geoffdbarrett",
               textAlign: TextAlign.center,
-              style: textTheme.caption,
+              style: textTheme.bodySmall,
             ),
           )
         ],

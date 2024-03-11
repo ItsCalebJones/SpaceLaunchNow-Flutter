@@ -20,12 +20,12 @@ import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class HomeListPage extends StatefulWidget {
-  const HomeListPage(this._configuration, {Key? key}) : super(key: key);
+  const HomeListPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _HomeListPageState createState() => _HomeListPageState();
+  State<HomeListPage> createState() => _HomeListPageState();
 }
 
 class _HomeListPageState extends State<HomeListPage> {
@@ -68,7 +68,7 @@ class _HomeListPageState extends State<HomeListPage> {
     logger.d("Init state of Upcoming!");
 
     List<Launch>? launches =
-        PageStorage.of(context)!.readState(context, identifier: 'homeLaunches');
+        PageStorage.of(context).readState(context, identifier: 'homeLaunches');
     if (launches != null) {
       _launches = launches;
     }
@@ -102,7 +102,7 @@ class _HomeListPageState extends State<HomeListPage> {
 
     setState(() {
       _launches.addAll(launches.launches!);
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _launches, identifier: 'homeLaunches');
     });
   }
@@ -207,7 +207,7 @@ class _HomeListPageState extends State<HomeListPage> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
-                                .headline3!
+                                .displaySmall!
                                 .copyWith(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18),
@@ -219,7 +219,7 @@ class _HomeListPageState extends State<HomeListPage> {
                           child: Text(launch.pad!.location!.name!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText2),
+                              style: Theme.of(context).textTheme.bodyMedium),
                         ),
                         Padding(
                           padding:
@@ -227,7 +227,7 @@ class _HomeListPageState extends State<HomeListPage> {
                           child: Text(formatter.format(launch.net!.toLocal()),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText2),
+                              style: Theme.of(context).textTheme.bodyMedium),
                         ),
                       ],
                     ),
@@ -289,10 +289,10 @@ class _HomeListPageState extends State<HomeListPage> {
         padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 4.0),
         child: CupertinoButton(
           color: Theme.of(context).colorScheme.secondary,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 Icons.explore,
               ),
@@ -384,7 +384,7 @@ class _HomeListPageState extends State<HomeListPage> {
         title: Text(
           'Home',
           textAlign: TextAlign.left,
-          style: Theme.of(context).textTheme.headline1!.copyWith(
+          style: Theme.of(context).textTheme.displayLarge!.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 34,
               color: barTheme.focusColor),
@@ -611,7 +611,7 @@ class _HomeListPageState extends State<HomeListPage> {
         child: Text(launch.mission!.name!,
             style: Theme.of(context)
                 .textTheme
-                .headline5!
+                .headlineSmall!
                 .copyWith(fontWeight: FontWeight.bold)),
       );
     } else {
@@ -627,7 +627,7 @@ class _HomeListPageState extends State<HomeListPage> {
         child: Text(launch.mission!.description!,
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.left),
       );
     } else {
@@ -701,7 +701,7 @@ class _HomeListPageState extends State<HomeListPage> {
       ));
     } else {
       _launches.asMap().forEach(
-          (index, item) => {content.addAll(mapLaunchToTile(index, item))});
+          (index, item) {content.addAll(mapLaunchToTile(index, item));});
 
       // content.add(const SizedBox(height: 400));
     }

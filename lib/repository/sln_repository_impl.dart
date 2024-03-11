@@ -22,18 +22,18 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<Launch>> fetch([String? lsp]) {
-    String _kLaunchesUrl = BASE_URL + '/launch/?mode=detailed&limit=20';
+    String kLaunchesUrl = '$BASE_URL/launch/?mode=detailed&limit=20';
     if (lsp != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
+      kLaunchesUrl = '$kLaunchesUrl&lsp__id=$lsp';
     }
-    print(_kLaunchesUrl);
+    debugPrint(kLaunchesUrl);
     client
-        .get(Uri.parse(_kLaunchesUrl))
+        .get(Uri.parse(kLaunchesUrl))
         .then((response) => utf8.decode(response.bodyBytes))
         .then((bodyStr) {
-      print(bodyStr);
+      debugPrint(bodyStr);
     });
-    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
+    return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -48,18 +48,18 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<Launch>> fetchNext([String? lsp]) {
-    String _kLaunchesUrl = BASE_URL + '/launch/?mode=detailed&limit=1';
+    String kLaunchesUrl = '$BASE_URL/launch/?mode=detailed&limit=1';
     if (lsp != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
+      kLaunchesUrl = '$kLaunchesUrl&lsp__id=$lsp';
     }
-    print(_kLaunchesUrl);
+    print(kLaunchesUrl);
     client
-        .get(Uri.parse(_kLaunchesUrl))
+        .get(Uri.parse(kLaunchesUrl))
         .then((response) => utf8.decode(response.bodyBytes))
         .then((bodyStr) {
       print(bodyStr);
     });
-    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
+    return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
@@ -75,19 +75,19 @@ class SLNRepositoryImpl implements SLNRepository {
   @override
   Future<LaunchesList> fetchPrevious(
       {String? lsp, String? limit, String? offset, String? search}) {
-    String _kLaunchesUrl =
-        BASE_URL + '/launch/previous/?mode=list&limit=' + limit!;
+    String kLaunchesUrl =
+        '$BASE_URL/launch/previous/?mode=list&limit=${limit!}';
     if (lsp != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
+      kLaunchesUrl = '$kLaunchesUrl&lsp__id=$lsp';
     }
     if (offset != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+      kLaunchesUrl = '$kLaunchesUrl&offset=$offset';
     }
     if (search != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
+      kLaunchesUrl = '$kLaunchesUrl&search=$search';
     }
-    print(_kLaunchesUrl);
-    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
+    print(kLaunchesUrl);
+    return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -104,27 +104,27 @@ class SLNRepositoryImpl implements SLNRepository {
   @override
   Future<LaunchesList> fetchUpcoming(
       {String? lsp, String? limit, String? offset, String? search}) {
-    String _kLaunchesUrl =
-        BASE_URL + '/launch/upcoming/?mode=list&limit=' + limit!;
+    String kLaunchesUrl =
+        '$BASE_URL/launch/upcoming/?mode=list&limit=${limit!}';
     if (lsp != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&lsp__id=' + lsp;
+      kLaunchesUrl = '$kLaunchesUrl&lsp__id=$lsp';
     }
 
     if (offset != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+      kLaunchesUrl = '$kLaunchesUrl&offset=$offset';
     }
 
     if (search != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&search=' + search;
+      kLaunchesUrl = '$kLaunchesUrl&search=$search';
     }
 
     client
-        .get(Uri.parse(_kLaunchesUrl))
+        .get(Uri.parse(kLaunchesUrl))
         .then((response) => utf8.decode(response.bodyBytes))
         .then((bodyStr) {
       print(bodyStr);
     });
-    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
+    return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -142,23 +142,23 @@ class SLNRepositoryImpl implements SLNRepository {
   @override
   Future<Launches> fetchUpcomingHome(
       {String? lsps, String? locations, String? limit, String? offset}) {
-    String _kLaunchesUrl =
-        BASE_URL + '/launch/upcoming/?mode=detailed&limit=' + limit!;
+    String kLaunchesUrl =
+        '$BASE_URL/launch/upcoming/?mode=detailed&limit=${limit!}';
     if (lsps != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&lsp__ids=' + lsps;
+      kLaunchesUrl = '$kLaunchesUrl&lsp__ids=$lsps';
     }
 
     if (locations != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&location__ids=' + locations;
+      kLaunchesUrl = '$kLaunchesUrl&location__ids=$locations';
     }
 
     if (offset != null) {
-      _kLaunchesUrl = _kLaunchesUrl + '&offset=' + offset;
+      kLaunchesUrl = '$kLaunchesUrl&offset=$offset';
     }
 
-    print(_kLaunchesUrl);
+    print(kLaunchesUrl);
 
-    return client.get(Uri.parse(_kLaunchesUrl)).then((http.Response response) {
+    return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -176,15 +176,15 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<Events> fetchNextEvent({String? limit, String? offset}) {
-    String _kEventsUrl =
-        BASE_URL + '/event/upcoming/?mode=list&limit=' + limit!;
+    String kEventsUrl =
+        '$BASE_URL/event/upcoming/?mode=list&limit=${limit!}';
 
     if (offset != null) {
-      _kEventsUrl = _kEventsUrl + '&offset=' + offset;
+      kEventsUrl = '$kEventsUrl&offset=$offset';
     }
 
-    print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return client.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -199,15 +199,15 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<Events> fetchPreviousEvent({String? limit, String? offset}) {
-    String _kEventsUrl =
-        BASE_URL + '/event/previous/?mode=list&limit=' + limit!;
+    String kEventsUrl =
+        '$BASE_URL/event/previous/?mode=list&limit=${limit!}';
 
     if (offset != null) {
-      _kEventsUrl = _kEventsUrl + '&offset=' + offset;
+      kEventsUrl = '$kEventsUrl&offset=$offset';
     }
 
-    print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return client.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -222,10 +222,10 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<Event> fetchEventById(int? id) {
-    String _kEventsUrl = BASE_URL + '/event/$id';
+    String kEventsUrl = '$BASE_URL/event/$id';
 
-    print(_kEventsUrl);
-    return client.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return client.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -240,10 +240,10 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNews() {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles?_limit=50';
+    String kEventsUrl = '$NEWS_BASE_URL/articles?_limit=50';
 
-    print(_kEventsUrl);
-    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -264,11 +264,11 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNewsBySite(String name) {
-    String _kEventsUrl =
-        NEWS_BASE_URL + '/articles?newsSite.name_contains=$name';
+    String kEventsUrl =
+        '$NEWS_BASE_URL/articles?newsSite.name_contains=$name';
 
-    print(_kEventsUrl);
-    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -289,10 +289,10 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNewsByLaunch({String? id}) {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles/launch/$id/?_limit=30';
+    String kEventsUrl = '$NEWS_BASE_URL/articles/launch/$id/?_limit=30';
 
-    print(_kEventsUrl);
-    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -311,10 +311,10 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNewsByEvent({int? id}) {
-    String _kEventsUrl = NEWS_BASE_URL + '/articles/event/$id/?_limit=30';
+    String kEventsUrl = '$NEWS_BASE_URL/articles/event/$id/?_limit=30';
 
-    print(_kEventsUrl);
-    return newsClient.get(Uri.parse(_kEventsUrl)).then((http.Response response) {
+    print(kEventsUrl);
+    return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 
@@ -333,9 +333,9 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<Starship> fetchStarshipDashboard() {
-    String _kUrl = BASE_URL + '/dashboard/starship/?mode=list';
-    print(_kUrl);
-    return client.get(Uri.parse(_kUrl)).then((http.Response response) {
+    String kUrl = '$BASE_URL/dashboard/starship/?mode=list';
+    print(kUrl);
+    return client.get(Uri.parse(kUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
 

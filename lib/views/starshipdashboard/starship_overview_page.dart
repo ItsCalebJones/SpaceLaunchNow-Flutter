@@ -24,12 +24,12 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'custom_play_pause.dart';
 
 class StarshipOverviewPage extends StatefulWidget {
-  const StarshipOverviewPage(this._configuration, {Key? key}) : super(key: key);
+  const StarshipOverviewPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _StarshipOverviewPageState createState() => _StarshipOverviewPageState();
+  State<StarshipOverviewPage> createState() => _StarshipOverviewPageState();
 }
 
 class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
@@ -43,7 +43,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   void initState() {
     super.initState();
     Starship? starship =
-        PageStorage.of(context)!.readState(context, identifier: 'starship');
+        PageStorage.of(context).readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -63,7 +63,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _starship, identifier: 'starship');
     });
   }
@@ -188,13 +188,13 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .headline5!
+                      .headlineSmall!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   _starship!.liveStream!.first.description!,
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 )
               ],
             ),
@@ -203,10 +203,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: CupertinoButton(
               color: Colors.red,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -238,7 +238,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .subtitle1!
+              .titleMedium!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
         ),
       ),
@@ -273,7 +273,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         child: Text("No upcoming events.",
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
       );
     }
@@ -292,11 +292,11 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         title: Text(launch.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(launch.location!),
         trailing: Text(formatter.format(launch.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -312,11 +312,11 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
         title: Text(event.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(event.location!),
         trailing: Text(formatter.format(event.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -346,7 +346,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           child: Text("Road Closures",
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1!
+                  .titleMedium!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 42))),
     );
 
@@ -360,7 +360,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
         child: Text(
           "No road closures.",
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ));
     }
@@ -386,7 +386,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
               roadClosure.title!,
               style: Theme.of(context)
                   .textTheme
-                  .headline6!
+                  .titleLarge!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             Text("Status: ${roadClosure.status!.name!}"),
@@ -407,7 +407,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           "Notices",
           style: Theme.of(context)
               .textTheme
-              .subtitle1!
+              .titleMedium!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
         ),
       ),
@@ -422,7 +422,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             top: 8.0, bottom: 4.0, left: 32.0, right: 32.0),
         child: Text(
           "No notices available.",
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ));
     }
@@ -448,7 +448,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
               notice.type!.name!,
               style: Theme.of(context)
                   .textTheme
-                  .headline6!
+                  .titleLarge!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             Row(
