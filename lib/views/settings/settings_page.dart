@@ -35,11 +35,11 @@ class NotificationFilterPageState extends State<SettingsPage> {
   NotificationFilterPageState(this._firebaseMessaging);
 
   final List<String> _productLists = [
-    "2022_super_fan",
-    "2022_gse",
-    "2022_flight_controller",
-    "2022_launch_director",
-    "2022_elon"
+    "2024_super_fan",
+    "2024_gse",
+    "2024_flight_controller",
+    "2024_launch_director",
+    "2024_elon"
   ];
 
   final List<String> _notFoundIds = [];
