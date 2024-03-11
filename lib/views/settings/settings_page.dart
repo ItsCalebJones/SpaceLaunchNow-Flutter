@@ -39,7 +39,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     "2024_gse",
     "2024_flight_controller",
     "2024_launch_director",
-    "2024_elon"
+    "2024_elon",
   ];
 
   final List<String> _notFoundIds = [];
@@ -79,8 +79,9 @@ class NotificationFilterPageState extends State<SettingsPage> {
 
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
-    List<PurchasedItem>? items =
-        await FlutterInappPurchase.instance.getPurchaseHistory();
+    logger.d("Starting thing");
+    List<PurchasedItem>? items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    logger.d("Oh hi $items");
     for (var item in items!) {
       logger.d(item.toString());
       _purchases.add(item);
@@ -117,8 +118,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     // refresh items for android
     try {
-      String? msg = await (FlutterInappPurchase.instance.consumeAll()
-          as FutureOr<String?>);
+      String msg = await FlutterInappPurchase.instance.consumeAll();
       logger.d('consumeAllItems: $msg');
     } catch (err) {
       logger.d('consumeAllItems error: $err');
@@ -159,13 +159,16 @@ class NotificationFilterPageState extends State<SettingsPage> {
     await _getPurchaseHistory(initial: true);
     await _getProduct();
     setState(() {
+      logger.d("setting loading false");
       _loading = false;
     });
   }
 
   Future _getProduct() async {
+    logger.d("Looking for $_productLists");
     List<IAPItem> items =
         await FlutterInappPurchase.instance.getProducts(_productLists);
+    logger.d("Got some items $items");
     for (var item in items) {
       logger.d(item.toString());
       _items.add(item);
@@ -745,7 +748,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
           title: Text('Error loading in-app-purchases.',
               style: TextStyle(fontWeight: FontWeight.bold))));
     }
-    logger.d("logger.ding items");
+    logger.d("oh $_items");
     logger.d(_items);
     productList.addAll(_items.map(
       (IAPItem product) {

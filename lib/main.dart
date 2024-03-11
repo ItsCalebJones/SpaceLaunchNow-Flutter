@@ -106,7 +106,7 @@ class PagesState extends State<Pages> {
     '2024_gse',
     '2024_launch_director',
     '2024_flight_controller',
-    '2024_elon'
+    '2024_elon',
   ];
 
   List<IAPItem> _items = [];
@@ -158,6 +158,8 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+
+    logger.d(_productLists);
 
     _rateMyApp.init().then((_) {
       if (_rateMyApp.shouldOpenDialog) {
@@ -491,19 +493,6 @@ class PagesState extends State<Pages> {
 
     startBackground();
     requestiOSPermissions();
-
-    _firebaseMessaging.getToken().then((String? token) {
-      assert(token != null);
-      logger.d("Push Messaging token: $token");
-    });
-
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS) {
-      FirebaseMessaging.instance.getAPNSToken().then((value) {
-        logger.d('FlutterFire Messaging Example: Got APNs token: $value');
-      });
-    }
-
     asyncInitState();
     checkAd();
   }

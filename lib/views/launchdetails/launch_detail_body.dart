@@ -180,7 +180,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         );
       }
     }
-    return const Row();
+    return Row();
   }
 
   Widget _buildActionButtons(ThemeData theme) {

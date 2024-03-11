@@ -26,13 +26,9 @@ class SLNRepositoryImpl implements SLNRepository {
     if (lsp != null) {
       kLaunchesUrl = '$kLaunchesUrl&lsp__id=$lsp';
     }
-    debugPrint(kLaunchesUrl);
     client
         .get(Uri.parse(kLaunchesUrl))
-        .then((response) => utf8.decode(response.bodyBytes))
-        .then((bodyStr) {
-      debugPrint(bodyStr);
-    });
+        .then((response) => utf8.decode(response.bodyBytes));
     return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final String jsonBody = response.body;
       final statusCode = response.statusCode;
