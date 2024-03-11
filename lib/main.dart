@@ -25,7 +25,6 @@ import 'package:spacelaunchnow_flutter/views/tabs/news_and_events.dart';
 import 'package:spacelaunchnow_flutter/views/tabs/starship_dashboard.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/custom_dialog_box.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'firebase_options.dart';
 import 'views/homelist/home_list_page.dart';
@@ -70,6 +69,8 @@ Future<void> main() async {
 class SpaceLaunchNow extends StatelessWidget {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  SpaceLaunchNow({super.key});
+
   static bool get isInDebugMode {
     bool inDebugMode = false;
     assert(inDebugMode = true);
@@ -89,7 +90,7 @@ class SpaceLaunchNow extends StatelessWidget {
 class Pages extends StatefulWidget {
   final FirebaseMessaging _firebaseMessaging;
 
-  Pages(this._firebaseMessaging);
+  const Pages(this._firebaseMessaging, {super.key});
 
   @override
   createState() => PagesState(_firebaseMessaging);
@@ -101,11 +102,11 @@ class PagesState extends State<Pages> {
   var logger = Logger();
 
   final List<String> _productLists = [
-    '2022_super_fan',
-    '2022_gse',
-    '2022_launch_director',
-    '2022_flight_controller',
-    '2022_elon'
+    '2024_super_fan',
+    '2024_gse',
+    '2024_launch_director',
+    '2024_flight_controller',
+    '2024_elon',
   ];
 
   List<IAPItem> _items = [];
@@ -157,6 +158,8 @@ class PagesState extends State<Pages> {
   @override
   void initState() {
     super.initState();
+
+    logger.d(_productLists);
 
     _rateMyApp.init().then((_) {
       if (_rateMyApp.shouldOpenDialog) {
@@ -490,19 +493,6 @@ class PagesState extends State<Pages> {
 
     startBackground();
     requestiOSPermissions();
-
-    _firebaseMessaging.getToken().then((String? token) {
-      assert(token != null);
-      logger.d("Push Messaging token: $token");
-    });
-
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS) {
-      FirebaseMessaging.instance.getAPNSToken().then((value) {
-        logger.d('FlutterFire Messaging Example: Got APNs token: $value');
-      });
-    }
-
     asyncInitState();
     checkAd();
   }
@@ -819,10 +809,10 @@ class PagesState extends State<Pages> {
 
   _openBrowser(String url) async {
     print("Checking $url");
-    var _url = Uri.parse(url);
-    if (await canLaunchUrl(_url)) {
+    var url0 = Uri.parse(url);
+    if (await canLaunchUrl(url0)) {
       print("Launching $url");
-      await launchUrl(_url);
+      await launchUrl(url0);
     } else {
       throw 'Could not launch $url';
     }

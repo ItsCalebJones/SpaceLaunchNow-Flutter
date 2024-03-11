@@ -3,11 +3,11 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 
 class LaunchDetailHeader extends StatelessWidget {
   const LaunchDetailHeader(
-    this.launch, {Key? key,
+    this.launch, {super.key,
     required this.loadLaunch,
     this.avatarTag,
     required this.backEnabled,
-  }) : super(key: key);
+  });
 
   final ValueChanged<String?> loadLaunch;
   final Launch? launch;

@@ -4,9 +4,9 @@ import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 
 class EventDetailHeader extends StatelessWidget {
   const EventDetailHeader(
-    this.event, {Key? key,
+    this.event, {super.key,
     required this.backEnabled,
-  }) : super(key: key);
+  });
 
   final Event? event;
   final bool backEnabled;

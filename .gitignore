@@ -27,3 +27,4 @@ macos/Flutter/ephemeral/Flutter-Generated.xcconfig
 # Envify related
 .env
 env.g.dart
+*.env

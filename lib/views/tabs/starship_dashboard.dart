@@ -6,13 +6,13 @@ import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_vehicle_page.dart';
 
 class StarshipDashboardPage extends StatefulWidget {
-  const StarshipDashboardPage(this._configuration, this.index, {Key? key}) : super(key: key);
+  const StarshipDashboardPage(this._configuration, this.index, {super.key});
 
   final AppConfiguration _configuration;
   final int index;
 
   @override
-  _StarshipDashboardPageState createState() =>
+  State<StarshipDashboardPage> createState() =>
       _StarshipDashboardPageState();
 }
 
@@ -67,7 +67,7 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage>
             ),
             title: Text(
               'Starship',
-              style: Theme.of(context).textTheme.headline1!.copyWith(
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 34,
                   color: barTheme.focusColor),

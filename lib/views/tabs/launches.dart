@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logger/logger.dart';
@@ -12,12 +11,12 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 class LaunchesTabPage extends StatefulWidget {
-  const LaunchesTabPage(this._configuration, {Key? key}) : super(key: key);
+  const LaunchesTabPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _LaunchesTabPageState createState() => _LaunchesTabPageState();
+  State<LaunchesTabPage> createState() => _LaunchesTabPageState();
 }
 
 class _LaunchesTabPageState extends State<LaunchesTabPage>
@@ -191,7 +190,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
             ],
           ),
           title: Text(myTitle,
-              style: Theme.of(context).textTheme.headline1!.copyWith(
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
                   color: barTheme.focusColor)));

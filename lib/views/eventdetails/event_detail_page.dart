@@ -11,15 +11,14 @@ import 'header/event_detail_header.dart';
 
 class EventDetailPage extends StatefulWidget {
   const EventDetailPage(this._configuration,
-      {Key? key, this.eventList, this.eventId})
-      : super(key: key);
+      {super.key, this.eventList, this.eventId});
 
   final AppConfiguration _configuration;
   final EventList? eventList;
   final int? eventId;
 
   @override
-  _EventDetailPageState createState() => _EventDetailPageState();
+  State<EventDetailPage> createState() => _EventDetailPageState();
 }
 
 class _EventDetailPageState extends State<EventDetailPage> {
@@ -32,7 +31,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   void initState() {
     super.initState();
     Event? event =
-        PageStorage.of(context)!.readState(context, identifier: 'event_detail');
+        PageStorage.of(context).readState(context, identifier: 'event_detail');
     if (event != null) {
       event = event;
     } else {
@@ -69,7 +68,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     setState(() {
       loading = false;
       event = localEvent;
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, event, identifier: 'event_detail');
     });
   }

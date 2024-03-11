@@ -8,11 +8,11 @@ import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 
 class AnchorAdWidget extends StatefulWidget {
-  const AnchorAdWidget(this.size, {Key? key}) : super(key: key);
+  const AnchorAdWidget(this.size, {super.key});
   final AnchoredAdaptiveBannerAdSize size;
 
   @override
-  _AnchorAdWidgetState createState() => _AnchorAdWidgetState();
+  State<AnchorAdWidget> createState() => _AnchorAdWidgetState();
 }
 
 class _AnchorAdWidgetState extends State<AnchorAdWidget>

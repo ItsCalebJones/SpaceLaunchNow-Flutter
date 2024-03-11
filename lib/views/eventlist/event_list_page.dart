@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -14,12 +13,12 @@ import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class EventListPage extends StatefulWidget {
-  const EventListPage(this._configuration, {Key? key}) : super(key: key);
+  const EventListPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _EventListPageState createState() => _EventListPageState();
+  State<EventListPage> createState() => _EventListPageState();
 }
 
 class _EventListPageState extends State<EventListPage> {
@@ -37,9 +36,9 @@ class _EventListPageState extends State<EventListPage> {
   @override
   void initState() {
     super.initState();
-    List<EventList>? upcomingEvents = PageStorage.of(context)!
+    List<EventList>? upcomingEvents = PageStorage.of(context)
         .readState(context, identifier: 'upcoming_events');
-    List<EventList>? previousEvents = PageStorage.of(context)!
+    List<EventList>? previousEvents = PageStorage.of(context)
         .readState(context, identifier: 'previous_events');
 
     if (upcomingEvents != null && previousEvents != null) {
@@ -93,7 +92,7 @@ class _EventListPageState extends State<EventListPage> {
 
     setState(() {
       _upcomingEvents.addAll(events.events!);
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _upcomingEvents, identifier: 'upcoming_events');
     });
   }
@@ -107,7 +106,7 @@ class _EventListPageState extends State<EventListPage> {
 
     setState(() {
       _previousEvents.addAll(events.events!);
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _previousEvents, identifier: 'previous_events');
     });
   }
@@ -178,7 +177,7 @@ class _EventListPageState extends State<EventListPage> {
             child: ToggleButtons(
               color: Theme.of(context).colorScheme.onPrimary,
               borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context).textTheme.subtitle2,
+              textStyle: Theme.of(context).textTheme.titleSmall,
               onPressed: (int index) {
                 setState(() {
                   for (int buttonIndex = 0;
@@ -234,11 +233,11 @@ class _EventListPageState extends State<EventListPage> {
         title: Text(event.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(location!),
         trailing: Text(PrecisionFormattedDate.getShortPrecisionFormattedDate(event.datePrecision?.id ?? 0, event.date!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }

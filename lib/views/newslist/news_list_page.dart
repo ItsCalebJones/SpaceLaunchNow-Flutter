@@ -17,12 +17,12 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class NewsListPage extends StatefulWidget {
-  const NewsListPage(this._configuration, {Key? key}) : super(key: key);
+  const NewsListPage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _NewsListPageState createState() => _NewsListPageState();
+  State<NewsListPage> createState() => _NewsListPageState();
 }
 
 class _NewsListPageState extends State<NewsListPage> {
@@ -40,7 +40,7 @@ class _NewsListPageState extends State<NewsListPage> {
   void initState() {
     super.initState();
     List<News>? news =
-        PageStorage.of(context)!.readState(context, identifier: 'news');
+        PageStorage.of(context).readState(context, identifier: 'news');
     if (news != null) {
       _news = news;
     } else {
@@ -63,7 +63,7 @@ class _NewsListPageState extends State<NewsListPage> {
     }
     setState(() {
       _news.addAll(response);
-      PageStorage.of(context)!.writeState(context, _news, identifier: 'news');
+      PageStorage.of(context).writeState(context, _news, identifier: 'news');
     });
   }
 
@@ -174,7 +174,7 @@ class _NewsListPageState extends State<NewsListPage> {
                       label: Text(string,
                           style: Theme.of(context)
                               .textTheme
-                              .headline5!
+                              .headlineSmall!
                               .copyWith(
                                   fontSize: 20,
                                   color: (filterIndex == index)
@@ -269,7 +269,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 child: Text(item.title!,
                     style: Theme.of(context)
                         .textTheme
-                        .headline5!
+                        .headlineSmall!
                         .copyWith(fontWeight: FontWeight.bold)),
               ),
               Container(
@@ -278,7 +278,7 @@ class _NewsListPageState extends State<NewsListPage> {
                 child: Text(item.summary!,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.left),
               ),
               Padding(
@@ -331,14 +331,14 @@ class _NewsListPageState extends State<NewsListPage> {
                 children: [
                   Text(
                       "${index.toString()}. ${item.newsSiteLong!} • ${timeago.format(item.datePublished!)}",
-                      style: Theme.of(context).textTheme.caption),
+                      style: Theme.of(context).textTheme.bodySmall),
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 16.0, right: 4.0, top: 4.0, bottom: 4.0),
                     child: Text(item.title!,
                         style: Theme.of(context)
                             .textTheme
-                            .headline5!
+                            .headlineSmall!
                             .copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ],

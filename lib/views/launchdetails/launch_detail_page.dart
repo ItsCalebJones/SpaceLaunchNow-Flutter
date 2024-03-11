@@ -31,7 +31,7 @@ class Dependencies {
 
 class LaunchDetailPage extends StatefulWidget {
   const LaunchDetailPage(this._configuration,
-      {Key? key, this.launch, this.launchId, this.avatarTag}) : super(key: key);
+      {super.key, this.launch, this.launchId, this.avatarTag});
 
   final AppConfiguration _configuration;
   final Launch? launch;
@@ -39,7 +39,7 @@ class LaunchDetailPage extends StatefulWidget {
   final Object? avatarTag;
 
   @override
-  _LaunchDetailsPageState createState() => _LaunchDetailsPageState();
+  State<LaunchDetailPage> createState() => _LaunchDetailsPageState();
 }
 
 class _LaunchDetailsPageState extends State<LaunchDetailPage>
@@ -64,7 +64,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       _loadLaunch(widget.launchId);
       backEnabled = true;
     } else {
-      Launch? mLaunch = PageStorage.of(context)!
+      Launch? mLaunch = PageStorage.of(context)
           .readState(context, identifier: 'next_launch');
       if (mLaunch != null) {
         launch = mLaunch;
@@ -107,7 +107,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         'https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
 
     nextLaunches = Launch.allFromResponse(response);
-    PageStorage.of(context)!
+    PageStorage.of(context)
         .writeState(context, nextLaunches!.first, identifier: 'next_launch');
     setState(() {
       launch = nextLaunches!.first;

@@ -9,12 +9,12 @@ import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class StarshipVehiclePage extends StatefulWidget {
-  const StarshipVehiclePage(this._configuration, {Key? key}) : super(key: key);
+  const StarshipVehiclePage(this._configuration, {super.key});
 
   final AppConfiguration _configuration;
 
   @override
-  _StarshipVehiclePageState createState() => _StarshipVehiclePageState();
+  State<StarshipVehiclePage> createState() => _StarshipVehiclePageState();
 }
 
 class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
@@ -29,7 +29,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   void initState() {
     super.initState();
     Starship? starship =
-        PageStorage.of(context)!.readState(context, identifier: 'starship');
+        PageStorage.of(context).readState(context, identifier: 'starship');
     if (starship != null) {
       _starship = starship;
       usingCached = true;
@@ -50,7 +50,7 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
 
     setState(() {
       _starship = starship;
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _starship, identifier: 'starship');
     });
   }
@@ -156,12 +156,12 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
             "${item.launcherConfiguration!.name!} | ${item.serialNumber!}",
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(item.details!),
         trailing: Text(
             '${item.status![0].toUpperCase()}${item.status!.substring(1)}',
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
@@ -24,7 +23,7 @@ class LaunchDetailBodyWidget extends StatefulWidget {
   final AppConfiguration _configuration;
   final List<News> news;
 
-  const LaunchDetailBodyWidget(this.launch, this._configuration, this.news, {Key? key}) : super(key: key);
+  const LaunchDetailBodyWidget(this.launch, this._configuration, this.news, {super.key});
 
   @override
   State createState() => LaunchDetailBodyState(launch);
@@ -54,7 +53,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: Text(
               mLaunch!.pad!.location!.name!,
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -91,7 +90,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: Text(
               Utils.getStatus(mLaunch!.status!.id),
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -114,7 +113,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                 widget.launch?.netPrecision?.id ?? 0,
                 widget.launch!.net!),
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -170,7 +169,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                     child: Text(
                       landingLocation,
                       maxLines: 2,
-                      style: textTheme.subtitle1,
+                      style: textTheme.titleMedium,
                       overflow: TextOverflow.fade,
                     ),
                   ),
@@ -282,7 +281,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: Text(
             mLaunch!.name!,
-            style: textTheme.headline5!
+            style: textTheme.headlineSmall!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 28),
             textAlign: TextAlign.start,
           ),
@@ -337,7 +336,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .headline4!
+              .headlineMedium!
               .copyWith(fontWeight: FontWeight.bold, fontSize: 26),
         ),
       );
@@ -359,7 +358,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
               title: Text(news.title!,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1!
+                  .titleMedium!
                   .copyWith(fontSize: 15.0)),
               subtitle: Text(news.newsSiteLong!),
             )));

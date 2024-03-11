@@ -25,7 +25,7 @@ class Dependencies {
 }
 
 class Countdown extends StatefulWidget {
-  Countdown(this.launch, {Key? key}) : super(key: key);
+  Countdown(this.launch, {super.key});
 
   final Launch? launch;
   final Dependencies dependencies = Dependencies();
@@ -105,9 +105,9 @@ class CountdownState extends State<Countdown> {
   @override
   build(BuildContext context) {
     var theme = Theme.of(context);
-    var textThemeDigits = theme.textTheme.subtitle1!.copyWith(fontSize: 46.0);
-    var textThemeDivider = theme.textTheme.subtitle1!.copyWith(fontSize: 34.0);
-    var textThemeDescription = theme.textTheme.caption;
+    var textThemeDigits = theme.textTheme.titleMedium!.copyWith(fontSize: 46.0);
+    var textThemeDivider = theme.textTheme.titleMedium!.copyWith(fontSize: 34.0);
+    var textThemeDescription = theme.textTheme.bodySmall;
     Duration duration = Duration(
         seconds: launch!.net!.difference(DateTime.now()).inSeconds);
     PrettyDuration prettyDuration = PrettyDuration(duration);
@@ -209,7 +209,7 @@ class CountdownState extends State<Countdown> {
                     elevation: 5,
                     label: Text(
                       status,
-                      style: theme.textTheme.headline6!
+                      style: theme.textTheme.titleLarge!
                           .copyWith(color: Colors.white),
                     ),
                     backgroundColor: color,

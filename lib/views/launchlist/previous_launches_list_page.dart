@@ -17,14 +17,14 @@ import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class PreviousLaunchListPage extends StatefulWidget {
   const PreviousLaunchListPage(
-      this._configuration, this.searchQuery, this.searchActive, {Key? key}) : super(key: key);
+      this._configuration, this.searchQuery, this.searchActive, {super.key});
 
   final AppConfiguration _configuration;
   final String? searchQuery;
   final bool searchActive;
 
   @override
-  _LaunchListPageState createState() => _LaunchListPageState();
+  State<PreviousLaunchListPage> createState() => _LaunchListPageState();
 }
 
 class _LaunchListPageState extends State<PreviousLaunchListPage> {
@@ -41,13 +41,13 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   @override
   void initState() {
     super.initState();
-    List<LaunchList>? launches = PageStorage.of(context)!
+    List<LaunchList>? launches = PageStorage.of(context)
         .readState(context, identifier: 'previousLaunches');
     if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context)!
+      nextOffset = PageStorage.of(context)
           .readState(context, identifier: 'previousLaunchesNextOffset');
-      totalCount = PageStorage.of(context)!
+      totalCount = PageStorage.of(context)
           .readState(context, identifier: 'previousLaunchesNextTotalCount');
     }
 
@@ -55,9 +55,9 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       _getLaunchBySearch(widget.searchQuery);
     } else if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context)!
+      nextOffset = PageStorage.of(context)
           .readState(context, identifier: 'previousLaunchesNextOffset');
-      totalCount = PageStorage.of(context)!
+      totalCount = PageStorage.of(context)
           .readState(context, identifier: 'previousLaunchesNextTotalCount');
     } else {
       lockedLoadNext();
@@ -97,11 +97,11 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     }
     setState(() {
       _launches.addAll(launches.launches!);
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _launches, identifier: 'previousLaunches');
-      PageStorage.of(context)!.writeState(context, nextOffset,
+      PageStorage.of(context).writeState(context, nextOffset,
           identifier: 'previousLaunchesNextOffset');
-      PageStorage.of(context)!.writeState(context, totalCount,
+      PageStorage.of(context).writeState(context, totalCount,
           identifier: 'previousLaunchesNextTotalCount');
     });
   }
@@ -157,11 +157,11 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         title: Text(launch.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(launch.location!),
         trailing: Text(PrecisionFormattedDate.getShortPrecisionFormattedDate(launch.netPrecision?.id ?? 0, launch.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }

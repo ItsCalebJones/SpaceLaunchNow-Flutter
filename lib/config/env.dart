@@ -6,5 +6,5 @@ part 'env.g.dart';
 abstract class Secret {
   /// Holds the LL_API_KEY.
   @EnviedField(varName: 'LL_API_KEY')
-  static const ll_api_key = _Secret.ll_api_key;
+  static const String ll_api_key = _Secret.ll_api_key;
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
@@ -17,8 +16,7 @@ import '../../util/date_formatter.dart';
 
 class EventDetailBodyWidget extends StatefulWidget {
   const EventDetailBodyWidget(
-      {Key? key, required this.event, required this.configuration})
-      : super(key: key);
+      {super.key, required this.event, required this.configuration});
   final Event event;
   final AppConfiguration configuration;
 
@@ -42,7 +40,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             child: Text(
               widget.event.location ?? "Unknown Location",
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -62,7 +60,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             child: Text(
               widget.event.type!.name!,
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -86,7 +84,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(formattedDate,
               maxLines: 2,
-              style: textTheme.subtitle1,
+              style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
             ),
           ),
@@ -112,7 +110,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: Text(
             widget.event.name!,
-            style: textTheme.headline1!
+            style: textTheme.displayLarge!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             textAlign: TextAlign.start,
           ),
@@ -208,7 +206,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             child: Text("Event Details",
                 style: Theme.of(context)
                     .textTheme
-                    .headline1!
+                    .displayLarge!
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
           ),
           Text(widget.event.description!),
@@ -267,7 +265,7 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 child: Text("Related Launch",
                     style: Theme.of(context)
                         .textTheme
-                        .headline1!
+                        .displayLarge!
                         .copyWith(fontWeight: FontWeight.bold, fontSize: 30)),
               ),
             ),
@@ -283,11 +281,11 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
               title: Text(launch.name!,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1!
+                      .titleMedium!
                       .copyWith(fontSize: 15.0)),
               subtitle: Text(launch.pad!.location!.name!),
               trailing: Text(formatter.format(launch.net!),
-                  style: Theme.of(context).textTheme.caption),
+                  style: Theme.of(context).textTheme.bodySmall),
             ),
           ],
         ),

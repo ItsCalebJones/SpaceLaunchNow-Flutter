@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DiagonallyCutColoredImage extends StatelessWidget {
-  const DiagonallyCutColoredImage({Key? key, required this.screenWidth, required this.image}) : super(key: key);
+  const DiagonallyCutColoredImage({super.key, required this.screenWidth, required this.image});
 
   final double screenWidth;
   final String image;

@@ -6,10 +6,10 @@ import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 class LocationShowcaseWidget extends StatefulWidget {
   final Launch? _launch;
 
-  const LocationShowcaseWidget(this._launch, {Key? key}) : super(key: key);
+  const LocationShowcaseWidget(this._launch, {super.key});
 
   @override
-  State createState() => LocationShowcaseState(_launch);
+  State<LocationShowcaseWidget> createState() => LocationShowcaseState(_launch);
 }
 
 class LocationShowcaseState extends State<LocationShowcaseWidget> {
@@ -76,7 +76,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
               textAlign: TextAlign.left,
               style: Theme.of(context)
                   .textTheme
-                  .headline4!
+                  .headlineMedium!
                   .copyWith(fontWeight: FontWeight.bold, fontSize: 30),
             )),
         Padding(
@@ -87,7 +87,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
             child: Text(
               _launch!.pad!.name!,
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             )),
         Padding(
             padding: const EdgeInsets.only(
@@ -97,7 +97,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
             child: Text(
               _launch!.pad!.location!.name!,
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             )),
         _buildActionButtons(theme),
         Padding(
@@ -114,7 +114,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
           child: Text(
             _launch!.pad!.location!.name!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption!.copyWith(),
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(),
           ),
         ),
         Padding(
@@ -131,7 +131,7 @@ class LocationShowcaseState extends State<LocationShowcaseWidget> {
           child: Text(
             _launch!.pad!.name!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
         const SizedBox(height: 100)

@@ -9,12 +9,12 @@ import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 
 class ListAdWidget extends StatefulWidget {
-  const ListAdWidget(this.size, {Key? key}) : super(key: key);
+  const ListAdWidget(this.size, {super.key});
 
   final AdSize size;
 
   @override
-  _ListAdWidgetState createState() => _ListAdWidgetState();
+  State<ListAdWidget> createState() => _ListAdWidgetState();
 }
 
 class _ListAdWidgetState extends State<ListAdWidget>

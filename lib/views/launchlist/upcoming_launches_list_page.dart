@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
@@ -17,14 +16,14 @@ import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class UpcomingLaunchListPage extends StatefulWidget {
   const UpcomingLaunchListPage(
-      this._configuration, this.searchQuery, this.searchActive, {Key? key}) : super(key: key);
+      this._configuration, this.searchQuery, this.searchActive, {super.key});
 
   final AppConfiguration _configuration;
   final String? searchQuery;
   final bool searchActive;
 
   @override
-  _LaunchListPageState createState() => _LaunchListPageState();
+  State<UpcomingLaunchListPage> createState() => _LaunchListPageState();
 }
 
 class _LaunchListPageState extends State<UpcomingLaunchListPage> {
@@ -43,13 +42,13 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     super.initState();
     logger.d("Init state of Upcoming!");
 
-    List<LaunchList>? launches = PageStorage.of(context)!
+    List<LaunchList>? launches = PageStorage.of(context)
         .readState(context, identifier: 'upcomingLaunches');
     if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context)!
+      nextOffset = PageStorage.of(context)
           .readState(context, identifier: 'upcomingLaunchesNextOffset');
-      totalCount = PageStorage.of(context)!
+      totalCount = PageStorage.of(context)
           .readState(context, identifier: 'upcomingLaunchesNextTotalCount');
     }
 
@@ -57,9 +56,9 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       _getLaunchBySearch(widget.searchQuery);
     } else if (launches != null) {
       _launches = launches;
-      nextOffset = PageStorage.of(context)!
+      nextOffset = PageStorage.of(context)
           .readState(context, identifier: 'upcomingLaunchesNextOffset');
-      totalCount = PageStorage.of(context)!
+      totalCount = PageStorage.of(context)
           .readState(context, identifier: 'upcomingLaunchesNextTotalCount');
     } else {
       lockedLoadNext();
@@ -100,11 +99,11 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     }
     setState(() {
       _launches.addAll(launches.launches!);
-      PageStorage.of(context)!
+      PageStorage.of(context)
           .writeState(context, _launches, identifier: 'upcomingLaunches');
-      PageStorage.of(context)!.writeState(context, nextOffset,
+      PageStorage.of(context).writeState(context, nextOffset,
           identifier: 'upcomingLaunchesNextOffset');
-      PageStorage.of(context)!.writeState(context, totalCount,
+      PageStorage.of(context).writeState(context, totalCount,
           identifier: 'upcomingLaunchesNextTotalCount');
     });
   }
@@ -159,11 +158,11 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         title: Text(launch.name!,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontSize: 15.0)),
         subtitle: Text(launch.location!),
         trailing: Text(PrecisionFormattedDate.getShortPrecisionFormattedDate(launch.netPrecision?.id ?? 0, launch.net!),
-            style: Theme.of(context).textTheme.caption),
+            style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -208,13 +207,6 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     }
 
     return content;
-  }
-
-  bool isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return double.parse(s, ((e) => null) as double Function(String)?) != null;
   }
 
   void notifyThreshold() {
