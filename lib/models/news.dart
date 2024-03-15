@@ -33,10 +33,10 @@ class News {
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
       title: json['title'],
-      newsSiteLong: json['newsSite'],
+      newsSiteLong: json['news_site'],
       url: json['url'],
-      featureImage: json['imageUrl'],
-      datePublished: DateTime.parse(json['publishedAt']),
+      featureImage: json['image_url'],
+      datePublished: DateTime.parse(json['published_at']),
       summary: json['summary'],
     );
   }

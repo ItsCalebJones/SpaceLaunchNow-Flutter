@@ -9,13 +9,14 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
+import 'package:spacelaunchnow_flutter/models/news_response.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 
 import 'http_client.dart';
 
 class SLNRepositoryImpl implements SLNRepository {
   static const String BASE_URL = "https://spacelaunchnow.me/api/ll/2.2.0";
-  static const String NEWS_BASE_URL = "https://api.spaceflightnewsapi.net/v3";
+  static const String NEWS_BASE_URL = "https://api.spaceflightnewsapi.net/v4";
 
   final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
   final newsClient = ClientWithUserAgent(http.Client(), useSLNAuth: false);
@@ -236,7 +237,7 @@ class SLNRepositoryImpl implements SLNRepository {
 
   @override
   Future<List<News>> fetchNews() {
-    String kEventsUrl = '$NEWS_BASE_URL/articles?_limit=50';
+    String kEventsUrl = '$NEWS_BASE_URL/articles/?limit=50';
 
     print(kEventsUrl);
     return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
@@ -252,16 +253,15 @@ class SLNRepositoryImpl implements SLNRepository {
 
       return jsonBody
           .cast<Map<String, dynamic>>()
-          .map((obj) => News.fromJson(obj))
-          .toList()
-          .cast<News>();
+          .map((obj) => NewsResponse.fromJson(obj))
+          .news;
     });
   }
 
   @override
   Future<List<News>> fetchNewsBySite(String name) {
     String kEventsUrl =
-        '$NEWS_BASE_URL/articles?newsSite.name_contains=$name';
+        '$NEWS_BASE_URL/articles/?limit=50&news_site=$name';
 
     print(kEventsUrl);
     return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
@@ -277,15 +277,14 @@ class SLNRepositoryImpl implements SLNRepository {
 
       return jsonBody
           .cast<Map<String, dynamic>>()
-          .map((obj) => News.fromJson(obj))
-          .toList()
-          .cast<News>();
+          .map((obj) => NewsResponse.fromJson(obj))
+          .news;
     });
   }
 
   @override
   Future<List<News>> fetchNewsByLaunch({String? id}) {
-    String kEventsUrl = '$NEWS_BASE_URL/articles/launch/$id/?_limit=30';
+    String kEventsUrl = '$NEWS_BASE_URL/articles/?launch=$id&?limit=30';
 
     print(kEventsUrl);
     return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
@@ -299,15 +298,14 @@ class SLNRepositoryImpl implements SLNRepository {
 
       return jsonBody
           .cast<Map<String, dynamic>>()
-          .map((obj) => News.fromJson(obj))
-          .toList()
-          .cast<News>();
+          .map((obj) => NewsResponse.fromJson(obj))
+          .news;
     });
   }
 
   @override
   Future<List<News>> fetchNewsByEvent({int? id}) {
-    String kEventsUrl = '$NEWS_BASE_URL/articles/event/$id/?_limit=30';
+    String kEventsUrl = '$NEWS_BASE_URL/articles/?event=$id&limit=30';
 
     print(kEventsUrl);
     return newsClient.get(Uri.parse(kEventsUrl)).then((http.Response response) {
@@ -321,9 +319,8 @@ class SLNRepositoryImpl implements SLNRepository {
 
       return jsonBody
           .cast<Map<String, dynamic>>()
-          .map((obj) => News.fromJson(obj))
-          .toList()
-          .cast<News>();
+          .map((obj) => NewsResponse.fromJson(obj))
+          .news;
     });
   }
 
