@@ -3,12 +3,12 @@ import 'package:spacelaunchnow_flutter/models/news.dart';
 class NewsResponse {
   final List<News>? news;
   final int? count;
-  final int? next;
-  final int? previous;
+  final String? next;
+  final String? previous;
 
   NewsResponse({this.news, this.next, this.count, this.previous});
 
-  static NewsResponse fromResponse(Map<String, dynamic> json) {
+  factory NewsResponse.fromResponse(Map<String, dynamic> json) {
     return NewsResponse.fromJson(json);
   }
 

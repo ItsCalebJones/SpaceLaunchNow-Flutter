@@ -44,7 +44,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  print("Handling a background message: ${message.messageId}");
+  if (kDebugMode) {
+    print("Handling a background message: ${message.messageId}");
+  }
 }
 
 Future<void> main() async {
@@ -79,27 +81,26 @@ class SpaceLaunchNow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
         title: 'Space Launch Now',
         debugShowCheckedModeBanner: false,
-        home: Pages(_firebaseMessaging),
-        routes: const <String, WidgetBuilder>{});
+        home: Pages(),
+        routes: <String, WidgetBuilder>{});
   }
 }
 
 class Pages extends StatefulWidget {
-  final FirebaseMessaging _firebaseMessaging;
-
-  const Pages(this._firebaseMessaging, {super.key});
+  const Pages({super.key});
 
   @override
-  createState() => PagesState(_firebaseMessaging);
+  createState() => PagesState();
 }
 
 class PagesState extends State<Pages> {
   bool showAds = true;
   TabController? controller;
   var logger = Logger();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   final List<String> _productLists = [
     '2024_super_fan',
@@ -112,15 +113,11 @@ class PagesState extends State<Pages> {
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
   bool _purchaseRestored = false;
-  final bool _purchaseRestoredAttempted = false;
-
-  bool _loading = true;
 
   GlobalKey stickyKey = GlobalKey();
 
-  PagesState(this._firebaseMessaging);
+  PagesState();
 
-  final FirebaseMessaging _firebaseMessaging;
   int pageIndex = 0;
   int newsAndEventsIndex = 0;
   int starshipIndex = 0;
@@ -610,10 +607,8 @@ class PagesState extends State<Pages> {
   }
 
   Future _getPurchaseHistory() async {
-    List<PurchasedItem> items = await (FlutterInappPurchase.instance
-        .getPurchaseHistory() as FutureOr<List<PurchasedItem>>);
-    for (var item in items) {
-      print(item.toString());
+    List<PurchasedItem>? items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    for (var item in items!) {
       _purchases.add(item);
     }
 
@@ -621,7 +616,6 @@ class PagesState extends State<Pages> {
       _purchaseRestored = true;
       _items = [];
       _purchases = items;
-      _loading = false;
     });
   }
 

@@ -27,14 +27,26 @@ class NewsListPage extends StatefulWidget {
 
 class _NewsListPageState extends State<NewsListPage> {
   List<News> _news = [];
+  List<News> _newsBySite = [];
   int limit = 50;
   bool loading = false;
+  bool siteLoading = false;
   bool showAds = false;
   int filterIndex = 0;
   final SLNRepository _repository = Injector().slnRepository;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   ListAdWidget? squareAd;
   var logger = Logger();
+
+  List<String> filters = [
+      "All",
+      "SpaceNews",
+      "NASA",
+      "NASA Spaceflight",
+      "Teslarati",
+      "Spaceflight Now",
+      "Arstechnica"
+    ];
 
   @override
   void initState() {
@@ -46,6 +58,12 @@ class _NewsListPageState extends State<NewsListPage> {
     } else {
       _handleRefresh();
     }
+
+    List<News>? newsBySite = PageStorage.of(context).readState(context, identifier: 'newsBySite');
+    if (newsBySite != null) {
+      _newsBySite = newsBySite;
+    }
+
     squareAd = const ListAdWidget(AdSize.mediumRectangle);
     _prefs.then((SharedPreferences prefs) =>
         {showAds = prefs.getBool("showAds") ?? true});
@@ -67,10 +85,22 @@ class _NewsListPageState extends State<NewsListPage> {
     });
   }
 
+  void onLoadResponseCompleteNewsSite(List<News> response, [bool reload = false]) {
+    limit = 50;
+    if (reload) {
+      _newsBySite.clear();
+    }
+    setState(() {
+      _newsBySite.addAll(response);
+      PageStorage.of(context).writeState(context, _newsBySite, identifier: 'newsBySite');
+    });
+  }
+
   void onLoadContactsError([bool? search]) {
     logger.d("An error occurred!");
     setState(() {
       loading = false;
+      siteLoading = false;
     });
     if (search == true) {
       setState(() {
@@ -114,6 +144,7 @@ class _NewsListPageState extends State<NewsListPage> {
       content = Scaffold(
         body: ListView(
           shrinkWrap: true,
+          physics: const PageScrollPhysics(),
           children: _buildNewsList(),
         ),
       );
@@ -132,6 +163,17 @@ class _NewsListPageState extends State<NewsListPage> {
     onLoadResponseComplete(response);
   }
 
+    Future<void> _handleGetNewsBySite(String newsSite) async {
+    _newsBySite.clear();
+    limit = 30;
+    siteLoading = false;
+    List<News> response = await _repository.fetchNewsBySite(newsSite).catchError((onError) {
+      logger.d(onError);
+      onLoadContactsError();
+    });
+    onLoadResponseCompleteNewsSite(response);
+  }
+
   List<Widget> _buildNewsList() {
     List<Widget> content = <Widget>[];
     if (_news.length >= 5) {
@@ -141,23 +183,14 @@ class _NewsListPageState extends State<NewsListPage> {
     if (showAds) {
       content.add(squareAd!);
     }
-
-    List<String> filters = [
-      "All",
-      "SpaceNews",
-      "NASA",
-      "NASA Spaceflight",
-      "Teslarati",
-      "Spaceflight Now",
-      "Arstechnica"
-    ];
-
+    
     content.add(
       SizedBox(
-        height: 120,
+        height: 50,
         child: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 0, left: 0, right: 0),
+          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 0),
           child: ListView.builder(
+            physics: const PageScrollPhysics(), 
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: filters.length,
@@ -193,17 +226,19 @@ class _NewsListPageState extends State<NewsListPage> {
       ),
     );
 
+    content.add(const Divider());
+
     List<News> theRest = _news.sublist(6, _news.length);
     if (filterIndex == 0) {
       content.addAll(_buildList(theRest));
     } else {
-      theRest = theRest
-          .where((i) =>
-              i.newsSiteLong!.toLowerCase() ==
-              filters[filterIndex].toLowerCase())
-          .toList();
-      if (theRest.isNotEmpty) {
-        content.addAll(_buildList(theRest));
+      if (siteLoading){
+        content.add(const SizedBox(
+          height: 200,
+          child: CircularProgressIndicator()
+        ));
+      } else if (_newsBySite.isNotEmpty) {
+        content.addAll(_buildList(_newsBySite));
       } else {
         content.add(const SizedBox(
           height: 200,
@@ -367,8 +402,10 @@ class _NewsListPageState extends State<NewsListPage> {
 
   setFilter(int index) {
     setState(() {
+      siteLoading = true;
       filterIndex = index;
     });
+    _handleGetNewsBySite(filters[index]);
   }
 }
 
