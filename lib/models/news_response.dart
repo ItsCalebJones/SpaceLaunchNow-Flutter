@@ -2,35 +2,21 @@ import 'package:spacelaunchnow_flutter/models/news.dart';
 
 class NewsResponse {
   final List<News>? news;
-  final int? limit;
-  final int? totalDocs;
-  final bool? hasNextPage;
-  final int? page;
-  final int? totalPages;
-  final int? pagingCounter;
-  final int? nextPage;
+  final int? count;
+  final String? next;
+  final String? previous;
 
-  NewsResponse(
-      {this.news,
-      this.limit,
-      this.totalDocs,
-      this.hasNextPage,
-      this.page,
-      this.totalPages,
-      this.nextPage,
-      this.pagingCounter});
+  NewsResponse({this.news, this.next, this.count, this.previous});
+
+  factory NewsResponse.fromResponse(Map<String, dynamic> json) {
+    return NewsResponse.fromJson(json);
+  }
 
   factory NewsResponse.fromJson(Map<String, dynamic> json) {
     return NewsResponse(
-      news: List<News>.from(
-          json['docs'].map((news) => News.fromJson(news))),
-      limit: json['limit'],
-      totalDocs: json['totalDocs'],
-      hasNextPage: json['hasNextPage'],
-      page: json['page'],
-      totalPages: json['totalPages'],
-      pagingCounter: json['pagingCounter'],
-      nextPage: json['nextPage'],
-    );
+        news: List<News>.from(json['results'].map((event) => News.fromJson(event))),
+        previous: json['previous'],
+        next: json['next'],
+        count: json['count']);
   }
 }

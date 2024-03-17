@@ -709,6 +709,7 @@ class _HomeListPageState extends State<HomeListPage> {
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
           ListView.separated(
+            physics: const BouncingScrollPhysics().applyTo(const ClampingScrollPhysics()),
             padding: const EdgeInsets.fromLTRB(2, 2, 2, 64),
             itemCount: _launches.length,
             itemBuilder: (BuildContext context, int index) {

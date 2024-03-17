@@ -22,8 +22,7 @@ class SettingsPage extends StatefulWidget {
 
 
   @override
-  State<SettingsPage> createState() =>
-      NotificationFilterPageState(_firebaseMessaging);
+  State<SettingsPage> createState() => NotificationFilterPageState(_firebaseMessaging);
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
@@ -51,8 +50,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
   StreamSubscription? _purchaseUpdatedSubscription;
   StreamSubscription? _purchaseErrorSubscription;
   StreamSubscription? _connectionSubscription;
-
-
 
   @override
   initState() {
