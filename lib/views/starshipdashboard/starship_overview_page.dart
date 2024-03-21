@@ -221,10 +221,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: CupertinoButton(
               color: Colors.red,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: const <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(

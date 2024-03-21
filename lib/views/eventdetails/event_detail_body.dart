@@ -170,10 +170,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             padding: const EdgeInsets.all(24),
             child: CupertinoButton(
               color: Colors.red,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: const <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -222,10 +222,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 const EdgeInsets.only(bottom: 24, top: 16, left: 8, right: 8),
             child: CupertinoButton(
               color: Colors.blue,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: const <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
