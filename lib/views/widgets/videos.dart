@@ -3,19 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spacelaunchnow_flutter/models/update.dart';
+import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 
-Widget buildUpdates(
-    List<Update> updates, BuildContext context, String rootSlug) {
-  var formatter = DateFormat.MMMEd().add_jm();
-  if (updates.isNotEmpty) {
+Widget buildVideos(
+
+    List<VidURL> videos, BuildContext context) {
+
+  var placeholder = "https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com/static/home/img/placeholder.jpg";
+
+  if (videos.isNotEmpty && videos.length > 1) {
     List<Widget> widgets = <Widget>[];
     widgets.add(
       Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 0.0),
         child: Text(
-          "Status Updates",
+          "Live Coverage",
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
@@ -24,41 +28,24 @@ Widget buildUpdates(
         ),
       ),
     );
-    List<Update> newUpdates = [];
-    if (updates.length >= 6) {
-      newUpdates = updates.sublist(0, 5);
+    List<VidURL> newVideos = [];
+    if (videos.length >= 10) {
+      newVideos = videos.sublist(0, 5);
     } else {
-      newUpdates = updates;
+      newVideos = videos;
     }
-    for (Update update in newUpdates) {
-      var comment = update.comment ?? "N/A";
-      if (update.infoUrl != null) {
-        comment += "\n\nSource:\n${update.infoUrl!}";
-      }
+    for (VidURL video in videos) {
       widgets.add(Padding(
           padding: const EdgeInsets.all(4.0),
           child: ListTile(
-            onTap: () => openUrl(update.infoUrl!),
+            onTap: () => openUrl(video.url!),
             leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(update.profileImage!),
+              backgroundImage: CachedNetworkImageProvider(video.featureImage ?? placeholder),
             ),
             title: Text(
-                "${update.createdBy!} - ${formatter.format(update.createdOn!)}",
+                video.title!,
                 style: Theme.of(context).textTheme.titleSmall),
-            subtitle: Text(comment, style: Theme.of(context).textTheme.bodySmall),
           )));
-    }
-    if (newUpdates.length >= 6) {
-      widgets.add(
-        Center(
-          child: CupertinoButton(
-              color: Theme.of(context).colorScheme.secondary,
-              child: const Text("Read More"),
-              onPressed: () {
-                openUrl(rootSlug);
-              }),
-        ),
-      );
     }
     return Padding(
       padding: const EdgeInsets.all(8.0),

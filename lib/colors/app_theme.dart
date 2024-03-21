@@ -26,7 +26,7 @@ final ThemeData kIOSTheme = ThemeData(
             .copyWith(color: Colors.white),
       )),
   colorScheme:
-      ColorScheme.fromSwatch(primarySwatch: Colors.red, accentColor: Colors.red)
+      ColorScheme.fromSwatch(primarySwatch: Colors.blue)
           .copyWith(secondary: Colors.red, brightness: Brightness.light),
 );
 

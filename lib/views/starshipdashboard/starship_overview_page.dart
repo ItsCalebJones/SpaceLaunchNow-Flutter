@@ -87,7 +87,9 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: SingleChildScrollView(
+        child:_buildBody()
+      )
     );
   }
 
@@ -136,13 +138,29 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         widget,
-        Expanded(
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: content,
-          ),
-        ),
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth < 600) {
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: content
+                );
+              }
+
+              return Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Card(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: content
+                ),
+                    )
+            )
+          );
+        })
       ],
     );
   }
@@ -203,10 +221,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: CupertinoButton(
               color: Colors.red,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(

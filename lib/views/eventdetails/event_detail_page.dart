@@ -99,31 +99,41 @@ class _EventDetailPageState extends State<EventDetailPage> {
         child: CircularProgressIndicator(),
       );
     } else {
-      content = Scaffold(body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                EventDetailHeader(
-                  event,
-                  backEnabled: true,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: EventDetailBodyWidget(
-                    configuration: widget._configuration,
-                    event: event,
-                  ),
-                ),
-              ],
+      content = Scaffold(body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            EventDetailHeader(
+              event,
+              backEnabled: true,
             ),
-          ),
-        );
-      }));
+            LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (constraints.maxWidth < 600) {
+                    return _buildBody();
+                  }
+
+                  return Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.75,
+                        child: _buildBody(),
+                      ));
+                }),
+          ],
+        ),
+      ));
     }
     return content;
+  }
+
+  Widget _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top:48.0),
+      child: EventDetailBodyWidget(
+        configuration: widget._configuration,
+        event: event,
+      ),
+    );
   }
 }

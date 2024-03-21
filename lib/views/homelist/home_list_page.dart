@@ -240,7 +240,7 @@ class _HomeListPageState extends State<HomeListPage> {
                   placeholder: const AssetImage('assets/placeholder.png'),
                   image: CachedNetworkImageProvider(_getLaunchImage(launch)!),
                   fit: BoxFit.cover,
-                  height: 175.0,
+                  height: 250.0,
                   alignment: Alignment.center,
                   fadeInDuration: const Duration(milliseconds: 75),
                   fadeInCurve: Curves.easeIn,
@@ -289,7 +289,7 @@ class _HomeListPageState extends State<HomeListPage> {
         padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 4.0),
         child: CupertinoButton(
           color: Theme.of(context).colorScheme.secondary,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -363,7 +363,24 @@ class _HomeListPageState extends State<HomeListPage> {
     logger.d("Upcoming build!");
 
     Widget view = Scaffold(
-      body: _buildBody(),
+      body: Container(
+        constraints: const BoxConstraints.expand(),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 600) {
+              return _buildBody();
+            }
+
+            return Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: _buildBody(),
+              ),
+            );
+          },
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: barTheme.canvasColor,
         centerTitle: false,

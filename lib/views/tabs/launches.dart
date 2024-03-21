@@ -59,10 +59,46 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
             children: <Widget>[
               TabBarView(
                 children: [
-                  UpcomingLaunchListPage(
-                      widget._configuration, searchQuery, searchActive),
-                  PreviousLaunchListPage(
-                      widget._configuration, searchQuery, searchActive),
+                  Container(
+                    constraints: const BoxConstraints.expand(),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        if (constraints.maxWidth < 600) {
+                          return UpcomingLaunchListPage(
+                              widget._configuration, searchQuery, searchActive);
+                        }
+
+                        return Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            child: UpcomingLaunchListPage(
+                                widget._configuration, searchQuery, searchActive),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    constraints: const BoxConstraints.expand(),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        if (constraints.maxWidth < 600) {
+                          return PreviousLaunchListPage(
+                              widget._configuration, searchQuery, searchActive);
+                        }
+
+                        return Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            child: PreviousLaunchListPage(
+                                widget._configuration, searchQuery, searchActive),
+                          ),
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
               if (_anchoredAdaptiveAd != null && _isLoaded)

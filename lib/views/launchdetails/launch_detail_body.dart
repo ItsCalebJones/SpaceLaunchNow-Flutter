@@ -15,6 +15,7 @@ import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
+import 'package:spacelaunchnow_flutter/views/widgets/videos.dart';
 
 import 'footer/vehicle_showcase.dart';
 
@@ -309,9 +310,9 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         const Center(child: ListAdWidget(AdSize.banner)),
+        buildVideos(mLaunch!.vidURLs?? [], context),
         MissionShowcase(mLaunch),
-        buildUpdates(mLaunch!.updates!, context,
-            "https://spacelaunchnow.me/launch/${mLaunch!.slug!}#updates"),
+        buildUpdates(mLaunch!.updates!, context, "https://spacelaunchnow.me/launch/${mLaunch!.slug!}#updates"),
         _buildNews(),
         VehicleShowcase(mLaunch, widget._configuration),
         const Center(child: ListAdWidget(AdSize.mediumRectangle)),
