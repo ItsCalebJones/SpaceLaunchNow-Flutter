@@ -87,7 +87,9 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: SingleChildScrollView(
+        child:_buildBody()
+      )
     );
   }
 
@@ -136,13 +138,29 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         widget,
-        Expanded(
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: content,
-          ),
-        ),
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (constraints.maxWidth < 600) {
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: content
+                );
+              }
+
+              return Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Card(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: content
+                ),
+                    )
+            )
+          );
+        })
       ],
     );
   }

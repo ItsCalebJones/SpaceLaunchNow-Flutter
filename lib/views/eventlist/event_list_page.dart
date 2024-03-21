@@ -167,54 +167,80 @@ class _EventListPageState extends State<EventListPage> {
       content.addAll(_buildList());
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ToggleButtons(
-              color: Theme.of(context).colorScheme.onPrimary,
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context).textTheme.titleSmall,
-              onPressed: (int index) {
-                setState(() {
-                  for (int buttonIndex = 0;
-                      buttonIndex < isSelected.length;
-                      buttonIndex++) {
-                    if (buttonIndex == index) {
-                      isSelected[buttonIndex] = true;
-                    } else {
-                      isSelected[buttonIndex] = false;
-                    }
-                  }
-                });
-              },
-              isSelected: isSelected,
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Upcoming"),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Previous"),
-                ),
-              ],
+    return Container(
+      constraints: const BoxConstraints.expand(),
+      color: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 600) {
+            return _buildBody();
+          }
+
+          return Center(
+            child: SizedBox(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.75,
+              child: _buildBody(),
             ),
-          ),
-        ),
-        Expanded(
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            children: content,
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
+
+    Widget _buildBody() {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ToggleButtons(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(16.0),
+                textStyle: Theme.of(context).textTheme.titleSmall,
+                onPressed: (int index) {
+                  setState(() {
+                    for (int buttonIndex = 0;
+                    buttonIndex < isSelected.length;
+                    buttonIndex++) {
+                      if (buttonIndex == index) {
+                        isSelected[buttonIndex] = true;
+                      } else {
+                        isSelected[buttonIndex] = false;
+                      }
+                    }
+                  });
+                },
+                isSelected: isSelected,
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Upcoming"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Previous"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: _buildList(),
+            ),
+          ),
+        ],
+      );
+    }
 
   Widget _buildEventListTile(EventList event) {
     String? location = "";

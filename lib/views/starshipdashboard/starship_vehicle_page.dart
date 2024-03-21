@@ -72,7 +72,18 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 600) {
+              return _buildBody();
+            }
+
+            return Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: _buildBody(),
+                ));
+          })
     );
   }
 

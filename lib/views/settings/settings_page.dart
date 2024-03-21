@@ -595,7 +595,18 @@ class NotificationFilterPageState extends State<SettingsPage> {
               ),
         ),
       ),
-      body: buildSettingsPane(context),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 600) {
+              return buildSettingsPane(context);
+            }
+
+            return Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: buildSettingsPane(context),
+                ));
+          }),
     );
   }
 
@@ -722,12 +733,15 @@ class NotificationFilterPageState extends State<SettingsPage> {
     );
   }
 
-  Card _buildProductList() {
+  Widget _buildProductList() {
     if (_loading) {
-      return const Card(
-          child: (ListTile(
-              leading: CircularProgressIndicator(),
-              title: Text('Loading In-App Products...'))));
+      return const Padding(
+        padding: EdgeInsets.only(top: 16.0),
+        child: Card(
+            child: (ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text('Loading In-App Products...')))),
+      );
     }
 
     final ListTile productHeader = ListTile(

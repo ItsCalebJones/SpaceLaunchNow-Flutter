@@ -144,32 +144,44 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         child: CircularProgressIndicator(),
       );
     } else {
-      content = Scaffold(body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                LaunchDetailHeader(
-                  launch,
-                  loadLaunch: _loadLaunch,
-                  avatarTag: widget.avatarTag,
-                  backEnabled: backEnabled,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: LaunchDetailBodyWidget(
-                      launch, widget._configuration, _news),
-                ),
-              ],
+      content = Scaffold(body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LaunchDetailHeader(
+              launch,
+              loadLaunch: _loadLaunch,
+              avatarTag: widget.avatarTag,
+              backEnabled: backEnabled,
             ),
-          ),
-        );
-      }));
+            LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  if (constraints.maxWidth < 600) {
+                    return _buildBody();
+                  }
+
+              return Center(
+                child: Card(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: _buildBody(),
+                  ),
+                ));
+            }),
+          ],
+        ),
+      ));
     }
     return content;
+  }
+
+  Widget _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 48.0),
+      child: LaunchDetailBodyWidget(
+          launch, widget._configuration, _news),
+    );
   }
 
   void setController() {

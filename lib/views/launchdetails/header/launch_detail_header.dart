@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 
+
+import 'package:flutter/material.dart';
+import 'package:spacelaunchnow_flutter/views/launchdetails/header_background_image.dart';
+
 class LaunchDetailHeader extends StatelessWidget {
   const LaunchDetailHeader(
     this.launch, {super.key,
@@ -18,6 +22,7 @@ class LaunchDetailHeader extends StatelessWidget {
     loadLaunch(launch!.id);
   }
 
+
   Widget _buildAvatar(BuildContext context) {
     String? avatarUrl =
         "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
@@ -32,8 +37,8 @@ class LaunchDetailHeader extends StatelessWidget {
       return Hero(
         tag: avatarTag!,
         child: Container(
-          width: 200.0,
-          height: 200.0,
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: MediaQuery.of(context).size.width * 0.5,
           padding: const EdgeInsets.all(2.0), // border width
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor, // border color
@@ -49,8 +54,8 @@ class LaunchDetailHeader extends StatelessWidget {
       );
     } else {
       return Container(
-        width: 200.0,
-        height: 200.0,
+        width: MediaQuery.of(context).size.width * 0.5,
+        height: MediaQuery.of(context).size.width * 0.5,
         padding: const EdgeInsets.all(2.0), // border width
         decoration: BoxDecoration(
           color: Theme.of(context).highlightColor, // border color
@@ -66,26 +71,45 @@ class LaunchDetailHeader extends StatelessWidget {
     }
   }
 
+  Widget _buildDiagonalImageBackground(BuildContext context) {
+
+    String avatarUrl =
+        "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
+    if (launch!.rocket!.configuration!.image != null &&
+        launch!.rocket!.configuration!.image!.isNotEmpty) {
+      avatarUrl = launch!.rocket!.configuration!.image!;
+    } else if (launch!.pad != null) {
+      avatarUrl = launch!.pad!.mapImage!;
+    }
+
+    return HeaderBackgroundImage(
+      image: avatarUrl,
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
     if (backEnabled!) {
       return Stack(
         children: <Widget>[
+          _buildDiagonalImageBackground(context),
           Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
             child: _buildAvatar(context),
           ),
           const Positioned(
-            top: 24.0,
+            top: 30.0,
             left: 4.0,
-            child: BackButton(),
+            child: BackButton(color: Colors.white,),
           ),
           Positioned(
-            top: 24.0,
+            top: 30.0,
             right: 4.0,
             child: IconButton(
+                color: Colors.white,
                 icon: const Icon(Icons.refresh),
                 tooltip: 'Refresh',
                 onPressed: () {
@@ -97,6 +121,7 @@ class LaunchDetailHeader extends StatelessWidget {
     } else {
       return Stack(
         children: <Widget>[
+          _buildDiagonalImageBackground(context),
           Align(
             alignment: FractionalOffset.bottomCenter,
             heightFactor: 1.35,
