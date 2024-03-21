@@ -1,108 +1,104 @@
 PODS:
-  - Firebase/Analytics (10.15.0):
+  - Firebase/Analytics (10.22.0):
     - Firebase/Core
-  - Firebase/Core (10.15.0):
+  - Firebase/Core (10.22.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 10.15.0)
-  - Firebase/CoreOnly (10.15.0):
-    - FirebaseCore (= 10.15.0)
-  - Firebase/Messaging (10.15.0):
+    - FirebaseAnalytics (~> 10.22.0)
+  - Firebase/CoreOnly (10.22.0):
+    - FirebaseCore (= 10.22.0)
+  - Firebase/Messaging (10.22.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.15.0)
-  - firebase_analytics (10.5.1):
-    - Firebase/Analytics (= 10.15.0)
+    - FirebaseMessaging (~> 10.22.0)
+  - firebase_analytics (10.8.10):
+    - Firebase/Analytics (= 10.22.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.17.0):
-    - Firebase/CoreOnly (= 10.15.0)
+  - firebase_core (2.27.1):
+    - Firebase/CoreOnly (= 10.22.0)
     - Flutter
-  - firebase_messaging (14.6.9):
-    - Firebase/Messaging (= 10.15.0)
+  - firebase_messaging (14.7.20):
+    - Firebase/Messaging (= 10.22.0)
     - firebase_core
     - Flutter
-  - FirebaseAnalytics (10.15.0):
-    - FirebaseAnalytics/AdIdSupport (= 10.15.0)
+  - FirebaseAnalytics (10.22.0):
+    - FirebaseAnalytics/AdIdSupport (= 10.22.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (10.15.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseAnalytics/AdIdSupport (10.22.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleAppMeasurement (= 10.15.0)
+    - GoogleAppMeasurement (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseCore (10.15.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseCore (10.22.0):
     - FirebaseCoreInternal (~> 10.0)
-    - GoogleUtilities/Environment (~> 7.8)
-    - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreInternal (10.22.0):
+    - GoogleUtilities/Environment (~> 7.12)
+    - GoogleUtilities/Logger (~> 7.12)
+  - FirebaseCoreInternal (10.23.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.22.0):
+  - FirebaseInstallations (10.23.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.15.0):
+  - FirebaseMessaging (10.22.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleDataTransport (~> 9.2)
+    - GoogleDataTransport (~> 9.3)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - Flutter (1.0.0)
   - flutter_inapp_purchase (0.0.1):
     - Flutter
-  - flutter_inappwebview (0.0.1):
+  - flutter_inappwebview_ios (0.0.1):
     - Flutter
-    - flutter_inappwebview/Core (= 0.0.1)
+    - flutter_inappwebview_ios/Core (= 0.0.1)
     - OrderedSet (~> 5.0)
-  - flutter_inappwebview/Core (0.0.1):
+  - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 5.0)
-  - FMDB (2.7.9):
-    - FMDB/standard (= 2.7.9)
-  - FMDB/standard (2.7.9)
-  - Google-Mobile-Ads-SDK (10.9.0):
-    - GoogleAppMeasurement (< 11.0, >= 7.0)
+  - Google-Mobile-Ads-SDK (11.2.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (1.0.0):
     - Flutter
-    - Google-Mobile-Ads-SDK (~> 10.9.0)
+    - Google-Mobile-Ads-SDK (~> 11.2.0)
     - webview_flutter_wkwebview
-  - GoogleAppMeasurement (10.15.0):
-    - GoogleAppMeasurement/AdIdSupport (= 10.15.0)
+  - GoogleAppMeasurement (10.22.0):
+    - GoogleAppMeasurement/AdIdSupport (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (10.15.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.15.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (10.22.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (10.15.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/WithoutAdIdSupport (10.22.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUserMessagingPlatform (2.2.0)
+  - GoogleUserMessagingPlatform (2.3.0)
   - GoogleUtilities/AppDelegateSwizzler (7.13.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -131,11 +127,11 @@ PODS:
   - GoogleUtilities/UserDefaults (7.13.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - nanopb (2.30909.1):
-    - nanopb/decode (= 2.30909.1)
-    - nanopb/encode (= 2.30909.1)
-  - nanopb/decode (2.30909.1)
-  - nanopb/encode (2.30909.1)
+  - nanopb (2.30910.0):
+    - nanopb/decode (= 2.30910.0)
+    - nanopb/encode (= 2.30910.0)
+  - nanopb/decode (2.30910.0)
+  - nanopb/encode (2.30910.0)
   - OrderedSet (5.0.0)
   - package_info (0.0.1):
     - Flutter
@@ -145,7 +141,7 @@ PODS:
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.4.0)
-  - rate_my_app (1.1.4):
+  - rate_my_app (2.0.0):
     - Flutter
   - share_plus (0.0.1):
     - Flutter
@@ -154,11 +150,12 @@ PODS:
     - FlutterMacOS
   - sqflite (0.0.3):
     - Flutter
-    - FMDB (>= 2.7.5)
+    - FlutterMacOS
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
 
@@ -168,17 +165,17 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_inapp_purchase (from `.symlinks/plugins/flutter_inapp_purchase/ios`)
-  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - rate_my_app (from `.symlinks/plugins/rate_my_app/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
@@ -189,7 +186,6 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
-    - FMDB
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -210,8 +206,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_inapp_purchase:
     :path: ".symlinks/plugins/flutter_inapp_purchase/ios"
-  flutter_inappwebview:
-    :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_inappwebview_ios:
+    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   google_mobile_ads:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   package_info:
@@ -219,55 +215,54 @@ EXTERNAL SOURCES:
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/ios"
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   rate_my_app:
     :path: ".symlinks/plugins/rate_my_app/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
+    :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
-  firebase_analytics: f153c564d6a7675e56e4f171454b9f1b3e7b6601
-  firebase_core: 28e84c2a4fcf6a50ef83f47b145ded8c1fa331e4
-  firebase_messaging: 91ec967913a5d144f951b3c3ac17a57796d38735
-  FirebaseAnalytics: 47cef43728f81a839cf1306576bdd77ffa2eac7e
-  FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
-  FirebaseCoreInternal: bca337352024b18424a61e478460547d46c4c753
-  FirebaseInstallations: 763814908793c0da14c18b3dcffdec71e29ed55e
-  FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
+  firebase_analytics: 773f04fad34c0a4e442deb5bcfb6ffc8102b9221
+  firebase_core: d6dfb4cb86a9ebd92464bb8736075fe967211c97
+  firebase_messaging: f97062a3a7644703ba4892859183c0a59e08d25f
+  FirebaseAnalytics: 8d0ff929c63b7f72260f332b86ccf569776b75d3
+  FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
+  FirebaseCoreInternal: 6a292e6f0bece1243a737e81556e56e5e19282e3
+  FirebaseInstallations: 42d6ead4605d6eafb3b6683674e80e18eb6f2c35
+  FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_inapp_purchase: 5c6a1ac3f11b11d0c8c0321c0c41c1f05805e4c8
-  flutter_inappwebview: 3d32228f1304635e7c028b0d4252937730bbc6cf
-  FMDB: aa44149f6fb634b1ac54f64f47064bb0d0c5a032
-  Google-Mobile-Ads-SDK: e81e8b009a182dc8dd14951782efdbb30a5e4510
-  google_mobile_ads: 035df0d095e1a196b52e3c91534d0718d3dacf98
-  GoogleAppMeasurement: 722db6550d1e6d552b08398b69a975ac61039338
+  flutter_inappwebview_ios: 97215cf7d4677db55df76782dbd2930c5e1c1ea0
+  Google-Mobile-Ads-SDK: 5a6d005a6cb5b5e8f4c7b69ca05cdea79c181139
+  google_mobile_ads: 5698dd1cd5a3cfc6688abec7db5428f237d6b1ac
+  GoogleAppMeasurement: ccefe3eac9b0aa27f96066809fb1a7fe4b462626
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
-  GoogleUserMessagingPlatform: d31dbfb40ec02c5d9683029815c5d5a7f46389ee
+  GoogleUserMessagingPlatform: b1ad7bb1ee3ce64749d4fec24f667b36e45c396c
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
-  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  rate_my_app: e249ec0751c276811746ff89558c23dc0da39f0c
-  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
-  url_launcher_ios: 68d46cc9766d0c41dbdc884310529557e3cd7a86
-  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
-  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+  rate_my_app: 80fba94c4885cd31738231b7b1f51c1ad726f5c7
+  share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
+  video_player_avfoundation: 02011213dab73ae3687df27ce441fbbcc82b5579
+  webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
 
 PODFILE CHECKSUM: 57c8aed26fba39d3ec9424816221f294a07c58eb
 

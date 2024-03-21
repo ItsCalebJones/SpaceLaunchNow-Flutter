@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 final ThemeData kIOSTheme = ThemeData(
   brightness: Brightness.light,
-  primaryColor: Colors.grey[200],
-  typography: Typography.material2018(
+  useMaterial3: true,
+  typography: Typography.material2021(
       platform: TargetPlatform.iOS,
       black: Typography.blackMountainView.copyWith(
         displayLarge: Typography.blackMountainView.displayLarge!
@@ -25,15 +25,12 @@ final ThemeData kIOSTheme = ThemeData(
         headlineMedium: Typography.whiteMountainView.headlineMedium!
             .copyWith(color: Colors.white),
       )),
-  colorScheme:
-      ColorScheme.fromSwatch(primarySwatch: Colors.red, accentColor: Colors.red)
-          .copyWith(secondary: Colors.red, brightness: Brightness.light),
-);
+  colorSchemeSeed: Colors.blue);
 
 final ThemeData kIOSThemeDark = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Colors.grey[800],
-  typography: Typography.material2018(
+  typography: Typography.material2021(
       platform: TargetPlatform.iOS,
       black: Typography.blackMountainView.copyWith(
         displayLarge: Typography.blackMountainView.displayLarge!
@@ -67,7 +64,7 @@ final ThemeData kIOSThemeBar = ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.blue[600],
   focusColor: Colors.black,
-  typography: Typography.material2018(
+  typography: Typography.material2021(
       platform: TargetPlatform.iOS,
       black: Typography.blackMountainView.copyWith(
         displayLarge: Typography.blackMountainView.displayLarge!
@@ -96,7 +93,7 @@ final ThemeData kIOSThemeDarkBar = ThemeData(
   canvasColor: Colors.grey[800],
   primaryColor: Colors.grey[800],
   focusColor: Colors.white,
-  typography: Typography.material2018(
+  typography: Typography.material2021(
       platform: TargetPlatform.iOS,
       black: Typography.blackMountainView.copyWith(
         displayLarge: Typography.blackMountainView.displayLarge!
