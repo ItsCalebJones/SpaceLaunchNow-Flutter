@@ -1,8 +1,7 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
+
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
-
-
-import 'package:flutter/material.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header_background_image.dart';
 
 class LaunchDetailHeader extends StatelessWidget {
@@ -22,50 +21,61 @@ class LaunchDetailHeader extends StatelessWidget {
     loadLaunch(launch!.id);
   }
 
+  void _handleImageTap(BuildContext context, String imageUrl) {
+    showImageViewer(context, Image.network(imageUrl).image,
+                swipeDismissible: false);
+  }
+
 
   Widget _buildAvatar(BuildContext context) {
-    String? avatarUrl =
+    String avatarUrl =
         "https://spacelaunchnow-prod-east.nyc3.cdn.digitaloceanspaces.com/static/home/img/placeholder_agency.jpg";
     if (launch!.rocket!.configuration!.image != null &&
         launch!.rocket!.configuration!.image!.isNotEmpty) {
-      avatarUrl = launch!.rocket!.configuration!.image;
+      avatarUrl = launch!.rocket!.configuration!.image!;
     } else if (launch!.pad != null) {
-      avatarUrl = launch!.pad!.mapImage;
+      avatarUrl = launch!.pad!.mapImage!;
     }
 
     if (avatarTag != null) {
       return Hero(
         tag: avatarTag!,
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          height: MediaQuery.of(context).size.width * 0.5,
-          padding: const EdgeInsets.all(2.0), // border width
-          decoration: BoxDecoration(
-            color: Theme.of(context).highlightColor, // border color
-            shape: BoxShape.circle,
-          ),
-          child: CircleAvatar(
-            foregroundColor: Colors.white,
-            backgroundImage: NetworkImage(avatarUrl!),
-            radius: 100.0,
-            backgroundColor: Colors.white,
+        child: GestureDetector(
+          onTap: () => _handleImageTap(context, avatarUrl),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            height: MediaQuery.of(context).size.width * 0.4,
+            padding: const EdgeInsets.all(5.0), // border width
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary, // border color
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              foregroundColor: Colors.white,
+              backgroundImage: NetworkImage(avatarUrl),
+              radius: 100.0,
+              backgroundColor: Colors.white,
+            ),
           ),
         ),
       );
     } else {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        height: MediaQuery.of(context).size.width * 0.5,
-        padding: const EdgeInsets.all(2.0), // border width
-        decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor, // border color
-          shape: BoxShape.circle,
-        ),
-        child: CircleAvatar(
-          foregroundColor: Colors.white,
-          backgroundImage: NetworkImage(avatarUrl!),
-          radius: 100.0,
-          backgroundColor: Colors.white,
+      return GestureDetector(
+        onTap: () => _handleImageTap(context, avatarUrl),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.width * 0.4,
+          padding: const EdgeInsets.all(5.0), // border width
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary, // border color
+            shape: BoxShape.circle,
+          ),
+          child: CircleAvatar(
+            foregroundColor: Colors.white,
+            backgroundImage: NetworkImage(avatarUrl),
+            radius: 100.0,
+            backgroundColor: Colors.white,
+          ),
         ),
       );
     }

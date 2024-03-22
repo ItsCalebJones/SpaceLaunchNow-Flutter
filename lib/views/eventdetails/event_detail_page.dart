@@ -4,16 +4,12 @@ import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 import 'event_detail_body.dart';
 import 'header/event_detail_header.dart';
 
 class EventDetailPage extends StatefulWidget {
-  const EventDetailPage(this._configuration,
-      {super.key, this.eventList, this.eventId});
-
-  final AppConfiguration _configuration;
+  const EventDetailPage({super.key, this.eventList, this.eventId});
   final EventList? eventList;
   final int? eventId;
 
@@ -131,7 +127,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top:48.0),
       child: EventDetailBodyWidget(
-        configuration: widget._configuration,
         event: event,
       ),
     );

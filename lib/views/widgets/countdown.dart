@@ -31,15 +31,14 @@ class Countdown extends StatefulWidget {
   final Dependencies dependencies = Dependencies();
 
   @override
-  CountdownState createState() =>
-      CountdownState(dependencies: dependencies, launch: launch);
+  CountdownState createState() => CountdownState();
 }
 
 class CountdownState extends State<Countdown> {
   CountdownState({this.dependencies, this.launch});
 
-  final Launch? launch;
-  final Dependencies? dependencies;
+  Launch? launch;
+  Dependencies? dependencies;
   Timer? timer;
   int? milliseconds;
   int? minutes = 0;
@@ -47,6 +46,8 @@ class CountdownState extends State<Countdown> {
 
   @override
   void initState() {
+    launch = widget.launch;
+    dependencies = widget.dependencies;
     timer = Timer.periodic(
         Duration(milliseconds: dependencies!.timerMillisecondsRefreshRate),
         callback);

@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/notice.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/road_closure.dart';
@@ -16,7 +15,6 @@ import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -24,9 +22,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'custom_play_pause.dart';
 
 class StarshipOverviewPage extends StatefulWidget {
-  const StarshipOverviewPage(this._configuration, {super.key});
-
-  final AppConfiguration _configuration;
+  const StarshipOverviewPage({super.key});
 
   @override
   State<StarshipOverviewPage> createState() => _StarshipOverviewPageState();
@@ -74,14 +70,6 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     setState(() {
       loading = false;
     });
-  }
-
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
   }
 
   @override
@@ -132,6 +120,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     } else {
       widget = Container();
     }
+
+    if (loading){
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } 
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -206,7 +200,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .headlineSmall!
+                      .headlineLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -221,10 +215,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: CupertinoButton(
               color: Colors.red,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -256,17 +250,17 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .titleMedium!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
+              .headlineLarge!
+              .copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       _addUpNext(dataUpcoming),
-      const ListAdWidget(AdSize.banner),
+      const Center(child: ListAdWidget(AdSize.banner)),
       buildUpdates(_starship!.updates!, context,
           "https://spacelaunchnow.me/starship#updates"),
       _addRoadClosure(),
       _addNotice(),
-      const ListAdWidget(AdSize.largeBanner),
+      const Center(child: ListAdWidget(AdSize.largeBanner)),
       const SizedBox(
         height: 50,
       )
@@ -345,7 +339,6 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget._configuration,
             launch: null,
             avatarTag: avatarTag,
             launchId: launchId,

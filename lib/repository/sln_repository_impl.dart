@@ -1,6 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
@@ -37,7 +40,6 @@ class SLNRepositoryImpl implements SLNRepository {
         .get(Uri.parse(kLaunchesUrl))
         .then((response) => utf8.decode(response.bodyBytes));
     return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
-      final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode >= 300) {
@@ -62,7 +64,6 @@ class SLNRepositoryImpl implements SLNRepository {
         .get(Uri.parse(kLaunchesUrl))
         .then((response) => utf8.decode(response.bodyBytes));
     return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
-      final String jsonBody = response.body;
       final statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode >= 300) {
@@ -144,7 +145,7 @@ class SLNRepositoryImpl implements SLNRepository {
             " Error:${response.reasonPhrase}]");
       }
 
-      print("Returning!");
+      debugPrint("Returning!");
       return LaunchesList.fromJson(jsonBody);
     });
   }
@@ -172,7 +173,7 @@ class SLNRepositoryImpl implements SLNRepository {
       kLaunchesUrl = '$kLaunchesUrl&offset=$offset';
     }
 
-    print(kLaunchesUrl);
+    debugPrint(kLaunchesUrl);
 
     return client.get(Uri.parse(kLaunchesUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
@@ -201,7 +202,7 @@ class SLNRepositoryImpl implements SLNRepository {
       kEventsUrl = '$kEventsUrl&offset=$offset';
     }
 
-    print(kEventsUrl);
+    debugPrint(kEventsUrl);
     return client.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
@@ -211,8 +212,8 @@ class SLNRepositoryImpl implements SLNRepository {
             "Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      print("Returning!");
-      print(jsonBody);
+      debugPrint("Returning!");
+      debugPrint(jsonBody);
       return Events.fromJson(jsonBody);
     });
   }
@@ -230,7 +231,7 @@ class SLNRepositoryImpl implements SLNRepository {
       kEventsUrl = '$kEventsUrl&offset=$offset';
     }
 
-    print(kEventsUrl);
+    debugPrint(kEventsUrl);
     return client.get(Uri.parse(kEventsUrl)).then((http.Response response) {
       final jsonBody = json.decode(utf8.decode(response.bodyBytes));
       final statusCode = response.statusCode;
@@ -240,8 +241,8 @@ class SLNRepositoryImpl implements SLNRepository {
             "Error while getting contacts [StatusCode:$statusCode, Error:${response.reasonPhrase}]");
       }
 
-      print("Returning!");
-      print(jsonBody);
+      debugPrint("Returning!");
+      debugPrint(jsonBody);
 
       return Events.fromJson(jsonBody);
     });

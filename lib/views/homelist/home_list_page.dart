@@ -9,20 +9,17 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launches.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class HomeListPage extends StatefulWidget {
-  const HomeListPage(this._configuration, {super.key});
+  const HomeListPage({super.key});
 
-  final AppConfiguration _configuration;
 
   @override
   State<HomeListPage> createState() => _HomeListPageState();
@@ -125,14 +122,6 @@ class _HomeListPageState extends State<HomeListPage> {
           },
         ),
       ));
-    }
-  }
-
-  Color? getPrimaryColor() {
-    if (widget._configuration.nightMode) {
-      return Colors.grey[800];
-    } else {
-      return Colors.blue[500];
     }
   }
 
@@ -267,7 +256,6 @@ class _HomeListPageState extends State<HomeListPage> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget._configuration,
             launch: null,
             launchId: launchId,
           );
@@ -289,10 +277,10 @@ class _HomeListPageState extends State<HomeListPage> {
         padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 4.0),
         child: CupertinoButton(
           color: Theme.of(context).colorScheme.secondary,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 Icons.explore,
               ),
@@ -348,19 +336,11 @@ class _HomeListPageState extends State<HomeListPage> {
         children: eventButtons);
   }
 
-
-  ThemeData get barTheme {
-    var qDarkMode = MediaQuery.of(context).platformBrightness;
-    if (qDarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     logger.d("Upcoming build!");
+
+    ColorScheme scheme = Theme.of(context).colorScheme;
 
     Widget view = Scaffold(
       body: Container(
@@ -382,14 +362,13 @@ class _HomeListPageState extends State<HomeListPage> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: barTheme.canvasColor,
         centerTitle: false,
-        elevation: 0,
+        elevation: 20,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.refresh,
-              color: barTheme.focusColor,
+              color: scheme.secondary,
             ),
             onPressed: () {
               setState(() {
@@ -403,8 +382,7 @@ class _HomeListPageState extends State<HomeListPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context).textTheme.displayLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 34,
-              color: barTheme.focusColor),
+              fontSize: 34,),
         ),
       ),
     );
@@ -453,6 +431,7 @@ class _HomeListPageState extends State<HomeListPage> {
             locations: locations)
         .catchError((onError) {
       onLoadContactsError();
+      return Launches(launches: List<Launch>.empty(), count: 0, nextOffset: 0);
     });
     onLoadLaunchesComplete(responseLaunches);
   }
@@ -655,10 +634,10 @@ class _HomeListPageState extends State<HomeListPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadAd();
+    _loadAd(MediaQuery.of(context).size.width);
   }
 
-  Future<void> _loadAd() async {
+  Future<void> _loadAd(double adWidthSize) async {
     late bool showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
         {showAds = prefs.getBool("showAds") ?? true});
@@ -668,9 +647,7 @@ class _HomeListPageState extends State<HomeListPage> {
     }
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-            MediaQuery.of(context).size.width.truncate());
+    final AnchoredAdaptiveBannerAdSize? size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(adWidthSize.truncate());
 
     if (size == null) {
       logger.d('Unable to get height of anchored banner.');

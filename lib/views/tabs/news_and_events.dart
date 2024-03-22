@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class NewsAndEventsPage extends StatefulWidget {
-  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {super.key});
-
-  final AppConfiguration _configuration;
+  const NewsAndEventsPage(this.newsAndEventsIndex, {super.key});
   final int newsAndEventsIndex;
 
   @override
@@ -31,23 +27,13 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
     super.dispose();
   }
 
-  ThemeData get barTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: barTheme.canvasColor,
-            elevation: 0.0,
+            elevation: 20,
             centerTitle: false,
             bottom: TabBar(
               controller: _tabController,
@@ -64,15 +50,14 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
               'News',
               style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 34,
-                  color: barTheme.focusColor),
+                  fontSize: 34),
             ),
           ),
           body: TabBarView(
             controller: _tabController,
-            children: [
-              NewsListPage(widget._configuration),
-              EventListPage(widget._configuration),
+            children: const [
+              NewsListPage(),
+              EventListPage(),
             ],
           ),
         ));

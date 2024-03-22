@@ -9,17 +9,18 @@ class LocationShowcaseWidget extends StatefulWidget {
   const LocationShowcaseWidget(this._launch, {super.key});
 
   @override
-  State<LocationShowcaseWidget> createState() => LocationShowcaseState(_launch);
+  State<LocationShowcaseWidget> createState() => LocationShowcaseState();
 }
 
 class LocationShowcaseState extends State<LocationShowcaseWidget> {
-  LocationShowcaseState(this._launch);
+  LocationShowcaseState();
 
-  final Launch? _launch;
+  Launch? _launch;
   Uri? staticMapUri;
 
   @override
   void initState() {
+    _launch = widget._launch;
     super.initState();
     if (_launch!.pad!.mapImage != null) {
       staticMapUri = Uri.parse(_launch!.pad!.mapImage!);

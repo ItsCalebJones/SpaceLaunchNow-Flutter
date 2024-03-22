@@ -5,20 +5,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_detailed.dart';
+import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/custom_play_pause.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../util/date_formatter.dart';
 
 class EventDetailBodyWidget extends StatefulWidget {
   const EventDetailBodyWidget(
-      {super.key, required this.event, required this.configuration});
+      {super.key, required this.event});
   final Event event;
-  final AppConfiguration configuration;
 
   @override
   EventDetailBodyState createState() {
@@ -170,10 +168,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
             padding: const EdgeInsets.all(24),
             child: CupertinoButton(
               color: Colors.red,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -222,10 +220,10 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
                 const EdgeInsets.only(bottom: 24, top: 16, left: 8, right: 8),
             child: CupertinoButton(
               color: Colors.blue,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -300,7 +298,6 @@ class EventDetailBodyState extends State<EventDetailBodyWidget> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget.configuration,
             launch: null,
             avatarTag: avatarTag,
             launchId: launchId,

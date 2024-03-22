@@ -77,6 +77,7 @@ class _AnchorAdWidgetState extends State<AnchorAdWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_isReady && _showAds) {
       return Padding(
         padding: const EdgeInsets.all(8.0),

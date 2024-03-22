@@ -37,14 +37,14 @@ class HeaderBackgroundImage extends StatelessWidget {
               fit: BoxFit.fitWidth,
             ),
             Positioned(
-              top: 10,
-              bottom: 150,
-              left: 30,
-              right: 100,
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20,),
+                filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5,),
                 child: Container(
-                  color: Colors.black.withOpacity(0),
+                  color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
                 ),
               ),
             ),

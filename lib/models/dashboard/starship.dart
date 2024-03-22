@@ -29,7 +29,8 @@ class Starship {
     var logger = Logger();
 
     LaunchEventList upcoming = LaunchEventList.fromJson(json['upcoming']);
-    LaunchEventList previous = LaunchEventList.fromJson(json['upcoming']);
+    LaunchEventList previous = LaunchEventList.fromJson(json['previous']);
+    
     List<LiveStream> liveStreams = List<LiveStream>.from(
         json['live_streams'].map((stream) => LiveStream.fromJson(stream)));
 
