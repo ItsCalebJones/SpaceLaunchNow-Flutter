@@ -7,19 +7,15 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logger/logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/news.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class NewsListPage extends StatefulWidget {
-  const NewsListPage(this._configuration, {super.key});
-
-  final AppConfiguration _configuration;
+  const NewsListPage({super.key});
 
   @override
   State<NewsListPage> createState() => _NewsListPageState();
@@ -118,6 +114,7 @@ class _NewsListPageState extends State<NewsListPage> {
         },
       ),
     ));
+    return;
   }
   
   @override
@@ -172,6 +169,7 @@ class _NewsListPageState extends State<NewsListPage> {
     List<News> response = await _repository.fetchNews().catchError((onError) {
       logger.d(onError);
       onLoadContactsError();
+      return <News>[];
     });
     onLoadResponseComplete(response);
   }
@@ -183,6 +181,7 @@ class _NewsListPageState extends State<NewsListPage> {
     List<News> response = await _repository.fetchNewsBySite(newsSite).catchError((onError) {
       logger.d(onError);
       onLoadContactsError();
+      return <News>[];
     });
     onLoadResponseCompleteNewsSite(response);
   }

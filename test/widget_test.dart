@@ -19,7 +19,7 @@ void main() {
 
   testWidgets('Init main app widget', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(SpaceLaunchNow());
+    await tester.pumpWidget(const SpaceLaunchNow());
     final titleFinder = find.text("Home");
     expect(titleFinder, findsNWidgets(2));
   });

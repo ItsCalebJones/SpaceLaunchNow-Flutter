@@ -4,21 +4,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class UpcomingLaunchListPage extends StatefulWidget {
-  const UpcomingLaunchListPage(
-      this._configuration, this.searchQuery, this.searchActive, {super.key});
+  const UpcomingLaunchListPage(this.searchQuery, this.searchActive, {super.key});
 
-  final AppConfiguration _configuration;
   final String? searchQuery;
   final bool searchActive;
 
@@ -34,7 +30,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
   int limit = 30;
   bool loading = false;
   final SLNRepository _repository = Injector().slnRepository;
-  ListAdWidget? _bannerAdWidget;
+  ListAdWidget? bannerAdWidget;
   var logger = Logger();
 
   @override
@@ -64,7 +60,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
       lockedLoadNext();
     }
 
-    _bannerAdWidget = const ListAdWidget(AdSize.largeBanner);
+    bannerAdWidget = const ListAdWidget(AdSize.largeBanner);
   }
 
   @override
@@ -164,9 +160,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          return LaunchDetailPage(
-            widget._configuration,
-            launch: null,
+          return LaunchDetailPage(launch: null,
             avatarTag: avatarTag,
             launchId: launchId,
           );
@@ -235,6 +229,7 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
         .fetchUpcoming(limit: limit.toString(), offset: nextOffset.toString())
         .catchError((onError) {
       onLoadContactsError();
+      return LaunchesList(launches: List<LaunchList>.empty(), count: 0, nextOffset: 0);
     });
     onLoadLaunchesComplete(responseLaunches);
   }

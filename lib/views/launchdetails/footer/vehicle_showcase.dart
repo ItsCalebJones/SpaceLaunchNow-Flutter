@@ -5,28 +5,27 @@ import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/first_stage.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/crew.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/spacecraft/spacecraft_stage.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 import '../launch_detail_page.dart';
 
 class VehicleShowcase extends StatefulWidget {
   final Launch? _launch;
-  final AppConfiguration _configuration;
 
-  const VehicleShowcase(this._launch, this._configuration, {super.key});
+  const VehicleShowcase(this._launch, {super.key});
 
   @override
-  State createState() => VehicleShowcaseState(_launch);
+  State createState() => VehicleShowcaseState();
 }
 
 class VehicleShowcaseState extends State<VehicleShowcase> {
-  VehicleShowcaseState(this._launch);
+  VehicleShowcaseState();
 
-  final Launch? _launch;
+  Launch? _launch;
 
   @override
   void initState() {
+    _launch = widget._launch;
     super.initState();
   }
   
@@ -470,7 +469,6 @@ class VehicleShowcaseState extends State<VehicleShowcase> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget._configuration,
             launch: null,
             launchId: launchId,
           );

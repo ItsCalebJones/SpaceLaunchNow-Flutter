@@ -8,7 +8,6 @@ import 'package:spacelaunchnow_flutter/repository/http_client.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/header/launch_detail_header.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_body.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class ElapsedTime {
   final int? hundreds;
@@ -30,10 +29,9 @@ class Dependencies {
 }
 
 class LaunchDetailPage extends StatefulWidget {
-  const LaunchDetailPage(this._configuration,
-      {super.key, this.launch, this.launchId, this.avatarTag});
+  const LaunchDetailPage({super.key, this.launch, this.launchId, this.avatarTag});
 
-  final AppConfiguration _configuration;
+
   final Launch? launch;
   final String? launchId;
   final Object? avatarTag;
@@ -166,7 +164,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 48.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: LaunchDetailBodyWidget(launch: launch, widget._configuration, _news),
+        child: LaunchDetailBodyWidget(launch: launch, _news),
       ),
     );
   }
@@ -183,8 +181,7 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   }
 
   void _loadNews(String? id) async {
-    List<News> response =
-        await _repository.fetchNewsByLaunch(id: id).catchError((onError) {});
+    List<News> response = await _repository.fetchNewsByLaunch(id: id);
     onLoadResponseComplete(response);
   }
 

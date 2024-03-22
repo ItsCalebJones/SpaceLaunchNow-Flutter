@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_event_page.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_overview_page.dart';
 import 'package:spacelaunchnow_flutter/views/starshipdashboard/starship_vehicle_page.dart';
 
 class StarshipDashboardPage extends StatefulWidget {
-  const StarshipDashboardPage(this._configuration, this.index, {super.key});
-
-  final AppConfiguration _configuration;
+  const StarshipDashboardPage(this.index, {super.key});
   final int index;
 
   @override
@@ -64,10 +60,10 @@ class _StarshipDashboardPageState extends State<StarshipDashboardPage>
           ),
           body: TabBarView(
             controller: _tabController,
-            children: [
-              StarshipOverviewPage(widget._configuration),
-              StarshipEventPage(widget._configuration),
-              StarshipVehiclePage(widget._configuration),
+            children: const [
+              StarshipOverviewPage(),
+              StarshipEventPage(),
+              StarshipVehiclePage(),
             ],
           ),
         ));

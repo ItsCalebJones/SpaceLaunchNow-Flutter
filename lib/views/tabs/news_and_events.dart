@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/eventlist/event_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/newslist/news_list_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class NewsAndEventsPage extends StatefulWidget {
-  const NewsAndEventsPage(this._configuration, this.newsAndEventsIndex, {super.key});
-
-  final AppConfiguration _configuration;
+  const NewsAndEventsPage(this.newsAndEventsIndex, {super.key});
   final int newsAndEventsIndex;
 
   @override
@@ -59,9 +55,9 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
           ),
           body: TabBarView(
             controller: _tabController,
-            children: [
-              NewsListPage(widget._configuration),
-              EventListPage(widget._configuration),
+            children: const [
+              NewsListPage(),
+              EventListPage(),
             ],
           ),
         ));

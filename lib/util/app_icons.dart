@@ -13,6 +13,7 @@
 ///
 ///
 ///
+library;
 import 'package:flutter/widgets.dart';
 
 class CustomSLN {
@@ -23,6 +24,6 @@ class CustomSLN {
 
   static const IconData starship =
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData threedee_rotation =
+  static const IconData threeDeRotation =
       IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -7,31 +7,29 @@ import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = '/material/dialog';
 
-  SettingsPage(this.configuration, this.updater, {super.key});
+  const SettingsPage(this.configuration, this.updater, {super.key});
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final AppConfiguration configuration;
   final ValueChanged<AppConfiguration> updater;
 
 
   @override
-  State<SettingsPage> createState() => NotificationFilterPageState(_firebaseMessaging);
+  State<SettingsPage> createState() => NotificationFilterPageState();
 }
 
 class NotificationFilterPageState extends State<SettingsPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final FirebaseMessaging _firebaseMessaging;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   var logger = Logger();
 
-  NotificationFilterPageState(this._firebaseMessaging);
+  NotificationFilterPageState();
 
   final List<String> _productLists = [
     "2024_super_fan",
@@ -44,18 +42,19 @@ class NotificationFilterPageState extends State<SettingsPage> {
   final List<String> _notFoundIds = [];
   List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
-  final bool _isAvailable = false;
+  // final bool _isAvailable = false;
   bool _loading = true;
 
-  StreamSubscription? _purchaseUpdatedSubscription;
-  StreamSubscription? _purchaseErrorSubscription;
-  StreamSubscription? _connectionSubscription;
+  StreamSubscription? purchaseUpdatedSubscription;
+  StreamSubscription? purchaseErrorSubscription;
+  StreamSubscription? connectionSubscription;
 
   @override
   initState() {
     super.initState();
     asyncInitState();
     init();
+    
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       String appName = packageInfo.appName;
       String packageName = packageInfo.packageName;
@@ -90,20 +89,24 @@ class NotificationFilterPageState extends State<SettingsPage> {
               Text('Purchase history restored - thank you for your support!'),
           duration: Duration(seconds: 5),
         );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        _snackBar(snackBar);
       } else {
         const snackBar = SnackBar(
           content: Text('Purchase history restored - no purchases found.'),
           duration: Duration(seconds: 5),
         );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        _snackBar(snackBar);
       }
     }
   }
 
+  void _snackBar(SnackBar snackBar){
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void asyncInitState() async {
     await FlutterInappPurchase.instance.initialize();
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
     // refresh items for android
     try {
       String msg = await FlutterInappPurchase.instance.consumeAll();
@@ -112,12 +115,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
       logger.d('consumeAllItems error: $err');
     }
 
-    _connectionSubscription =
+    connectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
       logger.d('connected: $connected');
     });
 
-    _purchaseUpdatedSubscription =
+    purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) {
       logger.d('purchase-updated: $productItem');
       if (productItem != null) {
@@ -125,7 +128,7 @@ class NotificationFilterPageState extends State<SettingsPage> {
       }
     });
 
-    _purchaseErrorSubscription =
+    purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
       logger.d('purchase-error: $purchaseError');
       if (!purchaseError!.message!.contains("Cancelled")) {
@@ -176,12 +179,12 @@ class NotificationFilterPageState extends State<SettingsPage> {
     ));
   }
 
-  void _handleNightMode(bool value) {
-    sendUpdates(widget.configuration.copyWith(nightMode: value));
-    _prefs.then((SharedPreferences prefs) {
-      return (prefs.setBool('nightMode', value));
-    });
-  }
+  // void _handleNightMode(bool value) {
+  //   sendUpdates(widget.configuration.copyWith(nightMode: value));
+  //   _prefs.then((SharedPreferences prefs) {
+  //     return (prefs.setBool('nightMode', value));
+  //   });
+  // }
 
   void _handleDebugSupporter(bool value) {
     logger.d("Debug supporters: $value");

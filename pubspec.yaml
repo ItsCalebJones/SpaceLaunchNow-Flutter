@@ -3,8 +3,7 @@ description: A new Space Launch Now flutter application.
 version: 2.6.0+2
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
-
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -33,7 +32,6 @@ dependencies:
   flutter_vector_icons: ^2.0.0
   rate_my_app: ^2.0.0
   yaml: ^3.1.1
-  package_info: ^2.0.2
   youtube_player_flutter: ^9.0.0
   google_fonts: ^6.2.1
   quiver: ^3.2.1
@@ -49,10 +47,11 @@ dependencies:
   envied: ^0.5.3
   easy_image_viewer: ^1.4.1
 
+  http: any
 dev_dependencies:
-  build_runner: ^2.3.3
+  build_runner: ^2.4.8
   envied_generator: ^0.5.3
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
 

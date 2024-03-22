@@ -3,19 +3,15 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
 import 'package:spacelaunchnow_flutter/models/event/events.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class EventListPage extends StatefulWidget {
-  const EventListPage(this._configuration, {super.key});
-
-  final AppConfiguration _configuration;
+  const EventListPage({super.key});
 
   @override
   State<EventListPage> createState() => _EventListPageState();
@@ -266,7 +262,6 @@ class _EventListPageState extends State<EventListPage> {
       MaterialPageRoute(
         builder: (c) {
           return EventDetailPage(
-            widget._configuration,
             eventList: event,
             eventId: eventId,
           );

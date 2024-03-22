@@ -1,8 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:spacelaunchnow_flutter/models/update.dart';
 import 'package:spacelaunchnow_flutter/models/vidurls.dart';
 import 'package:spacelaunchnow_flutter/util/url_helper.dart';
 
@@ -34,7 +31,8 @@ Widget buildVideos(
     } else {
       newVideos = videos;
     }
-    for (VidURL video in videos) {
+
+    for (VidURL video in newVideos) {
       widgets.add(Padding(
           padding: const EdgeInsets.all(4.0),
           child: ListTile(

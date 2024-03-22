@@ -2,7 +2,7 @@ import 'dart:async' show Future;
 import 'dart:convert' show json;
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:spacelaunchnow_flutter/util/Secret.dart';
+import 'package:spacelaunchnow_flutter/util/secert.dart';
 
 class SecretLoader {
   final String? secretPath;

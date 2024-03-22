@@ -11,7 +11,6 @@ import 'package:spacelaunchnow_flutter/util/utils.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/agencies_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/location_showcase.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/footer/mission_showcase.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/countdown.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/updates.dart';
@@ -21,10 +20,9 @@ import 'footer/vehicle_showcase.dart';
 
 class LaunchDetailBodyWidget extends StatefulWidget {
   final Launch? launch;
-  final AppConfiguration _configuration;
   final List<News> news;
 
-  const LaunchDetailBodyWidget(this._configuration, this.news, {super.key, required this.launch});
+  const LaunchDetailBodyWidget(this.news, {super.key, required this.launch});
 
   @override
   State createState() => LaunchDetailBodyState();
@@ -178,7 +176,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         );
       }
     }
-    return Row();
+    return const Row();
   }
 
   Widget _buildActionButtons(ThemeData theme) {
@@ -311,7 +309,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         MissionShowcase(widget.launch),
         buildUpdates(widget.launch!.updates!, context, "https://spacelaunchnow.me/launch/${widget.launch!.slug!}#updates"),
         _buildNews(),
-        VehicleShowcase(widget.launch, widget._configuration),
+        VehicleShowcase(widget.launch),
         const Center(child: ListAdWidget(AdSize.mediumRectangle)),
         AgenciesShowcase(widget.launch),
         LocationShowcaseWidget(widget.launch),

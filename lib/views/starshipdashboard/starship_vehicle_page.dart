@@ -1,17 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/rocket/launcher.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 
 class StarshipVehiclePage extends StatefulWidget {
-  const StarshipVehiclePage(this._configuration, {super.key});
-
-  final AppConfiguration _configuration;
+  const StarshipVehiclePage({super.key});
 
   @override
   State<StarshipVehiclePage> createState() => _StarshipVehiclePageState();

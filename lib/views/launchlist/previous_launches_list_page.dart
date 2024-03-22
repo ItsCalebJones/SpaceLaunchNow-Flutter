@@ -3,23 +3,17 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/models/launch/list/launches_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/util/date_formatter.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class PreviousLaunchListPage extends StatefulWidget {
-  const PreviousLaunchListPage(
-      this._configuration, this.searchQuery, this.searchActive, {super.key});
-
-  final AppConfiguration _configuration;
+  const PreviousLaunchListPage(this.searchQuery, this.searchActive, {super.key});
   final String? searchQuery;
   final bool searchActive;
 
@@ -35,7 +29,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
   int limit = 30;
   bool loading = false;
   final SLNRepository _repository = Injector().slnRepository;
-  ListAdWidget? _bannerAdWidget;
+  ListAdWidget? bannerAdWidget;
   var logger = Logger();
 
   @override
@@ -62,7 +56,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
     } else {
       lockedLoadNext();
     }
-    _bannerAdWidget = const ListAdWidget(AdSize.largeBanner);
+    bannerAdWidget = const ListAdWidget(AdSize.largeBanner);
   }
 
   @override
@@ -129,7 +123,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
 
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
-    var formatter = DateFormat.yMd();
 
     if (index > _launches.length - 10) {
       notifyThreshold();
@@ -164,7 +157,6 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget._configuration,
             launch: null,
             avatarTag: avatarTag,
             launchId: launchId,
@@ -233,6 +225,7 @@ class _LaunchListPageState extends State<PreviousLaunchListPage> {
         .fetchPrevious(limit: limit.toString(), offset: nextOffset.toString())
         .catchError((onError) {
       onLoadContactsError();
+      return LaunchesList(launches: List<LaunchList>.empty(), count: 0, nextOffset: 0);
     });
     onLoadLaunchesComplete(responseLaunches);
   }

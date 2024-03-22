@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
@@ -45,7 +45,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 
   if (kDebugMode) {
-    print("Handling a background message: ${message.messageId}");
+    debugPrint("Handling a background message: ${message.messageId}");
   }
 }
 
@@ -65,13 +65,12 @@ Future<void> main() async {
     badge: true,
     sound: false,
   );
-  runApp(SpaceLaunchNow());
+  runApp(const SpaceLaunchNow());
 }
 
 class SpaceLaunchNow extends StatelessWidget {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  SpaceLaunchNow({super.key});
+  const SpaceLaunchNow({super.key});
 
   static bool get isInDebugMode {
     bool inDebugMode = false;
@@ -110,7 +109,6 @@ class PagesState extends State<Pages> {
     '2024_elon',
   ];
 
-  List<IAPItem> _items = [];
   List<PurchasedItem> _purchases = [];
   bool _purchaseRestored = false;
 
@@ -171,13 +169,13 @@ class PagesState extends State<Pages> {
           listener: (button) {
             switch (button) {
               case RateMyAppDialogButton.rate:
-                print('Clicked on "Rate".');
+                debugPrint('Clicked on "Rate".');
                 break;
               case RateMyAppDialogButton.later:
-                print('Clicked on "Later".');
+                debugPrint('Clicked on "Later".');
                 break;
               case RateMyAppDialogButton.no:
-                print('Clicked on "No".');
+                debugPrint('Clicked on "No".');
                 break;
             }
 
@@ -233,7 +231,7 @@ class PagesState extends State<Pages> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (kDebugMode) {
-        print('A new onMessageOpenedApp event was published!');
+        debugPrint('A new onMessageOpenedApp event was published!');
       }
       if (message.data['launch_uuid'] != null) {
         _navigateToLaunchDetails(message.data['launch_uuid']);
@@ -579,32 +577,13 @@ class PagesState extends State<Pages> {
     setState(() {});
   }
 
-  void _showAds(bool value) {
-    _prefs.then((SharedPreferences prefs) {
-      return (prefs.setBool('showAds', value));
-    });
-  }
+
 
   @override
   void dispose() async {
     super.dispose();
   }
 
-  void hideAd() {}
-
-  Future _getProduct() async {
-    List<IAPItem> items =
-        await FlutterInappPurchase.instance.getProducts(_productLists);
-    for (var item in items) {
-      print(item.toString());
-      _items.add(item);
-    }
-
-    setState(() {
-      _items = items;
-      _purchases = [];
-    });
-  }
 
   Future _getPurchaseHistory() async {
     List<PurchasedItem>? items = await FlutterInappPurchase.instance.getPurchaseHistory();
@@ -614,7 +593,6 @@ class PagesState extends State<Pages> {
 
     setState(() {
       _purchaseRestored = true;
-      _items = [];
       _purchases = items;
     });
   }
@@ -629,43 +607,6 @@ class PagesState extends State<Pages> {
     }
   }
 
-  Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
-    return AlertDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(message['launch_name']),
-          Text(message['launch_location']),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('CLOSE'),
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-        ),
-        TextButton(
-          child: const Text('SHOW'),
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-        ),
-      ],
-    );
-  }
-
-  void _showLaunchDialog(Map<String, dynamic> message) {
-    final String? launchId = message['launch_uuid'];
-    showDialog<bool>(
-      context: context,
-      builder: (_) => _buildDialog(context, message),
-    ).then((bool? shouldNavigate) {
-      if (shouldNavigate == true) {
-        _navigateToLaunchDetails(launchId);
-      }
-    });
-  }
 
   void configurationUpdater(AppConfiguration value) {
     setState(() {
@@ -679,16 +620,16 @@ class PagesState extends State<Pages> {
   Widget pageChooser() {
     switch (pageIndex) {
       case 0:
-        return HomeListPage(_configuration);
+        return const HomeListPage();
 
       case 1:
-        return LaunchesTabPage(_configuration);
+        return const LaunchesTabPage();
 
       case 2:
-        return NewsAndEventsPage(_configuration, newsAndEventsIndex);
+        return NewsAndEventsPage(newsAndEventsIndex);
 
       case 3:
-        return StarshipDashboardPage(_configuration, starshipIndex);
+        return StarshipDashboardPage(starshipIndex);
 
       case 4:
         return SettingsPage(_configuration, configurationUpdater);
@@ -752,7 +693,7 @@ class PagesState extends State<Pages> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          return LaunchDetailPage(_configuration, launchId: launchId);
+          return LaunchDetailPage(launchId: launchId);
         },
       ),
     );
@@ -770,23 +711,23 @@ class PagesState extends State<Pages> {
     }
 
     if (kReleaseMode) {
-      print("\n\n\n\nRelease mode!\n\n\n\n\n\n\n");
+      debugPrint("\n\n\n\nRelease mode!\n\n\n\n\n\n\n");
       if (_purchases.isNotEmpty) {
         prefs.setBool("showAds", false);
       }
     } else {
-      print("\n\n\n\nIDK mode!\n\n\n\n\n\n\n");
+      debugPrint("\n\n\n\nIDK mode!\n\n\n\n\n\n\n");
     }
 
     showAds = prefs.getBool("showAds") ?? true;
-    print("Show ads: $showAds");
+    debugPrint("Show ads: $showAds");
   }
 
   _openBrowser(String url) async {
-    print("Checking $url");
+    debugPrint("Checking $url");
     var url0 = Uri.parse(url);
     if (await canLaunchUrl(url0)) {
-      print("Launching $url");
+      debugPrint("Launching $url");
       await launchUrl(url0);
     } else {
       throw 'Could not launch $url';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/injection/dependency_injection.dart';
 import 'package:spacelaunchnow_flutter/models/dashboard/starship.dart';
 import 'package:spacelaunchnow_flutter/models/event/event_list.dart';
@@ -11,13 +10,10 @@ import 'package:spacelaunchnow_flutter/models/launch/list/launch_list.dart';
 import 'package:spacelaunchnow_flutter/repository/sln_repository.dart';
 import 'package:spacelaunchnow_flutter/views/eventdetails/event_detail_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchdetails/launch_detail_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/views/widgets/ads/ad_widget.dart';
 
 class StarshipEventPage extends StatefulWidget {
-  const StarshipEventPage(this._configuration, {super.key});
-
-  final AppConfiguration _configuration;
+  const StarshipEventPage({super.key});
 
   @override
   State<StarshipEventPage> createState() => _StarshipEventPageState();
@@ -53,8 +49,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   void onLoadResponseComplete(Starship starship, [bool reload = false]) {
     loading = false;
     usingCached = false;
-    print(starship);
-
     setState(() {
       _starship = starship;
       PageStorage.of(context)
@@ -265,7 +259,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       MaterialPageRoute(
         builder: (c) {
           return LaunchDetailPage(
-            widget._configuration,
             launch: null,
             avatarTag: avatarTag,
             launchId: launchId,
@@ -281,7 +274,6 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       MaterialPageRoute(
         builder: (c) {
           return EventDetailPage(
-            widget._configuration,
             eventList: event,
             eventId: eventId,
           );

@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/previous_launches_list_page.dart';
 import 'package:spacelaunchnow_flutter/views/launchlist/upcoming_launches_list_page.dart';
-import 'package:spacelaunchnow_flutter/views/settings/app_settings.dart';
 import 'package:spacelaunchnow_flutter/util/banner_constant.dart';
 
 class LaunchesTabPage extends StatefulWidget {
-  const LaunchesTabPage(this._configuration, {super.key});
+  const LaunchesTabPage({super.key});
 
-  final AppConfiguration _configuration;
 
   @override
   State<LaunchesTabPage> createState() => _LaunchesTabPageState();
@@ -27,7 +24,6 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   String? searchQuery;
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
-  final bool _showAds = false;
   var logger = Logger();
 
   @override
@@ -44,7 +40,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadAd();
+    _loadAd(context);
   }
 
   @override
@@ -65,15 +61,13 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
                     child: LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints constraints) {
                         if (constraints.maxWidth < 600) {
-                          return UpcomingLaunchListPage(
-                              widget._configuration, searchQuery, searchActive);
+                          return UpcomingLaunchListPage(searchQuery, searchActive);
                         }
 
                         return Center(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.75,
-                            child: UpcomingLaunchListPage(
-                                widget._configuration, searchQuery, searchActive),
+                            child: UpcomingLaunchListPage(searchQuery, searchActive),
                           ),
                         );
                       },
@@ -85,15 +79,13 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
                     child: LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints constraints) {
                         if (constraints.maxWidth < 600) {
-                          return PreviousLaunchListPage(
-                              widget._configuration, searchQuery, searchActive);
+                          return PreviousLaunchListPage(searchQuery, searchActive);
                         }
 
                         return Center(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.75,
-                            child: PreviousLaunchListPage(
-                                widget._configuration, searchQuery, searchActive),
+                            child: PreviousLaunchListPage(searchQuery, searchActive),
                           ),
                         );
                       },
@@ -112,7 +104,7 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
     );
   }
 
-  Future<void> _loadAd() async {
+  Future<void> _loadAd(context) async {
     late bool showAds;
     await SharedPreferences.getInstance().then((SharedPreferences prefs) =>
         {showAds = prefs.getBool("showAds") ?? true});
@@ -157,8 +149,6 @@ class _LaunchesTabPageState extends State<LaunchesTabPage>
   }
 
   PreferredSizeWidget _appBar() {
-    ColorScheme scheme = Theme.of(context).colorScheme;
-
 
     if (searchViewActive) {
       return AppBar(
