@@ -105,12 +105,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
     final client = ClientWithUserAgent(http.Client(), useSLNAuth: true);
     http.Response response = await client.get(Uri.parse(
         'https://spacelaunchnow.me/api/ll/2.2.0/launch/upcoming/?limit=1&mode=detailed'));
-
     nextLaunches = Launch.allFromResponse(response);
-    PageStorage.of(context)
-        .writeState(context, nextLaunches!.first, identifier: 'next_launch');
     setState(() {
-      launch = nextLaunches!.first;
+      PageStorage.of(context).writeState(context, nextLaunches!.first, identifier: 'next_launch');
+      launch = nextLaunches.first;
       _loadNews(launch!.id);
       setController();
     });
@@ -125,19 +123,6 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   @override
   Widget build(BuildContext context) {
     Widget content;
-    List<Color> colors = [];
-    if (!widget._configuration.nightMode) {
-      colors.addAll([Colors.blue[700]!, Colors.blueGrey[400]!]);
-    } else {
-      colors.addAll([Colors.grey[800]!, Colors.blueGrey[700]!]);
-    }
-    var linearGradient = BoxDecoration(
-      gradient: LinearGradient(
-        begin: FractionalOffset.topCenter,
-        end: FractionalOffset.bottomCenter,
-        colors: colors,
-      ),
-    );
 
     if (launch == null) {
       content = const Center(
@@ -162,16 +147,16 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
                   }
 
               return Center(
-                child: Card(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
                     child: _buildBody(),
                   ),
-                ));
+              );
             }),
           ],
         ),
-      ));
+      )
+      );
     }
     return content;
   }
@@ -179,8 +164,10 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
   Widget _buildBody() {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 48.0),
-      child: LaunchDetailBodyWidget(
-          launch, widget._configuration, _news),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: LaunchDetailBodyWidget(launch: launch, widget._configuration, _news),
+      ),
     );
   }
 

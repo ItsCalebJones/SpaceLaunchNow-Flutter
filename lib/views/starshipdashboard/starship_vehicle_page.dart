@@ -61,14 +61,6 @@ class _StarshipVehiclePageState extends State<StarshipVehiclePage> {
     });
   }
 
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

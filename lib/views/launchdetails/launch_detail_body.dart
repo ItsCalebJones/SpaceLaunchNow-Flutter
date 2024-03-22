@@ -24,18 +24,14 @@ class LaunchDetailBodyWidget extends StatefulWidget {
   final AppConfiguration _configuration;
   final List<News> news;
 
-  const LaunchDetailBodyWidget(this.launch, this._configuration, this.news, {super.key});
+  const LaunchDetailBodyWidget(this._configuration, this.news, {super.key, required this.launch});
 
   @override
-  State createState() => LaunchDetailBodyState(launch);
+  State createState() => LaunchDetailBodyState();
 }
 
 class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
-  LaunchDetailBodyState(
-    this.mLaunch,
-  );
-
-  final Launch? mLaunch;
+  LaunchDetailBodyState();
 
   @override
   void initState() {
@@ -43,6 +39,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   }
 
   Widget _buildLocationInfo(TextTheme textTheme) {
+    
     return Row(
       children: <Widget>[
         const Icon(
@@ -52,7 +49,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              mLaunch!.pad!.location!.name!,
+              widget.launch!.pad!.location!.name!,
               maxLines: 2,
               style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
@@ -66,19 +63,19 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildStatusInfo(TextTheme textTheme) {
     var icon = Icons.event;
 
-    if (mLaunch!.status!.id == 1) {
+    if (widget.launch!.status!.id == 1) {
       icon = Icons.thumb_up;
-    } else if (mLaunch!.status!.id == 2) {
+    } else if (widget.launch!.status!.id == 2) {
       icon = Icons.thumb_down;
-    } else if (mLaunch!.status!.id == 3) {
+    } else if (widget.launch!.status!.id == 3) {
       icon = Icons.check;
-    } else if (mLaunch!.status!.id == 4) {
+    } else if (widget.launch!.status!.id == 4) {
       icon = Icons.close;
-    } else if (mLaunch!.status!.id == 5) {
+    } else if (widget.launch!.status!.id == 5) {
       icon = Icons.pause;
-    } else if (mLaunch!.status!.id == 6) {
+    } else if (widget.launch!.status!.id == 6) {
       icon = Icons.flight_takeoff;
-    } else if (mLaunch!.status!.id == 7) {
+    } else if (widget.launch!.status!.id == 7) {
       icon = Icons.close;
     }
 
@@ -89,7 +86,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              Utils.getStatus(mLaunch!.status!.id),
+              Utils.getStatus(widget.launch!.status!.id),
               maxLines: 2,
               style: textTheme.titleMedium,
               overflow: TextOverflow.fade,
@@ -124,11 +121,11 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   }
 
   Widget _buildLandingInfo(TextTheme textTheme) {
-    if (mLaunch!.rocket!.firstStages!.isNotEmpty) {
+    if (widget.launch!.rocket!.firstStages!.isNotEmpty) {
       bool landingAttempt = false;
       String landingLocation = "Landing: ";
-      for (var i = 0; i < mLaunch!.rocket!.firstStages!.length; i++) {
-        final item = mLaunch!.rocket!.firstStages!.elementAt(i);
+      for (var i = 0; i < widget.launch!.rocket!.firstStages!.length; i++) {
+        final item = widget.launch!.rocket!.firstStages!.elementAt(i);
         if (item.landing != null && item.landing!.attempt!) {
           landingAttempt = true;
           if (item.landing!.location != null) {
@@ -187,27 +184,27 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   Widget _buildActionButtons(ThemeData theme) {
     List<Widget> materialButtons = [];
 
-//    if (mLaunch.vidURL != null) {
+//    if (widget.launch.vidURL != null) {
 //      materialButtons.add(new Padding(
 //          padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 8.0),
 //          child: new IconButton(
 //            icon: Icon(Icons.live_tv),
 //            tooltip: 'Watch',
 //            onPressed: () {
-//              share(mLaunch.vidURL);
+//              share(widget.launch.vidURL);
 //            }, //
 //          )));
 //    }
-//    if (mLaunch.vidURL != null) {
+//    if (widget.launch.vidURL != null) {
 //      materialButtons.add(new CupertinoButton(
 //        onPressed: () {
-//          _launchURL(mLaunch.vidURL);
+//          _launchURL(widget.launch.vidURL);
 //        },
 //        child: new Text('Watch'),
 //      ));
 //    }
 
-    if (mLaunch!.vidURLs != null && mLaunch!.vidURLs!.isNotEmpty) {
+    if (widget.launch!.vidURLs != null && widget.launch!.vidURLs!.isNotEmpty) {
       materialButtons.add(Row(
         children: <Widget>[
           const Icon(Icons.live_tv),
@@ -215,7 +212,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             padding: const EdgeInsets.only(left: 8.0),
             child: CupertinoButton(
               onPressed: () {
-                openUrl(mLaunch!.vidURLs!.first.url!);
+                openUrl(widget.launch!.vidURLs!.first.url!);
               },
               child: const Text('Watch'),
             ),
@@ -224,7 +221,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
       ));
     }
 
-    if (mLaunch!.slug != null) {
+    if (widget.launch!.slug != null) {
       materialButtons.add(Row(
         children: <Widget>[
           const Icon(Icons.share),
@@ -233,7 +230,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
             child: CupertinoButton(
               onPressed: () {
                 Share.share(
-                    "https://spacelaunchnow.me/launch/${mLaunch!.slug!}");
+                    "https://spacelaunchnow.me/launch/${widget.launch!.slug!}");
               },
               child: const Text(
                 'Share',
@@ -256,11 +253,11 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   }
 
   Widget _buildCountDown(TextTheme textTheme) {
-    DateTime net = mLaunch!.net!;
+    DateTime net = widget.launch!.net!;
     DateTime current = DateTime.now();
     var diff = net.difference(current);
     if (diff.inSeconds > 0) {
-      return Countdown(mLaunch);
+      return Countdown(widget.launch);
     } else {
       return const SizedBox(width: 0.0, height: 0.0);
     }
@@ -281,7 +278,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
           child: Text(
-            mLaunch!.name!,
+            widget.launch!.name!,
             style: textTheme.headlineSmall!
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 28),
             textAlign: TextAlign.start,
@@ -310,14 +307,14 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
         ),
         _buildActionButtons(theme),
         const Center(child: ListAdWidget(AdSize.banner)),
-        buildVideos(mLaunch!.vidURLs?? [], context),
-        MissionShowcase(mLaunch),
-        buildUpdates(mLaunch!.updates!, context, "https://spacelaunchnow.me/launch/${mLaunch!.slug!}#updates"),
+        buildVideos(widget.launch!.vidURLs?? [], context),
+        MissionShowcase(widget.launch),
+        buildUpdates(widget.launch!.updates!, context, "https://spacelaunchnow.me/launch/${widget.launch!.slug!}#updates"),
         _buildNews(),
-        VehicleShowcase(mLaunch, widget._configuration),
+        VehicleShowcase(widget.launch, widget._configuration),
         const Center(child: ListAdWidget(AdSize.mediumRectangle)),
-        AgenciesShowcase(mLaunch),
-        LocationShowcaseWidget(mLaunch),
+        AgenciesShowcase(widget.launch),
+        LocationShowcaseWidget(widget.launch),
         _buildSpace(),
       ],
     );
@@ -371,7 +368,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
                 color: Theme.of(context).colorScheme.secondary,
                 child: const Text("Read More"),
                 onPressed: () {
-                  openUrl("https://spacelaunchnow.me/launch/${mLaunch!.slug!}#related-news");
+                  openUrl("https://spacelaunchnow.me/launch/${widget.launch!.slug!}#related-news");
                 }),
           ),
         );

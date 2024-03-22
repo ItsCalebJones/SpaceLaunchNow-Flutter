@@ -76,14 +76,6 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     });
   }
 
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,6 +124,12 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
     } else {
       widget = Container();
     }
+
+    if (loading){
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } 
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -206,7 +204,7 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
-                      .headlineSmall!
+                      .headlineLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -221,10 +219,10 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: CupertinoButton(
               color: Colors.red,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
@@ -256,17 +254,17 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context)
               .textTheme
-              .titleMedium!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 42),
+              .headlineLarge!
+              .copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       _addUpNext(dataUpcoming),
-      const ListAdWidget(AdSize.banner),
+      const Center(child: ListAdWidget(AdSize.banner)),
       buildUpdates(_starship!.updates!, context,
           "https://spacelaunchnow.me/starship#updates"),
       _addRoadClosure(),
       _addNotice(),
-      const ListAdWidget(AdSize.largeBanner),
+      const Center(child: ListAdWidget(AdSize.largeBanner)),
       const SizedBox(
         height: 50,
       )

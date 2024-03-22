@@ -128,14 +128,6 @@ class _HomeListPageState extends State<HomeListPage> {
     }
   }
 
-  Color? getPrimaryColor() {
-    if (widget._configuration.nightMode) {
-      return Colors.grey[800];
-    } else {
-      return Colors.blue[500];
-    }
-  }
-
   Widget _buildLaunchTile(BuildContext context, Launch launch) {
     var formatter = DateFormat("EEEE, MMMM d, yyyy");
     String? title = "";
@@ -289,7 +281,7 @@ class _HomeListPageState extends State<HomeListPage> {
         padding: const EdgeInsets.only(left: 8.0, right: 4.0, top: 4.0),
         child: CupertinoButton(
           color: Theme.of(context).colorScheme.secondary,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const <Widget>[
@@ -348,19 +340,11 @@ class _HomeListPageState extends State<HomeListPage> {
         children: eventButtons);
   }
 
-
-  ThemeData get barTheme {
-    var qDarkMode = MediaQuery.of(context).platformBrightness;
-    if (qDarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     logger.d("Upcoming build!");
+
+    ColorScheme scheme = Theme.of(context).colorScheme;
 
     Widget view = Scaffold(
       body: Container(
@@ -382,14 +366,13 @@ class _HomeListPageState extends State<HomeListPage> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: barTheme.canvasColor,
         centerTitle: false,
-        elevation: 0,
+        elevation: 20,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.refresh,
-              color: barTheme.focusColor,
+              color: scheme.secondary,
             ),
             onPressed: () {
               setState(() {
@@ -403,8 +386,7 @@ class _HomeListPageState extends State<HomeListPage> {
           textAlign: TextAlign.left,
           style: Theme.of(context).textTheme.displayLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 34,
-              color: barTheme.focusColor),
+              fontSize: 34,),
         ),
       ),
     );

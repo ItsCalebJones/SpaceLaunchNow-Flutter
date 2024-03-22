@@ -53,6 +53,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
   void onLoadResponseComplete(Starship starship, [bool reload = false]) {
     loading = false;
     usingCached = false;
+    print(starship);
 
     setState(() {
       _starship = starship;
@@ -67,15 +68,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
       loading = false;
     });
   }
-
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,7 +252,7 @@ class _StarshipEventPageState extends State<StarshipEventPage> {
                 .textTheme
                 .titleMedium!
                 .copyWith(fontSize: 15.0)),
-        subtitle: Text(event.location!),
+        subtitle: Text(event.location ?? "Uknown Location"),
         trailing: Text(formatter.format(event.net!),
             style: Theme.of(context).textTheme.bodySmall),
       ),

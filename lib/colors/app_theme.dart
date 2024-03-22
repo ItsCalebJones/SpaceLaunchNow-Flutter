@@ -29,7 +29,7 @@ final ThemeData kIOSTheme = ThemeData(
 
 final ThemeData kIOSThemeDark = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.grey[800],
+  useMaterial3: true,
   typography: Typography.material2021(
       platform: TargetPlatform.iOS,
       black: Typography.blackMountainView.copyWith(
@@ -52,11 +52,7 @@ final ThemeData kIOSThemeDark = ThemeData(
         headlineMedium: Typography.whiteMountainView.headlineMedium!
             .copyWith(color: Colors.white),
       )),
-  colorScheme: ColorScheme.fromSwatch(
-    primarySwatch: Colors.blue,
-    accentColor: Colors.grey[700],
-  ).copyWith(secondary: Colors.grey[700], brightness: Brightness.dark),
-);
+  colorSchemeSeed: Colors.red);
 
 final ThemeData kIOSThemeBar = ThemeData(
   brightness: Brightness.light,

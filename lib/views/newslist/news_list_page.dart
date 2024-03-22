@@ -119,15 +119,7 @@ class _NewsListPageState extends State<NewsListPage> {
       ),
     ));
   }
-
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     Widget content;

@@ -126,14 +126,6 @@ class _EventListPageState extends State<EventListPage> {
     ));
   }
 
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
   List<Widget> _buildList() {
     List<Widget> content = <Widget>[];
 

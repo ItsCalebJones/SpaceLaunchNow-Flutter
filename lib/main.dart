@@ -629,15 +629,6 @@ class PagesState extends State<Pages> {
     }
   }
 
-  ThemeData get barTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   Widget _buildDialog(BuildContext context, Map<String, dynamic> message) {
     return AlertDialog(
       content: Column(
@@ -689,19 +680,15 @@ class PagesState extends State<Pages> {
     switch (pageIndex) {
       case 0:
         return HomeListPage(_configuration);
-        break;
 
       case 1:
         return LaunchesTabPage(_configuration);
-        break;
 
       case 2:
         return NewsAndEventsPage(_configuration, newsAndEventsIndex);
-        break;
 
       case 3:
         return StarshipDashboardPage(_configuration, starshipIndex);
-        break;
 
       case 4:
         return SettingsPage(_configuration, configurationUpdater);
@@ -736,35 +723,29 @@ class PagesState extends State<Pages> {
         },
         home: Scaffold(
             body: PageStorage(bucket: pageStorageBucket, child: pageChooser()),
-//            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            bottomNavigationBar: Theme(
-                data: barTheme,
-
-                // sets the inactive color of the `BottomNavigationBar`
-                child: BottomNavigationBar(
-                  key: stickyKey,
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: pageIndex,
-                  onTap: (int tappedIndex) {
-                    //Toggle pageChooser and rebuild state with the index that was tapped in bottom navbar
-                    setState(() {
-                      pageIndex = tappedIndex;
-                    });
-                  },
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                        icon: Icon(FontAwesomeIcons.home), label: "Home"),
-                    BottomNavigationBarItem(
-                        label: 'Launches',
-                        icon: Icon(MaterialCommunityIcons.clipboard_text)),
-                    BottomNavigationBarItem(
-                        label: 'News', icon: Icon(FontAwesomeIcons.newspaper)),
-                    BottomNavigationBarItem(
-                        label: 'Starship', icon: Icon(CustomSLN.starship)),
-                    BottomNavigationBarItem(
-                        label: 'Settings', icon: Icon(MaterialIcons.settings)),
-                  ],
-                ))));
+            bottomNavigationBar: NavigationBar(
+              elevation: 20,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              selectedIndex: pageIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  pageIndex = index;
+                });
+              },
+              destinations: const [
+              NavigationDestination(
+                  icon: Icon(FontAwesomeIcons.house), label: 'Explore'),
+              NavigationDestination(
+                  icon: Icon(MaterialCommunityIcons.clipboard_text),
+                  label: 'Launches'),
+              NavigationDestination(
+                  icon: Icon(FontAwesomeIcons.newspaper), label: 'News'),
+              NavigationDestination(icon: Icon(CustomSLN.starship), label: 'Starship'),
+              NavigationDestination(icon: Icon(MaterialIcons.settings), label: 'Settings'),
+            ],
+          ),
+      )
+    );
   }
 
   void _navigateToLaunchDetails(String? launchId) {

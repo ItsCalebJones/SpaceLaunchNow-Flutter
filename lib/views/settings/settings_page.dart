@@ -65,15 +65,6 @@ class NotificationFilterPageState extends State<SettingsPage> {
     });
   }
 
-  ThemeData get barTheme {
-    var qDarkMode = MediaQuery.of(context).platformBrightness;
-    if (qDarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   // Gets past purchases
   Future _getPurchaseHistory({bool initial = true}) async {
     logger.d("Starting thing");
@@ -583,15 +574,13 @@ class NotificationFilterPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: barTheme.canvasColor,
         centerTitle: false,
-        elevation: 0.0,
+        elevation: 20,
         title: Text(
           "Settings",
           style: Theme.of(context).textTheme.displayLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 34,
-                color: barTheme.focusColor,
               ),
         ),
       ),

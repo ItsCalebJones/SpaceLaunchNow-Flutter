@@ -129,14 +129,6 @@ class _LaunchListPageState extends State<UpcomingLaunchListPage> {
     }
   }
 
-  ThemeData get appBarTheme {
-    if (widget._configuration.nightMode) {
-      return kIOSThemeDark;
-    } else {
-      return kIOSTheme;
-    }
-  }
-
   Widget _buildLaunchListTile(BuildContext context, int index) {
     var launch = _launches[index];
 

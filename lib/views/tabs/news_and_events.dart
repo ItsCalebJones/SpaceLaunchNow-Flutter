@@ -31,23 +31,13 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
     super.dispose();
   }
 
-  ThemeData get barTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: barTheme.canvasColor,
-            elevation: 0.0,
+            elevation: 20,
             centerTitle: false,
             bottom: TabBar(
               controller: _tabController,
@@ -64,8 +54,7 @@ class _NewsAndEventsPageState extends State<NewsAndEventsPage>
               'News',
               style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 34,
-                  color: barTheme.focusColor),
+                  fontSize: 34),
             ),
           ),
           body: TabBarView(
