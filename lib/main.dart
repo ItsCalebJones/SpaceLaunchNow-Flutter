@@ -675,7 +675,7 @@ class PagesState extends State<Pages> {
               },
               destinations: const [
               NavigationDestination(
-                  icon: Icon(FontAwesomeIcons.house), label: 'Explore'),
+                  icon: Icon(FontAwesomeIcons.house), label: 'Home'),
               NavigationDestination(
                   icon: Icon(MaterialCommunityIcons.clipboard_text),
                   label: 'Launches'),
