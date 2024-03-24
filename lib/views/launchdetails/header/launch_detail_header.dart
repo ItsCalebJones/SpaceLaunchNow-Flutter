@@ -63,8 +63,8 @@ class LaunchDetailHeader extends StatelessWidget {
       return GestureDetector(
         onTap: () => _handleImageTap(context, avatarUrl),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.4,
-          height: MediaQuery.of(context).size.width * 0.4,
+          width: MediaQuery.of(context).size.width * 0.6,
+          height: MediaQuery.of(context).size.width * 0.6,
           padding: const EdgeInsets.all(5.0), // border width
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondary, // border color
@@ -111,12 +111,12 @@ class LaunchDetailHeader extends StatelessWidget {
             child: _buildAvatar(context),
           ),
           const Positioned(
-            top: 30.0,
+            top: 40.0,
             left: 4.0,
             child: BackButton(color: Colors.white,),
           ),
           Positioned(
-            top: 30.0,
+            top: 40.0,
             right: 4.0,
             child: IconButton(
                 color: Colors.white,
@@ -138,7 +138,7 @@ class LaunchDetailHeader extends StatelessWidget {
             child: _buildAvatar(context),
           ),
           Positioned(
-            top: 24.0,
+            top: 40.0,
             right: 4.0,
             child: IconButton(
                 icon: const Icon(Icons.refresh),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:spacelaunchnow_flutter/colors/app_theme.dart';
 import 'package:spacelaunchnow_flutter/models/launch/detailed/launch.dart';
 import 'package:spacelaunchnow_flutter/util/countdown_helper.dart';
 
@@ -94,15 +93,6 @@ class CountdownState extends State<Countdown> {
     }
   }
 
-  ThemeData get textTheme {
-    var qdarkMode = MediaQuery.of(context).platformBrightness;
-    if (qdarkMode == Brightness.dark) {
-      return kIOSThemeDarkBar;
-    } else {
-      return kIOSThemeBar;
-    }
-  }
-
   @override
   build(BuildContext context) {
     var theme = Theme.of(context);
@@ -120,7 +110,7 @@ class CountdownState extends State<Countdown> {
     var seconds = prettyDuration.seconds;
 
     if (launch!.status!.id == 1) {
-      color = Colors.green[600];
+      color = Colors.green[500];
     } else if (launch!.status!.id == 2) {
       color = Colors.red[500];
       days = "--";
@@ -207,7 +197,7 @@ class CountdownState extends State<Countdown> {
                     );
                   },
                   child: Chip(
-                    elevation: 5,
+                    elevation: 10,
                     label: Text(
                       status,
                       style: theme.textTheme.titleLarge!

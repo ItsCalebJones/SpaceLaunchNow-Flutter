@@ -127,7 +127,8 @@ class _LaunchDetailsPageState extends State<LaunchDetailPage>
         child: CircularProgressIndicator(),
       );
     } else {
-      content = Scaffold(body: SingleChildScrollView(
+      content = Scaffold(
+        body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -18,7 +18,7 @@ class HeaderBackgroundImage extends StatelessWidget {
     if (isTablet){
       imageHeight = MediaQuery.of(context).size.width / 2;
     } else {
-      imageHeight = 300;
+      imageHeight = 250;
     }
 
       return ClipPath(
@@ -42,9 +42,9 @@ class HeaderBackgroundImage extends StatelessWidget {
               left: 0,
               right: 0,
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5,),
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10,),
                 child: Container(
-                  color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.background.withOpacity(0.75),
                 ),
               ),
             ),

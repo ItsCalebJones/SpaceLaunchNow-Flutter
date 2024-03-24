@@ -213,7 +213,6 @@ class SLNRepositoryImpl implements SLNRepository {
       }
 
       debugPrint("Returning!");
-      debugPrint(jsonBody);
       return Events.fromJson(jsonBody);
     });
   }
@@ -242,7 +241,6 @@ class SLNRepositoryImpl implements SLNRepository {
       }
 
       debugPrint("Returning!");
-      debugPrint(jsonBody);
 
       return Events.fromJson(jsonBody);
     });

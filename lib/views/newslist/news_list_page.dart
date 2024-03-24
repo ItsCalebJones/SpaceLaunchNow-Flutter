@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logger/logger.dart';
 import 'package:share_plus/share_plus.dart';
@@ -290,8 +292,6 @@ class _NewsListPageState extends State<NewsListPage> {
 
     widget = Padding(
       padding: const EdgeInsets.only(top: 0, bottom: 8, left: 8, right: 8),
-      child: GestureDetector(
-        onTap: () => openUrl(item.url!),
         child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Column(
@@ -319,6 +319,16 @@ class _NewsListPageState extends State<NewsListPage> {
                         .headlineSmall!
                         .copyWith(fontWeight: FontWeight.bold)),
               ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 4.0, bottom: 0, left: 16.0, right: 16.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                          Text("${item.newsSiteLong!}  • ${timeago.format(item.datePublished!)}",
+                          style: Theme.of(context).textTheme.labelSmall),
+                    ]),
+              ),
               Container(
                 padding: const EdgeInsets.only(
                     top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
@@ -330,17 +340,32 @@ class _NewsListPageState extends State<NewsListPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 4.0, bottom: 0, left: 16.0, right: 16.0),
+                    top: 16, bottom: 16, left: 16, right: 16),
                 child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(item.newsSiteLong!),
-                          const Text(" • "),
-                          Text(timeago.format(item.datePublished!))
-                        ],
+                      CupertinoButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: Icon(
+                                FontAwesomeIcons.newspaper,
+                              ),
+                            ),
+                            Text(
+                              'Read ',
+                              style: TextStyle(),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          openUrl(item.url!);
+                        }, //
                       ),
                       IconButton(
                         icon: const Icon(Icons.share),
@@ -354,7 +379,6 @@ class _NewsListPageState extends State<NewsListPage> {
             ],
           ),
         ),
-      ),
     );
 
     return widget;
@@ -363,22 +387,20 @@ class _NewsListPageState extends State<NewsListPage> {
   Widget _buildMiniItem(int index, News item) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:
-      Card(
-        child: InkWell(
+      child: InkWell(
           onTap: () => openUrl(item.url!),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 7, // 60%
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                      padding: const EdgeInsets.only(top: 4.0, left: 16.0, right: 16.0),
                       child: Text(
                           "${index.toString()}. ${item.newsSiteLong!} • ${timeago.format(item.datePublished!)}",
                           style: Theme.of(context).textTheme.bodySmall),
@@ -403,7 +425,7 @@ class _NewsListPageState extends State<NewsListPage> {
                     placeholder: const AssetImage('assets/placeholder.png'),
                     image: CachedNetworkImageProvider(item.featureImage!),
                     fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.width * 0.20,
+                    height: MediaQuery.of(context).size.width * 0.25,
                     alignment: Alignment.center,
                     fadeInDuration: const Duration(milliseconds: 50),
                     fadeInCurve: Curves.easeIn,
@@ -413,7 +435,6 @@ class _NewsListPageState extends State<NewsListPage> {
             ],
           ),
         ),
-      )
     );
   }
 

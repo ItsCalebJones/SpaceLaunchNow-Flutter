@@ -201,50 +201,36 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
 //        child: new Text('Watch'),
 //      ));
 //    }
-
     if (widget.launch!.vidURLs != null && widget.launch!.vidURLs!.isNotEmpty) {
-      materialButtons.add(Row(
-        children: <Widget>[
-          const Icon(Icons.live_tv),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: CupertinoButton(
-              onPressed: () {
-                openUrl(widget.launch!.vidURLs!.first.url!);
-              },
-              child: const Text('Watch'),
-            ),
-          ),
-        ],
-      ));
+      materialButtons.add(
+          FilledButton.icon(
+            onPressed: () {
+              openUrl(widget.launch!.vidURLs!.first.url!);
+            },
+            label: const Text("Watch"),
+            icon: const Icon(Icons.live_tv),
+          )
+      );
     }
 
     if (widget.launch!.slug != null) {
-      materialButtons.add(Row(
-        children: <Widget>[
-          const Icon(Icons.share),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: CupertinoButton(
-              onPressed: () {
-                Share.share(
-                    "https://spacelaunchnow.me/launch/${widget.launch!.slug!}");
-              },
-              child: const Text(
-                'Share',
-              ),
-            ),
-          ),
-        ],
-      ));
+      materialButtons.add(
+          FilledButton.icon(
+            onPressed: () {
+              Share.share("https://spacelaunchnow.me/launch/${widget.launch!.slug!}");
+            },
+            label: const Text("Share"),
+            icon: const Icon(Icons.share),
+          )
+      );
     }
 
     return Padding(
       padding:
           const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0, bottom: 0.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: materialButtons,
       ),
     );
@@ -262,7 +248,7 @@ class LaunchDetailBodyState extends State<LaunchDetailBodyWidget> {
   }
 
   Widget _buildSpace() {
-    return const SizedBox(height: 50);
+    return const SizedBox(height: 25);
   }
 
   Widget _buildContentCard(BuildContext context) {
