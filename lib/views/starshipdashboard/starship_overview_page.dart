@@ -145,12 +145,15 @@ class _StarshipOverviewPageState extends State<StarshipOverviewPage> {
               return Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.75,
-                    child: Card(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: content
-                ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Card(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: content
+                                      ),
+                      ),
                     )
             )
           );
