@@ -2,6 +2,7 @@ name: spacelaunchnow_flutter
 description: A new Space Launch Now flutter application.
 version: 2.6.0+3
 
+
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
